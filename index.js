@@ -42,6 +42,8 @@ const handlers = {
   'BetIntent': Bet.handleIntent,
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
+  'AMAZON.YesIntent': Spin.handleIntent,
+  'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,

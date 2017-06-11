@@ -32,7 +32,7 @@ const resources = {
   'SPIN_RESULT': 'The machine spinned {0}. ',
   'SPIN_WINNER': 'You matched {0} and won {1}. ',
   'SPIN_LOSER': 'Sorry, you lost. ',
-  'SPIN_PLAY_AGAIN': 'Place new bets, or say spin.',
+  'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
   'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
   'SPIN_BUSTED_REPROMPT': 'Place a bet.',
   // From utils.js
