@@ -1,0 +1,30 @@
+{
+  "extends": "google",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "no-console": 0,
+    "require-jsdoc": 0,
+    "max-len": ["warn", {
+      "code": 100,
+      "ignoreStrings": true,
+      "ignoreTemplateLiterals": true
+    }],
+    "prefer-const": ["error", {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+    }],
+    "quotes": ["error", "single", {
+      "allowTemplateLiterals": true,
+      "avoidEscape": true
+      }
+    ],
+    "no-param-reassign": "error",
+    "prefer-arrow-callback": "error",
+    "camelcase": "warn",
+    "new-cap": "warn",
+    "no-var": "error"
+  }
+}
