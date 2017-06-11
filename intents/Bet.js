@@ -50,6 +50,7 @@ module.exports = {
       game.bankroll -= game.bet;
       reprompt = res.strings.BET_PLACED_REPROMPT;
       ssml = res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
+      ssml += reprompt;
     }
 
     utils.emitResponse(this.emit, this.event.request.locale, speechError, null, ssml, reprompt);
