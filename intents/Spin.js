@@ -64,10 +64,8 @@ module.exports = {
       let spinText = '';
 
       for (i = 0; i < spinResult.length; i++) {
+        spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
         spinText += res.saySymbol(spinResult[i]);
-        if (i < spinResult.length - 1) {
-          spinText += ' ';
-        }
       }
       speech += res.strings.SPIN_RESULT.replace('{0}', spinText);
 
@@ -101,9 +99,6 @@ module.exports = {
         }
       }
 
-      game.lastbet = bet;
-      game.bet = undefined;
-
       if (matchedPayout) {
         // You won!
         game.bankroll += (bet * rules.payouts[matchedPayout]);
@@ -113,7 +108,25 @@ module.exports = {
         speech += res.strings.SPIN_LOSER;
       }
 
+      // If they have no units left, reset the bankroll
+      if (game.bankroll < 1) {
+        game.bankroll = 1000;
+        bet = undefined;
+        speech += res.strings.SPIN_BUSTED;
+        reprompt = res.strings.SPIN_BUSTED_REPROMPT;
+      } else {
+        if (game.bankroll < bet) {
+          // They still have money left, but if they don't have enough to support
+          // the last set of bets again, then reset it to 1 coin
+          bet = 1;
+        }
+
+        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
+      }
+
       // And reprompt
+      game.lastbet = bet;
+      game.bet = undefined;
       reprompt = res.strings.SPIN_PLAY_AGAIN;
       speech += reprompt;
       utils.emitResponse(this.emit, this.event.request.locale, speechError, null, speech, reprompt);

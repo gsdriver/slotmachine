@@ -8,12 +8,12 @@ const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
 const Spin = require('./intents/Spin');
-// const Rules = require('./intents/Rules');
-// const Help = require('./intents/Help');
+const Rules = require('./intents/Rules');
+const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
 
-const APP_ID = '12'; // amzn1.ask.skill.5fdf0343-ea7d-40c2-8c0b-c7216b98aa04';
+const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
 // Handlers for our skill
 const handlers = {
@@ -41,8 +41,8 @@ const handlers = {
   'LaunchRequest': Launch.handleIntent,
   'BetIntent': Bet.handleIntent,
   'SpinIntent': Spin.handleIntent,
-//  'RulesIntent': Rules.handleIntent,
-//  'AMAZON.HelpIntent': Help.handleIntent,
+  'RulesIntent': Rules.handleIntent,
+  'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {

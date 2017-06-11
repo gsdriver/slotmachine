@@ -50,25 +50,40 @@ module.exports = {
     return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
   },
   readPayout: function(locale, game, payout) {
+    return readPayoutInternal(locale, game, payout, ' <break time=\"200ms\"/> ');
+  },
+  readPayoutTable: function(locale, game) {
     const res = require('./' + locale + '/resources');
-    const slots = payout.split('|');
     let text = '';
-    let i;
+    let payout;
 
-    for (i = 0; i < slots.length; i++) {
-      text += res.saySymbol(slots[i]);
-      if (i < game.slots - 1) {
-        text += ' ';
-      }
-    }
-
-    for (i = slots.length; i < game.slots; i++) {
-      text += res.strings.ANY_SLOT;
-      if (i < game.slots - 1) {
-        text += ' ';
+    for (payout in game.payouts) {
+      if (payout) {
+        text += readPayoutInternal(locale, game, payout, ' ');
+        text += res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
+        text += '\n';
       }
     }
 
     return text;
   },
 };
+
+function readPayoutInternal(locale, game, payout, pause) {
+  const res = require('./' + locale + '/resources');
+  const slots = payout.split('|');
+  let text = '';
+  let i;
+
+  for (i = 0; i < slots.length; i++) {
+    text += res.saySymbol(slots[i]);
+    text += pause;
+  }
+
+  for (i = slots.length; i < game.slots; i++) {
+    text += res.strings.ANY_SLOT;
+    text += pause;
+  }
+
+  return text;
+}

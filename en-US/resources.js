@@ -18,6 +18,13 @@ const resources = {
   'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
+  // From Help.js
+  'HELP_COMMANDS': 'Say bet to insert a coin or spin to pull the handle. ',
+  'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
+  'HELP_CARD_TITLE': 'Payout Table',
+  // From Rules.js
+  'RULES_REPROMPT': 'Say bet to insert a coin or spin to pull the handle.',
+  'RULES_CARD_TITLE': 'Payout Table',
   // From Spin.js
   'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
   'SPIN_INVALID_REPROMPT': 'Place a bet',
@@ -26,9 +33,12 @@ const resources = {
   'SPIN_WINNER': 'You matched {0} and won {1}. ',
   'SPIN_LOSER': 'Sorry, you lost. ',
   'SPIN_PLAY_AGAIN': 'Place new bets, or say spin.',
+  'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
+  'SPIN_BUSTED_REPROMPT': 'Place a bet.',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
+  'PAYOUT_PAYS': 'pays {0} coins.',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
