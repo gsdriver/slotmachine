@@ -18,8 +18,17 @@ const resources = {
   'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
+  // From Spin.js
+  'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
+  'SPIN_INVALID_REPROMPT': 'Place a bet',
+  'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
+  'SPIN_RESULT': 'The machine spinned {0}. ',
+  'SPIN_WINNER': 'You matched {0} and won {1}. ',
+  'SPIN_LOSER': 'Sorry, you lost. ',
+  'SPIN_PLAY_AGAIN': 'Place new bets, or say spin.',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
+  'ANY_SLOT': 'any',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
@@ -28,4 +37,13 @@ const resources = {
 
 module.exports = {
   strings: resources,
+  saySymbol: function(symbol) {
+    const symbolMap = {'cherry': 'cherry',
+      'lemon': 'lemon',
+      'orange': 'orange',
+      'plum': 'plum',
+      'bar': 'bar'};
+
+    return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
+  },
 };

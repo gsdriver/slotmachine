@@ -7,7 +7,7 @@
 const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
-// const Spin = require('./intents/Spin');
+const Spin = require('./intents/Spin');
 // const Rules = require('./intents/Rules');
 // const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
@@ -26,7 +26,6 @@ const handlers = {
     if (!this.attributes[this.attributes.currentGame]) {
       this.attributes[this.attributes.currentGame] = {
         bankroll: 1000,
-        maxCoins: 5,
       };
     }
 
@@ -41,7 +40,7 @@ const handlers = {
   // Some intents don't make sense for a new session - so just launch instead
   'LaunchRequest': Launch.handleIntent,
   'BetIntent': Bet.handleIntent,
-//  'SpinIntent': Spin.handleIntent,
+  'SpinIntent': Spin.handleIntent,
 //  'RulesIntent': Rules.handleIntent,
 //  'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
