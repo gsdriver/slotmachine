@@ -124,6 +124,13 @@ module.exports = {
         speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
       }
 
+      // Is this a new high for this game?
+      game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
+      if (game.bankroll > game.high) {
+        // Just track for now...
+        game.high = game.bankroll;
+      }
+
       // And reprompt
       game.lastbet = bet;
       game.bet = undefined;

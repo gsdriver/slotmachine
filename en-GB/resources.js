@@ -29,7 +29,7 @@ const resources = {
   'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
   'SPIN_INVALID_REPROMPT': 'Place a bet',
   'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
-  'SPIN_RESULT': 'The machine spinned {0}. ',
+  'SPIN_RESULT': ' {0}. ',
   'SPIN_WINNER': 'You matched {0} and won {1}. ',
   'SPIN_LOSER': 'Sorry, you lost. ',
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',

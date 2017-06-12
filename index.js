@@ -26,6 +26,7 @@ const handlers = {
     if (!this.attributes[this.attributes.currentGame]) {
       this.attributes[this.attributes.currentGame] = {
         bankroll: 1000,
+        high: 1000,
       };
     }
 
