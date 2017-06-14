@@ -39,6 +39,9 @@ const resources = {
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
   'PAYOUT_PAYS': 'pays {0} coins.',
+  'RANK_TOGO': 'You are {0} from <say-as interpret-as="ordinal">{1}</say-as> place. ',
+  'RANK_POSITION': 'Your high score of {0} coins ranks <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
+  'RANK_NUMPLAYERS': 'There are {0} players. ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',

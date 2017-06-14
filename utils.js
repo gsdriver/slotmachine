@@ -4,6 +4,9 @@
 
 'use strict';
 
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 
 const games = {
@@ -67,6 +70,32 @@ module.exports = {
 
     return text;
   },
+  readRank: function(locale, game, callback) {
+    const res = require('./' + locale + '/resources');
+
+    getRankFromS3(game.high, (err, rank) => {
+      // Let them know their current rank
+      let speech = '';
+
+      if (rank) {
+        let togo = '';
+
+        if (rank.delta > 0) {
+          togo = res.strings.RANK_TOGO.replace('{0}', speechUtils.numberOfItems(rank.delta, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN)).replace('{1}', rank.rank - 1);
+        }
+
+        // If they haven't played, just tell them the number of players
+        if (game.spins > 0) {
+          speech += res.strings.RANK_POSITION.replace('{0}', game.high).replace('{1}', rank.rank).replace('{2}', rank.players);
+          speech += togo;
+        } else {
+          speech += res.strings.RANK_NUMPLAYERS.replace('{0}', rank.players);
+        }
+      }
+
+      callback(err, speech);
+    });
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {
@@ -86,4 +115,36 @@ function readPayoutInternal(locale, game, payout, pause) {
   }
 
   return text;
+}
+
+function getRankFromS3(high, callback) {
+  let higher;
+
+  // Read the S3 buckets that has everyone's scores
+  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores.txt'}, (err, data) => {
+    if (err) {
+      console.log(err, err.stack);
+      callback(err, null);
+    } else {
+      // Yeah, I can do a binary search (this is sorted), but straight search for now
+      const ranking = JSON.parse(data.Body.toString('ascii'));
+      const scores = ranking.scores;
+
+      if (scores) {
+        for (higher = 0; higher < scores.length; higher++) {
+          if (scores[higher] <= high) {
+            break;
+          }
+        }
+
+        // Also let them know how much it takes to move up a position
+        callback(null, {rank: (higher + 1),
+            delta: (higher > 0) ? (scores[higher - 1] - high) : 0,
+            players: scores.length});
+      } else {
+        console.log('No scoreset for ' + scoreSet);
+        callback('No scoreset', null);
+      }
+    }
+  });
 }
