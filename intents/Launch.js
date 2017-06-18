@@ -10,18 +10,16 @@ module.exports = {
   handleIntent: function() {
     // Tell them the rules, their bankroll and offer a few things they can do
     const res = require('../' + this.event.request.locale + '/resources');
-    const reprompt = res.strings.LAUNCH_REPROMPT;
     let speech = res.strings.LAUNCH_WELCOME;
-    const game = this.attributes[this.attributes.currentGame];
 
-    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
+    // Read the available games then prompt for each one
+    utils.readAvailableGames(this.event.request.locale, (gameText, choices) => {
+      speech += gameText;
+      this.attributes.choices = choices;
+      this.handler.state = 'SELECTGAME';
 
-    utils.readRank(this.event.request.locale, game, (err, rank) => {
-      // Let them know their current rank
-      if (rank) {
-        speech += rank;
-      }
-
+      // Ask for the first one
+      const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
       speech += reprompt;
       utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
     });

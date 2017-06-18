@@ -10,15 +10,15 @@ const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 
 const games = {
-  // Has 99.5% payout
+  // Has 99.8% payout
   'basic': {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
     'frequency': [
-      {'total': 30, 'symbols': [6, 5, 8, 10, 1]},
-      {'total': 23, 'symbols': [4, 8, 4, 5, 2]},
-      {'total': 38, 'symbols': [15, 8, 6, 1, 8]},
+      {'total': 35, 'symbols': [6, 8, 8, 10, 2]},
+      {'total': 26, 'symbols': [4, 8, 4, 6, 4]},
+      {'total': 43, 'symbols': [24, 10, 6, 2, 1]},
     ],
     'payouts': {
       'cherry': 2,
@@ -29,6 +29,32 @@ const games = {
       'bar': 5,
       'bar|bar': 10,
       'bar|bar|bar': 100,
+    },
+  },
+  // % payout, no lower payouts but higher opportunity for jackpots
+  'wild': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
+    'frequency': [
+      {'total': 39, 'symbols': [3, 16, 10, 4, 6]},
+      {'total': 26, 'symbols': [2, 16, 5, 2, 1]},
+      {'total': 34, 'symbols': [1, 20, 8, 4, 1]},
+    ],
+    'substitutes': {
+      'bar': ['any bar'],
+      'double bar': ['any bar'],
+      'cherry': ['bar', 'double bar', 'seven'],
+    },
+    'wild': ['cherry'],
+    'payouts': {
+      'cherry': 5,
+      'cherry|cherry': 10,
+      'any bar|any bar|any bar': 5,
+      'bar|bar|bar': 10,
+      'double bar|double bar|double bar': 20,
+      'seven|seven|seven': 50,
+      'cherry|cherry|cherry': 500,
     },
   },
 };
@@ -48,6 +74,27 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
+  readAvailableGames: function(locale, callback) {
+    const res = require('./' + locale + '/resources');
+    let speech;
+    const choices = [];
+    const choiceText = [];
+    let game;
+    let count = 0;
+
+    for (game in games) {
+      if (game) {
+        count++;
+        choices.push(game);
+        choiceText.push(res.sayGame(game));
+      }
+    }
+
+    speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
+    speech += speechUtils.and(choiceText, {locale: locale});
+    speech += '. ';
+    callback(speech, choices);
+  },
   readCoins: function(locale, coins) {
     const res = require('./' + locale + '/resources');
     return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
@@ -55,10 +102,27 @@ module.exports = {
   readPayout: function(locale, game, payout) {
     return readPayoutInternal(locale, game, payout, ' <break time=\"200ms\"/> ');
   },
+  readWildSymbols: function(locale, game) {
+    const res = require('./' + locale + '/resources');
+    let i;
+    let text = '';
+
+    for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
+      text += res.strings.WILD_SYMBOL.replace('{0}', res.saySymbol(game.wild[i]));
+    }
+
+    return text;
+  },
   readPayoutTable: function(locale, game) {
     const res = require('./' + locale + '/resources');
     let text = '';
     let payout;
+    let i;
+
+    for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
+      text += res.strings.WILD_SYMBOL.replace('{0}', res.saySymbol(game.wild[i]));
+      text += '\n';
+    }
 
     for (payout in game.payouts) {
       if (payout) {

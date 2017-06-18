@@ -81,8 +81,18 @@ module.exports = {
 
           for (i = 0; i < slots.length; i++) {
             if (slots[i] !== spinResult[i]) {
-              isMatch = false;
-              break;
+              // Let's see if this can substitute
+              if (rules.substitutes && rules.substitutes[spinResult[i]]) {
+                // It can - can it substitute for this symbol though?
+                if (rules.substitutes[spinResult[i]].indexOf(slots[i]) < 0) {
+                  // Nope, it doesn't substitute
+                  isMatch = false;
+                  break;
+                }
+              } else {
+                isMatch = false;
+                break;
+              }
             }
           }
 
@@ -103,7 +113,7 @@ module.exports = {
         // You won!  If more than 50:1, play the jackpot sound
         if (rules.payouts[matchedPayout] >= 50) {
           speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
-          game.jackpot = (game.jackpot) ? 1 : (game.jackpot + 1);
+          game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
         }
 
         game.bankroll += (bet * rules.payouts[matchedPayout]);

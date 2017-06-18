@@ -14,6 +14,8 @@ module.exports = {
     const reprompt = res.strings.RULES_REPROMPT;
     let payout;
 
+    // Wild symbols
+    speech += utils.readWildSymbols(this.event.request.locale, rules);
     for (payout in rules.payouts) {
       if (payout) {
         speech += utils.readPayout(this.event.request.locale, rules, payout);

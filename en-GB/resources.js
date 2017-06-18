@@ -7,8 +7,11 @@ const resources = {
   'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Bet.',
   'UNKNOWN_INTENT_REPROMPT': 'Try saying Bet.',
   // Launch.js
-  'LAUNCH_REPROMPT': 'You can place a bet by saying bet a coin.',
+  'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
+  // Select.js
+  'SELECT_WELCOME': 'Welcome to {0}. ',
+  'SELECT_REPROMPT': 'You can place a bet by saying bet a coin.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
   // From Bet.js
@@ -42,6 +45,8 @@ const resources = {
   'RANK_TOGO': 'You are {0} from <say-as interpret-as="ordinal">{1}</say-as> place. ',
   'RANK_POSITION': 'Your high score of {0} coins ranks <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
   'RANK_NUMPLAYERS': 'There are {0} players. ',
+  'WILD_SYMBOL': '{0} is wild. ',
+  'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
@@ -55,8 +60,24 @@ module.exports = {
       'lemon': 'lemon',
       'orange': 'orange',
       'plum': 'plum',
-      'bar': 'bar'};
+      'bar': 'bar',
+      'blank': 'blank',
+      'double bar': 'double bar',
+      'seven': 'seven',
+      'any bar': 'any bar',
+      'chicken': 'chicken',
+      'pork': 'pork',
+      'veal': 'veal',
+      'turkey': 'turkey',
+      'steak': 'steak'};
 
     return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
+  },
+  sayGame: function(game) {
+    const gameMap = {'basic': 'the standard fruit game',
+      'wild': 'wild cherry',
+      'steak': 'the meat game'};
+
+    return (gameMap[game]) ? gameMap[game] : game;
   },
 };
