@@ -61,7 +61,7 @@ module.exports = {
         }
       }
 
-      let spinText = '';
+      let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
 
       for (i = 0; i < spinResult.length; i++) {
         spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
@@ -100,7 +100,11 @@ module.exports = {
       }
 
       if (matchedPayout) {
-        // You won!
+        // You won!  If more than 50:1, play the jackpot sound
+        if (rules.payouts[matchedPayout] >= 50) {
+          speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+        }
+
         game.bankroll += (bet * rules.payouts[matchedPayout]);
         speech += res.strings.SPIN_WINNER.replace('{0}', utils.readPayout(this.event.request.locale, rules, matchedPayout)).replace('{1}', utils.readCoins(this.event.request.locale, bet * rules.payouts[matchedPayout]));
       } else {
