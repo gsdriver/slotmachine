@@ -47,7 +47,7 @@ function selectedGame(emit, locale, attributes) {
   const game = attributes[attributes.currentGame];
 
   speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
-  utils.readRank(locale, game, (err, rank) => {
+  utils.readRank(locale, attributes, (err, rank) => {
     // Let them know their current rank
     if (rank) {
       speech += rank;

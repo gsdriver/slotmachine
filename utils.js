@@ -31,7 +31,7 @@ const games = {
       'bar|bar|bar': 100,
     },
   },
-  // % payout, no lower payouts but higher opportunity for jackpots
+  // 99.8% payout, no lower payouts but higher opportunity for jackpots
   'wild': {
     'maxCoins': 5,
     'slots': 3,
@@ -74,7 +74,7 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(locale, callback) {
+  readAvailableGames: function(locale, currentGame, callback) {
     const res = require('./' + locale + '/resources');
     let speech;
     const choices = [];
@@ -85,8 +85,14 @@ module.exports = {
     for (game in games) {
       if (game) {
         count++;
-        choices.push(game);
-        choiceText.push(res.sayGame(game));
+        // Put the last played game at the front of the list
+        if (game == currentGame) {
+          choices.unshift(game);
+          choiceText.unshift(res.sayGame(game));
+        } else {
+         choices.push(game);
+         choiceText.push(res.sayGame(game));
+       }
       }
     }
 
@@ -134,10 +140,11 @@ module.exports = {
 
     return text;
   },
-  readRank: function(locale, game, callback) {
+  readRank: function(locale, attributes, callback) {
     const res = require('./' + locale + '/resources');
+    const game = attributes[attributes.currentGame];
 
-    getRankFromS3(game.high, (err, rank) => {
+    getRankFromS3(attributes, (err, rank) => {
       // Let them know their current rank
       let speech = '';
 
@@ -181,11 +188,12 @@ function readPayoutInternal(locale, game, payout, pause) {
   return text;
 }
 
-function getRankFromS3(high, callback) {
+function getRankFromS3(attributes, callback) {
   let higher;
+  const game = attributes[attributes.currentGame];
 
   // Read the S3 buckets that has everyone's scores
-  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores.txt'}, (err, data) => {
+  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores2.txt'}, (err, data) => {
     if (err) {
       console.log(err, err.stack);
       callback(err, null);
@@ -194,17 +202,19 @@ function getRankFromS3(high, callback) {
       const ranking = JSON.parse(data.Body.toString('ascii'));
       const scores = ranking.scores;
 
-      if (scores) {
-        for (higher = 0; higher < scores.length; higher++) {
-          if (scores[higher] <= high) {
+      if (scores && scores[attributes.currentGame]) {
+        const gameScores = scores[attributes.currentGame];
+
+        for (higher = 0; higher < gameScores.length; higher++) {
+          if (gameScores[higher] <= game.high) {
             break;
           }
         }
 
         // Also let them know how much it takes to move up a position
         callback(null, {rank: (higher + 1),
-            delta: (higher > 0) ? (scores[higher - 1] - high) : 0,
-            players: scores.length});
+            delta: (higher > 0) ? (gameScores[higher - 1] - game.high) : 0,
+            players: gameScores.length});
       } else {
         console.log('No scoreset for ' + scoreSet);
         callback('No scoreset', null);

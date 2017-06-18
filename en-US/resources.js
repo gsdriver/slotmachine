@@ -6,6 +6,8 @@ const resources = {
   // From index.js
   'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Bet.',
   'UNKNOWN_INTENT_REPROMPT': 'Try saying Bet.',
+  'UNKNOWN_SELECT_INTENT': 'Sorry, I didn\'t get that. Try saying Yes.',
+  'UNKNOWN_SELECT_INTENT_REPROMPT': 'Try saying Yes.',
   // Launch.js
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',

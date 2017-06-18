@@ -31,7 +31,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    this.emit(':ask', res.strings.UNKNOWNINTENT_RESET, res.strings.UNKNOWNINTENT_RESET_REPROMPT);
+    this.emit(':ask', res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
   },
 });
 
