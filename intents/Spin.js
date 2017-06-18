@@ -103,6 +103,7 @@ module.exports = {
         // You won!  If more than 50:1, play the jackpot sound
         if (rules.payouts[matchedPayout] >= 50) {
           speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+          game.jackpot = (game.jackpot) ? 1 : (game.jackpot + 1);
         }
 
         game.bankroll += (bet * rules.payouts[matchedPayout]);
