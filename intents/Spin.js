@@ -46,8 +46,13 @@ module.exports = {
       for (i = 0; i < rules.slots; i++) {
         let spin;
         let j;
+        let total = 0;
 
-        spin = Math.floor(Math.random() * rules.frequency[i].total);
+        for (j = 0; j < rules.frequency[i].symbols.length; j++) {
+          total += rules.frequency[i].symbols[j];
+        }
+
+        spin = Math.floor(Math.random() * total);
 
         for (j = 0; j < rules.frequency[i].symbols.length; j++) {
           if (spin < rules.frequency[i].symbols[j]) {

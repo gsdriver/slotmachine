@@ -1,7 +1,7 @@
 var utils = require('../utils');
 
 // Get a game and do 1000 spins to simulate what happens
-const rules = utils.getGame('wild');
+let rules;
 
 function doSpin() {
   // Pick random numbers based on the rules of the game
@@ -11,8 +11,13 @@ function doSpin() {
   for (i = 0; i < rules.slots; i++) {
     let spin;
     let j;
+    let total = 0;
 
-    spin = Math.floor(Math.random() * rules.frequency[i].total);
+    for (j = 0; j < rules.frequency[i].symbols.length; j++) {
+      total += rules.frequency[i].symbols[j];
+    }
+
+    spin = Math.floor(Math.random() * total);
 
     for (j = 0; j < rules.frequency[i].symbols.length; j++) {
       if (spin < rules.frequency[i].symbols[j]) {
@@ -75,19 +80,35 @@ function getPayout(spinResult, rules) {
 
 function runSimulation() {
   // 1,000,000 coins; 1,000,000 spins
-  let bankroll = 1000000;
+  const START = 1000000;
+  let bankroll = START;
   const SPINCOUNT = 1000000;
   let i;
   let spinResult;
   let matchedPayout;
   const results = {};
   let result;
+  let progressive;
+  let spinsThisProgressive = 0;
 
   for (i = 0; i < SPINCOUNT; i++) {
     spinResult = doSpin();
+    spinsThisProgressive++;
     matchedPayout = getPayout(spinResult, rules);
     if (matchedPayout) {
-      bankroll += (rules.payouts[matchedPayout] - 1);
+      let payoutAmount;
+
+      // Is this the progressive?
+      if (rules.progressive && (rules.progressive.match === matchedPayout)) {
+        // Yep - calculate as starting plus losers times the rate
+        payoutAmount = Math.floor(rules.progressive.start + rules.progressive.rate * spinsThisProgressive);
+        console.log('Progressive win ' + payoutAmount);
+        spinsThisProgressive = 0;
+      } else {
+        payoutAmount = rules.payouts[matchedPayout];
+      }
+
+      bankroll += (payoutAmount - 1);
       results[matchedPayout] = (!results[matchedPayout]) ? 1 : (results[matchedPayout] + 1);
     } else {
       bankroll--;
@@ -97,6 +118,7 @@ function runSimulation() {
 
   // Spit out the results
   console.log('Ending bankroll was ' + bankroll);
+  console.log('Payout was ' + (1.0 + (bankroll - START) / SPINCOUNT));
   for (result in results) {
     if (result) {
       console.log(result + ': ' + results[result]);
@@ -104,5 +126,15 @@ function runSimulation() {
   }
 }
 
-runSimulation();
+if (process.argv.length > 2) {
+  rules = utils.getGame(process.argv[2]);
+} else {
+  rules = utils.getGame('basic');
+}
+
+if (rules) {
+  runSimulation();
+} else {
+  console.log('Unknown game ' + process.argv[2]);
+}
 

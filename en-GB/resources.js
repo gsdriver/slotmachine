@@ -44,11 +44,13 @@ const resources = {
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
   'PAYOUT_PAYS': 'pays {0} coins.',
+  'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
   'RANK_TOGO': 'You are {0} from <say-as interpret-as="ordinal">{1}</say-as> place. ',
   'RANK_POSITION': 'Your high score of {0} coins ranks <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
   'RANK_NUMPLAYERS': 'There are {0} players. ',
-  'WILD_SYMBOL': '{0} is wild. ',
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
+  'WILD_SPECIAL': 'Cherries are wild. ',
+  'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot. ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
@@ -67,6 +69,8 @@ module.exports = {
       'double bar': 'double bar',
       'seven': 'seven',
       'any bar': 'any bar',
+      'bell': 'bell',
+      'diamond': 'diamond',
       'chicken': 'chicken',
       'pork': 'pork',
       'veal': 'veal',
@@ -78,6 +82,7 @@ module.exports = {
   sayGame: function(game) {
     const gameMap = {'basic': 'the standard fruit game',
       'wild': 'wild cherry',
+      'progressive': 'progressive jackpot',
       'steak': 'the meat game'};
 
     return (gameMap[game]) ? gameMap[game] : game;

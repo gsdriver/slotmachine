@@ -15,11 +15,14 @@ module.exports = {
     let payout;
 
     // Wild symbols
-    speech += utils.readWildSymbols(this.event.request.locale, rules);
+    if (rules.special) {
+      speech += res.strings[rules.special];
+    }
+
     for (payout in rules.payouts) {
       if (payout) {
         speech += utils.readPayout(this.event.request.locale, rules, payout);
-        speech += res.strings.PAYOUT_PAYS.replace('{0}', rules.payouts[payout]);
+        speech += utils.readPayoutAmount(this.event.request.locale, rules, payout);
         speech += ' <break time=\"200ms\"/>';
       }
     }
