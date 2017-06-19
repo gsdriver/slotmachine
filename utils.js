@@ -57,8 +57,10 @@ const games = {
       'cherry|cherry|cherry': 500,
     },
   },
-  // Has 99.8% payout with progressive
-  'progressive': {
+};
+
+if (process.env.PROGRESSIVE) {
+  games.progressive = {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
@@ -83,8 +85,8 @@ const games = {
       'diamond|diamond': 10,
       'diamond|diamond|diamond': 100,
     },
-  },
-};
+  };
+}
 
 module.exports = {
   emitResponse: function(emit, locale, error, response, speech, reprompt) {

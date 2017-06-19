@@ -48,10 +48,9 @@ module.exports = {
         let j;
         let total = 0;
 
-        for (j = 0; j < rules.frequency[i].symbols.length; j++) {
-          total += rules.frequency[i].symbols[j];
-        }
-
+        rules.frequency[i].symbols.map((item) => {
+          total = total + item;
+        });
         spin = Math.floor(Math.random() * total);
 
         for (j = 0; j < rules.frequency[i].symbols.length; j++) {
@@ -144,8 +143,15 @@ module.exports = {
         speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
       }
 
-      // Is this a new high for this game?
+      // Keep track of spins
+      game.timestamp = Date.now();
       game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
+      // if (rules.progressive) {
+        game.progressiveSpins = (game.progressiveSpins === undefined)
+              ? 1 : (game.progressiveSpins + 1);
+      // }
+
+      // Is this a new high for this game?
       if (game.bankroll > game.high) {
         // Just track for now...
         game.high = game.bankroll;

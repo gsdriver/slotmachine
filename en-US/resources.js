@@ -13,7 +13,7 @@ const resources = {
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
   // Select.js
   'SELECT_WELCOME': 'Welcome to {0}. ',
-  'SELECT_REPROMPT': 'You can place a bet by saying bet a coin.',
+  'SELECT_REPROMPT': 'You can bet up to {0} coins.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
   // From Bet.js
@@ -24,11 +24,11 @@ const resources = {
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
   // From Help.js
-  'HELP_COMMANDS': 'Say bet to insert a coin or spin to pull the handle. ',
+  'HELP_COMMANDS': 'Say bet to insert coins or spin to pull the handle. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   // From Rules.js
-  'RULES_REPROMPT': 'Say bet to insert a coin or spin to pull the handle.',
+  'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
   'RULES_CARD_TITLE': 'Payout Table',
   // From Spin.js
   'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
