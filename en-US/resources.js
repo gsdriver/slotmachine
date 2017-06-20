@@ -51,12 +51,12 @@ const resources = {
   'RANK_NUMPLAYERS': 'There are {0} players. ',
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'WILD_SPECIAL': 'Cherries are wild. ',
-  'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot. ',
+  'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
-  'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. ',
+  'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. You must bet the maximum number of coins to win the progressive jackpot. ',
 };
 
 module.exports = {

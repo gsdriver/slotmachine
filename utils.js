@@ -70,7 +70,7 @@ if (process.env.PROGRESSIVE) {
       {'symbols': [22, 10, 6, 2, 1]},
     ],
     'progressive': {
-      'start': 100,
+      'start': 500,
       'rate': 0.05,
       'match': 'diamond|diamond|diamond',
     },

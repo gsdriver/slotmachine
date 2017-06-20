@@ -57,6 +57,7 @@ function selectedGame(emit, locale, attributes) {
         // This jackpot was awarded after your last spin, so clear your spin count
         game.progressiveSpins = 0;
       }
+      game.startingProgressiveSpins = (game.progressiveSpins) ? game.progressiveSpins : 0;
     }
 
     speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
