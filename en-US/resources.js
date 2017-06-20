@@ -56,7 +56,7 @@ const resources = {
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
-  'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. You must bet the maximum number of coins to win the progressive jackpot. ',
+  'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
 };
 
 module.exports = {
