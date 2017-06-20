@@ -120,8 +120,15 @@ module.exports = {
           game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
         }
 
-        game.bankroll += (bet * rules.payouts[matchedPayout]);
-        speech += res.strings.SPIN_WINNER.replace('{0}', utils.readPayout(this.event.request.locale, rules, matchedPayout)).replace('{1}', utils.readCoins(this.event.request.locale, bet * rules.payouts[matchedPayout]));
+        // If you won the progressive, then ... wow, you rock!
+        if (rules.progressive && (matchedPayout == rules.progressive.match)) {
+          game.bankroll += (bet * game.progressiveJackpot);
+          speech += res.strings.SPIN_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, bet * game.progressiveJackpot));
+          utils.updateProgressive(this.attributes.currentGame);
+        } else {
+          game.bankroll += (bet * rules.payouts[matchedPayout]);
+          speech += res.strings.SPIN_WINNER.replace('{0}', utils.readPayout(this.event.request.locale, rules, matchedPayout)).replace('{1}', utils.readCoins(this.event.request.locale, bet * rules.payouts[matchedPayout]));
+        }
       } else {
         // Sorry, you lost
         speech += res.strings.SPIN_LOSER;
@@ -146,10 +153,10 @@ module.exports = {
       // Keep track of spins
       game.timestamp = Date.now();
       game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
-      // if (rules.progressive) {
+      if (rules.progressive) {
         game.progressiveSpins = (game.progressiveSpins === undefined)
               ? 1 : (game.progressiveSpins + 1);
-      // }
+      }
 
       // Is this a new high for this game?
       if (game.bankroll > game.high) {

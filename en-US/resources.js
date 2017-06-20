@@ -35,6 +35,7 @@ const resources = {
   'SPIN_INVALID_REPROMPT': 'Place a bet',
   'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
   'SPIN_RESULT': ' {0}. ',
+  'SPIN_PROGRESSIVE_WINNER': 'You hit the progressive jackpot and won {0}! ',
   'SPIN_WINNER': 'You matched {0} and won {1}. ',
   'SPIN_LOSER': 'Sorry, you lost. ',
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
@@ -55,6 +56,7 @@ const resources = {
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
+  'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. ',
 };
 
 module.exports = {

@@ -31,7 +31,8 @@ module.exports = {
 function selectedGame(emit, locale, attributes) {
   const res = require('../' + locale + '/resources');
   let speech;
-  const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', utils.getGame(attributes.currentGame).maxCoins);
+  const rules = utils.getGame(attributes.currentGame);
+  const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
 
   // Great, they picked a game
   attributes.currentGame = attributes.choices[0];
@@ -46,14 +47,27 @@ function selectedGame(emit, locale, attributes) {
   }
 
   const game = attributes[attributes.currentGame];
-  speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
-  utils.readRank(locale, attributes, (err, rank) => {
-    // Let them know their current rank
-    if (rank) {
-      speech += rank;
+
+  // Check if there is a progressive jackpot
+  utils.getProgressivePayout(attributes.currentGame, (lastwin, jackpot) => {
+    if (jackpot) {
+      speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot);
+      game.progressiveJackpot = jackpot;
+      if (game.timestamp && (lastwin > game.timestamp)) {
+        // This jackpot was awarded after your last spin, so clear your spin count
+        game.progressiveSpins = 0;
+      }
     }
 
-    speech += reprompt;
-    utils.emitResponse(emit, locale, null, null, speech, reprompt);
+    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
+    utils.readRank(locale, attributes, (err, rank) => {
+      // Let them know their current rank
+      if (rank) {
+        speech += rank;
+      }
+
+      speech += reprompt;
+      utils.emitResponse(emit, locale, null, null, speech, reprompt);
+    });
   });
 }

@@ -189,6 +189,64 @@ module.exports = {
       callback(err, speech);
     });
   },
+  getProgressivePayout: function(game, callback) {
+    // If there is no progressive for this game, just return undefined
+    if (games[game].progressive) {
+      // Read the S3 bucket with Progressive Status
+      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachine-Progressive.txt'}, (err, data) => {
+        if (err) {
+          // Use the base jackpot value
+          console.log(err, err.stack);
+          callback(0, games[game].progressive.start);
+        } else {
+          const progressive = JSON.parse(data.Body.toString('ascii'));
+          let jackpot;
+          let lastwin;
+
+          if (progressive[game]) {
+            // Great, use this as the number of spins and add to the starting jackpot
+            jackpot = Math.floor(games[game].progressive.start +
+                  (games[game].progressive.rate * progressive[game].spins));
+            lastwin = progressive[game].lastwin;
+          } else {
+            jackpot = games[game].progressive.start;
+            lastwin = 0;
+          }
+
+          callback(lastwin, jackpot);
+        }
+      });
+    } else {
+      callback(undefined);
+    }
+  },
+  // Updates S3 to note that the progressive was won!
+  // Note this function does not callback
+  updateProgressive: function(game) {
+    // Read the S3 bucket with Progressive Status
+    s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachine-Progressive.txt'}, (err, data) => {
+      if (err) {
+        // Use the base jackpot value
+        console.log(err, err.stack);
+        callback(0, games[game].progressive.start);
+      } else {
+        const progressive = JSON.parse(data.Body.toString('ascii'));
+
+        // Update the timestamp and reset the spin count to 0
+        progressive[game] = {lastwin: Date.now(), spins: 0};
+
+        const params = {Body: JSON.stringify(progressive),
+          Bucket: 'garrett-alexa-usage',
+          Key: 'SlotMachine-Progressive.txt'};
+
+        s3.putObject(params, (err, data) => {
+          if (err) {
+            console.log(err, err.stack);
+          }
+        });
+      }
+    });
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {
