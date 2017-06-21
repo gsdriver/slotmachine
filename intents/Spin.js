@@ -125,7 +125,7 @@ module.exports = {
               && (bet == rules.maxCoins)) {
           // Add spins that happened this round to the jackpot
           game.progressiveJackpot += Math.floor(
-              (game.progressiveSpins - game.startingProgressiveSpins)
+              (game.coinsPlayed - game.startingCoins)
               * rules.progressive.rate);
           game.bankroll += game.progressiveJackpot;
           speech += res.strings.SPIN_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, game.progressiveJackpot));
@@ -141,8 +141,8 @@ module.exports = {
 
       // Update coins in the progressive
       if (rules.progressive) {
-        game.progressiveSpins = (game.progressiveSpins === undefined)
-              ? bet : (game.progressiveSpins + bet);
+        game.coinsPlayed = (game.coinsPlayed === undefined)
+              ? bet : (game.coinsPlayed + bet);
       }
 
       // If they have no units left, reset the bankroll

@@ -55,10 +55,10 @@ function selectedGame(emit, locale, attributes) {
       speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
       game.progressiveJackpot = jackpot;
       if (game.timestamp && (lastwin > game.timestamp)) {
-        // This jackpot was awarded after your last spin, so clear your spin count
-        game.progressiveSpins = 0;
+        // This jackpot was awarded after your last spin, so clear the coins played
+        game.coinsPlayed = 0;
       }
-      game.startingProgressiveSpins = (game.progressiveSpins) ? game.progressiveSpins : 0;
+      game.startingCoins = (game.coinsPlayed) ? game.coinsPlayed : 0;
       utils.emitResponse(emit, locale, null, null, speech, reprompt);
     } else {
       speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));

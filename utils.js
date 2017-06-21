@@ -204,9 +204,9 @@ module.exports = {
           let lastwin;
 
           if (progressive[game]) {
-            // Great, use this as the number of spins and add to the starting jackpot
+            // Great, use this as the number of coins and add to the starting jackpot
             jackpot = Math.floor(games[game].progressive.start +
-                  (games[game].progressive.rate * progressive[game].spins));
+                  (games[game].progressive.rate * progressive[game].coins));
             lastwin = progressive[game].lastwin;
           } else {
             jackpot = games[game].progressive.start;
@@ -232,8 +232,8 @@ module.exports = {
       } else {
         const progressive = JSON.parse(data.Body.toString('ascii'));
 
-        // Update the timestamp and reset the spin count to 0
-        progressive[game] = {lastwin: Date.now(), spins: 0};
+        // Update the timestamp and reset the coin count to 0
+        progressive[game] = {lastwin: Date.now(), coins: 0};
 
         const params = {Body: JSON.stringify(progressive),
           Bucket: 'garrett-alexa-usage',
