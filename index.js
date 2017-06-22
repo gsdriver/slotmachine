@@ -13,6 +13,7 @@ const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
+const utils = require('./utils');
 
 const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
@@ -49,6 +50,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
+    utils.incrementProgressive(this.attributes);
     this.emit(':saveState', true);
   },
   'Unhandled': function() {

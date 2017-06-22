@@ -49,19 +49,15 @@ function selectedGame(emit, locale, attributes) {
   const game = attributes[attributes.currentGame];
 
   // Check if there is a progressive jackpot
-  utils.getProgressivePayout(attributes.currentGame, (lastwin, jackpot) => {
+  utils.getProgressivePayout(attributes.currentGame, (jackpot) => {
+    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
     if (jackpot) {
       // For progressive, just tell them the jackpot and to bet max coins
       speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
       game.progressiveJackpot = jackpot;
-      if (game.timestamp && (lastwin > game.timestamp)) {
-        // This jackpot was awarded after your last spin, so clear the coins played
-        game.coinsPlayed = 0;
-      }
       game.startingCoins = (game.coinsPlayed) ? game.coinsPlayed : 0;
       utils.emitResponse(emit, locale, null, null, speech, reprompt);
     } else {
-      speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
       utils.readRank(locale, attributes, (err, rank) => {
         // Let them know their current rank
         if (rank) {

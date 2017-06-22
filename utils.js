@@ -6,6 +6,7 @@
 
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
+const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 
@@ -192,58 +193,64 @@ module.exports = {
   getProgressivePayout: function(game, callback) {
     // If there is no progressive for this game, just return undefined
     if (games[game].progressive) {
-      // Read the S3 bucket with Progressive Status
-      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachine-Progressive.txt'}, (err, data) => {
-        if (err) {
-          // Use the base jackpot value
-          console.log(err, err.stack);
-          callback(0, games[game].progressive.start);
+      // Read from Dynamodb
+      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + game}}},
+              (err, data) => {
+        if (err || (data.Item === undefined)) {
+          console.log(err);
+          callback(games[game].progressive.start);
         } else {
-          const progressive = JSON.parse(data.Body.toString('ascii'));
-          let jackpot;
-          let lastwin;
+          // Do we have
+          let coins;
 
-          if (progressive[game]) {
-            // Great, use this as the number of coins and add to the starting jackpot
-            jackpot = Math.floor(games[game].progressive.start +
-                  (games[game].progressive.rate * progressive[game].coins));
-            lastwin = progressive[game].lastwin;
+          if (data.Item.coins && data.Item.coins.N) {
+            coins = parseInt(data.Item.coins.N);
           } else {
-            jackpot = games[game].progressive.start;
-            lastwin = 0;
+            coins = games[game].progressive.start;
           }
 
-          callback(lastwin, jackpot);
+          callback(Math.floor(games[game].progressive.start
+              + (coins * games[game].progressive.rate)));
         }
       });
     } else {
       callback(undefined);
     }
   },
-  // Updates S3 to note that the progressive was won!
+  incrementProgressive: function(attributes) {
+    const game = attributes[attributes.currentGame];
+
+    if (game && games[attributes.currentGame].progressive
+        && game.coinsPlayed && (game.startingCoins != undefined)
+        && (game.coinsPlayed > game.startingCoins)) {
+      const coinsToAdd = (game.coinsPlayed - game.startingCoins);
+
+      game.startingCoins = game.coinsPlayed;
+      const params = {
+          TableName: 'Slots',
+          Key: {userId: {S: 'game-' + attributes.currentGame}},
+          AttributeUpdates: {coins: {
+              Action: 'ADD',
+              Value: {N: coinsToAdd.toString()}},
+          }};
+
+      dynamodb.updateItem(params, (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  },
+  // Updates DynamoDB to note that the progressive was won!
   // Note this function does not callback
-  updateProgressive: function(game) {
-    // Read the S3 bucket with Progressive Status
-    s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachine-Progressive.txt'}, (err, data) => {
+  resetProgressive: function(game) {
+    // Write to the DB, and reset the coins played to 0
+    dynamodb.putItem({TableName: 'Slots',
+        Item: {userId: {S: 'game-' + game}, coins: {N: '0'}}},
+        (err, data) => {
+      // We don't take a callback, but if there's an error log it
       if (err) {
-        // Use the base jackpot value
-        console.log(err, err.stack);
-        callback(0, games[game].progressive.start);
-      } else {
-        const progressive = JSON.parse(data.Body.toString('ascii'));
-
-        // Update the timestamp and reset the coin count to 0
-        progressive[game] = {lastwin: Date.now(), coins: 0};
-
-        const params = {Body: JSON.stringify(progressive),
-          Bucket: 'garrett-alexa-usage',
-          Key: 'SlotMachine-Progressive.txt'};
-
-        s3.putObject(params, (err, data) => {
-          if (err) {
-            console.log(err, err.stack);
-          }
-        });
+        console.log(err);
       }
     });
   },

@@ -128,8 +128,9 @@ module.exports = {
               (game.coinsPlayed - game.startingCoins)
               * rules.progressive.rate);
           game.bankroll += game.progressiveJackpot;
+          game.startingCoins = game.coinsPlayed;
           speech += res.strings.SPIN_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, game.progressiveJackpot));
-          utils.updateProgressive(this.attributes.currentGame);
+          utils.resetProgressive(this.attributes.currentGame);
         } else {
           game.bankroll += (bet * rules.payouts[matchedPayout]);
           speech += res.strings.SPIN_WINNER.replace('{0}', utils.readPayout(this.event.request.locale, rules, matchedPayout)).replace('{1}', utils.readCoins(this.event.request.locale, bet * rules.payouts[matchedPayout]));
