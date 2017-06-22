@@ -190,42 +190,37 @@ module.exports = {
       callback(err, speech);
     });
   },
-  getProgressivePayout: function(game, callback) {
+  getProgressivePayout: function(attributes, callback) {
+    const rules = games[attributes.currentGame];
+
     // If there is no progressive for this game, just return undefined
-    if (games[game].progressive) {
+    if (rules && rules.progressive) {
       // Read from Dynamodb
-      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + game}}},
+      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + attributes.currentGame}}},
               (err, data) => {
         if (err || (data.Item === undefined)) {
           console.log(err);
-          callback(games[game].progressive.start);
+          callback((attributes[attributes.currentGame].progressiveJackpot)
+                ? attributes[attributes.currentGame].progressiveJackpot
+                : rules.progressive.start);
         } else {
-          // Do we have
           let coins;
 
           if (data.Item.coins && data.Item.coins.N) {
             coins = parseInt(data.Item.coins.N);
           } else {
-            coins = games[game].progressive.start;
+            coins = rules.progressive.start;
           }
 
-          callback(Math.floor(games[game].progressive.start
-              + (coins * games[game].progressive.rate)));
+          callback(Math.floor(rules.progressive.start + (coins * rules.progressive.rate)));
         }
       });
     } else {
       callback(undefined);
     }
   },
-  incrementProgressive: function(attributes) {
-    const game = attributes[attributes.currentGame];
-
-    if (game && games[attributes.currentGame].progressive
-        && game.coinsPlayed && (game.startingCoins != undefined)
-        && (game.coinsPlayed > game.startingCoins)) {
-      const coinsToAdd = (game.coinsPlayed - game.startingCoins);
-
-      game.startingCoins = game.coinsPlayed;
+  incrementProgressive: function(attributes, coinsToAdd) {
+    if (games[attributes.currentGame].progressive) {
       const params = {
           TableName: 'Slots',
           Key: {userId: {S: 'game-' + attributes.currentGame}},

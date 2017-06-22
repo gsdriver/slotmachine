@@ -31,8 +31,6 @@ module.exports = {
 function selectedGame(emit, locale, attributes) {
   const res = require('../' + locale + '/resources');
   let speech;
-  const rules = utils.getGame(attributes.currentGame);
-  const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
 
   // Great, they picked a game
   attributes.currentGame = attributes.choices[0];
@@ -47,15 +45,16 @@ function selectedGame(emit, locale, attributes) {
   }
 
   const game = attributes[attributes.currentGame];
+  const rules = utils.getGame(attributes.currentGame);
+  const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
 
   // Check if there is a progressive jackpot
-  utils.getProgressivePayout(attributes.currentGame, (jackpot) => {
+  utils.getProgressivePayout(attributes, (jackpot) => {
     speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
     if (jackpot) {
       // For progressive, just tell them the jackpot and to bet max coins
       speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
       game.progressiveJackpot = jackpot;
-      game.startingCoins = (game.coinsPlayed) ? game.coinsPlayed : 0;
       utils.emitResponse(emit, locale, null, null, speech, reprompt);
     } else {
       utils.readRank(locale, attributes, (err, rank) => {

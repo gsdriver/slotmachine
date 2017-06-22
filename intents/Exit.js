@@ -12,7 +12,6 @@ module.exports = {
     const res = require('../' + this.event.request.locale + '/resources');
 
     ads.getAd(this.attributes, 'slots', this.event.request.locale, (adText) => {
-      utils.incrementProgressive(this.attributes);
       utils.emitResponse(this.emit, this.event.request.locale,
         null, res.strings.EXIT_GAME.replace('{0}', adText), null, null);
     });
