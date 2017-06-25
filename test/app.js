@@ -7,6 +7,7 @@ function BuildEvent(argv)
   // Templates that can fill in the intent
   var bet = {'name': 'BetIntent', 'slots': {'Amount': {'name': 'Amount', 'value': ''}}};
   var spin = {'name': 'SpinIntent', 'slots': {}};
+  var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
@@ -85,6 +86,8 @@ function BuildEvent(argv)
     }
   } else if (argv[2] == 'spin') {
     lambda.request.intent = spin;
+  } else if (argv[2] == 'select') {
+    lambda.request.intent = select;
   } else if (argv[2] == 'launch') {
     return openEvent;
   } else if (argv[2] == 'help') {

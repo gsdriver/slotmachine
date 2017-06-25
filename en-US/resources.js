@@ -24,7 +24,7 @@ const resources = {
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
   // From Help.js
-  'HELP_COMMANDS': 'Say bet to insert coins or spin to pull the handle. ',
+  'HELP_COMMANDS': 'Say bet to insert coins, or spin to pull the handle, or select a new machine to change to a different machine. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   // From Rules.js

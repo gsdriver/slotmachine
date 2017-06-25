@@ -58,10 +58,7 @@ const games = {
       'cherry|cherry|cherry': 500,
     },
   },
-};
-
-if (process.env.PROGRESSIVE) {
-  games.progressive = {
+  'progressive': {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
@@ -86,8 +83,8 @@ if (process.env.PROGRESSIVE) {
       'diamond|diamond': 10,
       'diamond|diamond|diamond': 100,
     },
-  };
-}
+  },
+};
 
 module.exports = {
   emitResponse: function(emit, locale, error, response, speech, reprompt) {
@@ -104,7 +101,7 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(locale, currentGame, callback) {
+  readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');
     let speech;
     const choices = [];
@@ -116,13 +113,21 @@ module.exports = {
       if (game) {
         count++;
         // Put the last played game at the front of the list
-        if (game == currentGame) {
-          choices.unshift(game);
-          choiceText.unshift(res.sayGame(game));
-        } else {
+        if (game != currentGame) {
          choices.push(game);
          choiceText.push(res.sayGame(game));
        }
+      }
+    }
+
+    // And now the current game - either first or last in the list
+    if (currentGame && games[currentGame]) {
+      if (currentFirst) {
+        choices.unshift(currentGame);
+        choiceText.unshift(res.sayGame(currentGame));
+      } else {
+         choices.push(currentGame);
+         choiceText.push(res.sayGame(currentGame));
       }
     }
 

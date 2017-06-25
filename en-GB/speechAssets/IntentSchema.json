@@ -16,6 +16,9 @@
       "intent": "SpinIntent"
     },
     {
+      "intent": "SelectIntent"
+    },
+    {
       "intent": "AMAZON.YesIntent"
     },
     {

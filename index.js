@@ -43,6 +43,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'BetIntent': Bet.handleIntent,
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
+  'SelectIntent': Select.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
@@ -74,6 +75,10 @@ const handlers = {
     this.emit('LaunchRequest');
   },
   'LaunchRequest': Launch.handleIntent,
+  'Unhandled': function() {
+    const res = require('./' + this.event.request.locale + '/resources');
+    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+  },
 };
 
 exports.handler = function(event, context, callback) {
