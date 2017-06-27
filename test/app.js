@@ -7,6 +7,7 @@ function BuildEvent(argv)
   // Templates that can fill in the intent
   var bet = {'name': 'BetIntent', 'slots': {'Amount': {'name': 'Amount', 'value': ''}}};
   var spin = {'name': 'SpinIntent', 'slots': {}};
+  var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
@@ -19,7 +20,7 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.5fdf0343-ea7d-40c2-8c0b-c7216b98aa04"
+        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
       },
       "attributes": {},
       "user": {
@@ -41,7 +42,7 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.5fdf0343-ea7d-40c2-8c0b-c7216b98aa04"
+        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
       },
       "attributes": {},
       "user": {
@@ -85,6 +86,8 @@ function BuildEvent(argv)
     }
   } else if (argv[2] == 'spin') {
     lambda.request.intent = spin;
+  } else if (argv[2] == 'select') {
+    lambda.request.intent = select;
   } else if (argv[2] == 'launch') {
     return openEvent;
   } else if (argv[2] == 'help') {
@@ -127,7 +130,9 @@ myResponse.succeed = function(result) {
     // Output the attributes too
     const fs = require('fs');
     fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
-      console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
+      if (!process.env.NOLOG) {
+        console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
+      }
     });
   }
 }

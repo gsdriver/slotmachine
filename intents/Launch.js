@@ -14,7 +14,7 @@ module.exports = {
 
     // Read the available games then prompt for each one
     utils.readAvailableGames(this.event.request.locale,
-        this.attributes.currentGame, (gameText, choices) => {
+        this.attributes.currentGame, true, (gameText, choices) => {
       speech += gameText;
       this.attributes.choices = choices;
       this.handler.state = 'SELECTGAME';

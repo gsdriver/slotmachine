@@ -22,6 +22,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     this.handler.state = '';
     this.emitWithState('NewSession');
   },
+  'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -43,6 +44,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'BetIntent': Bet.handleIntent,
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
+  'SelectIntent': Select.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
@@ -74,19 +76,23 @@ const handlers = {
     this.emit('LaunchRequest');
   },
   'LaunchRequest': Launch.handleIntent,
+  'Unhandled': function() {
+    const res = require('./' + this.event.request.locale + '/resources');
+    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+  },
 };
 
 exports.handler = function(event, context, callback) {
   // Small enough volume for me to just write the incoming request
-  if (event) {
-    console.log(JSON.stringify(event.request));
+  if (event && !process.env.NOLOG) {
+    console.log(JSON.stringify(event));
   }
 
   AWS.config.update({region: 'us-east-1'});
 
   const alexa = Alexa.handler(event, context);
 
-  alexa.APP_ID = APP_ID;
+  alexa.appId = APP_ID;
   alexa.dynamoDBTableName = 'Slots';
   alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
   alexa.execute();

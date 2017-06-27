@@ -6,6 +6,7 @@
 
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
+const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 
@@ -16,9 +17,9 @@ const games = {
     'slots': 3,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
     'frequency': [
-      {'total': 35, 'symbols': [6, 8, 8, 10, 2]},
-      {'total': 26, 'symbols': [4, 8, 4, 6, 4]},
-      {'total': 43, 'symbols': [24, 10, 6, 2, 1]},
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 6, 4]},
+      {'symbols': [24, 10, 6, 2, 1]},
     ],
     'payouts': {
       'cherry': 2,
@@ -37,16 +38,16 @@ const games = {
     'slots': 3,
     'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
     'frequency': [
-      {'total': 39, 'symbols': [3, 16, 10, 4, 6]},
-      {'total': 26, 'symbols': [2, 16, 5, 2, 1]},
-      {'total': 34, 'symbols': [1, 20, 8, 4, 1]},
+      {'symbols': [3, 16, 10, 4, 6]},
+      {'symbols': [2, 16, 5, 2, 1]},
+      {'symbols': [1, 20, 8, 4, 1]},
     ],
     'substitutes': {
       'bar': ['any bar'],
       'double bar': ['any bar'],
       'cherry': ['bar', 'double bar', 'seven'],
     },
-    'wild': ['cherry'],
+    'special': 'WILD_SPECIAL',
     'payouts': {
       'cherry': 5,
       'cherry|cherry': 10,
@@ -55,6 +56,32 @@ const games = {
       'double bar|double bar|double bar': 20,
       'seven|seven|seven': 50,
       'cherry|cherry|cherry': 500,
+    },
+  },
+  'progressive': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 6, 2]},
+      {'symbols': [22, 10, 6, 2, 1]},
+    ],
+    'progressive': {
+      'start': 500,
+      'rate': 0.05,
+      'match': 'diamond|diamond|diamond',
+    },
+    'special': 'PROGRESSIVE_SPECIAL',
+    'payouts': {
+      'cherry': 2,
+      'cherry|cherry': 4,
+      'bell|bell|bell': 5,
+      'orange|orange|orange': 10,
+      'bar|bar|bar': 15,
+      'diamond': 5,
+      'diamond|diamond': 10,
+      'diamond|diamond|diamond': 100,
     },
   },
 };
@@ -74,7 +101,7 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(locale, currentGame, callback) {
+  readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');
     let speech;
     const choices = [];
@@ -86,13 +113,21 @@ module.exports = {
       if (game) {
         count++;
         // Put the last played game at the front of the list
-        if (game == currentGame) {
-          choices.unshift(game);
-          choiceText.unshift(res.sayGame(game));
-        } else {
+        if (game != currentGame) {
          choices.push(game);
          choiceText.push(res.sayGame(game));
        }
+      }
+    }
+
+    // And now the current game - either first or last in the list
+    if (currentGame && games[currentGame]) {
+      if (currentFirst) {
+        choices.unshift(currentGame);
+        choiceText.unshift(res.sayGame(currentGame));
+      } else {
+         choices.push(currentGame);
+         choiceText.push(res.sayGame(currentGame));
       }
     }
 
@@ -108,17 +143,6 @@ module.exports = {
   readPayout: function(locale, game, payout) {
     return readPayoutInternal(locale, game, payout, ' <break time=\"200ms\"/> ');
   },
-  readWildSymbols: function(locale, game) {
-    const res = require('./' + locale + '/resources');
-    let i;
-    let text = '';
-
-    for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
-      text += res.strings.WILD_SYMBOL.replace('{0}', res.saySymbol(game.wild[i]));
-    }
-
-    return text;
-  },
   readPayoutTable: function(locale, game) {
     const res = require('./' + locale + '/resources');
     let text = '';
@@ -132,13 +156,17 @@ module.exports = {
 
     for (payout in game.payouts) {
       if (payout) {
+        // Special case if it's the progressive
         text += readPayoutInternal(locale, game, payout, ' ');
-        text += res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
+        text += readPayoutAmountInternal(locale, game, payout);
         text += '\n';
       }
     }
 
     return text;
+  },
+  readPayoutAmount: function(locale, game, payout) {
+    return readPayoutAmountInternal(locale, game, payout);
   },
   readRank: function(locale, attributes, callback) {
     const res = require('./' + locale + '/resources');
@@ -167,6 +195,65 @@ module.exports = {
       callback(err, speech);
     });
   },
+  getProgressivePayout: function(attributes, callback) {
+    const rules = games[attributes.currentGame];
+
+    // If there is no progressive for this game, just return undefined
+    if (rules && rules.progressive) {
+      // Read from Dynamodb
+      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + attributes.currentGame}}},
+              (err, data) => {
+        if (err || (data.Item === undefined)) {
+          console.log(err);
+          callback((attributes[attributes.currentGame].progressiveJackpot)
+                ? attributes[attributes.currentGame].progressiveJackpot
+                : rules.progressive.start);
+        } else {
+          let coins;
+
+          if (data.Item.coins && data.Item.coins.N) {
+            coins = parseInt(data.Item.coins.N);
+          } else {
+            coins = rules.progressive.start;
+          }
+
+          callback(Math.floor(rules.progressive.start + (coins * rules.progressive.rate)));
+        }
+      });
+    } else {
+      callback(undefined);
+    }
+  },
+  incrementProgressive: function(attributes, coinsToAdd) {
+    if (games[attributes.currentGame].progressive) {
+      const params = {
+          TableName: 'Slots',
+          Key: {userId: {S: 'game-' + attributes.currentGame}},
+          AttributeUpdates: {coins: {
+              Action: 'ADD',
+              Value: {N: coinsToAdd.toString()}},
+          }};
+
+      dynamodb.updateItem(params, (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  },
+  // Updates DynamoDB to note that the progressive was won!
+  // Note this function does not callback
+  resetProgressive: function(game) {
+    // Write to the DB, and reset the coins played to 0
+    dynamodb.putItem({TableName: 'Slots',
+        Item: {userId: {S: 'game-' + game}, coins: {N: '0'}}},
+        (err, data) => {
+      // We don't take a callback, but if there's an error log it
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {
@@ -183,6 +270,19 @@ function readPayoutInternal(locale, game, payout, pause) {
   for (i = slots.length; i < game.slots; i++) {
     text += res.strings.ANY_SLOT;
     text += pause;
+  }
+
+  return text;
+}
+
+function readPayoutAmountInternal(locale, game, payout) {
+  let text;
+  const res = require('./' + locale + '/resources');
+
+  if (game.progressive && (game.progressive.match === payout)) {
+    text = res.strings.PAYOUT_PROGRESSIVE;
+  } else {
+    text = res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
   }
 
   return text;
@@ -216,7 +316,7 @@ function getRankFromS3(attributes, callback) {
             delta: (higher > 0) ? (gameScores[higher - 1] - game.high) : 0,
             players: gameScores.length});
       } else {
-        console.log('No scoreset for ' + scoreSet);
+        console.log('No scoreset for ' + attributes.currentGame);
         callback('No scoreset', null);
       }
     }
