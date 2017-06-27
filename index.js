@@ -22,6 +22,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     this.handler.state = '';
     this.emitWithState('NewSession');
   },
+  'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -83,7 +84,7 @@ const handlers = {
 
 exports.handler = function(event, context, callback) {
   // Small enough volume for me to just write the incoming request
-  if (event) {
+  if (event && !process.env.NOLOG) {
     console.log(JSON.stringify(event));
   }
 

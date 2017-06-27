@@ -27,6 +27,7 @@ const resources = {
   'HELP_COMMANDS': 'Say bet to insert coins, or spin to pull the handle, or select a new machine to change to a different machine. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
+  'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
   'RULES_CARD_TITLE': 'Payout Table',
