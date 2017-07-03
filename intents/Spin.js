@@ -116,6 +116,15 @@ module.exports = {
         if (rules.payouts[matchedPayout] >= 50) {
           speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
           game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
+
+          // Write the jackpot details, UNLESS it's a progressive payout
+          // in which case we'll write it out once we know the amount
+          if (!(rules.progressive && (matchedPayout == rules.progressive.match)
+                        && (bet == rules.maxCoins))) {
+            utils.writeJackpotDetails(this.event.session.user.userId,
+                this.attributes.currentGame,
+                bet * rules.payouts[matchedPayout]);
+          }
         }
 
         // If you won the progressive, then ... wow, you rock!
@@ -126,6 +135,9 @@ module.exports = {
             game.bankroll += coinsWon;
             speech += res.strings.SPIN_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, coinsWon));
             utils.resetProgressive(this.attributes.currentGame);
+            utils.writeJackpotDetails(this.event.session.user.userId,
+                  this.attributes.currentGame,
+                  coinsWon);
             updateGamePostPayout(this.event.request.locale, game, bet, (speechText, reprompt) => {
               speech += speechText;
               utils.emitResponse(this.emit, this.event.request.locale,

@@ -254,6 +254,33 @@ module.exports = {
       }
     });
   },
+  // Write jackpot details to S3
+  writeJackpotDetails: function(userId, game, jackpot) {
+    // It's not the same, so try to write it out
+    const details = {userId: userId, amount: jackpot};
+    const params = {Body: JSON.stringify(details),
+      Bucket: 'garrett-alexa-usage',
+      Key: 'jackpots/slots/' + game + '-' + Date.now() + '.txt'};
+
+    s3.putObject(params, (err, data) => {
+      // Don't care about teh error
+      if (err) {
+        console.log(err, err.stack);
+      }
+      // Update number of progressive wins while you're at it
+      dynamodb.updateItem({TableName: 'Slots',
+          Key: {userId: {S: 'game-' + game}},
+          AttributeUpdates: {jackpots: {
+              Action: 'ADD',
+              Value: {N: '1'}},
+      }}, (err, data) => {
+        // Again, don't care about the error
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {
