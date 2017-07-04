@@ -2,6 +2,10 @@ var mainApp = require('../index');
 
 const attributeFile = 'attributes.txt';
 
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+
 function BuildEvent(argv)
 {
   // Templates that can fill in the intent
@@ -142,7 +146,19 @@ myResponse.fail = function(e) {
 }
 
 // Build the event object and call the app
-var event = BuildEvent(process.argv);
-if (event) {
-    mainApp.handler(event, myResponse);
+if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {
+  const fs = require('fs');
+
+  // Clear is a special case - delete this entry from the DB and delete the attributes.txt file
+  dynamodb.deleteItem({TableName: 'Slots', Key: { userId: {S: 'not-amazon'}}}, function (error, data) {
+    console.log("Deleted " + error);
+    if (fs.existsSync(attributeFile)) {
+      fs.unlinkSync(attributeFile);
+    }
+  });
+} else {
+  var event = BuildEvent(process.argv);
+  if (event) {
+      mainApp.handler(event, myResponse);
+  }
 }
