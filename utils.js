@@ -281,6 +281,22 @@ module.exports = {
       });
     });
   },
+  saveNewUser: function() {
+    // Brand new player - let's log this in our DB (async call)
+    const params = {
+              TableName: 'Slots',
+              Key: {userId: {S: 'game'}},
+              AttributeUpdates: {newUsers: {
+                  Action: 'ADD',
+                  Value: {N: '1'}},
+              }};
+
+    dynamodb.updateItem(params, (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {

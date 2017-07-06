@@ -13,6 +13,7 @@ const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
+const utils = require('./utils');
 
 const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
@@ -64,6 +65,7 @@ const handlers = {
     // Initialize attributes and route the request
     if (!this.attributes.currentGame) {
       this.attributes.currentGame = 'basic';
+      utils.saveNewUser();
     }
 
     if (!this.attributes[this.attributes.currentGame]) {
