@@ -13,9 +13,11 @@ const resources = {
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
   // Select.js
   'SELECT_WELCOME': 'Welcome to {0}. ',
-  'SELECT_REPROMPT': 'You can bet up to {0} coins.',
+  'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
+  // From HighScore.js
+  'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
   'BET_INVALID_REPROMPT': 'What else can I help you with?',
@@ -24,7 +26,7 @@ const resources = {
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
   // From Help.js
-  'HELP_COMMANDS': 'Say bet to insert coins, or spin to pull the handle, or select a new machine to change to a different machine. ',
+  'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
@@ -47,9 +49,10 @@ const resources = {
   'ANY_SLOT': 'any',
   'PAYOUT_PAYS': 'pays {0} coins.',
   'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
-  'RANK_TOGO': 'You are {0} from <say-as interpret-as="ordinal">{1}</say-as> place. ',
-  'RANK_POSITION': 'Your high score of {0} coins ranks <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
-  'RANK_NUMPLAYERS': 'There are {0} players. ',
+  'LEADER_RANKING': 'Your high score of {0} coins on {1} ranks you as <say-as interpret-as="ordinal">{2}</say-as> of {3} players. ',
+  'LEADER_NO_SCORES': 'Sorry, I\'m unable to read the current leader board',
+  'LEADER_FORMAT': '{0} coins',
+  'LEADER_TOP_SCORES': 'The top {0} scores are ',
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'WILD_SPECIAL': 'Cherries are wild. ',
   'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ',

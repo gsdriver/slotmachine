@@ -61,3 +61,11 @@ SpinIntent spin
 SpinIntent pull the handle
 SpinIntent push the button
 SpinIntent play
+
+HighScoreIntent read high scores
+HighScoreIntent tell me high scores
+HighScoreIntent what are the high scores
+HighScoreIntent what is the leader board
+HighScoreIntent read leader board
+HighScoreIntent say high scores
+HighScoreIntent say leader board

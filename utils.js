@@ -168,31 +168,37 @@ module.exports = {
   readPayoutAmount: function(locale, game, payout) {
     return readPayoutAmountInternal(locale, game, payout);
   },
-  readRank: function(locale, attributes, callback) {
+  readLeaderBoard: function(locale, attributes, callback) {
     const res = require('./' + locale + '/resources');
     const game = attributes[attributes.currentGame];
 
-    getRankFromS3(attributes, (err, rank) => {
-      // Let them know their current rank
+    getTopScoresFromS3(attributes, (err, scores) => {
       let speech = '';
 
-      if (rank) {
-        let togo = '';
-
-        if (rank.delta > 0) {
-          togo = res.strings.RANK_TOGO.replace('{0}', speechUtils.numberOfItems(rank.delta, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN)).replace('{1}', rank.rank - 1);
-        }
-
-        // If they haven't played, just tell them the number of players
+      // OK, read up to five high scores
+      if (!scores || (scores.length === 0)) {
+        // No scores to read
+        speech = res.strings.LEADER_NO_SCORES;
+      } else {
+        // What is your ranking - assuming you've done a spin
         if (game.spins > 0) {
-          speech += res.strings.RANK_POSITION.replace('{0}', game.high).replace('{1}', rank.rank).replace('{2}', rank.players);
-          speech += togo;
-        } else {
-          speech += res.strings.RANK_NUMPLAYERS.replace('{0}', rank.players);
+          const ranking = scores.indexOf(game.high) + 1;
+
+          speech += res.strings.LEADER_RANKING
+            .replace('{0}', game.high)
+            .replace('{1}', res.sayGame(attributes.currentGame))
+            .replace('{2}', ranking)
+            .replace('{3}', scores.length);
         }
+
+        // And what is the leader board?
+        const toRead = (scores.length > 5) ? 5 : scores.length;
+        const topScores = scores.slice(0, toRead).map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
+        speech += res.strings.LEADER_TOP_SCORES.replace('{0}', toRead);
+        speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
       }
 
-      callback(err, speech);
+      callback(speech);
     });
   },
   getProgressivePayout: function(attributes, callback) {
@@ -331,8 +337,7 @@ function readPayoutAmountInternal(locale, game, payout) {
   return text;
 }
 
-function getRankFromS3(attributes, callback) {
-  let higher;
+function getTopScoresFromS3(attributes, callback) {
   const game = attributes[attributes.currentGame];
 
   // Read the S3 buckets that has everyone's scores
@@ -346,20 +351,14 @@ function getRankFromS3(attributes, callback) {
       const scores = ranking.scores;
 
       if (scores && scores[attributes.currentGame]) {
-        const gameScores = scores[attributes.currentGame];
-
-        for (higher = 0; higher < gameScores.length; higher++) {
-          if (gameScores[higher] <= game.high) {
-            break;
-          }
+        // If their current high score isn't in the list, add it
+        if (scores[attributes.currentGame].indexOf(game.high) < 0) {
+          scores[attributes.currentGame].push(game.high);
         }
 
-        // Also let them know how much it takes to move up a position
-        callback(null, {rank: (higher + 1),
-            delta: (higher > 0) ? (gameScores[higher - 1] - game.high) : 0,
-            players: gameScores.length});
+        callback(null, scores[attributes.currentGame].sort((a, b) => (b - a)));
       } else {
-        console.log('No scoreset for ' + attributes.currentGame);
+        console.log('No scores for ' + attributes.currentGame);
         callback('No scoreset', null);
       }
     }

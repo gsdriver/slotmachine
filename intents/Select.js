@@ -75,15 +75,8 @@ function selectedGame(emit, locale, attributes) {
       game.progressiveJackpot = jackpot;
       utils.emitResponse(emit, locale, null, null, speech, reprompt);
     } else {
-      utils.readRank(locale, attributes, (err, rank) => {
-        // Let them know their current rank
-        if (rank) {
-          speech += rank;
-        }
-
-        speech += reprompt;
-        utils.emitResponse(emit, locale, null, null, speech, reprompt);
-      });
+      speech += reprompt;
+      utils.emitResponse(emit, locale, null, null, speech, reprompt);
     }
   });
 }

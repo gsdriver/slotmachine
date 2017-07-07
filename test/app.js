@@ -19,6 +19,7 @@ function BuildEvent(argv)
   var help = {'name': 'AMAZON.HelpIntent', 'slots': {}};
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
+  var highScore = {'name': 'HighScoreIntent', 'slots': {}};
 
   var lambda = {
     "session": {
@@ -94,6 +95,8 @@ function BuildEvent(argv)
     lambda.request.intent = select;
   } else if (argv[2] == 'launch') {
     return openEvent;
+  } else if (argv[2] == 'highscore') {
+    lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
     lambda.request.intent = help;
   } else if (argv[2] == 'stop') {

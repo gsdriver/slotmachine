@@ -9,6 +9,7 @@ const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
 const Spin = require('./intents/Spin');
 const Rules = require('./intents/Rules');
+const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
@@ -46,6 +47,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
+  'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,

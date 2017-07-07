@@ -19,6 +19,9 @@
       "intent": "SelectIntent"
     },
     {
+      "intent": "HighScoreIntent"
+    },
+    {
       "intent": "AMAZON.YesIntent"
     },
     {
