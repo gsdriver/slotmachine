@@ -182,10 +182,10 @@ module.exports = {
       } else {
         // What is your ranking - assuming you've done a spin
         if (game.spins > 0) {
-          const ranking = scores.indexOf(game.high) + 1;
+          const ranking = scores.indexOf(game.bankroll) + 1;
 
           speech += res.strings.LEADER_RANKING
-            .replace('{0}', game.high)
+            .replace('{0}', game.bankroll)
             .replace('{1}', res.sayGame(attributes.currentGame))
             .replace('{2}', ranking)
             .replace('{3}', scores.length);
@@ -352,8 +352,8 @@ function getTopScoresFromS3(attributes, callback) {
 
       if (scores && scores[attributes.currentGame]) {
         // If their current high score isn't in the list, add it
-        if (scores[attributes.currentGame].indexOf(game.high) < 0) {
-          scores[attributes.currentGame].push(game.high);
+        if (scores[attributes.currentGame].indexOf(game.bankroll) < 0) {
+          scores[attributes.currentGame].push(game.bankroll);
         }
 
         callback(null, scores[attributes.currentGame].sort((a, b) => (b - a)));
