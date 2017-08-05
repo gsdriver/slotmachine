@@ -27,7 +27,9 @@ module.exports = {
       speech += res.strings.HELP_COMMANDS;
       speech += reprompt;
 
-      this.emit(':askWithCard', speech, reprompt, res.strings.HELP_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
+      utils.emitResponse(this.emit, this.event.request.locale, null, null,
+            speech, reprompt,
+            res.strings.HELP_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
     }
   },
 };

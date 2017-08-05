@@ -10,6 +10,9 @@ const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 
+// Global session ID
+let globalEvent;
+
 const games = {
   // Has 99.8% payout
   'basic': {
@@ -87,16 +90,43 @@ const games = {
 };
 
 module.exports = {
-  emitResponse: function(emit, locale, error, response, speech, reprompt) {
-    if (error) {
-      const res = require('./' + locale + '/resources');
-      console.log('Speech error: ' + error);
-      emit(':ask', error, res.ERROR_REPROMPT);
-    } else if (response) {
-      emit(':tell', response);
+  emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
+    // Save to S3 if environment variable is set
+    if (process.env.SAVELOG) {
+      const result = (error) ? error : ((response) ? response : speech);
+      const params = {Body: JSON.stringify({event: globalEvent, response: result}),
+        Bucket: 'garrett-alexa-usage',
+        Key: 'logs/slots/' + Date.now() + '.txt'};
+      s3.putObject(params, (err, data) => {
+        if (err) {
+          console.log(err, err.stack);
+        }
+        emitResult();
+      });
     } else {
-      emit(':ask', speech, reprompt);
+      emitResult();
     }
+
+    function emitResult() {
+      if (!process.env.NOLOG) {
+        console.log(JSON.stringify(globalEvent));
+      }
+
+      if (error) {
+        const res = require('./' + locale + '/resources');
+        console.log('Speech error: ' + error);
+        emit(':ask', error, res.ERROR_REPROMPT);
+      } else if (response) {
+        emit(':tell', response);
+      } else if (cardTitle) {
+        emit(':askWithCard', speech, reprompt, cardTitle, cardText);
+      } else {
+        emit(':ask', speech, reprompt);
+      }
+    }
+  },
+  setEvent: function(event) {
+    globalEvent = event;
   },
   getGame: function(name) {
     return games[name];
