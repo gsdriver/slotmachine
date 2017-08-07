@@ -4,6 +4,7 @@
   "description": "Alexa slot machine",
   "main": "index.js",
   "dependencies": {
+    "alexa-logger": "^1.0.0",
     "alexa-sdk": "^1.0.9",
     "alexa-speech-utils": "0.0.4",
     "aws-sdk": "^2.28.0",

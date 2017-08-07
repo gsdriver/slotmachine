@@ -9,6 +9,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
+const logger = require('alexa-logger');
 
 // Global session ID
 let globalEvent;
@@ -94,10 +95,9 @@ module.exports = {
     // Save to S3 if environment variable is set
     if (process.env.SAVELOG) {
       const result = (error) ? error : ((response) ? response : speech);
-      const params = {Body: JSON.stringify({event: globalEvent, response: result}),
-        Bucket: 'garrett-alexa-usage',
-        Key: 'logs/slots/' + Date.now() + '.txt'};
-      s3.putObject(params, (err, data) => {
+      logger.saveLog(globalEvent, result,
+        {bucket: 'garrett-alexa-logs', keyPrefix: 'slots/', fullLog: true},
+        (err) => {
         if (err) {
           console.log(err, err.stack);
         }
