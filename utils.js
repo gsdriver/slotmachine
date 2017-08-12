@@ -92,18 +92,40 @@ const games = {
 
 module.exports = {
   emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
+    let numCalls = 0;
+
     // Save to S3 if environment variable is set
     if (process.env.SAVELOG) {
+      numCalls++;
       const result = (error) ? error : ((response) ? response : speech);
-      logger.saveLog(globalEvent, result,
+        logger.saveLog(globalEvent, result,
         {bucket: 'garrett-alexa-logs', keyPrefix: 'slots/', fullLog: true},
         (err) => {
         if (err) {
           console.log(err, err.stack);
         }
-        emitResult();
+
+        if (--numCalls === 0) {
+          emitResult();
+        }
       });
-    } else {
+    }
+
+    if (response) {
+      // Save state
+      numCalls++;
+      const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+      doc.put({TableName: 'Slots',
+          Item: {userId: globalEvent.session.user.userId,
+                mapAttr: globalEvent.session.attributes}},
+          (err, data) => {
+        if (--numCalls === 0) {
+          emitResult();
+        }
+      });
+    }
+
+    if (!numCalls) {
       emitResult();
     }
 
