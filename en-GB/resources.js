@@ -60,6 +60,7 @@ const resources = {
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
+  'PROGRESSIVE_JACKPOT_ONLY': 'The progressive jackpot is currently {0} coins. ',
   'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
 };
 

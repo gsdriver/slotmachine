@@ -24,6 +24,10 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     this.handler.state = '';
     this.emitWithState('NewSession');
   },
+  'BetIntent': Select.handleBetIntent,
+  'SpinIntent': Select.handleBetIntent,
+  'SelectIntent': Select.handleNoIntent,
+  'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,

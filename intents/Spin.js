@@ -10,14 +10,21 @@ module.exports = {
   handleIntent: function() {
     // When you spin, you either have to have bets or prior bets
     let bet;
-    let speechError;
+    let speechError = '';
     let speech = '';
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
 
+    // If there is partial speech from a previous intent, append
+    if (this.attributes.partialSpeech) {
+      speechError = this.attributes.partialSpeech;
+      speech = this.attributes.partialSpeech;
+      this.attributes.partialSpeech = undefined;
+    }
+
     if (!game.bet && !game.lastbet) {
-      speechError = res.strings.SPIN_NOBETS;
+      speechError += res.strings.SPIN_NOBETS;
       utils.emitResponse(this.emit, this.event.request.locale, speechError,
           null, speech, res.strings.SPIN_INVALID_REPROMPT);
     } else {
@@ -27,7 +34,7 @@ module.exports = {
         // They want to re-use the same bets they did last time - make sure there
         // is enough left in the bankroll and update the bankroll before we spin
         if (game.lastbet > game.bankroll) {
-          speechError = res.strings.SPIN_CANTBET_LASTBETS.replace('{0}', utils.readCoins(game.bankroll));
+          speechError += res.strings.SPIN_CANTBET_LASTBETS.replace('{0}', utils.readCoins(game.bankroll));
           utils.emitResponse(this.emit, this.event.request.locale,
             speechError, null, speech, res.strings.SPIN_INVALID_REPROMPT);
           return;
