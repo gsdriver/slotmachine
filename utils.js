@@ -111,7 +111,7 @@ module.exports = {
 
     if (formData.savelog || formData.savedb) {
       const params = {
-        url: SERVICEURL + '/slots/saveState',
+        url: process.env.SERVICEURL + 'slots/saveState',
         formData: formData,
       };
 
