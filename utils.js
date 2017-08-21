@@ -9,7 +9,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
-const logger = require('alexa-logger');
+const request = require('request');
 
 // Global session ID
 let globalEvent;
@@ -92,59 +92,50 @@ const games = {
 
 module.exports = {
   emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
-    let numCalls = 0;
+    const formData = {};
 
-    // Save to S3 if environment variable is set
+    // Async call to save state and logs if necessary
     if (process.env.SAVELOG) {
-      numCalls++;
       const result = (error) ? error : ((response) ? response : speech);
-        logger.saveLog(globalEvent, result,
-        {bucket: 'garrett-alexa-logs', keyPrefix: 'slots/', fullLog: true},
-        (err) => {
-        if (err) {
-          console.log(err, err.stack);
-        }
-
-        if (--numCalls === 0) {
-          emitResult();
-        }
+      formData.savelog = JSON.stringify({
+        event: globalEvent,
+        result: result,
       });
     }
-
     if (response) {
-      // Save state
-      numCalls++;
-      const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-      doc.put({TableName: 'Slots',
-          Item: {userId: globalEvent.session.user.userId,
-                mapAttr: globalEvent.session.attributes}},
-          (err, data) => {
-        if (--numCalls === 0) {
-          emitResult();
+      formData.savedb = JSON.stringify({
+        userId: globalEvent.session.user.userId,
+        attributes: globalEvent.session.attributes,
+      });
+    }
+
+    if (formData.savelog || formData.savedb) {
+      const params = {
+        url: SERVICEURL + '/slots/saveState',
+        formData: formData,
+      };
+
+      request.post(params, (err, res, body) => {
+        if (err) {
+          console.log(err);
         }
       });
     }
 
-    if (!numCalls) {
-      emitResult();
+    if (!process.env.NOLOG) {
+      console.log(JSON.stringify(globalEvent));
     }
 
-    function emitResult() {
-      if (!process.env.NOLOG) {
-        console.log(JSON.stringify(globalEvent));
-      }
-
-      if (error) {
-        const res = require('./' + locale + '/resources');
-        console.log('Speech error: ' + error);
-        emit(':ask', error, res.ERROR_REPROMPT);
-      } else if (response) {
-        emit(':tell', response);
-      } else if (cardTitle) {
-        emit(':askWithCard', speech, reprompt, cardTitle, cardText);
-      } else {
-        emit(':ask', speech, reprompt);
-      }
+    if (error) {
+      const res = require('./' + locale + '/resources');
+      console.log('Speech error: ' + error);
+      emit(':ask', error, res.ERROR_REPROMPT);
+    } else if (response) {
+      emit(':tell', response);
+    } else if (cardTitle) {
+      emit(':askWithCard', speech, reprompt, cardTitle, cardText);
+    } else {
+      emit(':ask', speech, reprompt);
     }
   },
   setEvent: function(event) {
