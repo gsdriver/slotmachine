@@ -15,6 +15,7 @@ const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
+const request = require('request');
 
 const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
@@ -108,7 +109,8 @@ exports.handler = function(event, context, callback) {
         if (err) {
           console.log('Error reading attributes ' + err);
         } else {
-          utils.saveNewUser();
+          request.post({url: process.env.SERVICEURL + 'slots/newUser'}, (err, res, body) => {
+          });
         }
       } else {
         Object.assign(event.session.attributes, data.Item.mapAttr);
@@ -128,10 +130,21 @@ exports.handler = function(event, context, callback) {
 };
 
 function saveState(userId, attributes) {
-  const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-  doc.put({TableName: 'Slots',
-      Item: {userId: userId, mapAttr: attributes}},
-      (err, data) => {
-    console.log('Saved');
+  const formData = {};
+
+  formData.savedb = JSON.stringify({
+    userId: userId,
+    attributes: attributes,
+  });
+
+  const params = {
+    url: process.env.SERVICEURL + 'slots/saveState',
+    formData: formData,
+  };
+
+  request.post(params, (err, res, body) => {
+    if (err) {
+      console.log(err);
+    }
   });
 }

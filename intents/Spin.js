@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const request = require('request');
 
 module.exports = {
   handleIntent: function() {
@@ -128,9 +129,16 @@ module.exports = {
           // in which case we'll write it out once we know the amount
           if (!(rules.progressive && (matchedPayout == rules.progressive.match)
                         && (bet == rules.maxCoins))) {
-            utils.writeJackpotDetails(this.event.session.user.userId,
-                this.attributes.currentGame,
-                bet * rules.payouts[matchedPayout]);
+            const params = {
+              url: process.env.SERVICEURL + 'slots/updateJackpot',
+              formData: {
+                jackpot: bet * rules.payouts[matchedPayout],
+                game: this.attributes.currentGame,
+                userId: this.event.session.user.userId,
+              },
+            };
+            request.post(params, (err, res, body) => {
+            });
           }
         }
 
@@ -141,10 +149,19 @@ module.exports = {
           utils.getProgressivePayout(this.attributes, (coinsWon) => {
             game.bankroll += coinsWon;
             speech += res.strings.SPIN_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, coinsWon));
-            utils.resetProgressive(this.attributes.currentGame);
-            utils.writeJackpotDetails(this.event.session.user.userId,
-                  this.attributes.currentGame,
-                  coinsWon);
+
+            const params = {
+              url: process.env.SERVICEURL + 'slots/updateJackpot',
+              formData: {
+                jackpot: coinsWon,
+                game: this.attributes.currentGame,
+                userId: this.event.session.user.userId,
+                resetProgressive: true,
+              },
+            };
+            request.post(params, (err, res, body) => {
+            });
+
             updateGamePostPayout(this.event.request.locale, game, bet, (speechText, reprompt) => {
               speech += speechText;
               utils.emitResponse(this.emit, this.event.request.locale,

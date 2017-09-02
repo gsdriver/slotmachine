@@ -114,16 +114,15 @@ module.exports = {
         url: process.env.SERVICEURL + 'slots/saveState',
         formData: formData,
       };
-
       request.post(params, (err, res, body) => {
         if (err) {
           console.log(err);
         }
-      });
-    }
 
-    if (!process.env.NOLOG) {
-      console.log(JSON.stringify(globalEvent));
+        if (!process.env.NOLOG) {
+          console.log(JSON.stringify(globalEvent));
+        }
+      });
     }
 
     if (error) {
@@ -289,62 +288,6 @@ module.exports = {
         }
       });
     }
-  },
-  // Updates DynamoDB to note that the progressive was won!
-  // Note this function does not callback
-  resetProgressive: function(game) {
-    // Write to the DB, and reset the coins played to 0
-    dynamodb.putItem({TableName: 'Slots',
-        Item: {userId: {S: 'game-' + game}, coins: {N: '0'}}},
-        (err, data) => {
-      // We don't take a callback, but if there's an error log it
-      if (err) {
-        console.log(err);
-      }
-    });
-  },
-  // Write jackpot details to S3
-  writeJackpotDetails: function(userId, game, jackpot) {
-    // It's not the same, so try to write it out
-    const details = {userId: userId, amount: jackpot};
-    const params = {Body: JSON.stringify(details),
-      Bucket: 'garrett-alexa-usage',
-      Key: 'jackpots/slots/' + game + '-' + Date.now() + '.txt'};
-
-    s3.putObject(params, (err, data) => {
-      // Don't care about teh error
-      if (err) {
-        console.log(err, err.stack);
-      }
-      // Update number of progressive wins while you're at it
-      dynamodb.updateItem({TableName: 'Slots',
-          Key: {userId: {S: 'game-' + game}},
-          AttributeUpdates: {jackpots: {
-              Action: 'ADD',
-              Value: {N: '1'}},
-      }}, (err, data) => {
-        // Again, don't care about the error
-        if (err) {
-          console.log(err);
-        }
-      });
-    });
-  },
-  saveNewUser: function() {
-    // Brand new player - let's log this in our DB (async call)
-    const params = {
-              TableName: 'Slots',
-              Key: {userId: {S: 'game'}},
-              AttributeUpdates: {newUsers: {
-                  Action: 'ADD',
-                  Value: {N: '1'}},
-              }};
-
-    dynamodb.updateItem(params, (err, data) => {
-      if (err) {
-        console.log(err);
-      }
-    });
   },
 };
 
