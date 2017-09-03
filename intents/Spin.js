@@ -156,7 +156,7 @@ module.exports = {
                 jackpot: coinsWon,
                 game: this.attributes.currentGame,
                 userId: this.event.session.user.userId,
-                resetProgressive: true,
+                resetProgressive: 'true',
               },
             };
             request.post(params, (err, res, body) => {
