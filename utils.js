@@ -118,27 +118,22 @@ module.exports = {
         if (err) {
           console.log(err);
         }
-        completed();
       });
-    } else {
-      completed();
     }
 
-    function completed() {
-      if (!process.env.NOLOG) {
-        console.log(JSON.stringify(globalEvent));
-      }
-      if (error) {
-        const res = require('./' + locale + '/resources');
-        console.log('Speech error: ' + error);
-        emit(':ask', error, res.ERROR_REPROMPT);
-      } else if (response) {
-        emit(':tell', response);
-      } else if (cardTitle) {
-        emit(':askWithCard', speech, reprompt, cardTitle, cardText);
-      } else {
-        emit(':ask', speech, reprompt);
-      }
+    if (!process.env.NOLOG) {
+      console.log(JSON.stringify(globalEvent));
+    }
+    if (error) {
+      const res = require('./' + locale + '/resources');
+      console.log('Speech error: ' + error);
+      emit(':ask', error, res.ERROR_REPROMPT);
+    } else if (response) {
+      emit(':tell', response);
+    } else if (cardTitle) {
+      emit(':askWithCard', speech, reprompt, cardTitle, cardText);
+    } else {
+      emit(':ask', speech, reprompt);
     }
   },
   setEvent: function(event) {
