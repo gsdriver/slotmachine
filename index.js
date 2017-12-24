@@ -76,6 +76,7 @@ const handlers = {
       this.attributes.currentGame = 'basic';
     }
 
+    this.attributes.playerLocale = this.event.request.locale;
     if (!this.attributes[this.attributes.currentGame]) {
       this.attributes[this.attributes.currentGame] = {
         bankroll: 1000,
