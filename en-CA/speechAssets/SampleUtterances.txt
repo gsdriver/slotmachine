@@ -1,0 +1,71 @@
+
+BetIntent bet
+BetIntent place a bet
+BetIntent put in {Amount} coins
+BetIntent insert {Amount} coins
+BetIntent put in {Amount} dollars
+BetIntent insert {Amount} dollars
+BetIntent put in {Amount} units
+BetIntent insert {Amount} units
+
+RulesIntent read rules
+RulesIntent read the rules
+RulesIntent what are the rules
+RulesIntent tell me the rules
+RulesIntent read payout
+RulesIntent read payout table
+RulesIntent read the payout table
+RulesIntent what are the payouts
+RulesIntent tell me the payouts
+RulesIntent read rules of the game
+RulesIntent read the rules of the game
+RulesIntent what are the rules of the game
+RulesIntent tell me the rules of the game
+RulesIntent the rules of the game
+RulesIntent rules of the game
+
+SelectIntent pick a different game
+SelectIntent pick a different machine
+SelectIntent pick a new game
+SelectIntent pick a new machine
+SelectIntent pick another machine
+SelectIntent pick another game
+SelectIntent change to a different game
+SelectIntent change to a different machine
+SelectIntent change to a new game
+SelectIntent change to a new machine
+SelectIntent change to another machine
+SelectIntent change to another game
+SelectIntent change machine
+SelectIntent select a different game
+SelectIntent select a different machine
+SelectIntent select a new game
+SelectIntent select a new machine
+SelectIntent select another machine
+SelectIntent select another game
+SelectIntent choose a different game
+SelectIntent choose a different machine
+SelectIntent choose a new game
+SelectIntent choose a new machine
+SelectIntent choose another machine
+SelectIntent choose another game
+SelectIntent switch to a different game
+SelectIntent switch to a different machine
+SelectIntent switch to a new game
+SelectIntent switch to a new machine
+SelectIntent switch to another machine
+SelectIntent switch to another game
+
+SpinIntent spin the wheel
+SpinIntent spin
+SpinIntent pull the handle
+SpinIntent push the button
+SpinIntent play
+
+HighScoreIntent read high scores
+HighScoreIntent tell me high scores
+HighScoreIntent what are the high scores
+HighScoreIntent what is the leader board
+HighScoreIntent read leader board
+HighScoreIntent say high scores
+HighScoreIntent say leader board

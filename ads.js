@@ -15,7 +15,9 @@ module.exports = {
       callback('');
     } else {
       // Read the S3 buckets that has everyone's scores
-      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'ads/' + skill + '/CurrentAds.txt'}, (err, data) => {
+      const adBucket = 'garrett-alexa-usage/ads/' + skill + '/' + locale;
+
+      s3.getObject({Bucket: adBucket, Key: 'CurrentAds.txt'}, (err, data) => {
         if (err) {
           console.log('Error reading current ad list: ' + err);
           callback('');
@@ -35,7 +37,7 @@ module.exports = {
             });
 
             if (adToRun) {
-              s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'ads/' + skill + '/' + locale + '/' + adToRun}, (adErr, adData) => {
+              s3.getObject({Bucket: adBucket, Key: adToRun}, (adErr, adData) => {
                 if (adErr) {
                   console.log('Error reading ad ' + adToRun + ': ' + adErr);
                   callback('');

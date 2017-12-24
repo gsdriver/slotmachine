@@ -1,0 +1,40 @@
+{
+  "intents": [
+    {
+      "intent": "BetIntent",
+      "slots": [
+        {
+          "name": "Amount",
+          "type": "AMAZON.Number"
+        }
+      ]
+    },
+    {
+      "intent": "RulesIntent"
+    },
+    {
+      "intent": "SpinIntent"
+    },
+    {
+      "intent": "SelectIntent"
+    },
+    {
+      "intent": "HighScoreIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
