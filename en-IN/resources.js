@@ -76,7 +76,11 @@ module.exports = {
       'double bar': 'double bar',
       'seven': 'seven',
       'any bar': 'any bar',
+      'any gold bar': 'any gold bar',
       'bell': 'bell',
+      'heart': 'heart',
+      'horseshoe': 'horseshoe',
+      'gold bar': 'gold bar',
       'diamond': 'diamond',
       'chicken': 'chicken',
       'pork': 'pork',
@@ -89,6 +93,7 @@ module.exports = {
   sayGame: function(game) {
     const gameMap = {'basic': 'the standard fruit game',
       'wild': 'wild cherry',
+      'loose': 'the 105% payout game',
       'progressive': 'progressive jackpot',
       'steak': 'the meat game'};
 

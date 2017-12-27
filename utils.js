@@ -62,6 +62,27 @@ const games = {
       'cherry|cherry|cherry': 500,
     },
   },
+  // Has 104.9% payout
+  'loose': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
+    'frequency': [
+      {'symbols': [5, 6, 10, 10, 1]},
+      {'symbols': [4, 12, 4, 6, 3]},
+      {'symbols': [20, 12, 8, 3, 2]},
+    ],
+    'payouts': {
+      'heart': 2,
+      'heart|heart': 4,
+      'bell|bell|bell': 5,
+      'horseshoe|horseshoe|horseshoe': 6,
+      'seven|seven|seven': 10,
+      'gold bar': 10,
+      'gold bar|gold bar': 25,
+      'gold bar|gold bar|gold bar': 1000,
+    },
+  },
   'progressive': {
     'maxCoins': 5,
     'slots': 3,
