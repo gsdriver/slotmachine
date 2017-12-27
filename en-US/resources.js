@@ -11,6 +11,7 @@ const resources = {
   // Launch.js
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
+  'LAUNCH_WELCOME_ACHIEVEMENT': 'Welcome back to Slot Machine. You have {0} achievement points. ',
   // Select.js
   'SELECT_WELCOME': 'Welcome to {0}. ',
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
@@ -30,6 +31,8 @@ const resources = {
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
+  'HELP_ACHIEVEMENT_POINTS': 'You earn 10 points per game each day you play <break time=\'200ms\'/> 25 points for each payout of 50 to 1 or more <break time=\'200ms\'/> N points for each streak of N wins in a row. ',
+  'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - N points for each streak of N wins in a row.\n',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
   'RULES_CARD_TITLE': 'Payout Table',
@@ -44,14 +47,17 @@ const resources = {
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
   'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
   'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+  'SPIN_JACKPOT_ACHIEVEMENT': 'You earned 25 achievement points for a jackpot. ',
+  'SPIN_FIRSTPLAY_ACHIEVEMENT': 'You earned 10 achievement points for your first time playing {0} today. ',
+  'SPIN_STREAK_ACHIEVEMENT': 'You earned {0} achievement points for {1} wins in a row. ',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
   'PAYOUT_PAYS': 'pays {0} coins.',
   'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
-  'LEADER_RANKING': 'Your current bankroll of {0} coins on {1} ranks you as <say-as interpret-as="ordinal">{2}</say-as> of {3} players. ',
+  'LEADER_RANKING': 'You have {0} achievement points ranking you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
   'LEADER_NO_SCORES': 'Sorry, I\'m unable to read the current leader board',
-  'LEADER_FORMAT': '{0} coins',
+  'LEADER_FORMAT': '{0} achievement points',
   'LEADER_TOP_SCORES': 'The top {0} scores are ',
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'WILD_SPECIAL': 'Cherries are wild. ',

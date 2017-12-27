@@ -82,6 +82,7 @@ module.exports = {
       // Now let's determine the payouts
       let matchedPayout;
       let payout;
+      let outcome;
 
       for (payout in rules.payouts) {
         if (payout) {
@@ -124,6 +125,7 @@ module.exports = {
         if (rules.payouts[matchedPayout] >= 50) {
           speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
           game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
+          outcome = 'jackpot';
 
           // Write the jackpot details, UNLESS it's a progressive payout
           // in which case we'll write it out once we know the amount
@@ -140,6 +142,8 @@ module.exports = {
             request.post(params, (err, res, body) => {
             });
           }
+        } else {
+          outcome = 'win';
         }
 
         // If you won the progressive, then ... wow, you rock!
@@ -162,7 +166,8 @@ module.exports = {
             request.post(params, (err, res, body) => {
             });
 
-            updateGamePostPayout(this.event.request.locale, game, bet, (speechText, reprompt) => {
+            updateGamePostPayout(this.attributes, this.event.request.locale, game,
+              bet, outcome, (speechText, reprompt) => {
               speech += speechText;
               utils.emitResponse(this.emit, this.event.request.locale,
                                   null, null, speech, reprompt);
@@ -176,11 +181,13 @@ module.exports = {
       } else {
         // Sorry, you lost
         speech += res.strings.SPIN_LOSER;
+        outcome = 'lose';
       }
 
       // Update coins in the progressive (async call)
       utils.incrementProgressive(this.attributes, bet);
-      updateGamePostPayout(this.event.request.locale, game, bet, (speechText, reprompt) => {
+      updateGamePostPayout(this.attributes, this.event.request.locale, game,
+          bet, outcome, (speechText, reprompt) => {
         speech += speechText;
         utils.emitResponse(this.emit, this.event.request.locale,
                             null, null, speech, reprompt);
@@ -189,7 +196,7 @@ module.exports = {
   },
 };
 
-function updateGamePostPayout(locale, game, bet, callback) {
+function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) {
   const res = require('../' + locale + '/resources');
   let lastbet = bet;
   let speech = '';
@@ -209,6 +216,39 @@ function updateGamePostPayout(locale, game, bet, callback) {
     }
 
     speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
+  }
+
+  // Award achievement points
+  if (!attributes.achievements) {
+    attributes.achievements = {};
+  }
+
+  const now = new Date(Date.now());
+  const lastPlay = new Date(game.timestamp);
+  if (!game.timestamp || (lastPlay.getDate() != now.getDate())) {
+    attributes.achievements.gamedaysPlayed =
+      (attributes.achievements.gamedaysPlayed + 1) || 1;
+    speech += res.strings.SPIN_FIRSTPLAY_ACHIEVEMENT
+      .replace('{0}', res.sayGame(attributes.currentGame));
+  }
+
+  if (outcome === 'jackpot') {
+    // You get achievement points for that!
+    attributes.achievements.jackpot++;
+    speech += res.strings.SPIN_JACKPOT_ACHIEVEMENT;
+  }
+
+  if (outcome !== 'lose') {
+    attributes.winningStreak = (attributes.winningStreak + 1) || 1;
+    if (attributes.winningStreak > 1) {
+      attributes.streakScore = (attributes.streakScore + attributes.winningStreak)
+          || attributes.winningStreak;
+      speech += res.strings.SPIN_STREAK_ACHIEVEMENT
+        .replace('{0}', attributes.winningStreak)
+        .replace('{1}', attributes.winningStreak);
+    }
+  } else {
+    attributes.winningStreak = 0;
   }
 
   // Keep track of spins

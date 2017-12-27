@@ -10,7 +10,14 @@ module.exports = {
   handleIntent: function() {
     // Tell them the rules, their bankroll and offer a few things they can do
     const res = require('../' + this.event.request.locale + '/resources');
-    let speech = res.strings.LAUNCH_WELCOME;
+    const score = utils.getAchievementScore(this.attributes.achievements);
+    let speech;
+
+    if (score) {
+      speech = res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
+    } else {
+      speech = res.strings.LAUNCH_WELCOME;
+    }
 
     // Read the available games then prompt for each one
     utils.readAvailableGames(this.event.request.locale,

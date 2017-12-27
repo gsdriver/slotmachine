@@ -244,13 +244,13 @@ module.exports = {
       } else {
         // What is your ranking - assuming you've done a spin
         if (game.spins > 0) {
-          const ranking = scores.indexOf(game.bankroll) + 1;
+          const myScore = module.exports.getAchievementScore(attributes.achievements);
+          const ranking = scores.indexOf(myScore) + 1;
 
           speech += res.strings.LEADER_RANKING
-            .replace('{0}', game.bankroll)
-            .replace('{1}', res.sayGame(attributes.currentGame))
-            .replace('{2}', ranking)
-            .replace('{3}', scores.length);
+            .replace('{0}', myScore)
+            .replace('{1}', ranking)
+            .replace('{2}', scores.length);
         }
 
         // And what is the leader board?
@@ -309,6 +309,23 @@ module.exports = {
       });
     }
   },
+  getAchievementScore: function(achievements) {
+    let achievementScore = 0;
+
+    if (achievements) {
+      if (achievements.gamedaysPlayed) {
+        achievementScore += 10 * achievements.gamedaysPlayed;
+      }
+      if (achievements.jackpot) {
+        achievementScore += 25 * achievements.jackpot;
+      }
+      if (achievements.streakScore) {
+        achievementScore += achievements.streakScore;
+      }
+    }
+
+    return achievementScore;
+  },
 };
 
 function readPayoutInternal(locale, game, payout, pause) {
@@ -344,27 +361,26 @@ function readPayoutAmountInternal(locale, game, payout) {
 }
 
 function getTopScoresFromS3(attributes, callback) {
-  const game = attributes[attributes.currentGame];
-
   // Read the S3 buckets that has everyone's scores
-  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores2.txt'}, (err, data) => {
+  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores.txt'}, (err, data) => {
     if (err) {
       console.log(err, err.stack);
       callback(err, null);
     } else {
       // Yeah, I can do a binary search (this is sorted), but straight search for now
       const ranking = JSON.parse(data.Body.toString('ascii'));
-      const scores = ranking.scores;
+      const scores = ranking.scores.achievementScores;
+      const myScore = module.exports.getAchievementScore(attributes.achievements);
 
-      if (scores && scores[attributes.currentGame]) {
+      if (scores) {
         // If their current high score isn't in the list, add it
-        if (scores[attributes.currentGame].indexOf(game.bankroll) < 0) {
-          scores[attributes.currentGame].push(game.bankroll);
+        if (scores.indexOf(myScore) < 0) {
+          scores.push(myScore);
         }
 
-        callback(null, scores[attributes.currentGame].sort((a, b) => (b - a)));
+        callback(null, scores.sort((a, b) => (b - a)));
       } else {
-        console.log('No scores for ' + attributes.currentGame);
+        console.log('No scoress!');
         callback('No scoreset', null);
       }
     }

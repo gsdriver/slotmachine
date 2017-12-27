@@ -25,11 +25,14 @@ module.exports = {
 
       speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
       speech += res.strings.HELP_COMMANDS;
+      speech = res.strings.HELP_ACHIEVEMENT_POINTS + speech;
       speech += reprompt;
 
       utils.emitResponse(this.emit, this.event.request.locale, null, null,
             speech, reprompt,
-            res.strings.HELP_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
+            res.strings.HELP_CARD_TITLE,
+            res.strings.HELP_ACHIEVEMENT_CARD_TEXT
+            + utils.readPayoutTable(this.event.request.locale, rules));
     }
   },
 };
