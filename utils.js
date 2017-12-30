@@ -7,7 +7,6 @@
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 
@@ -230,34 +229,46 @@ module.exports = {
   readPayoutAmount: function(locale, game, payout) {
     return readPayoutAmountInternal(locale, game, payout);
   },
-  readLeaderBoard: function(locale, attributes, callback) {
+  readLeaderBoard: function(locale, userId, attributes, callback) {
     const res = require('./' + locale + '/resources');
     const game = attributes[attributes.currentGame];
+    let leaderURL = process.env.SERVICEURL + 'slots/leaders';
+    let myScore;
+    let speech = '';
 
-    getTopScoresFromS3(attributes, (err, scores) => {
-      let speech = '';
+    if (game.spins > 0) {
+      myScore = module.exports.getAchievementScore(attributes.achievements);
+      leaderURL += '?userId=' + userId + '&score=' + myScore;
+    }
 
-      // OK, read up to five high scores
-      if (!scores || (scores.length === 0)) {
+    request(
+      {
+        uri: leaderURL,
+        method: 'GET',
+        timeout: 1000,
+      }, (err, response, body) => {
+      if (err) {
         // No scores to read
         speech = res.strings.LEADER_NO_SCORES;
       } else {
-        // What is your ranking - assuming you've done a spin
-        if (game.spins > 0) {
-          const myScore = module.exports.getAchievementScore(attributes.achievements);
-          const ranking = scores.indexOf(myScore) + 1;
+        const leaders = JSON.parse(body);
 
-          speech += res.strings.LEADER_RANKING
-            .replace('{0}', myScore)
-            .replace('{1}', ranking)
-            .replace('{2}', scores.length);
+        if (!leaders.count || !leaders.top) {
+          // Something went wrong
+          speech = res.strings.LEADER_NO_SCORES;
+        } else {
+          if (leaders.rank) {
+            speech += res.strings.LEADER_RANKING
+              .replace('{0}', myScore)
+              .replace('{1}', leaders.rank)
+              .replace('{2}', leaders.count);
+          }
+
+          // And what is the leader board?
+          const topScores = leaders.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
+          speech += res.strings.LEADER_TOP_SCORES.replace('{0}', topScores.length);
+          speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
         }
-
-        // And what is the leader board?
-        const toRead = (scores.length > 5) ? 5 : scores.length;
-        const topScores = scores.slice(0, toRead).map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
-        speech += res.strings.LEADER_TOP_SCORES.replace('{0}', toRead);
-        speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
       }
 
       callback(speech);
@@ -358,31 +369,4 @@ function readPayoutAmountInternal(locale, game, payout) {
   }
 
   return text;
-}
-
-function getTopScoresFromS3(attributes, callback) {
-  // Read the S3 buckets that has everyone's scores
-  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores.txt'}, (err, data) => {
-    if (err) {
-      console.log(err, err.stack);
-      callback(err, null);
-    } else {
-      // Yeah, I can do a binary search (this is sorted), but straight search for now
-      const ranking = JSON.parse(data.Body.toString('ascii'));
-      const scores = ranking.scores.achievementScores;
-      const myScore = module.exports.getAchievementScore(attributes.achievements);
-
-      if (scores) {
-        // If their current high score isn't in the list, add it
-        if (scores.indexOf(myScore) < 0) {
-          scores.push(myScore);
-        }
-
-        callback(null, scores.sort((a, b) => (b - a)));
-      } else {
-        console.log('No scoress!');
-        callback('No scoreset', null);
-      }
-    }
-  });
 }
