@@ -234,7 +234,7 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
 
   if (outcome === 'jackpot') {
     // You get achievement points for that!
-    attributes.achievements.jackpot++;
+    attributes.achievements.jackpot = (attributes.achievements.jackpot + 1) || 1;
     speech += res.strings.SPIN_JACKPOT_ACHIEVEMENT;
   }
 
