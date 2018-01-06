@@ -9,6 +9,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
+const querystring = require('querystring');
 
 // Global session ID
 let globalEvent;
@@ -229,16 +230,30 @@ module.exports = {
   readPayoutAmount: function(locale, game, payout) {
     return readPayoutAmountInternal(locale, game, payout);
   },
-  readLeaderBoard: function(locale, userId, attributes, callback) {
-    const res = require('./' + locale + '/resources');
-    const game = attributes[attributes.currentGame];
+  readLeaderBoard: function(userId, game, attributes, callback) {
     let leaderURL = process.env.SERVICEURL + 'slots/leaders';
     let myScore;
-    let speech = '';
+    const params = {};
 
-    if (game.spins > 0) {
+    if (game === 'achievement') {
       myScore = module.exports.getAchievementScore(attributes.achievements);
-      leaderURL += '?userId=' + userId + '&score=' + myScore;
+      if (myScore > 0) {
+        params.userId = userId;
+        params.score = myScore;
+      }
+    } else {
+      const currentGame = attributes[game];
+      params.game = game;
+      if (currentGame.spins > 0) {
+        params.userId = userId;
+        params.score = currentGame.bankroll;
+        myScore = currentGame.bankroll;
+      }
+    }
+
+    const paramText = querystring.stringify(params);
+    if (paramText.length) {
+      leaderURL += '?' + paramText;
     }
 
     request(
@@ -247,31 +262,13 @@ module.exports = {
         method: 'GET',
         timeout: 1000,
       }, (err, response, body) => {
-      if (err) {
-        // No scores to read
-        speech = res.strings.LEADER_NO_SCORES;
-      } else {
-        const leaders = JSON.parse(body);
+        let leaders;
 
-        if (!leaders.count || !leaders.top) {
-          // Something went wrong
-          speech = res.strings.LEADER_NO_SCORES;
-        } else {
-          if (leaders.rank) {
-            speech += res.strings.LEADER_RANKING
-              .replace('{0}', myScore)
-              .replace('{1}', leaders.rank)
-              .replace('{2}', leaders.count);
-          }
-
-          // And what is the leader board?
-          const topScores = leaders.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
-          speech += res.strings.LEADER_TOP_SCORES.replace('{0}', topScores.length);
-          speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
+        if (!err) {
+          leaders = JSON.parse(body);
+          leaders.score = myScore;
         }
-      }
-
-      callback(speech);
+        callback(err, leaders);
     });
   },
   getProgressivePayout: function(attributes, callback) {
