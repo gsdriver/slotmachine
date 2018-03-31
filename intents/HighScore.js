@@ -78,8 +78,7 @@ module.exports = {
       }
       speech += reprompt;
 
-      utils.emitResponse(context.emit, context.event.request.locale, null,
-          null, speech, reprompt);
+      utils.emitResponse(context, null, null, speech, reprompt);
     }
   },
 };

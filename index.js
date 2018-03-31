@@ -16,7 +16,6 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
 const request = require('request');
-const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
 
 const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
@@ -27,6 +26,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     this.emitWithState('NewSession');
   },
   'BetIntent': Select.handleBetIntent,
+  'ElementSelected': Select.handleYesIntent,
   'SpinIntent': Select.handleBetIntent,
   'SelectIntent': Select.handleNoIntent,
   'HighScoreIntent': HighScore.handleIntent,
@@ -40,7 +40,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
   },
 });
@@ -51,6 +51,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
     this.emitWithState('NewSession');
   },
   'BetIntent': Bet.handleIntent,
+  'ElementSelected': Spin.handleIntent,
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
@@ -65,7 +66,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 });
@@ -90,12 +91,19 @@ const handlers = {
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 };
 
-exports.handler = dashbot.handler((event, context, callback) => {
+if (process.env.DASHBOTKEY) {
+  const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
+  exports.handler = dashbot.handler(runSkill);
+} else {
+  exports.handler = runSkill;
+}
+
+function runSkill(event, context, callback) {
   AWS.config.update({region: 'us-east-1'});
 
   const alexa = Alexa.handler(event, context);
@@ -129,7 +137,7 @@ exports.handler = dashbot.handler((event, context, callback) => {
     alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
     alexa.execute();
   }
-});
+}
 
 function saveState(userId, attributes) {
   const formData = {};

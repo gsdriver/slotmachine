@@ -63,6 +63,6 @@ module.exports = {
       ssml += reprompt;
     }
 
-    utils.emitResponse(this.emit, this.event.request.locale, speechError, null, ssml, reprompt);
+    utils.emitResponse(this, speechError, null, ssml, reprompt);
   },
 };

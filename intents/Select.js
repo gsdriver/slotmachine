@@ -19,16 +19,21 @@ module.exports = {
       this.attributes.choices = choices;
       this.handler.state = 'SELECTGAME';
 
+      const displayTemplate = utils.buildSelectTemplate(this);
+      if (displayTemplate) {
+        this.response.renderTemplate(displayTemplate);
+      }
+
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
       speech += reprompt;
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+      utils.emitResponse(this, null, null, speech, reprompt);
     });
   },
   handleYesIntent: function() {
     // Great, they picked a game
     this.handler.state = 'INGAME';
-    selectedGame(this.emit, this.event, this.attributes);
+    selectedGame(this);
   },
   handleNoIntent: function() {
     // OK, pop this choice and go to the next one - if no other choices, we'll go with the last one
@@ -36,23 +41,24 @@ module.exports = {
     if (this.attributes.choices.length === 1) {
       // OK, we're going with this one
       this.handler.state = 'INGAME';
-      selectedGame(this.emit, this.event, this.attributes);
+      selectedGame(this);
     } else {
       const res = require('../' + this.event.request.locale + '/resources');
       const speech = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));
 
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, speech);
+      utils.emitResponse(this, null, null, speech, speech);
     }
   },
   handleBetIntent: function() {
     // They want to bet - so we'll select and bet in one
     this.handler.state = 'INGAME';
-    selectedGame(this.emit, this.event, this.attributes, this.emitWithState, true);
+    selectedGame(this, true);
   },
 };
 
-function selectedGame(emit, event, attributes, emitWithState, placeBet) {
-  const res = require('../' + event.request.locale + '/resources');
+function selectedGame(context, placeBet) {
+  const res = require('../' + context.event.request.locale + '/resources');
+  const attributes = context.attributes;
   let speech;
 
   // Great, they picked a game
@@ -73,7 +79,7 @@ function selectedGame(emit, event, attributes, emitWithState, placeBet) {
 
   // Check if there is a progressive jackpot
   utils.getProgressivePayout(attributes, (jackpot) => {
-    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event.request.locale, game.bankroll));
+    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(context.event.request.locale, game.bankroll));
 
     if (placeBet) {
       if (jackpot) {
@@ -81,16 +87,16 @@ function selectedGame(emit, event, attributes, emitWithState, placeBet) {
         game.progressiveJackpot = jackpot;
       }
       attributes.partialSpeech = speech;
-      emitWithState(event.request.intent.name);
+      context.emitWithState(context.event.request.intent.name);
     } else {
       if (jackpot) {
         // For progressive, just tell them the jackpot and to bet max coins
         speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
         game.progressiveJackpot = jackpot;
-        utils.emitResponse(emit, event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(context, null, null, speech, reprompt);
       } else {
         speech += reprompt;
-        utils.emitResponse(emit, event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(context, null, null, speech, reprompt);
       }
     }
   });

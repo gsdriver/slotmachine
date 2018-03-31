@@ -26,10 +26,15 @@ module.exports = {
       this.attributes.choices = choices;
       this.handler.state = 'SELECTGAME';
 
+      const displayTemplate = utils.buildSelectTemplate(this);
+      if (displayTemplate) {
+        this.response.renderTemplate(displayTemplate);
+      }
+
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
       speech += reprompt;
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+      utils.emitResponse(this, null, null, speech, reprompt);
     });
   },
 };

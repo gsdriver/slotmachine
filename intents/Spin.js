@@ -4,6 +4,10 @@
 
 'use strict';
 
+const Alexa = require('alexa-sdk');
+// utility methods for creating Image and TextField objects
+// const makePlainText = Alexa.utils.TextUtils.makePlainText;
+const makeImage = Alexa.utils.ImageUtils.makeImage;
 const utils = require('../utils');
 const request = require('request');
 
@@ -26,8 +30,7 @@ module.exports = {
 
     if (!game.bet && !game.lastbet) {
       speechError += res.strings.SPIN_NOBETS;
-      utils.emitResponse(this.emit, this.event.request.locale, speechError,
-          null, speech, res.strings.SPIN_INVALID_REPROMPT);
+      utils.emitResponse(this, speechError, null, speech, res.strings.SPIN_INVALID_REPROMPT);
     } else {
       if (game.bet) {
         bet = game.bet;
@@ -36,8 +39,7 @@ module.exports = {
         // is enough left in the bankroll and update the bankroll before we spin
         if (game.lastbet > game.bankroll) {
           speechError += res.strings.SPIN_CANTBET_LASTBETS.replace('{0}', utils.readCoins(game.bankroll));
-          utils.emitResponse(this.emit, this.event.request.locale,
-            speechError, null, speech, res.strings.SPIN_INVALID_REPROMPT);
+          utils.emitResponse(this, speechError, null, speech, res.strings.SPIN_INVALID_REPROMPT);
           return;
         } else {
           bet = game.lastbet;
@@ -69,6 +71,11 @@ module.exports = {
           // Nope, go to the next one
           spin -= rules.frequency[i].symbols[j];
         }
+      }
+
+      const listTemplate = buildDisplayTemplate(this, spinResult);
+      if (listTemplate) {
+        this.response.renderTemplate(listTemplate);
       }
 
       let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
@@ -169,8 +176,7 @@ module.exports = {
             updateGamePostPayout(this.attributes, this.event.request.locale, game,
               bet, outcome, (speechText, reprompt) => {
               speech += speechText;
-              utils.emitResponse(this.emit, this.event.request.locale,
-                                  null, null, speech, reprompt);
+              utils.emitResponse(this, null, null, speech, reprompt);
             });
           });
           return;
@@ -189,8 +195,7 @@ module.exports = {
       updateGamePostPayout(this.attributes, this.event.request.locale, game,
           bet, outcome, (speechText, reprompt) => {
         speech += speechText;
-        utils.emitResponse(this.emit, this.event.request.locale,
-                            null, null, speech, reprompt);
+        utils.emitResponse(this, null, null, speech, reprompt);
       });
     }
   },
@@ -266,4 +271,34 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
   game.bet = undefined;
   speech += reprompt;
   callback(speech, reprompt);
+}
+
+function buildDisplayTemplate(context, spinResult) {
+  const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+  const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+  let url;
+  const format = 'https://s3-us-west-2.amazonaws.com/garrettvargas.com/img/slotmachine/slots/{0}.png';
+  let listTemplate;
+
+  if (context.event.context &&
+      context.event.context.System.device.supportedInterfaces.Display) {
+    let i;
+    context.attributes.display = true;
+
+    for (i = 0; i < spinResult.length; i++) {
+      url = format.replace('{0}', spinResult[i]);
+      listItemBuilder.addItem(makeImage(url), 'slot.' + i);
+    }
+
+    const listItems = listItemBuilder.build();
+    listTemplate = listTemplateBuilder
+      .setToken('listToken')
+      .setTitle('Result')
+      .setListItems(listItems)
+      .setBackButtonBehavior('HIDDEN')
+      .setBackgroundImage(makeImage('http://garrettvargas.com/img/plain-white-background.jpg'))
+      .build();
+  }
+
+  return listTemplate;
 }
