@@ -17,12 +17,8 @@ module.exports = {
         this.attributes.currentGame, false, (gameText, choices) => {
       speech = gameText;
       this.attributes.choices = choices;
+      this.attributes.originalChoices = choices;
       this.handler.state = 'SELECTGAME';
-
-      const displayTemplate = utils.buildSelectTemplate(this);
-      if (displayTemplate) {
-        this.response.renderTemplate(displayTemplate);
-      }
 
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
@@ -61,9 +57,17 @@ function selectedGame(context, placeBet) {
   const attributes = context.attributes;
   let speech;
 
-  // Great, they picked a game
-  attributes.currentGame = attributes.choices[0];
+  // First let's see if they selected an element via touch
+  const index = getSelectedIndex(context);
+  if ((index !== undefined) && (index >= 0) && (index < attributes.originalChoices.length)) {
+    // Use this one instead
+    attributes.currentGame = attributes.originalChoices[index];
+  } else {
+    attributes.currentGame = attributes.choices[0];
+  }
+
   attributes.choices = undefined;
+  attributes.originalChoices = undefined;
   speech = res.strings.SELECT_WELCOME.replace('{0}', res.sayGame(attributes.currentGame));
 
   if (!attributes[attributes.currentGame]) {
@@ -100,4 +104,30 @@ function selectedGame(context, placeBet) {
       }
     }
   });
+}
+
+function getSelectedIndex(context) {
+  let index;
+
+  if (context.event.request.token) {
+    const games = context.event.request.token.split('.');
+    if (games.length === 2) {
+      index = games[1];
+    }
+  } else {
+    // Look for an intent slot
+    if (context.event.request.intent.slots && context.event.request.intent.slots.Number
+      && context.event.request.intent.slots.Number.value) {
+      index = parseInt(context.event.request.intent.slots.Number.value);
+
+      if (isNaN(index)) {
+        index = undefined;
+      } else {
+        // Turn into zero-based index
+        index--;
+      }
+    }
+  }
+
+  return index;
 }

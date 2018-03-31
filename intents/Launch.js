@@ -24,12 +24,8 @@ module.exports = {
         this.attributes.currentGame, true, (gameText, choices) => {
       speech += gameText;
       this.attributes.choices = choices;
+      this.attributes.originalChoices = choices;
       this.handler.state = 'SELECTGAME';
-
-      const displayTemplate = utils.buildSelectTemplate(this);
-      if (displayTemplate) {
-        this.response.renderTemplate(displayTemplate);
-      }
 
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));

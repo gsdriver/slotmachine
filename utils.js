@@ -6,7 +6,7 @@
 
 const Alexa = require('alexa-sdk');
 // utility methods for creating Image and TextField objects
-// const makePlainText = Alexa.utils.TextUtils.makePlainText;
+const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
@@ -150,11 +150,12 @@ module.exports = {
       console.log(JSON.stringify(globalEvent));
     }
 
+    buildDisplayTemplate(context);
     if (error) {
       const res = require('./' + context.event.request.locale + '/resources');
       console.log('Speech error: ' + error);
       context.response.speak(error)
-        .listen(res.ERROR_REPROMPT);
+        .listen(res.strings.ERROR_REPROMPT);
     } else if (response) {
       context.response.speak(response);
     } else if (cardTitle) {
@@ -208,32 +209,6 @@ module.exports = {
     speech += speechUtils.and(choiceText, {locale: locale});
     speech += '. ';
     callback(speech, choices);
-  },
-  buildSelectTemplate: function(context) {
-    let listTemplate;
-
-    if (context.event.context &&
-      context.event.context.System.device.supportedInterfaces.Display) {
-      const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-      const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-      let i;
-
-      for (game in games) {
-        if (game) {
-          listItemBuilder.addItem(null, 'game.' + ++i, makePlainText(res.sayGame(game)));
-        }
-      }
-
-      const listItems = listItemBuilder.build();
-      listTemplate = listTemplateBuilder
-        .setToken('listToken')
-        .setTitle('Available games')
-        .setListItems(listItems)
-        .setBackButtonBehavior('HIDDEN')
-        .setBackgroundImage(makeImage('http://garrettvargas.com/img/plain-white-background.jpg'))
-        .build();
-    }
-    return listTemplate;
   },
   readCoins: function(locale, coins) {
     const res = require('./' + locale + '/resources');
@@ -403,4 +378,62 @@ function readPayoutAmountInternal(locale, game, payout) {
   }
 
   return text;
+}
+
+function buildDisplayTemplate(context) {
+  const game = context.attributes[context.attributes.currentGame];
+  const res = require('./' + context.event.request.locale + '/resources');
+  let listTemplateBuilder;
+  let listItemBuilder;
+  let listTemplate;
+
+  if (context.event.context &&
+      context.event.context.System.device.supportedInterfaces.Display) {
+    context.attributes.display = true;
+
+    if (context.attributes.originalChoices) {
+      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+      let i = 0;
+
+      context.attributes.originalChoices.forEach((choice) => {
+        listItemBuilder.addItem(null, 'game.' + i++,
+          makeRichText('<font size="3">' + res.sayGame(choice) + '</font>'));
+      });
+
+      const listItems = listItemBuilder.build();
+      listTemplate = listTemplateBuilder
+        .setToken('listToken')
+        .setTitle(res.strings.SELECT_GAME)
+        .setListItems(listItems)
+        .setBackButtonBehavior('HIDDEN')
+        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
+        .build();
+
+      context.response.renderTemplate(listTemplate);
+    } else if (game && game.result && game.result.spin) {
+      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+      const format = 'https://s3-us-west-2.amazonaws.com/garrettvargas.com/img/slotmachine/slots/{0}.png';
+      let i = 0;
+
+      game.result.spin.forEach((spin) => {
+        listItemBuilder.addItem(makeImage(format.replace('{0}', spin)), 'slot.' + i++);
+      });
+
+      const title = (game.result.payout)
+        ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
+        : res.strings.DISPLAY_PAYOUT_LOSER;
+      const listItems = listItemBuilder.build();
+      const listTemplate = listTemplateBuilder
+        .setToken('listToken')
+        .setTitle(title)
+        .setListItems(listItems)
+        .setBackButtonBehavior('HIDDEN')
+        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
+        .build();
+
+      context.response.renderTemplate(listTemplate);
+    }
+  }
 }

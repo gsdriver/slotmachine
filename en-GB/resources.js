@@ -64,6 +64,9 @@ const resources = {
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'WILD_SPECIAL': 'Cherries are wild. ',
   'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ',
+  'SELECT_GAME': 'Select a game to play',
+  'DISPLAY_PAYOUT_WINNER': 'You won {0} coins',
+  'DISPLAY_PAYOUT_LOSER': 'Sorry, you lost',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
