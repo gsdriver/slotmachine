@@ -24,12 +24,13 @@ module.exports = {
         this.attributes.currentGame, true, (gameText, choices) => {
       speech += gameText;
       this.attributes.choices = choices;
+      this.attributes.originalChoices = choices;
       this.handler.state = 'SELECTGAME';
 
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
       speech += reprompt;
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+      utils.emitResponse(this, null, null, speech, reprompt);
     });
   },
 };

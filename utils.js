@@ -4,6 +4,10 @@
 
 'use strict';
 
+const Alexa = require('alexa-sdk');
+// utility methods for creating Image and TextField objects
+const makeRichText = Alexa.utils.TextUtils.makeRichText;
+const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
@@ -112,7 +116,7 @@ const games = {
 };
 
 module.exports = {
-  emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
+  emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
     const formData = {};
 
     // Async call to save state and logs if necessary
@@ -145,17 +149,25 @@ module.exports = {
     if (!process.env.NOLOG) {
       console.log(JSON.stringify(globalEvent));
     }
+
+    buildDisplayTemplate(context);
     if (error) {
-      const res = require('./' + locale + '/resources');
+      const res = require('./' + context.event.request.locale + '/resources');
       console.log('Speech error: ' + error);
-      emit(':ask', error, res.ERROR_REPROMPT);
+      context.response.speak(error)
+        .listen(res.strings.ERROR_REPROMPT);
     } else if (response) {
-      emit(':tell', response);
+      context.response.speak(response);
     } else if (cardTitle) {
-      emit(':askWithCard', speech, reprompt, cardTitle, cardText);
+      context.response.speak(speech)
+        .listen(reprompt)
+        .cardRenderer(cardTitle, cardText);
     } else {
-      emit(':ask', speech, reprompt);
+      context.response.speak(speech)
+        .listen(reprompt);
     }
+
+    context.emit(':responseReady');
   },
   setEvent: function(event) {
     globalEvent = event;
@@ -366,4 +378,62 @@ function readPayoutAmountInternal(locale, game, payout) {
   }
 
   return text;
+}
+
+function buildDisplayTemplate(context) {
+  const game = context.attributes[context.attributes.currentGame];
+  const res = require('./' + context.event.request.locale + '/resources');
+  let listTemplateBuilder;
+  let listItemBuilder;
+  let listTemplate;
+
+  if (context.event.context &&
+      context.event.context.System.device.supportedInterfaces.Display) {
+    context.attributes.display = true;
+
+    if (context.attributes.originalChoices) {
+      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+      let i = 0;
+
+      context.attributes.originalChoices.forEach((choice) => {
+        listItemBuilder.addItem(null, 'game.' + i++,
+          makeRichText('<font size="3">' + res.sayGame(choice) + '</font>'));
+      });
+
+      const listItems = listItemBuilder.build();
+      listTemplate = listTemplateBuilder
+        .setToken('listToken')
+        .setTitle(res.strings.SELECT_GAME)
+        .setListItems(listItems)
+        .setBackButtonBehavior('HIDDEN')
+        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
+        .build();
+
+      context.response.renderTemplate(listTemplate);
+    } else if (game && game.result && game.result.spin) {
+      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+      const format = 'https://s3-us-west-2.amazonaws.com/garrettvargas.com/img/slotmachine/slots/{0}.png';
+      let i = 0;
+
+      game.result.spin.forEach((spin) => {
+        listItemBuilder.addItem(makeImage(format.replace('{0}', spin)), 'slot.' + i++);
+      });
+
+      const title = (game.result.payout)
+        ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
+        : res.strings.DISPLAY_PAYOUT_LOSER;
+      const listItems = listItemBuilder.build();
+      const listTemplate = listTemplateBuilder
+        .setToken('listToken')
+        .setTitle(title)
+        .setListItems(listItems)
+        .setBackButtonBehavior('HIDDEN')
+        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
+        .build();
+
+      context.response.renderTemplate(listTemplate);
+    }
+  }
 }

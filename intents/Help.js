@@ -19,7 +19,7 @@ module.exports = {
 
       speech = res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+      utils.emitResponse(this, null, null, speech, reprompt);
     } else {
       const reprompt = res.strings.HELP_REPROMPT;
 
@@ -28,7 +28,7 @@ module.exports = {
       speech = res.strings.HELP_ACHIEVEMENT_POINTS + speech;
       speech += reprompt;
 
-      utils.emitResponse(this.emit, this.event.request.locale, null, null,
+      utils.emitResponse(this, null, null,
             speech, reprompt,
             res.strings.HELP_CARD_TITLE,
             res.strings.HELP_ACHIEVEMENT_CARD_TEXT
