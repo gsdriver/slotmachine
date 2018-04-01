@@ -265,9 +265,16 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
     game.high = game.bankroll;
   }
 
+  // If it's a new user, clear that state and let them know about other games
+  if (attributes.newUser) {
+    attributes.newUser = undefined;
+    speech += res.strings.SPIN_NEWUSER;
+  } else {
+    speech += reprompt;
+  }
+
   // And reprompt
   game.lastbet = lastbet;
   game.bet = undefined;
-  speech += reprompt;
   callback(speech, reprompt);
 }

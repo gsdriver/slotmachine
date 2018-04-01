@@ -13,24 +13,31 @@ module.exports = {
     const score = utils.getAchievementScore(this.attributes.achievements);
     let speech;
 
-    if (score) {
-      speech = res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
+    // For a new user, just tell them to bet or say spin (which places a bet)
+    if (this.attributes.newUser) {
+      this.handler.state = 'INGAME';
+      utils.emitResponse(this, null, null,
+          res.strings.LAUNCH_NEWUSER, res.strings.LAUNCH_NEWUSER_REPROMPT);
     } else {
-      speech = res.strings.LAUNCH_WELCOME;
+      if (score) {
+        speech = res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
+      } else {
+        speech = res.strings.LAUNCH_WELCOME;
+      }
+
+      // Read the available games then prompt for each one
+      utils.readAvailableGames(this.event.request.locale,
+          this.attributes.currentGame, true, (gameText, choices) => {
+        speech += gameText;
+        this.attributes.choices = choices;
+        this.attributes.originalChoices = choices;
+        this.handler.state = 'SELECTGAME';
+
+        // Ask for the first one
+        const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
+        speech += reprompt;
+        utils.emitResponse(this, null, null, speech, reprompt);
+      });
     }
-
-    // Read the available games then prompt for each one
-    utils.readAvailableGames(this.event.request.locale,
-        this.attributes.currentGame, true, (gameText, choices) => {
-      speech += gameText;
-      this.attributes.choices = choices;
-      this.attributes.originalChoices = choices;
-      this.handler.state = 'SELECTGAME';
-
-      // Ask for the first one
-      const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
-      speech += reprompt;
-      utils.emitResponse(this, null, null, speech, reprompt);
-    });
   },
 };

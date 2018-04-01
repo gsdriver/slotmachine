@@ -12,6 +12,8 @@ const resources = {
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
   'LAUNCH_WELCOME_ACHIEVEMENT': 'Welcome back to Slot Machine. You have {0} achievement points. ',
+  'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
+  'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
   // Select.js
   'SELECT_WELCOME': 'Welcome to {0}. ',
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
@@ -50,6 +52,7 @@ const resources = {
   'SPIN_JACKPOT_ACHIEVEMENT': 'You earned 25 achievement points for a jackpot. ',
   'SPIN_FIRSTPLAY_ACHIEVEMENT': 'You earned 10 achievement points for your first time playing {0} today. ',
   'SPIN_STREAK_ACHIEVEMENT': 'You earned {0} achievement points for {1} wins in a row. ',
+  'SPIN_NEWUSER': 'If you would like to try a different machine, say change machine or say spin to spin again. ',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',

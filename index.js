@@ -77,6 +77,8 @@ const handlers = {
   'NewSession': function() {
     // Initialize attributes and route the request
     if (!this.attributes.currentGame) {
+      // This is a new user
+      this.attributes.newUser = true;
       this.attributes.currentGame = 'basic';
     }
 
