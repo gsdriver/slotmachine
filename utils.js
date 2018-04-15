@@ -398,7 +398,7 @@ function buildDisplayTemplate(context) {
 
       context.attributes.originalChoices.forEach((choice) => {
         listItemBuilder.addItem(null, 'game.' + i++,
-          makeRichText('<font size="3">' + res.sayGame(choice) + '</font>'));
+          makeRichText('<font size="7">' + res.sayGame(choice) + '</font>'));
       });
 
       const listItems = listItemBuilder.build();
@@ -434,6 +434,15 @@ function buildDisplayTemplate(context) {
         .build();
 
       context.response.renderTemplate(listTemplate);
+    } else {
+      // Just show the background image
+      const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+      const template = builder.setTitle(res.strings.LAUNCH_WELCOME)
+        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
+        .setBackButtonBehavior('HIDDEN')
+        .build();
+
+      context.response.renderTemplate(template);
     }
   }
 }

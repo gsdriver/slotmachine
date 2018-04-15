@@ -132,7 +132,7 @@ module.exports = {
       }
     }
 
-    game.result.payout = (matchedPayout ? rules.payouts[matchedPayout] : 0);
+    game.result.payout = bet * (matchedPayout ? rules.payouts[matchedPayout] : 0);
     if (matchedPayout) {
       // You won!  If more than 50:1, play the jackpot sound
       if (rules.payouts[matchedPayout] >= 50) {
