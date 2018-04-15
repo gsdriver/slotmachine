@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const request = require('request');
+const seedrandom = require('seedrandom');
 
 module.exports = {
   handleIntent: function() {
@@ -58,7 +59,12 @@ module.exports = {
       rules.frequency[i].symbols.map((item) => {
         total = total + item;
       });
-      spin = Math.floor(Math.random() * total);
+
+      const randomValue = seedrandom(i + this.event.session.user.userId + (game.timestamp ? game.timestamp : ''))();
+      spin = Math.floor(randomValue * total);
+      if (spin == total) {
+        spin--;
+      }
 
       for (j = 0; j < rules.frequency[i].symbols.length; j++) {
         if (spin < rules.frequency[i].symbols[j]) {
