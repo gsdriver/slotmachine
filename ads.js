@@ -31,8 +31,16 @@ module.exports = {
           } else {
             ads.running.forEach((ad) => {
               // Did we already show this ad?  If not, that's the one we'll pick
-              if (!adToRun && (!attributes.adsPlayed || !attributes.adsPlayed[ad])) {
-                adToRun = ad;
+              if (!adToRun && (!attributes.adsPlayed || !attributes.adsPlayed[ad.name])) {
+                // If there is a condition, make sure that it's met
+                if (ad.condition) {
+                  if (eval(ad.condition)) {
+                    adToRun = ad.name;
+                  }
+                } else {
+                  // No condition - just run this
+                  adToRun = ad.name;
+                }
               }
             });
 
