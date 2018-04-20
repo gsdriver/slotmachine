@@ -23,6 +23,7 @@ const games = {
   'basic': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -44,6 +45,7 @@ const games = {
   'wild': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
     'frequency': [
       {'symbols': [3, 16, 10, 4, 6]},
@@ -70,6 +72,7 @@ const games = {
   'loose': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
     'frequency': [
       {'symbols': [5, 6, 10, 10, 1]},
@@ -90,6 +93,7 @@ const games = {
   'progressive': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -113,6 +117,30 @@ const games = {
       'diamond|diamond|diamond': 100,
     },
   },
+};
+
+// Tournament with 105% payout
+const tournament = {
+ 'maxCoins': 5,
+ 'slots': 3,
+ 'symbols': ['cherry', 'plum', 'bell', 'bar', 'seven', 'diamond'],
+ 'frequency': [
+   {'symbols': [5, 6, 5, 8, 4, 4]},
+   {'symbols': [2, 15, 12, 4, 2, 1]},
+   {'symbols': [1, 12, 8, 8, 4, 1]},
+ ],
+ 'substitutes': {
+   'cherry': ['bell', 'bar', 'seven', 'diamond'],
+ },
+ 'special': 'WILD_SPECIAL',
+ 'payouts': {
+   'cherry': 2,
+   'bell|bell|bell': 5,
+   'bar|bar|bar': 10,
+   'seven|seven|seven': 20,
+   'diamond|diamond|diamond': 100,
+   'cherry|cherry|cherry': 1000,
+ },
 };
 
 module.exports = {
@@ -172,41 +200,61 @@ module.exports = {
   setEvent: function(event) {
     globalEvent = event;
   },
+  checkForTournament: function() {
+    // As part of launch, check if we need to add a tournament machine
+    if (process.env.TOURNAMENT) {
+      games.tournament = tournament;
+    }
+  },
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(locale, currentGame, currentFirst, callback) {
-    const res = require('./' + locale + '/resources');
+  readAvailableGames: function(context, currentFirst, callback) {
+    const res = require('./' + context.event.request.locale + '/resources');
     let speech;
     const choices = [];
     const choiceText = [];
     let game;
     let count = 0;
+    let gameToAdd = context.attributes.currentGame;
+    let offerTournament = false;
+
+    if (games.tournament) {
+      // If they already busted out, don't offer it
+      if (!context.attributes.tournament || !context.attributes.tournament.busted) {
+        // Offer the tournament
+        offerTournament = true;
+        if (currentFirst) {
+          gameToAdd = 'tournament';
+        }
+      }
+    }
 
     for (game in games) {
       if (game) {
-        count++;
-        // Put the last played game at the front of the list
-        if (game != currentGame) {
-         choices.push(game);
-         choiceText.push(res.sayGame(game));
+        if ((game != 'tournament') || offerTournament) {
+          count++;
+          // Put the last played game at the front of the list
+          if (game != gameToAdd) {
+           choices.push(game);
+           choiceText.push(res.sayGame(game));
+         }
        }
       }
     }
 
-    // And now the current game - either first or last in the list
-    if (currentGame && games[currentGame]) {
+    if (gameToAdd && games[gameToAdd]) {
       if (currentFirst) {
-        choices.unshift(currentGame);
-        choiceText.unshift(res.sayGame(currentGame));
+        choices.unshift(gameToAdd);
+        choiceText.unshift(res.sayGame(gameToAdd));
       } else {
-         choices.push(currentGame);
-         choiceText.push(res.sayGame(currentGame));
+         choices.push(gameToAdd);
+         choiceText.push(res.sayGame(gameToAdd));
       }
     }
 
     speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
-    speech += speechUtils.and(choiceText, {locale: locale});
+    speech += speechUtils.and(choiceText, {locale: context.event.request.locale});
     speech += '. ';
     callback(speech, choices);
   },

@@ -12,6 +12,7 @@ const resources = {
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
   'LAUNCH_WELCOME_ACHIEVEMENT': 'Welcome back to Slot Machine. You have {0} achievement points. ',
+  'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0} minutes. ',
   'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
   'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
   // Select.js
@@ -49,6 +50,7 @@ const resources = {
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
   'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
   'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+  'SPIN_OUTOFMONEY': 'You are out of coins and out of the tournament. Better luck next week! ',
   'SPIN_JACKPOT_ACHIEVEMENT': 'You earned 25 achievement points for a jackpot. ',
   'SPIN_FIRSTPLAY_ACHIEVEMENT': 'You earned 10 achievement points for your first time playing {0} today. ',
   'SPIN_STREAK_ACHIEVEMENT': 'You earned {0} achievement points for {1} wins in a row. ',
@@ -109,6 +111,7 @@ module.exports = {
       'wild': 'wild cherry',
       'loose': 'the 105% payout game',
       'progressive': 'progressive jackpot',
+      'tournament': 'the tournament round',
       'steak': 'the meat game'};
 
     return (gameMap[game]) ? gameMap[game] : game;

@@ -26,9 +26,12 @@ module.exports = {
       }
 
       // Read the available games then prompt for each one
-      utils.readAvailableGames(this.event.request.locale,
-          this.attributes.currentGame, true, (gameText, choices) => {
-        speech += gameText;
+      utils.readAvailableGames(this, true, (gameText, choices) => {
+        if (choices.indexOf('tournament') > -1) {
+          speech = res.strings.LAUNCH_WELCOME_TOURNAMENT.replace('{0}', 50);
+        } else {
+          speech += gameText;
+        }
         this.attributes.choices = choices;
         this.attributes.originalChoices = choices;
         this.handler.state = 'SELECTGAME';
