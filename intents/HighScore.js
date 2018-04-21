@@ -32,7 +32,22 @@ module.exports = {
       let speech = '';
       let reprompt;
 
-      if (!highScores) {
+      if (gameScores && gameScores.top && context.attributes.currentGame == 'tournament') {
+        // Only read the game scores
+        if (gameScores.rank) {
+          speech += res.strings.LEADER_GAME_RANKING
+             .replace('{0}', gameScores.score)
+             .replace('{1}', res.sayGame(context.attributes.currentGame))
+             .replace('{2}', gameScores.rank)
+             .replace('{3}', gameScores.count);
+        }
+
+        // And what is the leader board for this game?
+        const topScores = gameScores.top.map((x) => res.strings.LEADER_GAME_FORMAT.replace('{0}', x));
+        speech += res.strings.LEADER_TOP_SCORES
+            .replace('{0}', topScores.length)
+            .replace('{1}', speechUtils.and(topScores, {locale: context.event.request.locale, pause: '300ms'}));
+      } else if (!highScores) {
         speech = res.strings.LEADER_NO_SCORES;
       } else {
         if (!highScores.count || !highScores.top) {
@@ -52,7 +67,7 @@ module.exports = {
               .replace('{0}', topScores.length)
               .replace('{1}', speechUtils.and(topScores, {locale: context.event.request.locale, pause: '300ms'}));
 
-          if (gameScores) {
+          if (gameScores && gameScores.top) {
             if (gameScores.rank) {
               speech += res.strings.LEADER_GAME_RANKING
                  .replace('{0}', gameScores.score)

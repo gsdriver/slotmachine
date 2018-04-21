@@ -13,12 +13,6 @@ module.exports = {
     const rules = utils.getGame(this.attributes.currentGame);
     let speech;
 
-    if (!rules && (this.attributes.currentGame == 'tournament')) {
-      this.attributes.currentGame = 'basic';
-      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED, res.strings.ERROR_REPROMPT);
-      return;
-    }
-
     if (this.handler.state == 'SELECTGAME') {
       // If selecting a game, help string is different
       const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));

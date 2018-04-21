@@ -118,7 +118,7 @@ function runSkill(event, context, callback) {
   const alexa = Alexa.handler(event, context);
 
   // The first thing we need to check is whether to offer a tournament machine
-  utils.checkForTournament();
+  utils.checkForTournament(event);
   alexa.appId = APP_ID;
   if (!event.session.sessionId || event.session['new']) {
     const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});

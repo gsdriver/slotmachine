@@ -118,30 +118,28 @@ const games = {
       'diamond|diamond|diamond': 100,
     },
   },
-};
-
-// Tournament with 105% payout
-const tournament = {
- 'maxCoins': 5,
- 'slots': 3,
- 'symbols': ['cherry', 'plum', 'bell', 'bar', 'seven', 'diamond'],
- 'frequency': [
-   {'symbols': [5, 6, 5, 8, 4, 4]},
-   {'symbols': [2, 15, 12, 4, 2, 1]},
-   {'symbols': [1, 12, 8, 8, 4, 1]},
- ],
- 'substitutes': {
-   'cherry': ['bell', 'bar', 'seven', 'diamond'],
- },
- 'special': 'WILD_SPECIAL',
- 'payouts': {
-   'cherry': 2,
-   'bell|bell|bell': 5,
-   'bar|bar|bar': 10,
-   'seven|seven|seven': 20,
-   'diamond|diamond|diamond': 100,
-   'cherry|cherry|cherry': 1000,
- },
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'plum', 'bell', 'bar', 'seven', 'diamond'],
+    'frequency': [
+      {'symbols': [5, 6, 5, 8, 4, 4]},
+      {'symbols': [2, 15, 12, 4, 2, 1]},
+      {'symbols': [1, 12, 8, 8, 4, 1]},
+    ],
+    'substitutes': {
+      'cherry': ['bell', 'bar', 'seven', 'diamond'],
+    },
+    'special': 'WILD_SPECIAL',
+    'payouts': {
+      'cherry': 2,
+      'bell|bell|bell': 5,
+      'bar|bar|bar': 10,
+      'seven|seven|seven': 20,
+      'diamond|diamond|diamond': 100,
+      'cherry|cherry|cherry': 1000,
+    },
+  },
 };
 
 module.exports = {
@@ -201,11 +199,49 @@ module.exports = {
   setEvent: function(event) {
     globalEvent = event;
   },
-  checkForTournament: function() {
-    // As part of launch, check if we need to add a tournament machine
-    if (process.env.TOURNAMENT) {
-      games.tournament = tournament;
+  checkForTournament: function(event) {
+    if (!event.session.attributes.temp) {
+      event.session.attributes.temp = {};
     }
+
+    // Active on Wednesday PST (Day=3) from 6-7 PM
+    // Controlled by TOURNEYTIME environment variable
+    if (process.env.TOURNEYTIME) {
+      const times = process.env.TOURNEYTIME.split(',');
+      const d = new Date();
+      d.setHours(d.getHours() - 7);
+
+      event.session.attributes.temp.tournamentAvailable =
+        ((times.length == 2) && (times[0] == d.getDay())
+        && (times[1] == d.getHours()));
+    } else {
+      event.session.attributes.temp.tournamentAvailable = false;
+    }
+  },
+  timeUntilTournament: function() {
+    // How long until the next tournament?
+    if (process.env.TOURNEYTIME) {
+      const times = process.env.TOURNEYTIME.split(',');
+
+      if (times.length == 2) {
+        const d = new Date();
+        d.setHours(d.getHours() - 7);
+
+        let daysLeft = (times[0] - d.getDay());
+        let hoursLeft = (times[1] - d.getHours());
+        if (hoursLeft < 0) {
+          daysLeft--;
+          hoursLeft += 24;
+        }
+        if (daysLeft < 0) {
+          daysLeft += 7;
+        }
+
+        return {days: daysLeft, hours: hoursLeft};
+      }
+    }
+
+    return undefined;
   },
   getRemainingTournamentTime: function(context) {
     const res = require('./' + context.event.request.locale + '/resources');
@@ -228,7 +264,7 @@ module.exports = {
           .replace('{0}', minutesLeft)
           .replace('{1}', secondsLeft);
       } else {
-        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
+        text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
           .replace('{0}', secondsLeft);
       }
     }
@@ -304,7 +340,7 @@ module.exports = {
     let gameToAdd = context.attributes.currentGame;
     let offerTournament = false;
 
-    if (games.tournament) {
+    if (context.attributes.temp.tournamentAvailable) {
       // If they already busted out, don't offer it
       if (!context.attributes.tournament || !context.attributes.tournament.busted) {
         // Offer the tournament

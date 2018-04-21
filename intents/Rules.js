@@ -14,12 +14,6 @@ module.exports = {
     const reprompt = res.strings.RULES_REPROMPT;
     let payout;
 
-    if (!rules && (this.attributes.currentGame == 'tournament')) {
-      this.attributes.currentGame = 'basic';
-      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED, res.strings.ERROR_REPROMPT);
-      return;
-    }
-
     // Wild symbols
     if (rules.special) {
       speech += res.strings[rules.special];

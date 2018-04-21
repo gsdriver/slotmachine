@@ -20,6 +20,8 @@ const resources = {
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
+  'EXIT_TOURNAMENT_TODAY': 'Join us today from 6 to 7 PM Pacific for the slot machine tournament!',
+  'EXIT_TOURNAMENT_SOON': 'Join us on Wednesday from 6 to 7 PM Pacific for the slot machine tournament!',
   // From HighScore.js
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Bet.js
@@ -36,7 +38,7 @@ const resources = {
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
   'HELP_ACHIEVEMENT_POINTS': 'You earn 10 points per game each day you play <break time=\'200ms\'/> 25 points for each payout of 50 to 1 or more <break time=\'200ms\'/> 100 points for each tournament win <break time=\'200ms\'/> N points for each streak of N wins in a row. ',
-  'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - N points for each streak of N wins in a row.\n',
+  'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - 100 points for each tournament win \n - N points for each streak of N wins in a row.\n',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
   'RULES_CARD_TITLE': 'Payout Table',
