@@ -12,7 +12,7 @@ const resources = {
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
   'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
   'LAUNCH_WELCOME_ACHIEVEMENT': 'Welcome back to Slot Machine. You have {0} achievement points. ',
-  'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0} minutes. ',
+  'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. ',
   'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
   'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
   // Select.js
@@ -30,11 +30,12 @@ const resources = {
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
   // From Help.js
+  'HELP_TOURNAMENT': 'There are {0} left in tournament play. At the end of the tournament the highest bankroll will win 100 achievement points. ',
   'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
-  'HELP_ACHIEVEMENT_POINTS': 'You earn 10 points per game each day you play <break time=\'200ms\'/> 25 points for each payout of 50 to 1 or more <break time=\'200ms\'/> N points for each streak of N wins in a row. ',
+  'HELP_ACHIEVEMENT_POINTS': 'You earn 10 points per game each day you play <break time=\'200ms\'/> 25 points for each payout of 50 to 1 or more <break time=\'200ms\'/> 100 points for each tournament win <break time=\'200ms\'/> N points for each streak of N wins in a row. ',
   'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - N points for each streak of N wins in a row.\n',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
@@ -72,12 +73,18 @@ const resources = {
   'SELECT_GAME': 'Select a game to play',
   'DISPLAY_PAYOUT_WINNER': 'You won {0} coins',
   'DISPLAY_PAYOUT_LOSER': 'Sorry, you lost',
+  'TOURNAMENT_WINNER': 'Congratulations, you won the tournament with {0} coins! ',
+  'TOURNAMENT_LOSER': 'Sorry, you didn\'t win the tournament. The high score was {0} coins and you had {1} coins. ',
+  'TOURNAMENT_TIMELEFT_MINUTES': '{0} minutes',
+  'TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS': '{0} minutes and {1} seconds',
+  'TOURNAMENT_TIMELEFT_SECONDS': '{0} seconds',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
   'PROGRESSIVE_JACKPOT_ONLY': 'The progressive jackpot is currently {0} coins. ',
   'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
+  'TOURNAMENT_ENDED': 'The tournament has ended. Please check again later to hear the results!',
 };
 
 module.exports = {

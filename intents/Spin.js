@@ -18,6 +18,12 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
 
+    if (!rules && (this.attributes.currentGame == 'tournament')) {
+      this.attributes.currentGame = 'basic';
+      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED, res.strings.ERROR_REPROMPT);
+      return;
+    }
+
     // If there is partial speech from a previous intent, append
     if (this.attributes.partialSpeech) {
       speechError = this.attributes.partialSpeech;

@@ -10,6 +10,7 @@ const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
@@ -206,6 +207,90 @@ module.exports = {
       games.tournament = tournament;
     }
   },
+  getRemainingTournamentTime: function(context) {
+    const res = require('./' + context.event.request.locale + '/resources');
+    const now = new Date();
+    let text;
+
+    // Ends at the top of the hour
+    let minutesLeft = 59 - now.getMinutes();
+    const secondsLeft = 60 - now.getSeconds();
+    if (minutesLeft > 5) {
+      // Just read minutes, rounded
+      if (secondsLeft > 30) {
+        minutesLeft++;
+      }
+      text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
+        .replace('{0}', minutesLeft);
+    } else {
+      if (minutesLeft) {
+        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
+          .replace('{0}', minutesLeft)
+          .replace('{1}', secondsLeft);
+      } else {
+        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
+          .replace('{0}', secondsLeft);
+      }
+    }
+
+    return text;
+  },
+  getTournamentComplete: function(locale, attributes, callback) {
+    // If the user is in a tournament, we check to see if that tournament
+    // is complete.  If so, we set certain attributes and return a result
+    // string via the callback for the user
+    const game = attributes.tournament;
+    const res = require('./' + locale + '/resources');
+
+    if (game) {
+      // You are in a tournament - let's see if it's completed
+      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}, (err, data) => {
+        if (err) {
+          console.log(err, err.stack);
+          callback('');
+        } else {
+          // Yeah, I can do a binary search (this is sorted), but straight search for now
+          const results = JSON.parse(data.Body.toString('ascii'));
+          let i;
+          let result;
+          let speech = '';
+
+          // Go through the results and find one that closed AFTER our last play
+          for (i = 0; i < (results ? results.length : 0); i++) {
+            if (results[i].timestamp > game.timestamp) {
+              // This is the one
+              result = results[i];
+              break;
+            }
+          }
+
+          if (result) {
+            if (game.bankroll >= result.highScore) {
+              // Congratulations, you won!
+              if (!attributes.achievements) {
+                attributes.achievements = {trophy: 1};
+              } else {
+                attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
+              }
+              speech = res.strings.TOURNAMENT_WINNER.replace('{0}', game.bankroll);
+            } else {
+              speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
+            }
+
+            if (attributes.currentGame == 'tournament') {
+              attributes.currentGame = 'basic';
+            }
+            attributes['tournament'] = undefined;
+          }
+
+          callback(speech);
+        }
+      });
+    } else {
+      // No-op, you weren't playing
+      callback('');
+    }
+  },
   getGame: function(name) {
     return games[name];
   },
@@ -381,6 +466,9 @@ module.exports = {
     let achievementScore = 0;
 
     if (achievements) {
+      if (achievements.trophy) {
+        achievementScore += 100 * achievements.trophy;
+      }
       if (achievements.gamedaysPlayed) {
         achievementScore += 10 * achievements.gamedaysPlayed;
       }

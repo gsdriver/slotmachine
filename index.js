@@ -75,22 +75,27 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
 
 const handlers = {
   'NewSession': function() {
-    // Initialize attributes and route the request
-    if (!this.attributes.currentGame) {
-      // This is a new user
-      this.attributes.newUser = true;
-      this.attributes.currentGame = 'basic';
-    }
+    utils.getTournamentComplete(this.event.request.locale, this.attributes, (result) => {
+      // Initialize attributes and route the request
+      if (!this.attributes.currentGame) {
+        // This is a new user
+        this.attributes.newUser = true;
+        this.attributes.currentGame = 'basic';
+      }
 
-    this.attributes.playerLocale = this.event.request.locale;
-    if (!this.attributes[this.attributes.currentGame]) {
-      this.attributes[this.attributes.currentGame] = {
-        bankroll: 1000,
-        high: 1000,
-      };
-    }
+      this.attributes.playerLocale = this.event.request.locale;
+      if (!this.attributes[this.attributes.currentGame]) {
+        this.attributes[this.attributes.currentGame] = {
+          bankroll: 1000,
+          high: 1000,
+        };
+      }
 
-    this.emit('LaunchRequest');
+      if (result && (result.length > 0)) {
+        this.attributes.tournamentResult = result;
+      }
+      this.emit('LaunchRequest');
+    });
   },
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {

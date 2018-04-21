@@ -11,7 +11,12 @@ module.exports = {
     // Tell them the rules, their bankroll and offer a few things they can do
     const res = require('../' + this.event.request.locale + '/resources');
     const score = utils.getAchievementScore(this.attributes.achievements);
-    let speech;
+    let speech = '';
+
+    if (this.attributes.tournamentResult) {
+      speech += this.attributes.tournamentResult;
+      this.attributes.tournamentResult = undefined;
+    }
 
     // For a new user, just tell them to bet or say spin (which places a bet)
     if (this.attributes.newUser) {
@@ -20,15 +25,15 @@ module.exports = {
           res.strings.LAUNCH_NEWUSER, res.strings.LAUNCH_NEWUSER_REPROMPT);
     } else {
       if (score) {
-        speech = res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
+        speech += res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
       } else {
-        speech = res.strings.LAUNCH_WELCOME;
+        speech += res.strings.LAUNCH_WELCOME;
       }
 
       // Read the available games then prompt for each one
       utils.readAvailableGames(this, true, (gameText, choices) => {
         if (choices.indexOf('tournament') > -1) {
-          speech = res.strings.LAUNCH_WELCOME_TOURNAMENT.replace('{0}', 50);
+          speech = res.strings.LAUNCH_WELCOME_TOURNAMENT.replace('{0}', utils.getRemainingTournamentTime(this));
         } else {
           speech += gameText;
         }

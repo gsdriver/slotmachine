@@ -19,6 +19,12 @@ module.exports = {
     const rules = utils.getGame(this.attributes.currentGame);
     const amountSlot = this.event.request.intent.slots.Amount;
 
+    if (!rules && (this.attributes.currentGame == 'tournament')) {
+      this.attributes.currentGame = 'basic';
+      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED, res.strings.ERROR_REPROMPT);
+      return;
+    }
+
     // Default to one coin
     if (amountSlot && amountSlot.value) {
       // If the bet amount isn't an integer, we'll use the default value (1 unit)
