@@ -20,8 +20,8 @@ const resources = {
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
-  'EXIT_TOURNAMENT_TODAY': 'Join us today from 6 to 7 PM Pacific for the slot machine tournament!',
-  'EXIT_TOURNAMENT_SOON': 'Join us on Wednesday from 6 to 7 PM Pacific for the slot machine tournament!',
+  'EXIT_TOURNAMENT_TODAY': 'Thanks for playing! Play Slot Machine today from 6 to 7 PM Pacific Time for the slot machine tournament!',
+  'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Play Slot Machine on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
   // From HighScore.js
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Bet.js
@@ -86,7 +86,7 @@ const resources = {
   'READ_BANKROLL': 'You have {0}. ',
   'PROGRESSIVE_JACKPOT_ONLY': 'The progressive jackpot is currently {0} coins. ',
   'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
-  'TOURNAMENT_ENDED': 'The tournament has ended. Please check again later to hear the results!',
+  'TOURNAMENT_ENDED': 'The tournament has ended. Please check again later to hear the results! ',
 };
 
 module.exports = {

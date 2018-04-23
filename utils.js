@@ -317,6 +317,15 @@ module.exports = {
               attributes.currentGame = 'basic';
             }
             attributes['tournament'] = undefined;
+          } else {
+            // Tournament hasn't closed yet - is it active?  If not, flip to basic and
+            // let them know the tournament is over
+            if (!attributes.temp.tournamentAvailable) {
+              speech = res.strings.TOURNAMENT_ENDED;
+              if (attributes.currentGame == 'tournament') {
+                attributes.currentGame = 'basic';
+              }
+            }
           }
 
           callback(speech);
