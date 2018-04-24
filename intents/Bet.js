@@ -19,6 +19,7 @@ module.exports = {
     const rules = utils.getGame(this.attributes.currentGame);
     const amountSlot = this.event.request.intent.slots.Amount;
 
+    this.attributes.temp.readingRules = false;
     if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
       this.attributes.currentGame = 'basic';
       utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED,

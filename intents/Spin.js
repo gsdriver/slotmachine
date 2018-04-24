@@ -19,6 +19,7 @@ module.exports = {
     const rules = utils.getGame(this.attributes.currentGame);
 
     // Just in case they were trying to play at the last minute...
+    this.attributes.temp.readingRules = false;
     if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
       this.attributes.currentGame = 'basic';
       utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED,

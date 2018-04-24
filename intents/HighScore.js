@@ -10,6 +10,7 @@ const speechUtils = require('alexa-speech-utils')();
 module.exports = {
   handleIntent: function() {
     // First read leader board based on achievements
+    this.attributes.temp.readingRules = false;
     utils.readLeaderBoard(this.event.session.user.userId,
       'achievement',
       this.attributes, (err, highScores) => {

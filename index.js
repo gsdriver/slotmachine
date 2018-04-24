@@ -12,6 +12,7 @@ const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
+const Stop = require('./intents/Stop');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
@@ -34,7 +35,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
-  'AMAZON.StopIntent': Exit.handleIntent,
+  'AMAZON.StopIntent': Stop.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
     saveState(this.event.session.user.userId, this.attributes);
@@ -61,7 +62,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
-  'AMAZON.StopIntent': Exit.handleIntent,
+  'AMAZON.StopIntent': Stop.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
     saveState(this.event.session.user.userId, this.attributes);

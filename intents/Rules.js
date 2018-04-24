@@ -29,6 +29,7 @@ module.exports = {
 
     speech += reprompt;
 
+    this.attributes.temp.readingRules = true;
     utils.emitResponse(this, null, null,
           speech, reprompt,
           res.strings.RULES_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
