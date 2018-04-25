@@ -20,8 +20,8 @@ const resources = {
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
-  'EXIT_TOURNAMENT_TODAY': 'Thanks for playing! Play Slot Machine today from 6 to 7 PM Pacific Time for the slot machine tournament!',
-  'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Play Slot Machine on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
+  'EXIT_TOURNAMENT_TODAY': 'Thanks for playing! Come back between 6 and 7 PM Pacific Time for the slot machine tournament!',
+  'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Come back on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
   // From HighScore.js
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Bet.js
@@ -41,6 +41,7 @@ const resources = {
   'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - 100 points for each tournament win \n - N points for each streak of N wins in a row.\n',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
+  'RULES_SELECT_REPROMPT': 'Say yes to play this game or no to hear the next option.',
   'RULES_CARD_TITLE': 'Payout Table',
   // From Spin.js
   'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',

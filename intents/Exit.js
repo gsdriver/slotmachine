@@ -17,7 +17,7 @@ module.exports = {
       if (tournamentTime.days == 0) {
         // It's later today
         speech = res.strings.EXIT_TOURNAMENT_TODAY;
-      } else if (tournamentTime.days < 3) {
+      } else if (tournamentTime.days < 2) {
         // Tease it!
         speech = res.strings.EXIT_TOURNAMENT_SOON;
       }
