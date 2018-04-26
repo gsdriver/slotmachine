@@ -118,6 +118,8 @@ const games = {
       'diamond|diamond|diamond': 100,
     },
   },
+  /*
+  // 105% payout; high jackpot
   'tournament': {
     'maxCoins': 5,
     'slots': 3,
@@ -138,6 +140,27 @@ const games = {
       'seven|seven|seven': 20,
       'diamond|diamond|diamond': 100,
       'cherry|cherry|cherry': 1000,
+    },
+  },
+  */
+  // 110% payout, lower top jackpot
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['heart', 'bell', 'orange', 'bar', 'seven'],
+    'frequency': [
+      {'symbols': [6, 7, 7, 4, 3]},
+      {'symbols': [8, 10, 5, 4, 2]},
+      {'symbols': [2, 9, 8, 6, 4]},
+    ],
+    'payouts': {
+      'heart': 2,
+      'heart|heart': 4,
+      'bell|bell|bell': 5,
+      'orange|orange|orange': 6,
+      'bar|bar': 10,
+      'bar|bar|bar': 25,
+      'seven|seven|seven': 50,
     },
   },
 };
