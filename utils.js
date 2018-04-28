@@ -177,7 +177,7 @@ module.exports = {
         result: result,
       });
     }
-    if (response) {
+    if (response || globalEvent.session.attributes.temp.forceSave) {
       formData.savedb = JSON.stringify({
         userId: globalEvent.session.user.userId,
         attributes: globalEvent.session.attributes,
@@ -229,17 +229,25 @@ module.exports = {
 
     // Active on Wednesday PST (Day=3) from 6-7 PM
     // Controlled by TOURNEYTIME environment variable
+    let tournamentAvailable;
     if (process.env.TOURNEYTIME) {
       const times = process.env.TOURNEYTIME.split(',');
       const d = new Date();
       d.setHours(d.getHours() - 7);
 
-      event.session.attributes.temp.tournamentAvailable =
+      tournamentAvailable =
         ((times.length == 2) && (times[0] == d.getDay())
         && (times[1] == d.getHours()));
     } else {
-      event.session.attributes.temp.tournamentAvailable = false;
+      tournamentAvailable = false;
     }
+
+    if (event.session.attributes.temp.tournamentAvailable && !tournamentAvailable) {
+      // Tournament was available, now it's not - force a database save
+      event.session.attributes.temp.forceSave = true;
+    }
+
+    event.session.attributes.temp.tournamentAvailable = tournamentAvailable;
   },
   timeUntilTournament: function() {
     // How long until the next tournament?
