@@ -9,10 +9,14 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     const res = require('../' + this.event.request.locale + '/resources');
-    const rules = utils.getGame(this.attributes.currentGame);
     let speech = '';
-    const reprompt = res.strings.RULES_REPROMPT;
     let payout;
+    const reprompt = (this.handler.state == 'SELECTGAME')
+      ? res.strings.RULES_SELECT_REPROMPT
+      : res.strings.RULES_REPROMPT;
+    const rules = utils.getGame((this.handler.state == 'SELECTGAME')
+      ? this.attributes.choices[0]
+      : this.attributes.currentGame);
 
     // Wild symbols
     if (rules.special) {
@@ -29,6 +33,7 @@ module.exports = {
 
     speech += reprompt;
 
+    this.attributes.temp.readingRules = true;
     utils.emitResponse(this, null, null,
           speech, reprompt,
           res.strings.RULES_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));

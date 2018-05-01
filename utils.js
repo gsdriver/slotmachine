@@ -10,6 +10,7 @@ const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
@@ -23,6 +24,7 @@ const games = {
   'basic': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -44,6 +46,7 @@ const games = {
   'wild': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
     'frequency': [
       {'symbols': [3, 16, 10, 4, 6]},
@@ -70,6 +73,7 @@ const games = {
   'loose': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
     'frequency': [
       {'symbols': [5, 6, 10, 10, 1]},
@@ -90,6 +94,7 @@ const games = {
   'progressive': {
     'maxCoins': 5,
     'slots': 3,
+    'canReset': true,
     'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -113,6 +118,77 @@ const games = {
       'diamond|diamond|diamond': 100,
     },
   },
+  /*
+  // 105% payout; high jackpot
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'plum', 'bell', 'bar', 'seven', 'diamond'],
+    'frequency': [
+      {'symbols': [5, 6, 5, 8, 4, 4]},
+      {'symbols': [2, 15, 12, 4, 2, 1]},
+      {'symbols': [1, 12, 8, 8, 4, 1]},
+    ],
+    'substitutes': {
+      'cherry': ['bell', 'bar', 'seven', 'diamond'],
+    },
+    'special': 'WILD_SPECIAL',
+    'welcome': 'HIGH_JACKPOT',
+    'payouts': {
+      'cherry': 2,
+      'bell|bell|bell': 5,
+      'bar|bar|bar': 10,
+      'seven|seven|seven': 20,
+      'diamond|diamond|diamond': 100,
+      'cherry|cherry|cherry': 1000,
+    },
+  },
+  */
+  // 110% payout, lower top jackpot
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['heart', 'bell', 'orange', 'bar', 'seven'],
+    'frequency': [
+      {'symbols': [6, 7, 7, 4, 3]},
+      {'symbols': [8, 10, 5, 4, 2]},
+      {'symbols': [2, 9, 8, 6, 4]},
+    ],
+    'welcome': 'HIGH_PAYOUT',
+    'payouts': {
+      'heart': 2,
+      'heart|heart': 4,
+      'bell|bell|bell': 5,
+      'orange|orange|orange': 6,
+      'bar|bar': 10,
+      'bar|bar|bar': 25,
+      'seven|seven|seven': 50,
+    },
+  },
+  /*
+  // 107% payout, 40% chance of win
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['chicken', 'turkey', 'pork', 'veal', 'steak'],
+    'frequency': [
+      {'symbols': [4, 4, 3, 2, 1]},
+      {'symbols': [6, 8, 5, 4, 2]},
+      {'symbols': [2, 9, 8, 6, 2]},
+    ],
+    'welcome': 'STANDARD_MEAT',
+    'payouts': {
+      'chicken': 1,
+      'chicken|chicken': 2,
+      'turkey|turkey|turkey': 4,
+      'pork|pork|pork': 6,
+      'veal|veal|veal': 8,
+      'steak': 5,
+      'steak|steak': 20,
+      'steak|steak|steak': 100,
+    },
+  },
+  */
 };
 
 module.exports = {
@@ -127,7 +203,7 @@ module.exports = {
         result: result,
       });
     }
-    if (response) {
+    if (response || globalEvent.session.attributes.temp.forceSave) {
       formData.savedb = JSON.stringify({
         userId: globalEvent.session.user.userId,
         attributes: globalEvent.session.attributes,
@@ -172,41 +248,200 @@ module.exports = {
   setEvent: function(event) {
     globalEvent = event;
   },
+  checkForTournament: function(event) {
+    if (!event.session.attributes.temp) {
+      event.session.attributes.temp = {};
+    }
+
+    // Active on Wednesday PST (Day=3) from 6-7 PM
+    // Controlled by TOURNEYTIME environment variable
+    let tournamentAvailable;
+    if (process.env.TOURNEYTIME) {
+      const times = process.env.TOURNEYTIME.split(',');
+      const d = new Date();
+      d.setHours(d.getHours() - 7);
+
+      tournamentAvailable =
+        ((times.length == 2) && (times[0] == d.getDay())
+        && (times[1] == d.getHours()));
+    } else {
+      tournamentAvailable = false;
+    }
+
+    if (event.session.attributes.temp.tournamentAvailable && !tournamentAvailable) {
+      // Tournament was available, now it's not - force a database save
+      event.session.attributes.temp.forceSave = true;
+    }
+
+    event.session.attributes.temp.tournamentAvailable = tournamentAvailable;
+  },
+  timeUntilTournament: function() {
+    // How long until the next tournament?
+    if (process.env.TOURNEYTIME) {
+      const times = process.env.TOURNEYTIME.split(',');
+
+      if (times.length == 2) {
+        const d = new Date();
+        d.setHours(d.getHours() - 7);
+
+        let daysLeft = (times[0] - d.getDay());
+        let hoursLeft = (times[1] - d.getHours());
+        if (hoursLeft < 0) {
+          daysLeft--;
+          hoursLeft += 24;
+        }
+        if (daysLeft < 0) {
+          daysLeft += 7;
+        }
+
+        return {days: daysLeft, hours: hoursLeft};
+      }
+    }
+
+    return undefined;
+  },
+  getRemainingTournamentTime: function(context) {
+    const res = require('./' + context.event.request.locale + '/resources');
+    const now = new Date();
+    let text;
+
+    // Ends at the top of the hour
+    let minutesLeft = 59 - now.getMinutes();
+    const secondsLeft = 60 - now.getSeconds();
+    if (minutesLeft > 5) {
+      // Just read minutes, rounded
+      if (secondsLeft > 30) {
+        minutesLeft++;
+      }
+      text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
+        .replace('{0}', minutesLeft);
+    } else {
+      if (minutesLeft) {
+        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
+          .replace('{0}', minutesLeft)
+          .replace('{1}', secondsLeft);
+      } else {
+        text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
+          .replace('{0}', secondsLeft);
+      }
+    }
+
+    return text;
+  },
+  getTournamentComplete: function(locale, attributes, callback) {
+    // If the user is in a tournament, we check to see if that tournament
+    // is complete.  If so, we set certain attributes and return a result
+    // string via the callback for the user
+    const game = attributes.tournament;
+    const res = require('./' + locale + '/resources');
+
+    if (game) {
+      // You are in a tournament - let's see if it's completed
+      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}, (err, data) => {
+        if (err) {
+          console.log(err, err.stack);
+          callback('');
+        } else {
+          // Yeah, I can do a binary search (this is sorted), but straight search for now
+          const results = JSON.parse(data.Body.toString('ascii'));
+          let i;
+          let result;
+          let speech = '';
+
+          // Go through the results and find one that closed AFTER our last play
+          for (i = 0; i < (results ? results.length : 0); i++) {
+            if (results[i].timestamp > game.timestamp) {
+              // This is the one
+              result = results[i];
+              break;
+            }
+          }
+
+          if (result) {
+            if (game.bankroll >= result.highScore) {
+              // Congratulations, you won!
+              if (!attributes.achievements) {
+                attributes.achievements = {trophy: 1};
+              } else {
+                attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
+              }
+              speech = res.strings.TOURNAMENT_WINNER.replace('{0}', game.bankroll);
+            } else {
+              speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
+            }
+
+            if (attributes.currentGame == 'tournament') {
+              attributes.currentGame = 'basic';
+            }
+            attributes['tournament'] = undefined;
+          } else {
+            // Tournament hasn't closed yet - is it active?  If not, flip to basic and
+            // let them know the tournament is over
+            if (!attributes.temp.tournamentAvailable) {
+              speech = res.strings.TOURNAMENT_ENDED;
+              if (attributes.currentGame == 'tournament') {
+                attributes.currentGame = 'basic';
+              }
+            }
+          }
+
+          callback(speech);
+        }
+      });
+    } else {
+      // No-op, you weren't playing
+      callback('');
+    }
+  },
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(locale, currentGame, currentFirst, callback) {
-    const res = require('./' + locale + '/resources');
+  readAvailableGames: function(context, currentFirst, callback) {
+    const res = require('./' + context.event.request.locale + '/resources');
     let speech;
     const choices = [];
     const choiceText = [];
     let game;
     let count = 0;
+    let gameToAdd = context.attributes.currentGame;
+    let offerTournament = false;
+
+    if (context.attributes.temp.tournamentAvailable) {
+      // If they already busted out, don't offer it
+      if (!context.attributes.tournament || !context.attributes.tournament.busted) {
+        // Offer the tournament
+        offerTournament = true;
+        if (currentFirst) {
+          gameToAdd = 'tournament';
+        }
+      }
+    }
 
     for (game in games) {
       if (game) {
-        count++;
-        // Put the last played game at the front of the list
-        if (game != currentGame) {
-         choices.push(game);
-         choiceText.push(res.sayGame(game));
+        if ((game != 'tournament') || offerTournament) {
+          count++;
+          // Put the last played game at the front of the list
+          if (game != gameToAdd) {
+           choices.push(game);
+           choiceText.push(res.sayGame(game));
+         }
        }
       }
     }
 
-    // And now the current game - either first or last in the list
-    if (currentGame && games[currentGame]) {
+    if (gameToAdd && games[gameToAdd]) {
       if (currentFirst) {
-        choices.unshift(currentGame);
-        choiceText.unshift(res.sayGame(currentGame));
+        choices.unshift(gameToAdd);
+        choiceText.unshift(res.sayGame(gameToAdd));
       } else {
-         choices.push(currentGame);
-         choiceText.push(res.sayGame(currentGame));
+         choices.push(gameToAdd);
+         choiceText.push(res.sayGame(gameToAdd));
       }
     }
 
     speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
-    speech += speechUtils.and(choiceText, {locale: locale});
+    speech += speechUtils.and(choiceText, {locale: context.event.request.locale});
     speech += '. ';
     callback(speech, choices);
   },
@@ -333,6 +568,9 @@ module.exports = {
     let achievementScore = 0;
 
     if (achievements) {
+      if (achievements.trophy) {
+        achievementScore += 100 * achievements.trophy;
+      }
       if (achievements.gamedaysPlayed) {
         achievementScore += 10 * achievements.gamedaysPlayed;
       }

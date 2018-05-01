@@ -13,8 +13,8 @@ module.exports = {
     let speech;
 
     // Read the available games then prompt for each one
-    utils.readAvailableGames(this.event.request.locale,
-        this.attributes.currentGame, false, (gameText, choices) => {
+    this.attributes.temp.readingRules = false;
+    utils.readAvailableGames(this, false, (gameText, choices) => {
       speech = gameText;
       this.attributes.choices = choices;
       this.attributes.originalChoices = choices;
@@ -57,6 +57,14 @@ function selectedGame(context, placeBet) {
   const attributes = context.attributes;
   let speech;
 
+  // Just in case they were trying to play at the last minute...
+  if (!context.attributes.temp.tournamentAvailable && (context.attributes.currentGame == 'tournament')) {
+    context.attributes.currentGame = 'basic';
+    utils.emitResponse(context, null, null, res.strings.TOURNAMENT_ENDED,
+        res.strings.ERROR_REPROMPT);
+    return;
+  }
+
   // First let's see if they selected an element via touch
   const index = getSelectedIndex(context);
   if ((index !== undefined) && (index >= 0) && (index < attributes.originalChoices.length)) {
@@ -80,6 +88,10 @@ function selectedGame(context, placeBet) {
   const game = attributes[attributes.currentGame];
   const rules = utils.getGame(attributes.currentGame);
   const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
+
+  if (rules.welcome) {
+    speech += res.strings[rules.welcome];
+  }
 
   // Check if there is a progressive jackpot
   utils.getProgressivePayout(attributes, (jackpot) => {

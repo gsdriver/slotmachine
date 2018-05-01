@@ -12,6 +12,7 @@ const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
+const Stop = require('./intents/Stop');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
@@ -29,12 +30,14 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'ElementSelected': Select.handleYesIntent,
   'GameIntent': Select.handleYesIntent,
   'SpinIntent': Select.handleBetIntent,
+  'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleNoIntent,
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
+  'AMAZON.NextIntent': Select.handleNoIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
-  'AMAZON.StopIntent': Exit.handleIntent,
+  'AMAZON.StopIntent': Stop.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
     saveState(this.event.session.user.userId, this.attributes);
@@ -59,9 +62,10 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
+  'AMAZON.NextIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
-  'AMAZON.StopIntent': Exit.handleIntent,
+  'AMAZON.StopIntent': Stop.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
     saveState(this.event.session.user.userId, this.attributes);
@@ -75,22 +79,27 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
 
 const handlers = {
   'NewSession': function() {
-    // Initialize attributes and route the request
-    if (!this.attributes.currentGame) {
-      // This is a new user
-      this.attributes.newUser = true;
-      this.attributes.currentGame = 'basic';
-    }
+    utils.getTournamentComplete(this.event.request.locale, this.attributes, (result) => {
+      // Initialize attributes and route the request
+      if (!this.attributes.currentGame) {
+        // This is a new user
+        this.attributes.newUser = true;
+        this.attributes.currentGame = 'basic';
+      }
 
-    this.attributes.playerLocale = this.event.request.locale;
-    if (!this.attributes[this.attributes.currentGame]) {
-      this.attributes[this.attributes.currentGame] = {
-        bankroll: 1000,
-        high: 1000,
-      };
-    }
+      this.attributes.playerLocale = this.event.request.locale;
+      if (!this.attributes[this.attributes.currentGame]) {
+        this.attributes[this.attributes.currentGame] = {
+          bankroll: 1000,
+          high: 1000,
+        };
+      }
 
-    this.emit('LaunchRequest');
+      if (result && (result.length > 0)) {
+        this.attributes.tournamentResult = result;
+      }
+      this.emit('LaunchRequest');
+    });
   },
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {
@@ -112,6 +121,8 @@ function runSkill(event, context, callback) {
 
   const alexa = Alexa.handler(event, context);
 
+  // The first thing we need to check is whether to offer a tournament machine
+  utils.checkForTournament(event);
   alexa.appId = APP_ID;
   if (!event.session.sessionId || event.session['new']) {
     const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});

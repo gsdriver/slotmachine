@@ -18,6 +18,15 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
 
+    // Just in case they were trying to play at the last minute...
+    this.attributes.temp.readingRules = false;
+    if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
+      this.attributes.currentGame = 'basic';
+      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED,
+          res.strings.ERROR_REPROMPT);
+      return;
+    }
+
     // If there is partial speech from a previous intent, append
     if (this.attributes.partialSpeech) {
       speechError = this.attributes.partialSpeech;
@@ -211,13 +220,23 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
   let lastbet = bet;
   let speech = '';
   let reprompt = res.strings.SPIN_PLAY_AGAIN;
+  const rules = utils.getGame(attributes.currentGame);
 
   // If they have no units left, reset the bankroll
+  // unless this is tournament mode in which case - sorry you're out
   if (game.bankroll < 1) {
-    game.bankroll = 1000;
-    lastbet = undefined;
-    speech += res.strings.SPIN_BUSTED;
-    reprompt = res.strings.SPIN_BUSTED_REPROMPT;
+    if (!rules.canReset) {
+      // Sorry, you are out
+      game.busted = true;
+      attributes.currentGame = 'basic';
+      speech += res.strings.SPIN_OUTOFMONEY;
+      reprompt = res.strings.SPIN_BUSTED_REPROMPT;
+    } else {
+      game.bankroll = 1000;
+      lastbet = undefined;
+      speech += res.strings.SPIN_BUSTED;
+      reprompt = res.strings.SPIN_BUSTED_REPROMPT;
+    }
   } else {
     if (game.bankroll < lastbet) {
       // They still have money left, but if they don't have enough to support

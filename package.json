@@ -9,7 +9,7 @@
     "aws-sdk": "^2.28.0",
     "bluebird": "^3.5.0",
     "dashbot": "^9.4.3",
-    "request": "^2.81.0",
+    "request": "^2.85.0",
     "seedrandom": "^2.4.3"
   },
   "devDependencies": {
