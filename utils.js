@@ -133,6 +133,7 @@ const games = {
       'cherry': ['bell', 'bar', 'seven', 'diamond'],
     },
     'special': 'WILD_SPECIAL',
+    'welcome': 'HIGH_JACKPOT',
     'payouts': {
       'cherry': 2,
       'bell|bell|bell': 5,
@@ -153,6 +154,7 @@ const games = {
       {'symbols': [8, 10, 5, 4, 2]},
       {'symbols': [2, 9, 8, 6, 4]},
     ],
+    'welcome': 'HIGH_PAYOUT',
     'payouts': {
       'heart': 2,
       'heart|heart': 4,
@@ -163,6 +165,30 @@ const games = {
       'seven|seven|seven': 50,
     },
   },
+  /*
+  // 107% payout, 40% chance of win
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['chicken', 'turkey', 'pork', 'veal', 'steak'],
+    'frequency': [
+      {'symbols': [4, 4, 3, 2, 1]},
+      {'symbols': [6, 8, 5, 4, 2]},
+      {'symbols': [2, 9, 8, 6, 2]},
+    ],
+    'welcome': 'STANDARD_MEAT',
+    'payouts': {
+      'chicken': 1,
+      'chicken|chicken': 2,
+      'turkey|turkey|turkey': 4,
+      'pork|pork|pork': 6,
+      'veal|veal|veal': 8,
+      'steak': 5,
+      'steak|steak': 20,
+      'steak|steak|steak': 100,
+    },
+  },
+  */
 };
 
 module.exports = {

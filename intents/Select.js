@@ -89,6 +89,10 @@ function selectedGame(context, placeBet) {
   const rules = utils.getGame(attributes.currentGame);
   const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
 
+  if (rules.welcome) {
+    speech += res.strings[rules.welcome];
+  }
+
   // Check if there is a progressive jackpot
   utils.getProgressivePayout(attributes, (jackpot) => {
     speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(context.event.request.locale, game.bankroll));
