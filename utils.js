@@ -144,6 +144,7 @@ const games = {
     },
   },
   */
+  /*
   // 110% payout, lower top jackpot
   'tournament': {
     'maxCoins': 5,
@@ -165,7 +166,7 @@ const games = {
       'seven|seven|seven': 50,
     },
   },
-  /*
+  */
   // 107% payout, 40% chance of win
   'tournament': {
     'maxCoins': 5,
@@ -188,7 +189,6 @@ const games = {
       'steak|steak|steak': 100,
     },
   },
-  */
 };
 
 module.exports = {
@@ -271,6 +271,8 @@ module.exports = {
     if (event.session.attributes.temp.tournamentAvailable && !tournamentAvailable) {
       // Tournament was available, now it's not - force a database save
       event.session.attributes.temp.forceSave = true;
+    } else {
+      event.session.attributes.temp.forceSave = undefined;
     }
 
     event.session.attributes.temp.tournamentAvailable = tournamentAvailable;
