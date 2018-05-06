@@ -256,14 +256,10 @@ module.exports = {
     // Active on Wednesday PST (Day=3) from 6-7 PM
     // Controlled by TOURNEYTIME environment variable
     let tournamentAvailable;
-    if (process.env.TOURNEYTIME) {
-      const times = process.env.TOURNEYTIME.split(',');
-      const d = new Date();
-      d.setHours(d.getHours() - 7);
-
-      tournamentAvailable =
-        ((times.length == 2) && (times[0] == d.getDay())
-        && (times[1] == d.getHours()));
+    const times = getTournamentTimes();
+    if (times) {
+      tournamentAvailable = ((times.now.getTime() >= times.start.getTime())
+        && (times.now.getTime() <= times.end.getTime()));
     } else {
       tournamentAvailable = false;
     }
@@ -279,52 +275,48 @@ module.exports = {
   },
   timeUntilTournament: function() {
     // How long until the next tournament?
-    if (process.env.TOURNEYTIME) {
-      const times = process.env.TOURNEYTIME.split(',');
-
-      if (times.length == 2) {
-        const d = new Date();
-        d.setHours(d.getHours() - 7);
-
-        let daysLeft = (times[0] - d.getDay());
-        let hoursLeft = (times[1] - d.getHours());
-        if (hoursLeft < 0) {
-          daysLeft--;
-          hoursLeft += 24;
-        }
-        if (daysLeft < 0) {
-          daysLeft += 7;
-        }
-
-        return {days: daysLeft, hours: hoursLeft};
+    const times = getTournamentTimes();
+    if (times) {
+      let timeLeft = times.start.getTime() - times.now.getTime();
+      if (timeLeft < 0) {
+        // Tournament is probably active
+        timeLeft += 7 * 24 * 60 * 60 * 1000;
       }
+
+      const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hoursLeft = Math.floor((timeLeft - (daysLeft * 1000 * 60 * 60 * 24))
+            / (1000 * 60 * 60));
+      return {days: daysLeft, hours: hoursLeft};
     }
 
     return undefined;
   },
   getRemainingTournamentTime: function(context) {
     const res = require('./' + context.event.request.locale + '/resources');
-    const now = new Date();
-    let text;
+    let text = '';
+    const times = getTournamentTimes();
 
-    // Ends at the top of the hour
-    let minutesLeft = 59 - now.getMinutes();
-    const secondsLeft = 60 - now.getSeconds();
-    if (minutesLeft > 5) {
-      // Just read minutes, rounded
-      if (secondsLeft > 30) {
-        minutesLeft++;
-      }
-      text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
-        .replace('{0}', minutesLeft);
-    } else {
-      if (minutesLeft) {
-        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
-          .replace('{0}', minutesLeft)
-          .replace('{1}', secondsLeft);
+    if (times) {
+      let secondsLeft = Math.floor((times.end.getTime() - times.now.getTime()) / 1000);
+      let minutesLeft = Math.floor(secondsLeft / 60);
+      secondsLeft -= (minutesLeft * 60);
+
+      if (minutesLeft > 5) {
+        // Just read minutes, rounded
+        if (secondsLeft > 30) {
+          minutesLeft++;
+        }
+        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
+          .replace('{0}', minutesLeft);
       } else {
-        text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
-          .replace('{0}', secondsLeft);
+        if (minutesLeft) {
+          text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
+            .replace('{0}', minutesLeft)
+            .replace('{1}', secondsLeft);
+        } else {
+          text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
+            .replace('{0}', secondsLeft);
+        }
       }
     }
 
@@ -685,4 +677,56 @@ function buildDisplayTemplate(context) {
       context.response.renderTemplate(template);
     }
   }
+}
+
+function getTournamentTimes() {
+  let retVal;
+
+  if (process.env.TOURNEYTIME) {
+    const times = JSON.parse(process.env.TOURNEYTIME);
+
+    if ((times.day !== undefined) && (times.hour !== undefined)) {
+      retVal = {};
+
+      // First build off today's date
+      const d = new Date();
+      d.setHours(d.getHours() - 7);
+
+      const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      start.setHours(times.hour);
+      if (times.minute !== undefined) {
+        start.setMinutes(times.minute);
+      } else {
+        start.setMinutes(0);
+      }
+
+      // Now set the day of week
+      let offset = times.day - d.getDay();
+      if (offset < 0) {
+        offset += 7;
+      }
+      start.setDate(start.getDate() + offset);
+
+      // End is minutes after
+      const end = new Date(start.getTime());
+      if (times.length) {
+        end.setMinutes(end.getMinutes() + times.length);
+      } else {
+        end.setMinutes(end.getMinutes() + 60);
+      }
+
+      // Final check - if end comes before now, then add 7 days to
+      // both start and end
+      if (end.getTime() < d.getTime()) {
+        start.setDate(start.getDate() + 7);
+        end.setDate(end.getDate() + 7);
+      }
+
+      retVal.start = start;
+      retVal.end = end;
+      retVal.now = d;
+    }
+  }
+
+  return retVal;
 }
