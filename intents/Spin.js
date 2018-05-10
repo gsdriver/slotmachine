@@ -141,8 +141,8 @@ module.exports = {
       }
     }
 
-    game.result.payout = bet * (matchedPayout ? rules.payouts[matchedPayout] : 0);
-    if (matchedPayout) {
+    game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
+    if (game.result.payout > 0) {
       // You won!  If more than 50:1, play the jackpot sound
       if (rules.payouts[matchedPayout] >= 50) {
         speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
@@ -267,7 +267,7 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
     speech += res.strings.SPIN_JACKPOT_ACHIEVEMENT;
   }
 
-  if (outcome !== 'lose') {
+  if (game.result.payout >= bet) {
     attributes.winningStreak = (attributes.winningStreak + 1) || 1;
     if (attributes.winningStreak > 1) {
       attributes.streakScore = (attributes.streakScore + attributes.winningStreak)

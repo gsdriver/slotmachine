@@ -167,6 +167,7 @@ const games = {
     },
   },
   */
+  /*
   // 107% payout, 40% chance of win
   'tournament': {
     'maxCoins': 5,
@@ -187,6 +188,33 @@ const games = {
       'steak': 5,
       'steak|steak': 20,
       'steak|steak|steak': 100,
+    },
+  },
+  */
+  // 107% payout, every spin wins!
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'heart', 'orange', 'gold bar', 'seven'],
+    'frequency': [
+      {'symbols': [6, 4, 4, 4, 1]},
+      {'symbols': [10, 6, 5, 4, 2]},
+      {'symbols': [8, 4, 5, 3, 4]},
+    ],
+    'welcome': 'EVERYONE_WINS',
+    'special': 'PITY_PAYOUT',
+    'payouts': {
+      'cherry': 0.2,
+      'cherry|cherry|cherry': 4,
+      'heart': 0.2,
+      'heart|heart|heart': 6,
+      'orange': 0.2,
+      'orange|orange|orange': 8,
+      'gold bar': 0.2,
+      'gold bar|gold bar|gold bar': 10,
+      'seven': 10,
+      'seven|seven': 20,
+      'seven|seven|seven': 50,
     },
   },
 };

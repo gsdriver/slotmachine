@@ -24,7 +24,7 @@ module.exports = {
     }
 
     for (payout in rules.payouts) {
-      if (payout) {
+      if (payout && (rules.payouts[payout] >= 1)) {
         speech += utils.readPayout(this.event.request.locale, rules, payout);
         speech += utils.readPayoutAmount(this.event.request.locale, rules, payout);
         speech += ' <break time=\"200ms\"/>';
