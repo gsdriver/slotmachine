@@ -83,6 +83,11 @@ function selectedGame(context, placeBet) {
       bankroll: 1000,
       high: 1000,
     };
+
+    // If this is tournament, keep track of number of tournaments played
+    if (attributes.currentGame == 'tournament') {
+      attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
+    }
   }
 
   const game = attributes[attributes.currentGame];
