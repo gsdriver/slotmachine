@@ -201,6 +201,9 @@ module.exports = {
       }
     } else {
       // Sorry, you lost
+      if (rules.lose) {
+        speech += rules.lose;
+      }
       speech += res.strings.SPIN_LOSER;
       outcome = 'lose';
     }

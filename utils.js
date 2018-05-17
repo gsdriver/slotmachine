@@ -191,6 +191,7 @@ const games = {
     },
   },
   */
+  /*
   // 107% payout, every spin wins!
   'tournament': {
     'maxCoins': 5,
@@ -215,6 +216,30 @@ const games = {
       'seven': 10,
       'seven|seven': 20,
       'seven|seven|seven': 50,
+    },
+  },
+  */
+  // 110% payout, Simpsons theme
+  'tournament': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['maggie', 'lisa', 'marge', 'bart', 'homer'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 12, 2]},
+      {'symbols': [4, 6, 6, 6, 4]},
+      {'symbols': [24, 6, 6, 2, 1]},
+    ],
+    'welcome': 'SIMPSON_GAME',
+    'lose': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/doh.mp3\"/> ',
+    'payouts': {
+      'maggie': 2,
+      'maggie|maggie': 5,
+      'lisa|lisa|lisa': 10,
+      'marge|marge|marge': 12,
+      'bart|bart|bart': 15,
+      'homer': 5,
+      'homer|homer': 25,
+      'homer|homer|homer': 50,
     },
   },
 };
