@@ -231,6 +231,7 @@ const games = {
     ],
     'welcome': 'SIMPSON_GAME',
     'lose': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/doh.mp3\"/> ',
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/woohoo.mp3\"/> ',
     'payouts': {
       'maggie': 2,
       'maggie|maggie': 5,
@@ -697,31 +698,27 @@ function buildDisplayTemplate(context) {
 
       context.response.renderTemplate(listTemplate);
     } else if (game && game.result && game.result.spin) {
-      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
-      const format = 'https://s3-us-west-2.amazonaws.com/garrettvargas.com/img/slotmachine/slots/{0}.png';
-      let i = 0;
-
+      let name = '';
       game.result.spin.forEach((spin) => {
-        listItemBuilder.addItem(makeImage(format.replace('{0}', spin)), 'slot.' + i++);
+        if (name.length > 0) {
+          name += '-';
+        }
+        name += spin;
       });
 
       const title = (game.result.payout)
         ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
         : res.strings.DISPLAY_PAYOUT_LOSER;
-      const listItems = listItemBuilder.build();
-      const listTemplate = listTemplateBuilder
-        .setToken('listToken')
-        .setTitle(title)
-        .setListItems(listItems)
+      const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+      const template = builder.setTitle(title)
+        .setBackgroundImage(makeImage('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png'))
         .setBackButtonBehavior('HIDDEN')
-        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
         .build();
 
-      context.response.renderTemplate(listTemplate);
+      context.response.renderTemplate(template);
     } else {
       // Just show the background image
-      const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+      const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
       const template = builder.setTitle(res.strings.LAUNCH_WELCOME)
         .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
         .setBackButtonBehavior('HIDDEN')

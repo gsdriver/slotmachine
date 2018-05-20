@@ -165,6 +165,9 @@ module.exports = {
           });
         }
       } else {
+        if (rules.win) {
+          speech += rules.win;
+        }
         outcome = 'win';
       }
 
@@ -224,6 +227,11 @@ function updateGamePostPayout(attributes, locale, game, bet, outcome, callback) 
   let speech = '';
   let reprompt = res.strings.SPIN_PLAY_AGAIN;
   const rules = utils.getGame(attributes.currentGame);
+
+  // If this is the tournament, force a save
+  if (attributes.currentGame == 'tournament') {
+    attributes.temp.forceSave = true;
+  }
 
   // If they have no units left, reset the bankroll
   // unless this is tournament mode in which case - sorry you're out

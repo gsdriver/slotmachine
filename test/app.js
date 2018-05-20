@@ -40,7 +40,33 @@ function BuildEvent(argv)
       "timestamp": "2016-11-03T21:31:08Z",
       "intent": {}
     },
-    "version": "1.0"
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": "",
+       }
+     },
   };
 
   var openEvent = {
@@ -62,7 +88,33 @@ function BuildEvent(argv)
       "timestamp": "2016-11-03T21:31:08Z",
       "intent": {}
     },
-    "version": "1.0"
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": "",
+       }
+     },
   };
 
   // If there is an attributes.txt file, read the attributes from there
