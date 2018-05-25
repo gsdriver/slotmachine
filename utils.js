@@ -118,9 +118,11 @@ const games = {
       'diamond|diamond|diamond': 100,
     },
   },
-  /*
+};
+
+const tournaments = [
   // 105% payout; high jackpot
-  'tournament': {
+  {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'plum', 'bell', 'bar', 'seven', 'diamond'],
@@ -143,10 +145,8 @@ const games = {
       'cherry|cherry|cherry': 1000,
     },
   },
-  */
-  /*
   // 110% payout, lower top jackpot
-  'tournament': {
+  {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['heart', 'bell', 'orange', 'bar', 'seven'],
@@ -166,10 +166,8 @@ const games = {
       'seven|seven|seven': 50,
     },
   },
-  */
-  /*
   // 107% payout, 40% chance of win
-  'tournament': {
+  {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['chicken', 'turkey', 'pork', 'veal', 'steak'],
@@ -190,10 +188,8 @@ const games = {
       'steak|steak|steak': 100,
     },
   },
-  */
-  /*
   // 107% payout, every spin wins!
-  'tournament': {
+  {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'heart', 'orange', 'gold bar', 'seven'],
@@ -218,9 +214,8 @@ const games = {
       'seven|seven|seven': 50,
     },
   },
-  */
   // 110% payout, Simpsons theme
-  'tournament': {
+  {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['maggie', 'lisa', 'marge', 'bart', 'homer'],
@@ -243,7 +238,7 @@ const games = {
       'homer|homer|homer': 50,
     },
   },
-};
+];
 
 module.exports = {
   emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
@@ -316,6 +311,14 @@ module.exports = {
         && (times.now.getTime() <= times.end.getTime()));
     } else {
       tournamentAvailable = false;
+    }
+
+    if (tournamentAvailable) {
+      // Weekly tournament - rotate through each week - anchor allows you to force a new game when added
+      const anchor = new Date(2018, 4, 22);
+      const tournamentIndex = Math.floor((Date.now() - anchor) / (1000*60*60*24*7)) % tournaments.length;
+      console.log('Adding tournament ' + tournamentIndex);
+      Object.assign(games, {tournament: tournaments[tournamentIndex]});
     }
 
     if (event.session.attributes.temp.tournamentAvailable && !tournamentAvailable) {
