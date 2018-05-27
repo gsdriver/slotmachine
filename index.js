@@ -118,6 +118,9 @@ if (process.env.DASHBOTKEY) {
 
 function runSkill(event, context, callback) {
   AWS.config.update({region: 'us-east-1'});
+  if (!process.env.NOLOG) {
+    console.log(JSON.stringify(event));
+  }
 
   const alexa = Alexa.handler(event, context);
 
@@ -148,7 +151,6 @@ function runSkill(event, context, callback) {
   }
 
   function execute() {
-    utils.setEvent(event);
     alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
     alexa.execute();
   }

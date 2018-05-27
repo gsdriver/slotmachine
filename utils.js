@@ -16,9 +16,6 @@ const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 const querystring = require('querystring');
 
-// Global session ID
-let globalEvent;
-
 const games = {
   // Has 99.8% payout
   'basic': {
@@ -248,14 +245,14 @@ module.exports = {
     if (process.env.SAVELOG) {
       const result = (error) ? error : ((response) ? response : speech);
       formData.savelog = JSON.stringify({
-        event: globalEvent,
+        event: context.event,
         result: result,
       });
     }
-    if (response || globalEvent.session.attributes.temp.forceSave) {
+    if (response || context.attributes.temp.forceSave) {
       formData.savedb = JSON.stringify({
-        userId: globalEvent.session.user.userId,
-        attributes: globalEvent.session.attributes,
+        userId: context.event.session.user.userId,
+        attributes: context.attributes,
       });
     }
 
@@ -269,10 +266,6 @@ module.exports = {
           console.log(err);
         }
       });
-    }
-
-    if (!process.env.NOLOG) {
-      console.log(JSON.stringify(globalEvent));
     }
 
     buildDisplayTemplate(context);
@@ -293,9 +286,6 @@ module.exports = {
     }
 
     context.emit(':responseReady');
-  },
-  setEvent: function(event) {
-    globalEvent = event;
   },
   checkForTournament: function(event) {
     if (!event.session.attributes.temp) {
