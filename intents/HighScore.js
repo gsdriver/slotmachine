@@ -29,57 +29,56 @@ module.exports = {
     });
 
     function complete(context, highScores, gameScores) {
-      const res = require('../' + context.event.request.locale + '/resources');
       let speech = '';
       let reprompt;
 
       if (gameScores && gameScores.top && context.attributes.currentGame == 'tournament') {
         // Only read the game scores
         if (gameScores.rank) {
-          speech += res.strings.LEADER_GAME_RANKING
+          speech += context.t('LEADER_GAME_RANKING')
              .replace('{0}', gameScores.score)
-             .replace('{1}', res.sayGame(context.attributes.currentGame))
+             .replace('{1}', utils.sayGame(context, context.attributes.currentGame))
              .replace('{2}', gameScores.rank)
              .replace('{3}', gameScores.count);
         }
 
         // And what is the leader board for this game?
-        const topScores = gameScores.top.map((x) => res.strings.LEADER_GAME_FORMAT.replace('{0}', x));
-        speech += res.strings.LEADER_TOP_SCORES
+        const topScores = gameScores.top.map((x) => context.t('LEADER_GAME_FORMAT').replace('{0}', x));
+        speech += context.t('LEADER_TOP_SCORES')
             .replace('{0}', topScores.length)
             .replace('{1}', speechUtils.and(topScores, {locale: context.event.request.locale, pause: '300ms'}));
       } else if (!highScores) {
-        speech = res.strings.LEADER_NO_SCORES;
+        speech = context.t('LEADER_NO_SCORES');
       } else {
         if (!highScores.count || !highScores.top) {
           // Something went wrong
-          speech = res.strings.LEADER_NO_SCORES;
+          speech = context.t('LEADER_NO_SCORES');
         } else {
           if (highScores.rank) {
-            speech += res.strings.LEADER_RANKING
+            speech += context.t('LEADER_RANKING')
                .replace('{0}', highScores.score)
                .replace('{1}', highScores.rank)
                .replace('{2}', highScores.count);
           }
 
           // And what is the leader board?
-          const topScores = highScores.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
-          speech += res.strings.LEADER_TOP_SCORES
+          const topScores = highScores.top.map((x) => context.t('LEADER_FORMAT').replace('{0}', x));
+          speech += context.t('LEADER_TOP_SCORES')
               .replace('{0}', topScores.length)
               .replace('{1}', speechUtils.and(topScores, {locale: context.event.request.locale, pause: '300ms'}));
 
           if (gameScores && gameScores.top) {
             if (gameScores.rank) {
-              speech += res.strings.LEADER_GAME_RANKING
+              speech += context.t('LEADER_GAME_RANKING')
                  .replace('{0}', gameScores.score)
-                 .replace('{1}', res.sayGame(context.attributes.currentGame))
+                 .replace('{1}', utils.sayGame(context, context.attributes.currentGame))
                  .replace('{2}', gameScores.rank)
                  .replace('{3}', gameScores.count);
             }
 
             // And what is the leader board for this game?
-            const topScores = gameScores.top.map((x) => res.strings.LEADER_GAME_FORMAT.replace('{0}', x));
-            speech += res.strings.LEADER_TOP_SCORES
+            const topScores = gameScores.top.map((x) => context.t('LEADER_GAME_FORMAT').replace('{0}', x));
+            speech += context.t('LEADER_TOP_SCORES')
                 .replace('{0}', topScores.length)
                 .replace('{1}', speechUtils.and(topScores, {locale: context.event.request.locale, pause: '300ms'}));
           }
@@ -88,9 +87,10 @@ module.exports = {
 
       if ((context.handler.state === 'SELECTGAME') && context.attributes.choices) {
         // Ask for the first one
-        reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(context.attributes.choices[0]));
+        reprompt = context.t('LAUNCH_REPROMPT')
+            .replace('{0}', utils.sayGame(context, context.attributes.choices[0]));
       } else {
-        reprompt = res.strings.HIGHSCORE_REPROMPT;
+        reprompt = context.t('HIGHSCORE_REPROMPT');
       }
       speech += reprompt;
 

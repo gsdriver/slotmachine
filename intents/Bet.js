@@ -14,7 +14,6 @@ module.exports = {
     let speechError;
     let ssml = '';
     let amount;
-    const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
     const amountSlot = this.event.request.intent.slots.Amount;
@@ -22,8 +21,8 @@ module.exports = {
     this.attributes.temp.readingRules = false;
     if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
       this.attributes.currentGame = 'basic';
-      utils.emitResponse(this, null, null, res.strings.TOURNAMENT_ENDED,
-          res.strings.ERROR_REPROMPT);
+      utils.emitResponse(this, null, null, this.t('TOURNAMENT_ENDED'),
+          this.t('ERROR_REPROMPT'));
       return;
     }
 
@@ -38,15 +37,15 @@ module.exports = {
     }
 
     if (isNaN(amount) || (amount == 0)) {
-      speechError = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      speechError = this.t('BET_INVALID_AMOUNT').replace('{0}', amount);
+      reprompt = this.t('BET_INVALID_REPROMPT');
     } else if (amount > rules.maxCoins) {
-      speechError = res.strings.BET_EXCEEDS_MAX.replace('{0}', utils.readCoins(this.event.request.locale, rules.maxCoins));
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      speechError = this.t('BET_EXCEEDS_MAX').replace('{0}', utils.readCoins(this, rules.maxCoins));
+      reprompt = this.t('BET_INVALID_REPROMPT');
     } else if (amount > game.bankroll) {
       // Oops, you can't bet this much
-      speechError = res.strings.BET_EXCEEDS_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      speechError = this.t('BET_EXCEEDS_BANKROLL').replace('{0}', utils.readCoins(this, game.bankroll));
+      reprompt = this.t('BET_INVALID_REPROMPT');
     }
 
     // If there is partial speech from a previous intent, append
@@ -66,8 +65,8 @@ module.exports = {
       }
       game.bet = amount;
       game.bankroll -= game.bet;
-      reprompt = res.strings.BET_PLACED_REPROMPT;
-      ssml += res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
+      reprompt = this.t('BET_PLACED_REPROMPT');
+      ssml += this.t('BET_PLACED').replace('{0}', utils.readCoins(this, amount));
       ssml += reprompt;
     }
 

@@ -9,7 +9,6 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     // Tell them the rules, their bankroll and offer a few things they can do
-    const res = require('../' + this.event.request.locale + '/resources');
     let speech;
 
     // Read the available games then prompt for each one
@@ -21,7 +20,7 @@ module.exports = {
       this.handler.state = 'SELECTGAME';
 
       // Ask for the first one
-      const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
+      const reprompt = this.t('LAUNCH_REPROMPT').replace('{0}', utils.sayGame(this, choices[0]));
       speech += reprompt;
       utils.emitResponse(this, null, null, speech, reprompt);
     });
@@ -39,8 +38,7 @@ module.exports = {
       this.handler.state = 'INGAME';
       selectedGame(this);
     } else {
-      const res = require('../' + this.event.request.locale + '/resources');
-      const speech = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));
+      const speech = this.t('LAUNCH_REPROMPT').replace('{0}', utils.sayGame(this, this.attributes.choices[0]));
 
       utils.emitResponse(this, null, null, speech, speech);
     }
@@ -53,15 +51,14 @@ module.exports = {
 };
 
 function selectedGame(context, placeBet) {
-  const res = require('../' + context.event.request.locale + '/resources');
   const attributes = context.attributes;
   let speech;
 
   // Just in case they were trying to play at the last minute...
   if (!context.attributes.temp.tournamentAvailable && (context.attributes.currentGame == 'tournament')) {
     context.attributes.currentGame = 'basic';
-    utils.emitResponse(context, null, null, res.strings.TOURNAMENT_ENDED,
-        res.strings.ERROR_REPROMPT);
+    utils.emitResponse(context, null, null, context.t('TOURNAMENT_ENDED'),
+        context.t('ERROR_REPROMPT'));
     return;
   }
 
@@ -76,7 +73,7 @@ function selectedGame(context, placeBet) {
 
   attributes.choices = undefined;
   attributes.originalChoices = undefined;
-  speech = res.strings.SELECT_WELCOME.replace('{0}', res.sayGame(attributes.currentGame));
+  speech = context.t('SELECT_WELCOME').replace('{0}', utils.sayGame(context, attributes.currentGame));
 
   if (!attributes[attributes.currentGame]) {
     attributes[attributes.currentGame] = {
@@ -92,19 +89,19 @@ function selectedGame(context, placeBet) {
 
   const game = attributes[attributes.currentGame];
   const rules = utils.getGame(attributes.currentGame);
-  const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
+  const reprompt = context.t('SELECT_REPROMPT').replace('{0}', rules.maxCoins);
 
   if (rules.welcome) {
-    speech += res.strings[rules.welcome];
+    speech += context.t(rules.welcome);
   }
 
   // Check if there is a progressive jackpot
   utils.getProgressivePayout(attributes, (jackpot) => {
-    speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(context.event.request.locale, game.bankroll));
+    speech += context.t('READ_BANKROLL').replace('{0}', utils.readCoins(context, game.bankroll));
 
     if (placeBet) {
       if (jackpot) {
-        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', jackpot);
+        speech += context.t('PROGRESSIVE_JACKPOT_ONLY').replace('{0}', jackpot);
         game.progressiveJackpot = jackpot;
       }
       attributes.partialSpeech = speech;
@@ -112,7 +109,7 @@ function selectedGame(context, placeBet) {
     } else {
       if (jackpot) {
         // For progressive, just tell them the jackpot and to bet max coins
-        speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
+        speech += context.t('PROGRESSIVE_JACKPOT').replace('{0}', jackpot).replace('{1}', rules.maxCoins);
         game.progressiveJackpot = jackpot;
         utils.emitResponse(context, null, null, speech, reprompt);
       } else {

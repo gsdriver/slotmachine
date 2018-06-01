@@ -17,6 +17,7 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
 const request = require('request');
+const resources = require('./resources');
 
 const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
@@ -43,9 +44,8 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     saveState(this.event.session.user.userId, this.attributes);
   },
   'Unhandled': function() {
-    const res = require('./' + this.event.request.locale + '/resources');
     utils.emitResponse(this, null, null,
-          res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
+          this.t('UNKNOWN_SELECT_INTENT'), this.t('UNKNOWN_SELECT_INTENT_REPROMPT'));
   },
 });
 
@@ -71,15 +71,14 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
     saveState(this.event.session.user.userId, this.attributes);
   },
   'Unhandled': function() {
-    const res = require('./' + this.event.request.locale + '/resources');
     utils.emitResponse(this, null, null,
-          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+          this.t('UNKNOWN_INTENT'), this.t('UNKNOWN_INTENT_REPROMPT'));
   },
 });
 
 const handlers = {
   'NewSession': function() {
-    utils.getTournamentComplete(this.event.request.locale, this.attributes, (result) => {
+    utils.getTournamentComplete(this, (result) => {
       // Initialize attributes and route the request
       if (!this.attributes.currentGame) {
         // This is a new user
@@ -103,9 +102,8 @@ const handlers = {
   },
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {
-    const res = require('./' + this.event.request.locale + '/resources');
     utils.emitResponse(this, null, null,
-          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+          this.t('UNKNOWN_INTENT'), this.t('UNKNOWN_INTENT_REPROMPT'));
   },
 };
 
@@ -123,10 +121,12 @@ function runSkill(event, context, callback) {
   }
 
   const alexa = Alexa.handler(event, context);
+  alexa.resources = resources.languageStrings;
 
   // The first thing we need to check is whether to offer a tournament machine
   utils.checkForTournament(event);
   alexa.appId = APP_ID;
+
   if (!event.session.sessionId || event.session['new']) {
     const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
     doc.get({TableName: 'Slots',

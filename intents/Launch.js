@@ -9,7 +9,6 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     // Tell them the rules, their bankroll and offer a few things they can do
-    const res = require('../' + this.event.request.locale + '/resources');
     const score = utils.getAchievementScore(this.attributes.achievements);
     let speech = '';
 
@@ -22,18 +21,18 @@ module.exports = {
     if (this.attributes.newUser) {
       this.handler.state = 'INGAME';
       utils.emitResponse(this, null, null,
-          res.strings.LAUNCH_NEWUSER, res.strings.LAUNCH_NEWUSER_REPROMPT);
+          this.t('LAUNCH_NEWUSER'), this.t('LAUNCH_NEWUSER_REPROMPT'));
     } else {
       if (score) {
-        speech += res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
+        speech += this.t('LAUNCH_WELCOME_ACHIEVEMENT').replace('{0}', score);
       } else {
-        speech += res.strings.LAUNCH_WELCOME;
+        speech += this.t('LAUNCH_WELCOME');
       }
 
       // Read the available games then prompt for each one
       utils.readAvailableGames(this, true, (gameText, choices) => {
         if (choices.indexOf('tournament') > -1) {
-          speech = res.strings.LAUNCH_WELCOME_TOURNAMENT.replace('{0}', utils.getRemainingTournamentTime(this));
+          speech = this.t('LAUNCH_WELCOME_TOURNAMENT').replace('{0}', utils.getRemainingTournamentTime(this));
         } else {
           speech += gameText;
         }
@@ -42,7 +41,7 @@ module.exports = {
         this.handler.state = 'SELECTGAME';
 
         // Ask for the first one
-        const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(choices[0]));
+        const reprompt = this.t('LAUNCH_REPROMPT').replace('{0}', utils.sayGame(this, choices[0]));
         speech += reprompt;
         utils.emitResponse(this, null, null, speech, reprompt);
       });
