@@ -241,6 +241,8 @@ module.exports = {
   emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
     const formData = {};
 
+    console.log('Timing - emitResponse');
+
     // Async call to save state and logs if necessary
     if (process.env.SAVELOG) {
       const result = (error) ? error : ((response) ? response : speech);
@@ -284,6 +286,7 @@ module.exports = {
         .listen(reprompt);
     }
 
+    console.log('Timing - responseReady');
     context.emit(':responseReady');
   },
   checkForTournament: function(event) {

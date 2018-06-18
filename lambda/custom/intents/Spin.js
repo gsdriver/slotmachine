@@ -17,6 +17,8 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
 
+    console.log('Timing - Spin start');
+
     // Just in case they were trying to play at the last minute...
     this.attributes.temp.readingRules = false;
     if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
@@ -140,6 +142,8 @@ module.exports = {
       }
     }
 
+    console.log('Timing - reels spun');
+
     game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
     if (game.result.payout > 0) {
       // You won!  If more than 50:1, play the jackpot sound
@@ -228,6 +232,8 @@ function updateGamePostPayout(context, game, bet, outcome, callback) {
   const attributes = context.attributes;
   const rules = utils.getGame(attributes.currentGame);
 
+  console.log('Timing - updateGamePostPayout start');
+
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
     attributes.temp.forceSave = true;
@@ -309,6 +315,8 @@ function updateGamePostPayout(context, game, bet, outcome, callback) {
   } else {
     speech += reprompt;
   }
+
+  console.log('Timing - updateGamePostPayout done');
 
   // And reprompt
   game.lastbet = lastbet;

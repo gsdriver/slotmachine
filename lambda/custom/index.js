@@ -108,6 +108,7 @@ const handlers = {
 };
 
 if (process.env.DASHBOTKEY) {
+  console.log('Timing - entry');
   const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
   exports.handler = dashbot.handler(runSkill);
 } else {
@@ -115,6 +116,7 @@ if (process.env.DASHBOTKEY) {
 }
 
 function runSkill(event, context, callback) {
+  console.log('Timing - runSkill');
   AWS.config.update({region: 'us-east-1'});
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));
@@ -151,6 +153,7 @@ function runSkill(event, context, callback) {
   }
 
   function execute() {
+    console.log('Timing - execute');
     alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
     alexa.execute();
   }
