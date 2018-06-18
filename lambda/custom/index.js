@@ -7,6 +7,7 @@
 const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
+const CanFulfill = require('./intents/CanFulfill');
 const Spin = require('./intents/Spin');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
@@ -36,6 +37,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
+  'AMAZON.FallbackIntent': Help.handleIntent,
   'AMAZON.NextIntent': Select.handleNoIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
   'AMAZON.StopIntent': Stop.handleIntent,
@@ -61,6 +63,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
+  'AMAZON.FallbackIntent': Help.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NextIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
@@ -120,6 +123,12 @@ function runSkill(event, context, callback) {
   AWS.config.update({region: 'us-east-1'});
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));
+  }
+
+  // If this is a CanFulfill, handle this separately
+  if (event.request && (event.request.type == 'CanFulfillIntentRequest')) {
+    context.succeed(CanFulfill.check(event));
+    return;
   }
 
   const alexa = Alexa.handler(event, context);

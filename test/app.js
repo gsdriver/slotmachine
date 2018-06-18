@@ -1,4 +1,4 @@
-var mainApp = require('../index');
+var mainApp = require('../lambda/custom/index');
 
 const attributeFile = 'attributes.txt';
 
@@ -178,23 +178,27 @@ function myResponse(appId) {
 }
 
 myResponse.succeed = function(result) {
-  if (result.response.outputSpeech.ssml) {
-    console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+  if (!result || !result.response || !result.response.outputSpeech) {
+    console.log(JSON.stringify(result));
   } else {
-    console.log(result.response.outputSpeech.text);
-  }
-  if (result.response.card && result.response.card.content) {
-    console.log('Card Content: ' + result.response.card.content);
-  }
-  console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
-  if (result.sessionAttributes) {
-    // Output the attributes too
-    const fs = require('fs');
-    fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
-      if (!process.env.NOLOG) {
-        console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
-      }
-    });
+    if (result.response.outputSpeech.ssml) {
+      console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+    } else {
+      console.log(result.response.outputSpeech.text);
+    }
+    if (result.response.card && result.response.card.content) {
+      console.log('Card Content: ' + result.response.card.content);
+    }
+    console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
+    if (result.sessionAttributes) {
+      // Output the attributes too
+      const fs = require('fs');
+      fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
+        if (!process.env.NOLOG) {
+          console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
+        }
+      });
+    }
   }
 }
 
