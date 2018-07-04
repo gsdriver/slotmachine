@@ -78,6 +78,7 @@ const resources = {
       'STANDARD_MEAT': 'Today\'s tournament is the standard meat game. ',
       'EVERYONE_WINS': 'On today\'s tournament machine every spin wins when 5 coins are played. ',
       'SIMPSON_GAME': 'Today\'s tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3\"/> ',
+      'BATMAN_GAME': 'Today\'s tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ',
       'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ',
       'SELECT_GAME': 'Select a game to play',
       'DISPLAY_PAYOUT_WINNER': 'You won {0} coins',
@@ -95,7 +96,7 @@ const resources = {
       'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
       'TOURNAMENT_ENDED': 'The tournament has ended. Please check again later to hear the results! ',
       'GAME_LIST': '{"basic": "the standard fruit game","wild": "wild cherry","loose": "the 105% payout game","progressive": "progressive jackpot","tournament": "the tournament round","steak": "the meat game"}',
-      'SYMBOL_LIST': '{"cherry": "cherry","lemon": "lemon","orange": "orange","plum": "plum","bar": "bar","blank": "blank","double bar": "double bar","seven": "seven","any bar": "any bar","any gold bar": "any gold bar","bell": "bell","heart": "heart","horseshoe": "horseshoe","gold bar": "gold bar","diamond": "diamond","chicken": "chicken","maggie": "Maggie","lisa": "Lisa","marge": "Marge","bart": "Bart","homer": "Homer","pork": "pork","veal": "veal","turkey": "turkey","steak": "steak"}',
+      'SYMBOL_LIST': '{"cherry": "cherry","lemon": "lemon","orange": "orange","plum": "plum","bar": "bar","blank": "blank","double bar": "double bar","seven": "seven","any bar": "any bar","any gold bar": "any gold bar","bell": "bell","heart": "heart","horseshoe": "horseshoe","gold bar": "gold bar","diamond": "diamond","chicken": "chicken","maggie": "Maggie","lisa": "Lisa","marge": "Marge","bart": "Bart","homer": "Homer","pork": "pork","veal": "veal","turkey": "turkey","steak": "steak","penguin": "Penguin","2face": "Two Face","riddler": "The Riddler","joker": "The Joker","batman": "Batman"}',
     },
   },
 };

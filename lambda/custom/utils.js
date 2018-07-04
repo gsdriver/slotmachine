@@ -118,6 +118,28 @@ const games = {
 };
 
 const tournaments = [
+  // 110% payout, Batman theme
+  {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['penguin', '2face', 'riddler', 'joker', 'batman'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 12, 2]},
+      {'symbols': [4, 6, 6, 6, 4]},
+      {'symbols': [24, 6, 6, 2, 1]},
+    ],
+    'welcome': 'BATMAN_GAME',
+    'payouts': {
+      'penguin': 2,
+      'penguin|penguin': 5,
+      '2face|2face|2face': 10,
+      'riddler|riddler|riddler': 12,
+      'joker|joker|joker': 15,
+      'batman': 5,
+      'batman|batman': 25,
+      'batman|batman|batman': 50,
+    },
+  },
   // 105% payout; high jackpot
   {
     'maxCoins': 5,
