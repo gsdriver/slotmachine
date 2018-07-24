@@ -3,7 +3,7 @@
     "publishingInformation": {
       "locales": {
         "en-US": {
-          "summary": "Play a game of slots, try your luck for the big jackpot!",
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -14,12 +14,12 @@
             "casino"
           ],
           "name": "Slot Machine",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e8529ff231784e658cd34e32cd78a9ef/APP_ICON?versionId=6iQ8EDvIhyHlY9OqlP86k7Arb6mn3aO1&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=Gudtj93ymz556Zcw2xkRj7TprcQ%3D",
-          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us every Wednesday between 6 and 7 PM Pacific Time for an exciting tournament round!  Come back each week to try your luck.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/3fc7fbf1432b4814bdc73bd71e269452/APP_ICON_LARGE?versionId=t8ulBcY7jlokCvbt5GduIDRHw3kQlG8r&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=BDCSe7J1nU%2BhYDZ4G4%2F8yVTio9U%3D"
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e8529ff231784e658cd34e32cd78a9ef/APP_ICON?versionId=6iQ8EDvIhyHlY9OqlP86k7Arb6mn3aO1&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=hgm7KyRA7G0IwqacEP7K%2BEVl6L8%3D",
+          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us every Wednesday between 6 and 7 PM Pacific Time for an exciting tournament round!  Come back each week to try your luck.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/3fc7fbf1432b4814bdc73bd71e269452/APP_ICON_LARGE?versionId=t8ulBcY7jlokCvbt5GduIDRHw3kQlG8r&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=Aw1OuY1GQoJkiorY47pPkhn2KUk%3D"
         },
         "en-CA": {
-          "summary": "Play a game of slots, try your luck for the big jackpot!",
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -30,12 +30,12 @@
             "slots"
           ],
           "name": "Slot Machine",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/dbb3/15e35e071ccd4ec28d4fab6161a00ab2/APP_ICON?versionId=u.KBEMEPFUce_36mJEyYdCJkDsZPWraJ&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=dq7KjRkinf9R5WCTGVcI803tJIM%3D",
-          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us every Wednesday between 6 and 7 PM Pacific Time for an exciting tournament round!  Come back each week to try your luck.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5091/269216a7198e4cd1bb8e54f8b6b88cf8/APP_ICON_LARGE?versionId=St5XTqZ18sz8tzzcmhWu8qk4vNIoGvkd&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=yAWWkPc6z6DAWzgm5lWgLhZNyvo%3D"
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/dbb3/15e35e071ccd4ec28d4fab6161a00ab2/APP_ICON?versionId=u.KBEMEPFUce_36mJEyYdCJkDsZPWraJ&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=PJmfYGutiEzRGCiIJp53nQ88K0w%3D",
+          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us every Wednesday between 6 and 7 PM Pacific Time for an exciting tournament round!  Come back each week to try your luck.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5091/269216a7198e4cd1bb8e54f8b6b88cf8/APP_ICON_LARGE?versionId=St5XTqZ18sz8tzzcmhWu8qk4vNIoGvkd&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=mHot8a42eAZ51SC8o9E6R3WjWu4%3D"
         },
         "en-IN": {
-          "summary": "Play a game of slots, try your luck for the big jackpot!",
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -46,12 +46,12 @@
             "slots"
           ],
           "name": "Slot Machine",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/161c/16daa19de83c44d98364ac425ce196d4/APP_ICON?versionId=.x_CoNg3tj0fjrdPCfvkeYM3epnxaNLH&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=qWr7hqjrue6CxfUPyZfuwRxF%2B7k%3D",
-          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a422/5ba2ae87c511460bb6a57921433a6841/APP_ICON_LARGE?versionId=8CRPfSKdmp0cS5xLhanBd_nrRB7ZRHaj&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415906&Signature=%2FWmmNmBQ%2Fp%2FsXM1SNOYygkBbmys%3D"
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/161c/16daa19de83c44d98364ac425ce196d4/APP_ICON?versionId=.x_CoNg3tj0fjrdPCfvkeYM3epnxaNLH&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=HB66SeSOmSyycPrWEE5u8z7%2Fm8s%3D",
+          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a422/5ba2ae87c511460bb6a57921433a6841/APP_ICON_LARGE?versionId=8CRPfSKdmp0cS5xLhanBd_nrRB7ZRHaj&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=UgEFDMOLq9HlA8SepRgLuaxPfBo%3D"
         },
         "en-AU": {
-          "summary": "Play a game of slots, try your luck for the big jackpot!",
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -62,12 +62,12 @@
             "slots"
           ],
           "name": "Slot Machine",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/95fe/bdea1f8869c94b6db77d1a49f71a18c8/APP_ICON?versionId=KEIyFbPnRyrxk_uUVphIZclrygW3O9Pe&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=JET59Qipv4Dmtfq0WtkbjG1hO70%3D",
-          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/2bac/04253a64e6cc475d9298c853f3997802/APP_ICON_LARGE?versionId=VV8.X4HAnGnrYjWUd3.4uRTAml5QQXRo&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=xBplCXqaLQ7qyQuiuNca7a%2F2tWE%3D"
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/95fe/bdea1f8869c94b6db77d1a49f71a18c8/APP_ICON?versionId=KEIyFbPnRyrxk_uUVphIZclrygW3O9Pe&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=pfC4ZF%2BCVJa5L6kPKGc8jtNHxO8%3D",
+          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/2bac/04253a64e6cc475d9298c853f3997802/APP_ICON_LARGE?versionId=VV8.X4HAnGnrYjWUd3.4uRTAml5QQXRo&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=mx0Ma1AB%2BohaxA8NhiyhNC86Y1M%3D"
         },
         "en-GB": {
-          "summary": "Play a game of slots, try your luck for the big jackpot!",
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -78,15 +78,22 @@
             "casino"
           ],
           "name": "Slot Machine",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f57002e11193432189e149584e86a742/APP_ICON?versionId=xlhCTSWlzCSwx0qCHaSfSa0LF3x6h4Re&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=4kGOQlNqnGq33iQy36G02U0IDXU%3D",
-          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/05f7f4e8f23d42e48b0143efc607afbe/APP_ICON_LARGE?versionId=brs_zCxb5yFVw2cz7JXcK_RKBDLLmHOH&AWSAccessKeyId=AKIAI3X6PUXD7CU5F5BQ&Expires=1529415905&Signature=FEhUTGQbLd%2Fok4GV%2F8RtwCSC9do%3D"
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f57002e11193432189e149584e86a742/APP_ICON?versionId=xlhCTSWlzCSwx0qCHaSfSa0LF3x6h4Re&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=1iTpk82b7u%2FjmATUgLgodYeht8A%3D",
+          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 1,000 coins and can vary your bet from 1 to 5 coins per spin.  Don't worry if you go bust - we'll automatically reset your bankroll.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/05f7f4e8f23d42e48b0143efc607afbe/APP_ICON_LARGE?versionId=brs_zCxb5yFVw2cz7JXcK_RKBDLLmHOH&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=fvKb4uhQCbA1G0D2lmlJPABZHw0%3D"
         }
       },
       "isAvailableWorldwide": true,
       "testingInstructions": "Allows you to play a slot machine. The game keeps the player's state so they can track their progress as they play.",
       "category": "GAMES",
-      "distributionCountries": []
+      "distributionCountries": [],
+      "gadgetSupport": {
+        "maxGadgetButtons": 1,
+        "numPlayersMax": 1,
+        "minGadgetButtons": 1,
+        "requirement": "OPTIONAL",
+        "numPlayersMin": 1
+      }
     },
     "apis": {
       "custom": {
@@ -98,7 +105,13 @@
             "type": "RENDER_TEMPLATE"
           },
           {
-            "type":"CAN_FULFILL_INTENT_REQUEST"
+            "type": "GAME_ENGINE"
+          },
+          {
+            "type": "GADGET_CONTROLLER"
+          },
+          {
+            "type": "CAN_FULFILL_INTENT_REQUEST"
           }
         ]
       }

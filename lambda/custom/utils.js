@@ -263,8 +263,6 @@ module.exports = {
   emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
     const formData = {};
 
-    console.log('Timing - emitResponse');
-
     // Async call to save state and logs if necessary
     if (process.env.SAVELOG) {
       const result = (error) ? error : ((response) ? response : speech);
@@ -308,7 +306,6 @@ module.exports = {
         .listen(reprompt);
     }
 
-    console.log('Timing - responseReady');
     context.emit(':responseReady');
   },
   checkForTournament: function(event) {
@@ -661,6 +658,56 @@ module.exports = {
   saySymbol: function(context, symbol) {
     const symbolMap = JSON.parse(context.t('SYMBOL_LIST'));
     return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
+  },
+  startButtonInput: function(context) {
+    // We'll allow them to press the button again
+    context.response._addDirective({
+      'type': 'GameEngine.StartInputHandler',
+      'timeout': 30000,
+      'recognizers': {
+        'button_down_recognizer': {
+          'type': 'match',
+          'fuzzy': false,
+          'anchor': 'end',
+          'pattern': [{
+            'action': 'down',
+          }],
+        },
+      },
+      'events': {
+        'button_down_event': {
+          'meets': ['button_down_recognizer'],
+          'reports': 'matches',
+          'shouldEndInputHandler': true,
+        },
+        'timeout': {
+          'meets': ['timed out'],
+          'reports': 'history',
+          'shouldEndInputHandler': true,
+        },
+      },
+    });
+  },
+  buildButtonDownAnimationDirective: function(targetGadgets) {
+    return {
+      'type': 'GadgetController.SetLight',
+      'version': 1,
+      'targetGadgets': targetGadgets,
+      'parameters': {
+        'animations': [{
+          'repeat': 1,
+          'targetLights': ['1'],
+          'sequence': [{
+            'durationMs': 500,
+            'color': 'FFFF00',
+            'intensity': 255,
+            'blend': false,
+          }],
+        }],
+        'triggerEvent': 'buttonDown',
+        'triggerEventTimeMs': 0,
+      },
+    };
   },
 };
 

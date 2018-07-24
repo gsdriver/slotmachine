@@ -105,7 +105,9 @@ function selectedGame(context, placeBet) {
         game.progressiveJackpot = jackpot;
       }
       attributes.partialSpeech = speech;
-      context.emitWithState(context.event.request.intent.name);
+      const newIntent = (context.event.request.intent && context.event.request.intent.name)
+        ? context.event.request.intent.name : 'SpinIntent';
+      context.emitWithState(newIntent);
     } else {
       if (jackpot) {
         // For progressive, just tell them the jackpot and to bet max coins
@@ -130,7 +132,8 @@ function getSelectedIndex(context) {
     }
   } else {
     // Look for an intent slot
-    if (context.event.request.intent.slots && context.event.request.intent.slots.Number
+    if (context.event.request.intent && context.event.request.intent.slots
+      && context.event.request.intent.slots.Number
       && context.event.request.intent.slots.Number.value) {
       index = parseInt(context.event.request.intent.slots.Number.value);
 

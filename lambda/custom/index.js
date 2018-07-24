@@ -9,6 +9,7 @@ const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
 const CanFulfill = require('./intents/CanFulfill');
 const Spin = require('./intents/Spin');
+const Button = require('./intents/Button');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
@@ -32,6 +33,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'ElementSelected': Select.handleYesIntent,
   'GameIntent': Select.handleYesIntent,
   'SpinIntent': Select.handleBetIntent,
+  'GameEngine.InputHandlerEvent': Button.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleNoIntent,
   'HighScoreIntent': HighScore.handleIntent,
@@ -60,6 +62,7 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'ElementSelected': Spin.handleIntent,
   'GameIntent': Spin.handleIntent,
   'SpinIntent': Spin.handleIntent,
+  'GameEngine.InputHandlerEvent': Button.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
@@ -111,7 +114,6 @@ const handlers = {
 };
 
 if (process.env.DASHBOTKEY) {
-  console.log('Timing - entry');
   const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
   exports.handler = dashbot.handler(runSkill);
 } else {
@@ -119,7 +121,6 @@ if (process.env.DASHBOTKEY) {
 }
 
 function runSkill(event, context, callback) {
-  console.log('Timing - runSkill');
   AWS.config.update({region: 'us-east-1'});
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));
@@ -162,7 +163,6 @@ function runSkill(event, context, callback) {
   }
 
   function execute() {
-    console.log('Timing - execute');
     alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
     alexa.execute();
   }

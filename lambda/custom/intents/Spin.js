@@ -17,8 +17,6 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
 
-    console.log('Timing - Spin start');
-
     // Just in case they were trying to play at the last minute...
     this.attributes.temp.readingRules = false;
     if (!this.attributes.temp.tournamentAvailable && (this.attributes.currentGame == 'tournament')) {
@@ -142,8 +140,6 @@ module.exports = {
       }
     }
 
-    console.log('Timing - reels spun');
-
     game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
     if (game.result.payout > 0) {
       // You won!  If more than 50:1, play the jackpot sound
@@ -216,6 +212,11 @@ module.exports = {
       outcome = 'lose';
     }
 
+    // Update the color of the echo button (if present)
+    if (this.attributes.temp.buttonId) {
+      colorButton(this, (game.result.payout > 0));
+    }
+
     // Update coins in the progressive (async call)
     utils.incrementProgressive(this.attributes, bet);
     updateGamePostPayout(this, game, bet, outcome, (speechText, reprompt) => {
@@ -231,8 +232,6 @@ function updateGamePostPayout(context, game, bet, outcome, callback) {
   let reprompt = context.t('SPIN_PLAY_AGAIN');
   const attributes = context.attributes;
   const rules = utils.getGame(attributes.currentGame);
-
-  console.log('Timing - updateGamePostPayout start');
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
@@ -316,10 +315,49 @@ function updateGamePostPayout(context, game, bet, outcome, callback) {
     speech += reprompt;
   }
 
-  console.log('Timing - updateGamePostPayout done');
-
   // And reprompt
   game.lastbet = lastbet;
   game.bet = undefined;
   callback(speech, reprompt);
+}
+
+function colorButton(context, winner) {
+  // Pulse the button based on whether they won or lost
+  const buttonIdleDirective = {
+    'type': 'GadgetController.SetLight',
+    'version': 1,
+    'targetGadgets': [context.attributes.temp.buttonId],
+    'parameters': {
+      'animations': [{
+        'repeat': 1,
+        'targetLights': ['1'],
+        'sequence': [{
+          'durationMs': 5000,
+          'color': 'FFFFFF',
+          'blend': true,
+        }],
+      }],
+      'triggerEvent': 'none',
+      'triggerEventTimeMs': 0,
+    },
+  };
+
+  // Add to the animations array
+  let i;
+  for (i = 0; i < 4; i++) {
+    buttonIdleDirective.parameters.animations[0].sequence.push({
+      'durationMs': 400,
+      'color': (winner ? '00FE10' : 'FF0000'),
+      'blend': true,
+    });
+    buttonIdleDirective.parameters.animations[0].sequence.push({
+      'durationMs': 300,
+      'color': '000000',
+      'blend': true,
+    });
+  }
+
+  context.response._addDirective(buttonIdleDirective);
+  context.response._addDirective(utils.buildButtonDownAnimationDirective(
+    [context.attributes.temp.buttonId]));
 }

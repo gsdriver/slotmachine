@@ -133,6 +133,13 @@ function BuildEvent(argv)
   if (argv.length <= 2) {
     console.log('I need some parameters');
     return null;
+  } else if (argv[2] == "seed") {
+    if (fs.existsSync("seed.txt")) {
+      data = fs.readFileSync("seed.txt", 'utf8');
+      if (data) {
+        return JSON.parse(data);
+      }
+    }
   } else if (argv[2] == 'bet') {
     lambda.request.intent = bet;
     if (argv.length > 3) {
@@ -168,6 +175,13 @@ function BuildEvent(argv)
     console.log(argv[2] + ' was not valid');
     return null;
   }
+
+  // Write the last action
+  fs.writeFile('lastaction.txt', JSON.stringify(lambda), (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 
   return lambda;
 }
