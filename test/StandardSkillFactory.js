@@ -1,5 +1,5 @@
 //
-// Copy this file to node_modules/ask-sdk/dist/skill/factory
+// copy StandardSkillFactory.js ..\lambda\custom\node_modules\ask-sdk\dist\skill\factory
 // to replace the default StandardSkillFactory
 // This will allow you to use the same DB schema as before
 //

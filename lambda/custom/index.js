@@ -47,10 +47,36 @@ const requestInterceptor = {
 
               attributes.playerLocale = event.request.locale;
               if (!attributes[attributes.currentGame]) {
-                attributes[attributes.currentGame] = {
-                  bankroll: 1000,
-                  high: 1000,
-                };
+                attributes[attributes.currentGame] = {};
+                attributes.bankroll = 100;
+                attributes.high = 100;
+              }
+
+              // Migrate to a common bankroll - if a legacy player,
+              // we will set the bankroll to the highest (non-tournament)
+              // game bankroll
+              if (attributes.bankroll === undefined) {
+                let maxGameBankroll;
+                let maxHigh;
+                let game;
+                for (game in attributes) {
+                  if (attributes[game] && attributes[game].bankroll &&
+                    (game !== 'tournament')) {
+                    if ((maxGameBankroll === undefined) ||
+                      (attributes[game].bankroll > maxGameBankroll)) {
+                      maxGameBankroll = attributes[game].bankroll;
+                    }
+                    if ((maxHigh === undefined) ||
+                      (attributes[game].high > maxHigh)) {
+                      maxHigh = attributes[game].high;
+                    }
+                    attributes[game].bankroll = undefined;
+                    attributes[game].high = undefined;
+                  }
+                }
+
+                attributes.bankroll = maxGameBankroll;
+                attributes.high = maxHigh;
               }
 
               if (result && (result.length > 0)) {
@@ -62,6 +88,7 @@ const requestInterceptor = {
               attributes.temp = {};
               attributes.sessions = (attributes.sessions + 1) || 1;
               attributes.bot = sessionAttributes.bot;
+              utils.checkForTournament(attributes);
               attributesManager.setSessionAttributes(attributes);
               responseBuilder = handlerInput.responseBuilder;
               resolve();
@@ -71,6 +98,8 @@ const requestInterceptor = {
             reject(error);
           });
       } else {
+        const attributes = handlerInput.attributesManager.getSessionAttributes();
+        utils.checkForTournament(attributes);
         responseBuilder = handlerInput.responseBuilder;
         resolve();
       }
@@ -127,7 +156,6 @@ function runGame(event, context, callback) {
     return;
   }
 
-  utils.checkForTournament(event);
   const skillFunction = skillBuilder.addRequestHandlers(
       Launch,
       HighScore,
