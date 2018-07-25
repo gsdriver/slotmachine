@@ -4,20 +4,25 @@
 
 'use strict';
 
-const utils = require('../utils');
-const ads = require('../ads');
-
 module.exports = {
-  handleIntent: function() {
-    if (this.attributes.temp.readingRules) {
-      // They were just reading the rules, so don't exit
-      this.attributes.temp.readingRules = false;
-      utils.emitResponse(this, null, null, this.t('ERROR_REPROMPT'), this.t('ERROR_REPROMPT'));
-      return;
-    }
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    ads.getAd(this.attributes, 'slots', this.event.request.locale, (adText) => {
-      utils.emitResponse(this, null, this.t('EXIT_GAME').replace('{0}', adText), null, null);
-    });
+    // Can always handle with Stop and Cancel
+    return ((request.type === 'IntentRequest') &&
+      (request.intent.name === 'AMAZON.StopIntent') &&
+      attributes.temp.readingRules);
+  },
+  handle: function(handlerInput) {
+    // Stop reading the rules
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../resources')(event.request.locale);
+
+    attributes.temp.readingRules = false;
+    handlerInput.responseBuilder
+      .speak(res.strings.ERROR_REPROMPT)
+      .reprompt(res.strings.ERROR_REPROMPT);
   },
 };

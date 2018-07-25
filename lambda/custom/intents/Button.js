@@ -5,9 +5,16 @@
 'use strict';
 
 const utils = require('../utils');
+const Spin = require('./Spin');
 
 module.exports = {
-  handleIntent: function() {
+  canHandle: function(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+
+    return ((request.type === 'IntentRequest') && (request.intent.name === 'GameEngine.InputHandlerEvent'));
+  },
+  handle: function(handlerInput) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     const gameEngineEvents = this.event.request.events || [];
 
     gameEngineEvents.forEach((engineEvent) => {
@@ -19,12 +26,12 @@ module.exports = {
         // id of the button that triggered event
         // we only support one button so save it here
         console.log('Received button down request');
-        this.attributes.usedButton = true;
-        this.attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
+        attributes.usedButton = true;
+        attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
 
         // We'll allow them to press the button again
-        utils.startButtonInput(this);
-        this.emitWithState('SpinIntent');
+        utils.startButtonInput(handlerInput);
+        Spin.handle(handlerInput);
       }
     });
   },

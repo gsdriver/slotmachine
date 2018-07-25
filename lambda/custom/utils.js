@@ -4,10 +4,7 @@
 
 'use strict';
 
-const Alexa = require('alexa-sdk');
-// utility methods for creating Image and TextField objects
-const makeRichText = Alexa.utils.TextUtils.makeRichText;
-const makeImage = Alexa.utils.ImageUtils.makeImage;
+const Alexa = require('ask-sdk');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -260,54 +257,6 @@ const tournaments = [
 ];
 
 module.exports = {
-  emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
-    const formData = {};
-
-    // Async call to save state and logs if necessary
-    if (process.env.SAVELOG) {
-      const result = (error) ? error : ((response) ? response : speech);
-      formData.savelog = JSON.stringify({
-        event: context.event,
-        result: result,
-      });
-    }
-    if (response || context.attributes.temp.forceSave) {
-      formData.savedb = JSON.stringify({
-        userId: context.event.session.user.userId,
-        attributes: context.attributes,
-      });
-    }
-
-    if (formData.savelog || formData.savedb) {
-      const params = {
-        url: process.env.SERVICEURL + 'slots/saveState',
-        formData: formData,
-      };
-      request.post(params, (err, res, body) => {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-
-    buildDisplayTemplate(context);
-    if (error) {
-      console.log('Speech error: ' + error);
-      context.response.speak(error)
-        .listen(context.t('ERROR_REPROMPT'));
-    } else if (response) {
-      context.response.speak(response);
-    } else if (cardTitle) {
-      context.response.speak(speech)
-        .listen(reprompt)
-        .cardRenderer(cardTitle, cardText);
-    } else {
-      context.response.speak(speech)
-        .listen(reprompt);
-    }
-
-    context.emit(':responseReady');
-  },
   checkForTournament: function(event) {
     if (!event.session.attributes.temp) {
       event.session.attributes.temp = {};
@@ -360,7 +309,8 @@ module.exports = {
 
     return undefined;
   },
-  getRemainingTournamentTime: function(context) {
+  getRemainingTournamentTime: function(event) {
+    const res = require('./resources')(event.request.locale);
     let text = '';
     const times = getTournamentTimes();
 
@@ -374,15 +324,15 @@ module.exports = {
         if (secondsLeft > 30) {
           minutesLeft++;
         }
-        text = context.t('TOURNAMENT_TIMELEFT_MINUTES')
+        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
           .replace('{0}', minutesLeft);
       } else {
         if (minutesLeft) {
-          text = context.t('TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS')
+          text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
             .replace('{0}', minutesLeft)
             .replace('{1}', secondsLeft);
         } else {
-          text = context.t('TOURNAMENT_TIMELEFT_SECONDS')
+          text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
             .replace('{0}', secondsLeft);
         }
       }
@@ -390,12 +340,12 @@ module.exports = {
 
     return text;
   },
-  getTournamentComplete: function(context, callback) {
+  getTournamentComplete: function(event, attributes, callback) {
     // If the user is in a tournament, we check to see if that tournament
     // is complete.  If so, we set certain attributes and return a result
     // string via the callback for the user
-    const attributes = context.attributes;
     const game = attributes.tournament;
+    const res = require('./resources')(event.request.locale);
 
     if (game) {
       // You are in a tournament - let's see if it's completed
@@ -427,9 +377,9 @@ module.exports = {
               } else {
                 attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
               }
-              speech = context.t('TOURNAMENT_WINNER').replace('{0}', game.bankroll);
+              speech = res.strings.TOURNAMENT_WINNER.replace('{0}', game.bankroll);
             } else {
-              speech = context.t('TOURNAMENT_LOSER').replace('{0}', result.highScore).replace('{1}', game.bankroll);
+              speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
             }
 
             if (attributes.currentGame == 'tournament') {
@@ -440,7 +390,7 @@ module.exports = {
             // Tournament hasn't closed yet - is it active?  If not, flip to basic and
             // let them know the tournament is over
             if (!attributes.temp.tournamentAvailable) {
-              speech = context.t('TOURNAMENT_ENDED');
+              speech = res.strings.TOURNAMENT_ENDED;
               if (attributes.currentGame == 'tournament') {
                 attributes.currentGame = 'basic';
               }
@@ -458,18 +408,19 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(context, currentFirst, callback) {
+  readAvailableGames: function(event, attributes, currentFirst) {
+    const res = require('./resources')(event.request.locale);
     let speech;
     const choices = [];
     const choiceText = [];
     let game;
     let count = 0;
-    let gameToAdd = context.attributes.currentGame;
+    let gameToAdd = attributes.currentGame;
     let offerTournament = false;
 
-    if (context.attributes.temp.tournamentAvailable) {
+    if (attributes.temp.tournamentAvailable) {
       // If they already busted out, don't offer it
-      if (!context.attributes.tournament || !context.attributes.tournament.busted) {
+      if (!attributes.tournament || !attributes.tournament.busted) {
         // Offer the tournament
         offerTournament = true;
         if (currentFirst) {
@@ -485,7 +436,7 @@ module.exports = {
           // Put the last played game at the front of the list
           if (game != gameToAdd) {
            choices.push(game);
-           choiceText.push(module.exports.sayGame(context, game));
+           choiceText.push(module.exports.sayGame(event, game));
          }
        }
       }
@@ -494,52 +445,55 @@ module.exports = {
     if (gameToAdd && games[gameToAdd]) {
       if (currentFirst) {
         choices.unshift(gameToAdd);
-        choiceText.unshift(module.exports.sayGame(context, gameToAdd));
+        choiceText.unshift(module.exports.sayGame(event, gameToAdd));
       } else {
          choices.push(gameToAdd);
-         choiceText.push(module.exports.sayGame(context, gameToAdd));
+         choiceText.push(module.exports.sayGame(event, gameToAdd));
       }
     }
 
-    speech = context.t('AVAILABLE_GAMES').replace('{0}', count);
-    speech += speechUtils.and(choiceText, {locale: context.event.request.locale});
+    speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
+    speech += speechUtils.and(choiceText, {locale: event.request.locale});
     speech += '. ';
-    callback(speech, choices);
+    return {speech: speech, choices: choices};
   },
-  readCoins: function(context, coins) {
-    return speechUtils.numberOfItems(coins, context.t('SINGLE_COIN'), context.t('PLURAL_COIN'));
+  readCoins: function(event, coins) {
+    const res = require('./resources')(event.request.locale);
+    return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
   },
-  readPayout: function(context, game, payout) {
-    return readPayoutInternal(context, game, payout, ' <break time=\"200ms\"/> ');
+  readPayout: function(event, game, payout) {
+    return readPayoutInternal(event, game, payout, ' <break time=\"200ms\"/> ');
   },
-  readPayoutTable: function(context, game) {
+  readPayoutTable: function(event, game) {
+    const res = require('./resources')(event.request.locale);
     let text = '';
     let payout;
     let i;
 
     for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
-      text += context.t('WILD_SYMBOL').replace('{0}', module.exports.saySymbol(context, game.wild[i]));
+      text += res.strings.WILD_SYMBOL.replace('{0}', module.exports.saySymbol(event, game.wild[i]));
       text += '\n';
     }
 
     for (payout in game.payouts) {
       if (payout) {
         // Special case if it's the progressive
-        text += readPayoutInternal(context, game, payout, ' ');
-        text += module.exports.readPayoutAmount(context, game, payout);
+        text += readPayoutInternal(event, game, payout, ' ');
+        text += module.exports.readPayoutAmount(event, game, payout);
         text += '\n';
       }
     }
 
     return text;
   },
-  readPayoutAmount: function(context, game, payout) {
+  readPayoutAmount: function(event, game, payout) {
+    const res = require('./resources')(event.request.locale);
     let text;
 
     if (game.progressive && (game.progressive.match === payout)) {
-      text = context.t('PAYOUT_PROGRESSIVE');
+      text = res.strings.PAYOUT_PROGRESSIVE;
     } else {
-      text = context.t('PAYOUT_PAYS').replace('{0}', game.payouts[payout]);
+      text = res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
     }
 
     return text;
@@ -651,17 +605,96 @@ module.exports = {
 
     return achievementScore;
   },
-  sayGame: function(context, game) {
-    const gameMap = JSON.parse(context.t('GAME_LIST'));
+  sayGame: function(event, game) {
+    const res = require('./resources')(event.request.locale);
+    const gameMap = JSON.parse(res.strings.GAME_LIST);
     return (gameMap[game]) ? gameMap[game] : game;
   },
-  saySymbol: function(context, symbol) {
-    const symbolMap = JSON.parse(context.t('SYMBOL_LIST'));
+  saySymbol: function(event, symbol) {
+    const res = require('./resources')(event.request.locale);
+    const symbolMap = JSON.parse(res.strings.SYMBOL_LIST);
     return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
   },
-  startButtonInput: function(context) {
+  drawTable: function(handlerInput) {
+    const response = handlerInput.responseBuilder;
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('./resources')(event.request.locale);
+    const game = attributes[attributes.currentGame];
+    let image;
+
+    if (event.context && event.context.System &&
+      event.context.System.device &&
+      event.context.System.device.supportedInterfaces &&
+      event.context.System.device.supportedInterfaces.Display) {
+      attributes.display = true;
+
+      if (attributes.originalChoices) {
+        let i = 0;
+        const listItems = [];
+
+        attributes.originalChoices.forEach((choice) => {
+          listItems.push({
+            'token': 'game.' + i++,
+            'textContent': {
+              'primaryText': {
+                'type': 'RichText',
+                'text': '<font size=\"7\">' + module.exports.sayGame(event, choice) + '</font>',
+              },
+            },
+          });
+        });
+
+        image = new Alexa.ImageHelper()
+          .withDescription(res.strings.SELECT_GAME)
+          .addImageInstance('http://garrettvargas.com/img/slot-background.png')
+          .getImage();
+        response.addRenderTemplateDirective({
+          type: 'ListTemplate1',
+          token: 'listToken',
+          backButton: 'HIDDEN',
+          backgroundImage: image,
+          listItems: listItems,
+        });
+      } else if (game && game.result && game.result.spin) {
+        let name = '';
+        game.result.spin.forEach((spin) => {
+          if (name.length > 0) {
+            name += '-';
+          }
+          name += spin;
+        });
+
+        const title = (game.result.payout)
+          ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
+          : res.strings.DISPLAY_PAYOUT_LOSER;
+
+        image = new Alexa.ImageHelper()
+          .withDescription(title)
+          .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
+          .getImage();
+        response.addRenderTemplateDirective({
+          type: 'BodyTemplate1',
+          backButton: 'HIDDEN',
+          backgroundImage: image,
+        });
+      } else {
+        // Just show the background image
+        image = new Alexa.ImageHelper()
+          .withDescription(res.strings.LAUNCH_WELCOME)
+          .addImageInstance('http://garrettvargas.com/img/slot-background.png')
+          .getImage();
+        response.addRenderTemplateDirective({
+          type: 'BodyTemplate1',
+          backButton: 'HIDDEN',
+          backgroundImage: image,
+        });
+      }
+    }
+  },
+  startButtonInput: function(handlerInput) {
     // We'll allow them to press the button again
-    context.response._addDirective({
+    handlerInput.responseBuilder.addDirective({
       'type': 'GameEngine.StartInputHandler',
       'timeout': 30000,
       'recognizers': {
@@ -711,84 +744,23 @@ module.exports = {
   },
 };
 
-function readPayoutInternal(context, game, payout, pause) {
+function readPayoutInternal(event, game, payout, pause) {
+  const res = require('./resources')(event.request.locale);
   const slots = payout.split('|');
   let text = '';
   let i;
 
   for (i = 0; i < slots.length; i++) {
-    text += module.exports.saySymbol(context, slots[i]);
+    text += module.exports.saySymbol(event, slots[i]);
     text += pause;
   }
 
   for (i = slots.length; i < game.slots; i++) {
-    text += context.t('ANY_SLOT');
+    text += res.strings.ANY_SLOT;
     text += pause;
   }
 
   return text;
-}
-
-function buildDisplayTemplate(context) {
-  const game = context.attributes[context.attributes.currentGame];
-  let listTemplateBuilder;
-  let listItemBuilder;
-  let listTemplate;
-
-  if (context.event.context &&
-      context.event.context.System.device.supportedInterfaces.Display) {
-    context.attributes.display = true;
-
-    if (context.attributes.originalChoices) {
-      listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-      listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-      let i = 0;
-
-      context.attributes.originalChoices.forEach((choice) => {
-        listItemBuilder.addItem(null, 'game.' + i++,
-          makeRichText('<font size="7">' + module.exports.sayGame(context, choice) + '</font>'));
-      });
-
-      const listItems = listItemBuilder.build();
-      listTemplate = listTemplateBuilder
-        .setToken('listToken')
-        .setTitle(context.t('SELECT_GAME'))
-        .setListItems(listItems)
-        .setBackButtonBehavior('HIDDEN')
-        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
-        .build();
-
-      context.response.renderTemplate(listTemplate);
-    } else if (game && game.result && game.result.spin) {
-      let name = '';
-      game.result.spin.forEach((spin) => {
-        if (name.length > 0) {
-          name += '-';
-        }
-        name += spin;
-      });
-
-      const title = (game.result.payout)
-        ? context.t('DISPLAY_PAYOUT_WINNER').replace('{0}', game.result.payout)
-        : context.t('DISPLAY_PAYOUT_LOSER');
-      const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
-      const template = builder.setTitle(title)
-        .setBackgroundImage(makeImage('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png'))
-        .setBackButtonBehavior('HIDDEN')
-        .build();
-
-      context.response.renderTemplate(template);
-    } else {
-      // Just show the background image
-      const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
-      const template = builder.setTitle(context.t('LAUNCH_WELCOME'))
-        .setBackgroundImage(makeImage('http://garrettvargas.com/img/slot-background.png'))
-        .setBackButtonBehavior('HIDDEN')
-        .build();
-
-      context.response.renderTemplate(template);
-    }
-  }
 }
 
 function getTournamentTimes() {

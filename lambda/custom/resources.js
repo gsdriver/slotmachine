@@ -101,13 +101,17 @@ const resources = {
   },
 };
 
-// Use a proxy in case we are asked for a language not called out above
-const handler = {
-  get: function(target, name) {
-    return target.hasOwnProperty(name) ? target[name] : target['en-US'];
-  },
+const utils = (locale) => {
+  let translation;
+  if (resources[locale]) {
+    translation = resources[locale].translation;
+  } else {
+    translation = resources['en-US'].translation;
+  }
+
+  return {
+    strings: translation,
+  };
 };
 
-module.exports = {
-  languageStrings: new Proxy(resources, handler),
-};
+module.exports = utils;
