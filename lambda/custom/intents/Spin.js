@@ -14,243 +14,238 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
+    if (request.type === 'GameEngine.InputHandlerEvent') {
+      return true;
+    }
+
+    // Bet or Spin can be done while you are selecting a game
+    if ((request.type === 'IntentRequest')
+      && (attributes.choices && (attributes.choices.length > 0))
+      && ((request.intent.name === 'BetIntent')
+        || (request.intent.name === 'SpinIntent'))) {
+      return true;
+    }
+
+    // You have several ways you can kick off a spin if you are not
+    // in the middle of selecting a game
     return ((request.type === 'IntentRequest')
       && (!attributes.choices || !attributes.choices.length)
       && ((request.intent.name === 'ElementSelected')
         || (request.intent.name === 'GameIntent')
+        || (request.intent.name === 'BetIntent')
         || (request.intent.name === 'AMAZON.YesIntent')
         || (request.intent.name === 'AMAZON.NextIntent')
         || (request.intent.name === 'SpinIntent')));
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
+    return new Promise((resolve, reject) => {
+      selectGame(handlerInput, (welcome) => {
+        const event = handlerInput.requestEnvelope;
+        const attributes = handlerInput.attributesManager.getSessionAttributes();
+        const res = require('../resources')(event.request.locale);
 
-    // When you spin, you either have to have bets or prior bets
-    let bet;
-    let speechError = '';
-    let speech = '';
-    const game = attributes[attributes.currentGame];
-    const rules = utils.getGame(attributes.currentGame);
+        // When you spin, you either have to have bets or prior bets
+        let speech = welcome;
+        const game = attributes[attributes.currentGame];
+        const rules = utils.getGame(attributes.currentGame);
 
-    // Just in case they were trying to play at the last minute...
-    attributes.temp.readingRules = false;
-    if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
-      attributes.currentGame = 'basic';
-      handlerInput.responseBuilder
-        .speak(res.strings.TOURNAMENT_ENDED)
-        .reprompt(res.strings.ERROR_REPROMPT);
-      return;
-    }
-
-    // If there is partial speech from a previous intent, append
-    if (attributes.partialSpeech) {
-      speechError = attributes.partialSpeech;
-      speech = attributes.partialSpeech;
-      attributes.partialSpeech = undefined;
-    }
-
-    if (!game.bet && !game.lastbet) {
-      // Either bet the max coins or their available bankroll
-      bet = Math.min(rules.maxCoins, game.bankroll);
-      game.bet = bet;
-      game.bankroll -= bet;
-    } else {
-      if (game.bet) {
-        bet = game.bet;
-      } else if (game.lastbet) {
-        // They want to re-use the same bets they did last time - make sure there
-        // is enough left in the bankroll and update the bankroll before we spin
-        if (game.lastbet > game.bankroll) {
-          speechError += res.strings.SPIN_CANTBET_LASTBETS.replace('{0}', utils.readCoins(event, game.bankroll));
+        // Just in case they were trying to play at the last minute...
+        attributes.temp.readingRules = false;
+        if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
+          attributes.currentGame = 'basic';
           handlerInput.responseBuilder
-            .speak(speechError)
-            .reprompt(res.strings.SPIN_INVALID_REPROMPT);
+            .speak(res.strings.TOURNAMENT_ENDED)
+            .reprompt(res.strings.ERROR_REPROMPT);
+          resolve();
           return;
-        } else {
-          bet = game.lastbet;
-          game.bankroll -= game.lastbet;
-        }
-      }
-    }
-
-    // Pick random numbers based on the rules of the game
-    const spinResult = [];
-    let i;
-
-    for (i = 0; i < rules.slots; i++) {
-      let spin;
-      let j;
-      let total = 0;
-
-      rules.frequency[i].symbols.map((item) => {
-        total = total + item;
-      });
-
-      const randomValue = seedrandom(i + event.session.user.userId + (game.timestamp ? game.timestamp : ''))();
-      spin = Math.floor(randomValue * total);
-      if (spin == total) {
-        spin--;
-      }
-
-      for (j = 0; j < rules.frequency[i].symbols.length; j++) {
-        if (spin < rules.frequency[i].symbols[j]) {
-          // This is it!
-          spinResult.push(rules.symbols[j]);
-          break;
         }
 
-        // Nope, go to the next one
-        spin -= rules.frequency[i].symbols[j];
-      }
-    }
+        const bet = getBet(event, attributes);
+        game.bet = bet;
+        game.bankroll -= bet;
+        if (bet !== game.lastbet) {
+          // Say the amount they are betting
+          speech += res.strings.SPIN_YOU_BET.replace('{0}', utils.readCoins(event, bet));
+        }
 
-    if (!game.result) {
-      game.result = {};
-    }
-    game.result.spin = spinResult;
-
-    let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
-
-    for (i = 0; i < spinResult.length; i++) {
-      spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
-      spinText += utils.saySymbol(event, spinResult[i]);
-    }
-    speech += res.strings.SPIN_RESULT.replace('{0}', spinText);
-
-    // Now let's determine the payouts
-    let matchedPayout;
-    let payout;
-    let outcome;
-
-    for (payout in rules.payouts) {
-      if (payout) {
-        const slots = payout.split('|');
+        // Pick random numbers based on the rules of the game
+        const spinResult = [];
         let i;
-        let isMatch = true;
 
-        for (i = 0; i < slots.length; i++) {
-          if (slots[i] !== spinResult[i]) {
-            // Let's see if this can substitute
-            if (rules.substitutes && rules.substitutes[spinResult[i]]) {
-              // It can - can it substitute for this symbol though?
-              if (rules.substitutes[spinResult[i]].indexOf(slots[i]) < 0) {
-                // Nope, it doesn't substitute
-                isMatch = false;
-                break;
-              }
-            } else {
-              isMatch = false;
+        for (i = 0; i < rules.slots; i++) {
+          let spin;
+          let j;
+          let total = 0;
+
+          rules.frequency[i].symbols.map((item) => {
+            total = total + item;
+          });
+
+          const randomValue = seedrandom(i + event.session.user.userId + (game.timestamp ? game.timestamp : ''))();
+          spin = Math.floor(randomValue * total);
+          if (spin == total) {
+            spin--;
+          }
+
+          for (j = 0; j < rules.frequency[i].symbols.length; j++) {
+            if (spin < rules.frequency[i].symbols[j]) {
+              // This is it!
+              spinResult.push(rules.symbols[j]);
               break;
             }
+
+            // Nope, go to the next one
+            spin -= rules.frequency[i].symbols[j];
           }
         }
 
-        if (isMatch) {
-          if (matchedPayout) {
-            // Is this one better?
-            if (rules.payouts[payout] > rules.payouts[matchedPayout]) {
-              matchedPayout = payout;
+        if (!game.result) {
+          game.result = {};
+        }
+        game.result.spin = spinResult;
+        let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
+        for (i = 0; i < spinResult.length; i++) {
+          spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
+          spinText += utils.saySymbol(event, spinResult[i]);
+        }
+        speech += res.strings.SPIN_RESULT.replace('{0}', spinText);
+
+        // Now let's determine the payouts
+        let matchedPayout;
+        let payout;
+        let outcome;
+
+        for (payout in rules.payouts) {
+          if (payout) {
+            const slots = payout.split('|');
+            let i;
+            let isMatch = true;
+
+            for (i = 0; i < slots.length; i++) {
+              if (slots[i] !== spinResult[i]) {
+                // Let's see if this can substitute
+                if (rules.substitutes && rules.substitutes[spinResult[i]]) {
+                  // It can - can it substitute for this symbol though?
+                  if (rules.substitutes[spinResult[i]].indexOf(slots[i]) < 0) {
+                    // Nope, it doesn't substitute
+                    isMatch = false;
+                    break;
+                  }
+                } else {
+                  isMatch = false;
+                  break;
+                }
+              }
+            }
+
+            if (isMatch) {
+              if (matchedPayout) {
+                // Is this one better?
+                if (rules.payouts[payout] > rules.payouts[matchedPayout]) {
+                  matchedPayout = payout;
+                }
+              } else {
+                matchedPayout = payout;
+              }
+            }
+          }
+        }
+
+        game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
+        if (game.result.payout > 0) {
+          // You won!  If more than 50:1, play the jackpot sound
+          if (rules.payouts[matchedPayout] >= 50) {
+            speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+            game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
+            outcome = 'jackpot';
+
+            // Write the jackpot details, UNLESS it's a progressive payout
+            // in which case we'll write it out once we know the amount
+            if (!(rules.progressive && (matchedPayout == rules.progressive.match)
+                          && (bet == rules.maxCoins))) {
+              const params = {
+                url: process.env.SERVICEURL + 'slots/updateJackpot',
+                formData: {
+                  jackpot: bet * rules.payouts[matchedPayout],
+                  game: attributes.currentGame,
+                  userId: event.session.user.userId,
+                },
+              };
+              request.post(params, (err, res, body) => {
+              });
             }
           } else {
-            matchedPayout = payout;
+            if (rules.win) {
+              speech += rules.win;
+            }
+            outcome = 'win';
           }
-        }
-      }
-    }
 
-    game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
-    if (game.result.payout > 0) {
-      // You won!  If more than 50:1, play the jackpot sound
-      if (rules.payouts[matchedPayout] >= 50) {
-        speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
-        game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
-        outcome = 'jackpot';
+          // If you won the progressive, then ... wow, you rock!
+          if (rules.progressive && (matchedPayout == rules.progressive.match)
+                && (bet == rules.maxCoins)) {
+            // OK, read the jackpot from the database
+            utils.getProgressivePayout(attributes, (coinsWon) => {
+              game.bankroll += coinsWon;
+              speech += res.strings.SPIN_PROGRESSIVE_WINNER
+                  .replace('{0}', utils.readCoins(event, coinsWon));
 
-        // Write the jackpot details, UNLESS it's a progressive payout
-        // in which case we'll write it out once we know the amount
-        if (!(rules.progressive && (matchedPayout == rules.progressive.match)
-                      && (bet == rules.maxCoins))) {
-          const params = {
-            url: process.env.SERVICEURL + 'slots/updateJackpot',
-            formData: {
-              jackpot: bet * rules.payouts[matchedPayout],
-              game: attributes.currentGame,
-              userId: event.session.user.userId,
-            },
-          };
-          request.post(params, (err, res, body) => {
-          });
-        }
-      } else {
-        if (rules.win) {
-          speech += rules.win;
-        }
-        outcome = 'win';
-      }
+              const params = {
+                url: process.env.SERVICEURL + 'slots/updateJackpot',
+                formData: {
+                  jackpot: coinsWon,
+                  game: attributes.currentGame,
+                  userId: event.session.user.userId,
+                  resetProgressive: 'true',
+                },
+              };
+              request.post(params, (err, res, body) => {
+              });
 
-      // If you won the progressive, then ... wow, you rock!
-      if (rules.progressive && (matchedPayout == rules.progressive.match)
-            && (bet == rules.maxCoins)) {
-        return new Promise((resolve, reject) => {
-          // OK, read the jackpot from the database
-          utils.getProgressivePayout(attributes, (coinsWon) => {
-            game.bankroll += coinsWon;
-            speech += res.strings.SPIN_PROGRESSIVE_WINNER
-                .replace('{0}', utils.readCoins(event, coinsWon));
-
-            const params = {
-              url: process.env.SERVICEURL + 'slots/updateJackpot',
-              formData: {
-                jackpot: coinsWon,
-                game: attributes.currentGame,
-                userId: event.session.user.userId,
-                resetProgressive: 'true',
-              },
-            };
-            request.post(params, (err, res, body) => {
+              updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
+                speech += speechText;
+                handlerInput.responseBuilder
+                  .speak(speech)
+                  .reprompt(reprompt);
+                resolve();
+              });
             });
+            return;
+          } else {
+            game.bankroll += (bet * rules.payouts[matchedPayout]);
+            speech += res.strings.SPIN_WINNER
+                .replace('{0}', utils.readPayout(event, rules, matchedPayout))
+                .replace('{1}', utils.readCoins(event, bet * rules.payouts[matchedPayout]));
+          }
+        } else {
+          // Sorry, you lost
+          if (rules.lose) {
+            speech += rules.lose;
+          }
+          speech += res.strings.SPIN_LOSER;
+          outcome = 'lose';
+        }
 
-            updateGamePostPayout(event, attributes, game, bet, outcome, (speechText, reprompt) => {
-              speech += speechText;
-              handlerInput.responseBuilder
-                .speak(speech)
-                .reprompt(reprompt);
-              resolve();
-            });
-          });
+        // Update coins in the progressive (async call)
+        utils.incrementProgressive(attributes, bet);
+        updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
+          speech += speechText;
+          handlerInput.responseBuilder
+            .speak(speech)
+            .reprompt(reprompt);
+          resolve();
         });
-      } else {
-        game.bankroll += (bet * rules.payouts[matchedPayout]);
-        speech += res.strings.SPIN_WINNER
-            .replace('{0}', utils.readPayout(event, rules, matchedPayout))
-            .replace('{1}', utils.readCoins(event, bet * rules.payouts[matchedPayout]));
-      }
-    } else {
-      // Sorry, you lost
-      if (rules.lose) {
-        speech += rules.lose;
-      }
-      speech += res.strings.SPIN_LOSER;
-      outcome = 'lose';
-    }
-
-    // Update coins in the progressive (async call)
-    utils.incrementProgressive(attributes, bet);
-    updateGamePostPayout(event, attributes, game, bet, outcome, (speechText, reprompt) => {
-      speech += speechText;
-      handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt);
+      });
     });
   },
 };
 
-function updateGamePostPayout(event, attributes, game, bet, outcome, callback) {
+function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
+  const event = handlerInput.requestEnvelope;
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = '';
-  const res = require('../resources')(event.request.locale);
   let reprompt = res.strings.SPIN_PLAY_AGAIN;
   const rules = utils.getGame(attributes.currentGame);
 
@@ -337,14 +332,8 @@ function updateGamePostPayout(event, attributes, game, bet, outcome, callback) {
   }
 
   // Update the color of the echo button (if present)
-  buttons.turnOffButtons(context);
   if (attributes.temp.buttonId) {
-    // Look for the first wheel sound to see if there is starting text
-    // That tells us whether to have a longer or shorter length of time on the buttons
-    const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
-    buttons.colorButton(context, attributes.temp.buttonId,
-      (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
-    buttons.buildButtonDownAnimationDirective(context, [attributes.temp.buttonId]);
+    colorButton(handlerInput, (game.result.payout > 0));
   }
 
   // And reprompt
@@ -354,11 +343,13 @@ function updateGamePostPayout(event, attributes, game, bet, outcome, callback) {
 }
 
 function colorButton(handlerInput, winner) {
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+
   // Pulse the button based on whether they won or lost
   const buttonIdleDirective = {
     'type': 'GadgetController.SetLight',
     'version': 1,
-    'targetGadgets': [context.attributes.temp.buttonId],
+    'targetGadgets': [attributes.temp.buttonId],
     'parameters': {
       'animations': [{
         'repeat': 1,
@@ -392,5 +383,83 @@ function colorButton(handlerInput, winner) {
   handlerInput.responseBuilder
     .addDirective(buttonIdleDirective)
     .addDirective(utils.buildButtonDownAnimationDirective(
-        [context.attributes.temp.buttonId]));
+        [attributes.temp.buttonId]));
+}
+
+function getBet(event, attributes) {
+  // The bet amount is optional - if not present we will use a default value
+  // of either the last bet amount or the maximum coins for the machine
+  let amount;
+  const game = attributes[attributes.currentGame];
+  const rules = utils.getGame(attributes.currentGame);
+  const amountSlot = (event.request.intent && event.request.intent.slots
+      && event.request.intent.slots.Amount);
+
+  if (amountSlot && amountSlot.value) {
+    // If the bet amount isn't an integer, we'll use the default value (1 unit)
+    amount = parseInt(amountSlot.value);
+  } else if (game.lastbet) {
+    amount = game.lastbet;
+  } else {
+    amount = rules.maxCoins;
+  }
+
+  // Let's tweak the amount for them
+  if (isNaN(amount) || (amount == 0)) {
+    amount = 1;
+  } else if (amount > rules.maxCoins) {
+    amount = rules.maxCoins;
+  }
+  if (amount > game.bankroll) {
+    amount = game.bankroll;
+  }
+
+  return amount;
+}
+
+function selectGame(handlerInput, callback) {
+  const event = handlerInput.requestEnvelope;
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  const res = require('../resources')(event.request.locale);
+  let speech = '';
+
+  // If they were in the midst of selecting a game, make that selection
+  if (attributes.choices && (attributes.choices.length > 0)) {
+    attributes.currentGame = attributes.choices[0];
+    attributes.choices = undefined;
+    attributes.originalChoices = undefined;
+    speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
+
+    if (!attributes[attributes.currentGame]) {
+      attributes[attributes.currentGame] = {
+        bankroll: 1000,
+        high: 1000,
+      };
+
+      // If this is tournament, keep track of number of tournaments played
+      if (attributes.currentGame == 'tournament') {
+        attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
+      }
+    }
+
+    const game = attributes[attributes.currentGame];
+    const rules = utils.getGame(attributes.currentGame);
+
+    if (rules.welcome) {
+      speech += res.strings[rules.welcome];
+    }
+
+    // Check if there is a progressive jackpot
+    utils.getProgressivePayout(attributes, (jackpot) => {
+      speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+
+      if (jackpot) {
+        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', jackpot);
+        game.progressiveJackpot = jackpot;
+      }
+      callback(speech);
+    });
+  } else {
+    callback(speech);
+  }
 }

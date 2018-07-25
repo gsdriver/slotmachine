@@ -24,13 +24,6 @@ const resources = {
       'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Come back on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
       // From HighScore.js
       'HIGHSCORE_REPROMPT': 'What else can I help you with?',
-      // From Bet.js
-      'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
-      'BET_INVALID_REPROMPT': 'What else can I help you with?',
-      'BET_EXCEEDS_MAX': 'Sorry, this bet exceeds the maximum bet of {0}.',
-      'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
-      'BET_PLACED': 'You bet {0}. ',
-      'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
       // From Help.js
       'HELP_TOURNAMENT': 'There are {0} left in tournament play. At the end of the tournament the highest bankroll will win 100 achievement points. ',
       'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
@@ -44,6 +37,7 @@ const resources = {
       'RULES_SELECT_REPROMPT': 'Say yes to play this game or no to hear the next option.',
       'RULES_CARD_TITLE': 'Payout Table',
       // From Spin.js
+      'SPIN_YOU_BET': 'You bet {0}. ',
       'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
       'SPIN_INVALID_REPROMPT': 'Place a bet',
       'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
