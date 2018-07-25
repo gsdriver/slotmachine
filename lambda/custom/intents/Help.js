@@ -7,39 +7,50 @@
 const utils = require('../utils');
 
 module.exports = {
-  handleIntent: function() {
-    const game = this.attributes[this.attributes.currentGame];
-    const rules = utils.getGame(this.attributes.currentGame);
+  canHandle: function(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+
+    return ((request.type === 'IntentRequest') && (request.intent.name === 'AMAZON.HelpIntent'));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../resources')(event.request.locale);
+    const game = attributes[attributes.currentGame];
+    const rules = utils.getGame(attributes.currentGame);
     let speech;
 
-    this.attributes.temp.readingRules = false;
-    if (this.handler.state == 'SELECTGAME') {
+    attributes.temp.readingRules = false;
+    if (attributes.choices && (attributes.choices.length > 0)) {
       // If selecting a game, help string is different
-      const reprompt = this.t('LAUNCH_REPROMPT').replace('{0}', utils.sayGame(this, this.attributes.choices[0]));
+      const reprompt = res.strings.LAUNCH_REPROMPT
+        .replace('{0}', utils.sayGame(event, attributes.choices[0]));
 
-      speech = this.t('HELP_SELECT_TEXT');
+      speech = res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
-      utils.emitResponse(this, null, null, speech, reprompt);
+      handlerInput.responseBuilder
+        .speak(speech)
+        .reprompt(reprompt);
     } else {
-      const reprompt = this.t('HELP_REPROMPT');
+      const reprompt = res.strings.HELP_REPROMPT;
 
-      if (this.attributes.currentGame == 'tournament') {
+      if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
-        speech = this.t('HELP_TOURNAMENT').replace('{0}', utils.getRemainingTournamentTime(this));
-        speech += this.t('READ_BANKROLL').replace('{0}', utils.readCoins(this, game.bankroll));
-        speech += this.t('HELP_COMMANDS');
+        speech = res.strings.HELP_TOURNAMENT.replace('{0}', utils.getRemainingTournamentTime(event));
+        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+        speech += res.strings.HELP_COMMANDS;
       } else {
-        speech = this.t('READ_BANKROLL').replace('{0}', utils.readCoins(this, game.bankroll));
-        speech += this.t('HELP_COMMANDS');
-        speech = this.t('HELP_ACHIEVEMENT_POINTS') + speech;
+        speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+        speech += res.strings.HELP_COMMANDS;
+        speech = res.strings.HELP_ACHIEVEMENT_POINTS + speech;
       }
       speech += reprompt;
 
-      utils.emitResponse(this, null, null,
-            speech, reprompt,
-            this.t('HELP_CARD_TITLE'),
-            this.t('HELP_ACHIEVEMENT_CARD_TEXT')
-            + utils.readPayoutTable(this, rules));
+      handlerInput.responseBuilder
+        .speak(speech)
+        .reprompt(reprompt)
+        .withSimpleCard(res.strings.HELP_CARD_TITLE,
+          res.strings.HELP_ACHIEVEMENT_CARD_TEXT + utils.readPayoutTable(event, rules));
     }
   },
 };
