@@ -5,7 +5,6 @@
 'use strict';
 
 const Alexa = require('ask-sdk');
-const Bet = require('./intents/Bet');
 const CanFulfill = require('./intents/CanFulfill');
 const Spin = require('./intents/Spin');
 const Button = require('./intents/Button');
@@ -18,7 +17,6 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const SelectYes = require('./intents/SelectYes');
 const SelectNo = require('./intents/SelectNo');
-const SelectAndSpin = require('./intents/SelectAndSpin');
 const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
@@ -137,8 +135,6 @@ function runGame(event, context, callback) {
       Select,
       SelectYes,
       SelectNo,
-      SelectAndSpin,
-      Bet,
       Button,
       Spin,
       Help,
@@ -161,15 +157,3 @@ function runGame(event, context, callback) {
     callback(err, response);
   });
 }
-
-/*
-// Handlers for our skill
-const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
-  'GameEngine.InputHandlerEvent': Button.handleIntent,
-});
-
-const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
-  'GameEngine.InputHandlerEvent': Button.handleIntent,
-});
-*/
-
