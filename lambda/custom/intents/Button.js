@@ -11,11 +11,12 @@ module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
 
-    return ((request.type === 'IntentRequest') && (request.intent.name === 'GameEngine.InputHandlerEvent'));
+    return (request.type === 'GameEngine.InputHandlerEvent');
   },
   handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const gameEngineEvents = this.event.request.events || [];
+    const gameEngineEvents = event.request.events || [];
 
     gameEngineEvents.forEach((engineEvent) => {
       // in this request type, we'll see one or more incoming events

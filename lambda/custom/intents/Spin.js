@@ -14,10 +14,6 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    if (request.type === 'GameEngine.InputHandlerEvent') {
-      return true;
-    }
-
     // Bet or Spin can be done while you are selecting a game
     if ((request.type === 'IntentRequest')
       && (attributes.choices && (attributes.choices.length > 0))
@@ -62,7 +58,7 @@ module.exports = {
 
         const bet = getBet(event, attributes);
         game.bet = bet;
-        game.bankroll -= bet;
+        updateBankroll(attributes, -bet);
         if (bet !== game.lastbet) {
           // Say the amount they are betting
           speech += res.strings.SPIN_YOU_BET.replace('{0}', utils.readCoins(event, bet));
@@ -186,7 +182,7 @@ module.exports = {
                 && (bet == rules.maxCoins)) {
             // OK, read the jackpot from the database
             utils.getProgressivePayout(attributes, (coinsWon) => {
-              game.bankroll += coinsWon;
+              updateBankroll(attributes, coinsWon);
               speech += res.strings.SPIN_PROGRESSIVE_WINNER
                   .replace('{0}', utils.readCoins(event, coinsWon));
 
@@ -204,15 +200,18 @@ module.exports = {
 
               updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
                 speech += speechText;
-                handlerInput.responseBuilder
-                  .speak(speech)
-                  .reprompt(reprompt);
+                handlerInput.responseBuilder.speak(speech);
+                if (reprompt) {
+                  handlerInput.responseBuilder.reprompt(reprompt);
+                } else {
+                  handlerInput.responseBuilder.withShouldEndSession(true);
+                }
                 resolve();
               });
             });
             return;
           } else {
-            game.bankroll += (bet * rules.payouts[matchedPayout]);
+            updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
             speech += res.strings.SPIN_WINNER
                 .replace('{0}', utils.readPayout(event, rules, matchedPayout))
                 .replace('{1}', utils.readCoins(event, bet * rules.payouts[matchedPayout]));
@@ -230,9 +229,12 @@ module.exports = {
         utils.incrementProgressive(attributes, bet);
         updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
           speech += speechText;
-          handlerInput.responseBuilder
-            .speak(speech)
-            .reprompt(reprompt);
+          handlerInput.responseBuilder.speak(speech);
+          if (reprompt) {
+            handlerInput.responseBuilder.reprompt(reprompt);
+          } else {
+            handlerInput.responseBuilder.withShouldEndSession(true);
+          }
           resolve();
         });
       });
@@ -254,30 +256,22 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
     attributes.temp.forceSave = true;
   }
 
-  // If they have no units left, reset the bankroll
-  // unless this is tournament mode in which case - sorry you're out
-  if (game.bankroll < 1) {
-    if (!rules.canReset) {
-      // Sorry, you are out
-      game.busted = true;
-      attributes.currentGame = 'basic';
-      speech += res.strings.SPIN_OUTOFMONEY;
-      reprompt = res.strings.SPIN_BUSTED_REPROMPT;
-    } else {
-      game.bankroll = 1000;
-      lastbet = undefined;
-      speech += res.strings.SPIN_BUSTED;
-      reprompt = res.strings.SPIN_BUSTED_REPROMPT;
-    }
+  // If you run out of coins, sorry - you need to come back tomorrow or buy more
+  // Buying more is only allowed if the game doesn't have its own bankroll
+  if ((game.bankroll !== undefined) && (game.bankroll < 1)) {
+    // Sorry, you are out
+    game.busted = true;
+    attributes.currentGame = 'basic';
+    speech += res.strings.SPIN_OUTOFMONEY;
+    reprompt = undefined;
+  } else if (attributes.bankroll < 1) {
+    lastbet = undefined;
+    attributes.busted = Date.now();
+    speech += res.strings.SPIN_BUSTED;
+    reprompt = undefined;
   } else {
-    if (game.bankroll < lastbet) {
-      // They still have money left, but if they don't have enough to support
-      // the last set of bets again, then reset it to 1 coin
-      lastbet = 1;
-    }
-
     speech += res.strings.READ_BANKROLL
-        .replace('{0}', utils.readCoins(event, game.bankroll));
+        .replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
   }
 
   // Award achievement points
@@ -317,17 +311,20 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
   game.timestamp = Date.now();
   game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
 
-  // Is this a new high for this game?
-  if (game.bankroll > game.high) {
-    // Just track for now...
-    game.high = game.bankroll;
+  // Is this a new high?
+  if (game.bankroll !== undefined) {
+    if (game.bankroll > game.high) {
+      game.high = game.bankroll;
+    }
+  } else if (attributes.bankroll > attributes.high) {
+    attributes.high = attributes.bankroll;
   }
 
   // If it's a new user, clear that state and let them know about other games
   if (attributes.newUser) {
     attributes.newUser = undefined;
     speech += res.strings.SPIN_NEWUSER;
-  } else {
+  } else if (reprompt) {
     speech += reprompt;
   }
 
@@ -336,7 +333,6 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
     colorButton(handlerInput, (game.result.payout > 0));
   }
 
-  // And reprompt
   game.lastbet = lastbet;
   game.bet = undefined;
   callback(speech, reprompt);
@@ -390,6 +386,7 @@ function getBet(event, attributes) {
   // The bet amount is optional - if not present we will use a default value
   // of either the last bet amount or the maximum coins for the machine
   let amount;
+  const bankroll = utils.getBankroll(attributes);
   const game = attributes[attributes.currentGame];
   const rules = utils.getGame(attributes.currentGame);
   const amountSlot = (event.request.intent && event.request.intent.slots
@@ -410,8 +407,8 @@ function getBet(event, attributes) {
   } else if (amount > rules.maxCoins) {
     amount = rules.maxCoins;
   }
-  if (amount > game.bankroll) {
-    amount = game.bankroll;
+  if (amount > bankroll) {
+    amount = bankroll;
   }
 
   return amount;
@@ -431,14 +428,13 @@ function selectGame(handlerInput, callback) {
     speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
     if (!attributes[attributes.currentGame]) {
-      attributes[attributes.currentGame] = {
-        bankroll: 1000,
-        high: 1000,
-      };
+      attributes[attributes.currentGame] = {};
 
       // If this is tournament, keep track of number of tournaments played
       if (attributes.currentGame == 'tournament') {
         attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
+        attributes.tournament.bankroll = 1000;
+        attributes.tournament.high = 1000;
       }
     }
 
@@ -451,7 +447,7 @@ function selectGame(handlerInput, callback) {
 
     // Check if there is a progressive jackpot
     utils.getProgressivePayout(attributes, (jackpot) => {
-      speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+      speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
 
       if (jackpot) {
         speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', jackpot);
@@ -461,5 +457,14 @@ function selectGame(handlerInput, callback) {
     });
   } else {
     callback(speech);
+  }
+}
+
+function updateBankroll(attributes, amount) {
+  const game = attributes[attributes.currentGame];
+  if (game && (game.bankroll !== undefined)) {
+    game.bankroll += amount;
+  } else {
+    attributes.bankroll += amount;
   }
 }

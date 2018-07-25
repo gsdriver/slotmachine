@@ -18,7 +18,6 @@ const games = {
   'basic': {
     'maxCoins': 5,
     'slots': 3,
-    'canReset': true,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -40,7 +39,6 @@ const games = {
   'wild': {
     'maxCoins': 5,
     'slots': 3,
-    'canReset': true,
     'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
     'frequency': [
       {'symbols': [3, 16, 10, 4, 6]},
@@ -67,7 +65,6 @@ const games = {
   'loose': {
     'maxCoins': 5,
     'slots': 3,
-    'canReset': true,
     'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
     'frequency': [
       {'symbols': [5, 6, 10, 10, 1]},
@@ -88,7 +85,6 @@ const games = {
   'progressive': {
     'maxCoins': 5,
     'slots': 3,
-    'canReset': true,
     'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
     'frequency': [
       {'symbols': [6, 8, 8, 10, 2]},
@@ -257,11 +253,11 @@ const tournaments = [
 ];
 
 module.exports = {
-  checkForTournament: function(event) {
-    if (!event.session.attributes.temp) {
-      event.session.attributes.temp = {};
-    }
-
+  getBankroll: function(attributes) {
+    const game = attributes[attributes.currentGame];
+    return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
+  },
+  checkForTournament: function(attributes) {
     // Active on Wednesday PST (Day=3) from 6-7 PM
     // Controlled by TOURNEYTIME environment variable
     let tournamentAvailable;
@@ -282,14 +278,14 @@ module.exports = {
       Object.assign(games, {tournament: tournaments[tournamentIndex]});
     }
 
-    if (event.session.attributes.temp.tournamentAvailable && !tournamentAvailable) {
+    if (attributes.temp.tournamentAvailable && !tournamentAvailable) {
       // Tournament was available, now it's not - force a database save
-      event.session.attributes.temp.forceSave = true;
+      attributes.temp.forceSave = true;
     } else {
-      event.session.attributes.temp.forceSave = undefined;
+      attributes.temp.forceSave = undefined;
     }
 
-    event.session.attributes.temp.tournamentAvailable = tournamentAvailable;
+    attributes.temp.tournamentAvailable = tournamentAvailable;
   },
   timeUntilTournament: function() {
     // How long until the next tournament?
@@ -511,11 +507,12 @@ module.exports = {
       }
     } else {
       const currentGame = attributes[game];
+      const bankroll = module.exports.getBankroll(attributes);
       params.game = game;
       if (currentGame.spins > 0) {
         params.userId = userId;
-        params.score = currentGame.bankroll;
-        myScore = currentGame.bankroll;
+        params.score = bankroll;
+        myScore = bankroll;
       }
     }
 

@@ -17,6 +17,18 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
 
+    // First off - are they out of money?
+    if (attributes.busted) {
+      if (Date.now() - attributes.busted > 24*60*60*1000) {
+        handlerInput.responseBuilder
+          .speak(res.strings.LAUNCH_BUSTED)
+          .withEndSession(true);
+      } else {
+        attributes.bankroll += 25;
+        attributes.busted = undefined;
+      }
+    }
+
     // Tell them the rules, their bankroll and offer a few things they can do
     const score = utils.getAchievementScore(attributes.achievements);
     let speech = '';

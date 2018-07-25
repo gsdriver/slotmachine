@@ -16,7 +16,7 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
-    const game = attributes[attributes.currentGame];
+    const bankroll = utils.getBankroll(attributes);
     const rules = utils.getGame(attributes.currentGame);
     let speech;
 
@@ -37,10 +37,10 @@ module.exports = {
       if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
         speech = res.strings.HELP_TOURNAMENT.replace('{0}', utils.getRemainingTournamentTime(event));
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       } else {
-        speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+        speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
         speech = res.strings.HELP_ACHIEVEMENT_POINTS + speech;
       }

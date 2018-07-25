@@ -15,6 +15,8 @@ const resources = {
       'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. ',
       'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
+      'LAUNCH_BUSTED': 'You are out of coins. Come back tomorrow for 25 more coins. ',
+      'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are 25 coins to get you back in the game. ',
       // Select.js
       'SELECT_WELCOME': 'Welcome to {0}. ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
@@ -46,8 +48,7 @@ const resources = {
       'SPIN_WINNER': 'You matched {0} and won {1}. ',
       'SPIN_LOSER': 'Sorry, you lost. ',
       'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
-      'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
-      'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+      'SPIN_BUSTED': 'You lost all your money. Come back tomorrow for 25 coins. ',
       'SPIN_OUTOFMONEY': 'You are out of coins and out of the tournament. Better luck next week! ',
       'SPIN_JACKPOT_ACHIEVEMENT': 'You earned 25 achievement points for a jackpot. ',
       'SPIN_FIRSTPLAY_ACHIEVEMENT': 'You earned 10 achievement points for your first time playing {0} today. ',

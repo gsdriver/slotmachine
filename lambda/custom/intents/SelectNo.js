@@ -43,14 +43,14 @@ module.exports = {
       speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
       if (!attributes[attributes.currentGame]) {
-        attributes[attributes.currentGame] = {
-          bankroll: 1000,
-          high: 1000,
-        };
+        attributes[attributes.currentGame] = {};
 
         // If this is tournament, keep track of number of tournaments played
+        // Tournaments also have separate bankrolls
         if (attributes.currentGame == 'tournament') {
           attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
+          attributes.tournament.bankroll = 1000;
+          attributes.tournament.high = 1000;
         }
       }
 
@@ -65,7 +65,7 @@ module.exports = {
       return new Promise((resolve, reject) => {
         // Check if there is a progressive jackpot
         utils.getProgressivePayout(attributes, (jackpot) => {
-          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, game.bankroll));
+          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
 
           if (jackpot) {
             // For progressive, just tell them the jackpot and to bet max coins
