@@ -249,7 +249,6 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
   let lastbet = bet;
   let speech = '';
   let reprompt = res.strings.SPIN_PLAY_AGAIN;
-  const rules = utils.getGame(attributes.currentGame);
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
@@ -422,36 +421,19 @@ function selectGame(handlerInput, callback) {
 
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
-    attributes.currentGame = attributes.choices[0];
-    attributes.choices = undefined;
-    attributes.originalChoices = undefined;
-    speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
+    utils.selectGame(attributes, 0).then(() => {
+      speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
-    if (!attributes[attributes.currentGame]) {
-      attributes[attributes.currentGame] = {};
-
-      // If this is tournament, keep track of number of tournaments played
-      if (attributes.currentGame == 'tournament') {
-        attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
-        attributes.tournament.bankroll = 1000;
-        attributes.tournament.high = 1000;
+      const game = attributes[attributes.currentGame];
+      const rules = utils.getGame(attributes.currentGame);
+      if (rules.welcome) {
+        speech += res.strings[rules.welcome];
       }
-    }
 
-    const game = attributes[attributes.currentGame];
-    const rules = utils.getGame(attributes.currentGame);
-
-    if (rules.welcome) {
-      speech += res.strings[rules.welcome];
-    }
-
-    // Check if there is a progressive jackpot
-    utils.getProgressivePayout(attributes, (jackpot) => {
       speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
 
-      if (jackpot) {
-        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', jackpot);
-        game.progressiveJackpot = jackpot;
+      if (game.progressiveJackpot) {
+        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', game.progressiveJackpot);
       }
       callback(speech);
     });

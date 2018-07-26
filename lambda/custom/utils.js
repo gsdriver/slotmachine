@@ -602,6 +602,34 @@ module.exports = {
 
     return achievementScore;
   },
+  selectGame: function(attributes, choice) {
+    attributes.currentGame = attributes.choices[choice];
+    attributes.choices = undefined;
+    attributes.originalChoices = undefined;
+
+    if (!attributes[attributes.currentGame]) {
+      attributes[attributes.currentGame] = {};
+
+      // If this is tournament, keep track of number of tournaments played
+      // Tournaments also have separate bankrolls
+      if (attributes.currentGame == 'tournament') {
+        attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
+        attributes.tournament.bankroll = 1000;
+        attributes.tournament.high = 1000;
+      }
+    }
+
+    const game = attributes[attributes.currentGame];
+    return new Promise((resolve, reject) => {
+      // Check if there is a progressive jackpot and save it
+      module.exports.getProgressivePayout(attributes, (jackpot) => {
+        if (jackpot) {
+          game.progressiveJackpot = jackpot;
+        }
+        resolve();
+      });
+    });
+  },
   sayGame: function(event, game) {
     const res = require('./resources')(event.request.locale);
     const gameMap = JSON.parse(res.strings.GAME_LIST);
