@@ -37,40 +37,24 @@ module.exports = {
         return;
       }
 
-      attributes.currentGame = attributes.choices[0];
-      attributes.choices = undefined;
-      attributes.originalChoices = undefined;
-      speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
-
-      if (!attributes[attributes.currentGame]) {
-        attributes[attributes.currentGame] = {};
-
-        // If this is tournament, keep track of number of tournaments played
-        // Tournaments also have separate bankrolls
-        if (attributes.currentGame == 'tournament') {
-          attributes.tournamentsPlayed = (attributes.tournamentsPlayed + 1) || 1;
-          attributes.tournament.bankroll = 1000;
-          attributes.tournament.high = 1000;
-        }
-      }
-
-      const game = attributes[attributes.currentGame];
-      const rules = utils.getGame(attributes.currentGame);
-      const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
-
-      if (rules.welcome) {
-        speech += res.strings[rules.welcome];
-      }
-
       return new Promise((resolve, reject) => {
-        // Check if there is a progressive jackpot
-        utils.getProgressivePayout(attributes, (jackpot) => {
-          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
+        utils.selectGame(attributes, 0).then(() => {
+          speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
-          if (jackpot) {
+          const game = attributes[attributes.currentGame];
+          const rules = utils.getGame(attributes.currentGame);
+          const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
+
+          if (rules.welcome) {
+            speech += res.strings[rules.welcome];
+          }
+
+          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
+          if (game.progressiveJackpot) {
             // For progressive, just tell them the jackpot and to bet max coins
-            speech += res.strings.PROGRESSIVE_JACKPOT.replace('{0}', jackpot).replace('{1}', rules.maxCoins);
-            game.progressiveJackpot = jackpot;
+            speech += res.strings.PROGRESSIVE_JACKPOT
+                .replace('{0}', game.progressiveJackpot)
+                .replace('{1}', rules.maxCoins);
           } else {
             speech += reprompt;
           }
