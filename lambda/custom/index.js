@@ -48,8 +48,8 @@ const requestInterceptor = {
               attributes.playerLocale = event.request.locale;
               if (!attributes[attributes.currentGame]) {
                 attributes[attributes.currentGame] = {};
-                attributes.bankroll = 100;
-                attributes.high = 100;
+                attributes.bankroll = utils.STARTING_BANKROLL;
+                attributes.high = utils.STARTING_BANKROLL;
               }
 
               // Migrate to a common bankroll - if a legacy player,

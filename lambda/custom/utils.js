@@ -253,6 +253,8 @@ const tournaments = [
 ];
 
 module.exports = {
+  STARTING_BANKROLL: 100,
+  REFRESH_BANKROLL: 25,
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
