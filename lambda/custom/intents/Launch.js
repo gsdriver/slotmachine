@@ -16,14 +16,38 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
+    let speech = '';
+
+    if (attributes.tournamentResult) {
+      speech += attributes.tournamentResult;
+      attributes.tournamentResult = undefined;
+    }
 
     // First off - are they out of money?
     if (attributes.busted) {
-      if (Date.now() - attributes.busted > 24*60*60*1000) {
-        handlerInput.responseBuilder
-          .speak(res.strings.LAUNCH_BUSTED)
-          .withEndSession(true);
+      // Is it the next day or not?
+      let nextDay = false;
+      const now = Date.now();
+
+      if ((now - attributes.busted) > 24*60*60*1000) {
+        nextDay = true;
       } else {
+        // Convert to PST to see if it's next day
+        const d = new Date(now);
+        const b = new Date(attributes.busted);
+        d.setHours(d.getHours() - 7);
+        b.setHours(b.getHours() - 7);
+        nextDay = (b.getDay() !== d.getDay());
+      }
+
+      if (!nextDay) {
+        speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+        handlerInput.responseBuilder
+          .speak(speech)
+          .withShouldEndSession(true);
+        return;
+      } else {
+        speech += res.strings.LAUNCH_BUSTED_REPLENISH.replace('{0}', utils.REFRESH_BANKROLL);
         attributes.bankroll += 25;
         attributes.busted = undefined;
       }
@@ -31,7 +55,6 @@ module.exports = {
 
     // Tell them the rules, their bankroll and offer a few things they can do
     const score = utils.getAchievementScore(attributes.achievements);
-    let speech = '';
 
     // We support buttons
     // Build idle breathing animation that will play immediately
@@ -41,11 +64,6 @@ module.exports = {
     handlerInput.responseBuilder
       .addDirective(buildButtonIdleAnimationDirective([], breathAnimation))
       .addDirective(utils.buildButtonDownAnimationDirective([]));
-
-    if (attributes.tournamentResult) {
-      speech += attributes.tournamentResult;
-      attributes.tournamentResult = undefined;
-    }
 
     // For a new user, just tell them to bet or say spin (which places a bet)
     if (attributes.newUser) {

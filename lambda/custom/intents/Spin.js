@@ -266,7 +266,7 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
   } else if (attributes.bankroll < 1) {
     lastbet = undefined;
     attributes.busted = Date.now();
-    speech += res.strings.SPIN_BUSTED;
+    speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
     reprompt = undefined;
   } else {
     speech += res.strings.READ_BANKROLL
