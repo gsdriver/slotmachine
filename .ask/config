@@ -14,7 +14,12 @@
           }
         }
       },
-      "in_skill_products": []
+      "in_skill_products": [
+        {
+          "deploy_status": "Add",
+          "filePath": "isps\\subscription\\coins.json"
+        }
+      ]
     }
   }
 }

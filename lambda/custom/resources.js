@@ -15,7 +15,17 @@ const resources = {
       'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
       'LAUNCH_BUSTED': 'You are out of coins. Come back tomorrow for {0} more coins. ',
+      'LAUNCH_BUSTED_UPSELL': 'You are out of coins. Come back tomorrow for {0} more coins or buy a subscription to reset your bankroll whenever you go bust. ',
       'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are {0} coins to get you back in the game. ',
+      'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
+      // From Purchase.js
+      'PURCHASE_RESETBANKROLL': 'We have a Reset Bankroll subscription available for purchase. Would you like to buy it? ',
+      'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy Reset Bankroll',
+      'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
+      // From Refund.js
+      'REFUND_RESETBANKROLL': 'OK, as a reminder you will need to wait a day to receive additional coins when you lose all your coins. Would you like to cancel your Reset Bankroll subscription? ',
+      'REFUND_CONFIRM_REPROMPT': 'Would you like to refund Reset Bankroll?',
+      'REFUND_NO_REFUND': 'What else can I help you with?',
       // Select.js
       'SELECT_WELCOME': 'Welcome to {0}. ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
