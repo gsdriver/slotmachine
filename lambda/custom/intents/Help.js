@@ -36,21 +36,21 @@ module.exports = {
 
       if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
-        speech = res.strings.HELP_TOURNAMENT.replace('{0}', utils.getRemainingTournamentTime(event));
+        speech = res.strings.HELP_TOURNAMENT
+          .replace('{0}', utils.getRemainingTournamentTime(event))
+          .replace('{1}', utils.TOURNAMENT_PAYOUT);
         speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       } else {
         speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
-        speech = res.strings.HELP_ACHIEVEMENT_POINTS + speech;
       }
       speech += reprompt;
 
       handlerInput.responseBuilder
         .speak(speech)
         .reprompt(reprompt)
-        .withSimpleCard(res.strings.HELP_CARD_TITLE,
-          res.strings.HELP_ACHIEVEMENT_CARD_TEXT + utils.readPayoutTable(event, rules));
+        .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules));
     }
   },
 };

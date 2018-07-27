@@ -272,39 +272,6 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
         .replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
   }
 
-  // Award achievement points
-  if (!attributes.achievements) {
-    attributes.achievements = {};
-  }
-
-  const now = new Date(Date.now());
-  const lastPlay = new Date(game.timestamp);
-  if (!game.timestamp || (lastPlay.getDate() != now.getDate())) {
-    attributes.achievements.gamedaysPlayed =
-      (attributes.achievements.gamedaysPlayed + 1) || 1;
-    speech += res.strings.SPIN_FIRSTPLAY_ACHIEVEMENT
-      .replace('{0}', utils.sayGame(event, attributes.currentGame));
-  }
-
-  if (outcome === 'jackpot') {
-    // You get achievement points for that!
-    attributes.achievements.jackpot = (attributes.achievements.jackpot + 1) || 1;
-    speech += res.strings.SPIN_JACKPOT_ACHIEVEMENT;
-  }
-
-  if (game.result.payout >= bet) {
-    attributes.winningStreak = (attributes.winningStreak + 1) || 1;
-    if (attributes.winningStreak > 1) {
-      attributes.streakScore = (attributes.streakScore + attributes.winningStreak)
-          || attributes.winningStreak;
-      speech += res.strings.SPIN_STREAK_ACHIEVEMENT
-        .replace('{0}', attributes.winningStreak)
-        .replace('{1}', attributes.winningStreak);
-    }
-  } else {
-    attributes.winningStreak = 0;
-  }
-
   // Keep track of spins
   game.timestamp = Date.now();
   game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
