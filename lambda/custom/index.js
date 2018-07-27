@@ -17,6 +17,9 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const SelectYes = require('./intents/SelectYes');
 const SelectNo = require('./intents/SelectNo');
+const Purchase = require('./intents/Purchase');
+const Refund = require('./intents/Refund');
+const ProductResponse = require('./intents/ProductResponse');
 const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
@@ -157,7 +160,10 @@ function runGame(event, context, callback) {
   }
 
   const skillFunction = skillBuilder.addRequestHandlers(
+      ProductResponse,
       Launch,
+      Purchase,
+      Refund,
       HighScore,
       Rules,
       Select,

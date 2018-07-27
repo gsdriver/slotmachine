@@ -745,6 +745,18 @@ module.exports = {
       },
     };
   },
+  getPurchaseDirective: function(attributes, name, message) {
+    return {
+      'type': 'Connections.SendRequest',
+      'name': name,
+      'payload': {
+        'InSkillProduct': {
+          'productId': attributes.paid.coins.productId,
+        },
+        'upsellMessage': message,
+      },
+    };
+  },
 };
 
 function readPayoutInternal(event, game, payout, pause) {

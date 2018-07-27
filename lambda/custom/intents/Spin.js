@@ -263,10 +263,16 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
     speech += res.strings.SPIN_OUTOFMONEY;
     reprompt = undefined;
   } else if (attributes.bankroll < 1) {
-    lastbet = undefined;
-    attributes.busted = Date.now();
-    speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
-    reprompt = undefined;
+    // If they subscribed to reset bankroll, then reset for them
+    if (attributes.paid && attributes.paid.coins && (attributes.paid.coins.state == 'PURCHASED')) {
+      speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
+      attributes.bankroll = utils.STARTING_BANKROLL;
+    } else {
+      lastbet = undefined;
+      attributes.busted = Date.now();
+      speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+      reprompt = undefined;
+    }
   } else {
     speech += res.strings.READ_BANKROLL
         .replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
