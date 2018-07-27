@@ -53,9 +53,6 @@ module.exports = {
       }
     }
 
-    // Tell them the rules, their bankroll and offer a few things they can do
-    const score = utils.getAchievementScore(attributes.achievements);
-
     // We support buttons
     // Build idle breathing animation that will play immediately
     // and button down animation for when the button is pressed
@@ -71,11 +68,7 @@ module.exports = {
         .speak(res.strings.LAUNCH_NEWUSER)
         .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT);
     } else {
-      if (score) {
-        speech += res.strings.LAUNCH_WELCOME_ACHIEVEMENT.replace('{0}', score);
-      } else {
-        speech += res.strings.LAUNCH_WELCOME;
-      }
+      speech += res.strings.LAUNCH_WELCOME;
 
       // Read the available games then prompt for each one
       const availableGames = utils.readAvailableGames(event, attributes, true);

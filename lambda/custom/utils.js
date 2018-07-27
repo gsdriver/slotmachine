@@ -255,6 +255,7 @@ const tournaments = [
 module.exports = {
   STARTING_BANKROLL: 100,
   REFRESH_BANKROLL: 25,
+  TOURNAMENT_PAYOUT: 50,
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
@@ -375,7 +376,10 @@ module.exports = {
               } else {
                 attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
               }
-              speech = res.strings.TOURNAMENT_WINNER.replace('{0}', game.bankroll);
+              attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
+              speech = res.strings.TOURNAMENT_WINNER
+                  .replace('{0}', game.bankroll)
+                  .replace('{1}', module.exports.TOURNAMENT_PAYOUT);
             } else {
               speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
             }
@@ -501,22 +505,14 @@ module.exports = {
     let myScore;
     const params = {};
 
-    if (game === 'achievement') {
-      myScore = module.exports.getAchievementScore(attributes.achievements);
-      if (myScore > 0) {
-        params.userId = userId;
-        params.score = myScore;
-      }
-    } else {
-      const currentGame = attributes[game];
-      const bankroll = module.exports.getBankroll(attributes);
+    if (attributes[game] && (attributes[game].bankroll !== undefined)) {
       params.game = game;
-      if (currentGame.spins > 0) {
-        params.userId = userId;
-        params.score = bankroll;
-        myScore = bankroll;
-      }
+      myScore = attributes[game].bankroll;
+    } else {
+      myScore = attributes.bankroll;
     }
+    params.userId = userId;
+    params.score = myScore;
 
     const paramText = querystring.stringify(params);
     if (paramText.length) {
@@ -583,26 +579,6 @@ module.exports = {
         }
       });
     }
-  },
-  getAchievementScore: function(achievements) {
-    let achievementScore = 0;
-
-    if (achievements) {
-      if (achievements.trophy) {
-        achievementScore += 100 * achievements.trophy;
-      }
-      if (achievements.gamedaysPlayed) {
-        achievementScore += 10 * achievements.gamedaysPlayed;
-      }
-      if (achievements.jackpot) {
-        achievementScore += 25 * achievements.jackpot;
-      }
-      if (achievements.streakScore) {
-        achievementScore += achievements.streakScore;
-      }
-    }
-
-    return achievementScore;
   },
   selectGame: function(attributes, choice) {
     attributes.currentGame = attributes.choices[choice];
