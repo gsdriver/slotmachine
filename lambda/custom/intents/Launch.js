@@ -44,7 +44,7 @@ module.exports = {
         }};
       }
 
-      let speech = '';
+      let speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ';
       if (attributes.tournamentResult) {
         speech += attributes.tournamentResult;
         attributes.tournamentResult = undefined;
@@ -102,6 +102,7 @@ module.exports = {
         handlerInput.responseBuilder
           .speak(res.strings.LAUNCH_NEWUSER)
           .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT);
+        resolve();
       } else {
         speech += res.strings.LAUNCH_WELCOME;
 
