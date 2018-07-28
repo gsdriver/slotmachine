@@ -695,56 +695,6 @@ module.exports = {
       }
     }
   },
-  startButtonInput: function(handlerInput) {
-    // We'll allow them to press the button again
-    handlerInput.responseBuilder.addDirective({
-      'type': 'GameEngine.StartInputHandler',
-      'timeout': 30000,
-      'recognizers': {
-        'button_down_recognizer': {
-          'type': 'match',
-          'fuzzy': false,
-          'anchor': 'end',
-          'pattern': [{
-            'action': 'down',
-          }],
-        },
-      },
-      'events': {
-        'button_down_event': {
-          'meets': ['button_down_recognizer'],
-          'reports': 'matches',
-          'shouldEndInputHandler': true,
-        },
-        'timeout': {
-          'meets': ['timed out'],
-          'reports': 'history',
-          'shouldEndInputHandler': true,
-        },
-      },
-    });
-  },
-  buildButtonDownAnimationDirective: function(targetGadgets) {
-    return {
-      'type': 'GadgetController.SetLight',
-      'version': 1,
-      'targetGadgets': targetGadgets,
-      'parameters': {
-        'animations': [{
-          'repeat': 1,
-          'targetLights': ['1'],
-          'sequence': [{
-            'durationMs': 500,
-            'color': 'FFFF00',
-            'intensity': 255,
-            'blend': false,
-          }],
-        }],
-        'triggerEvent': 'buttonDown',
-        'triggerEventTimeMs': 0,
-      },
-    };
-  },
   getPurchaseDirective: function(attributes, name, message) {
     return {
       'type': 'Connections.SendRequest',
