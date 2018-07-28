@@ -7,7 +7,6 @@
 module.exports = {
   getPressedButton: function(request, attributes) {
     const gameEngineEvents = request.events || [];
-    let buttonId;
 
     gameEngineEvents.forEach((engineEvent) => {
       // in this request type, we'll see one or more incoming events
@@ -17,17 +16,18 @@ module.exports = {
       } else if (engineEvent.name === 'button_down_event') {
         // save id of the button that triggered event
         console.log('Received button down request');
-        buttonId = engineEvent.inputEvents[0].gadgetId;
+        attributes.usedButton = true;
+        attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
       }
     });
 
-    return buttonId;
+    return (attributes.temp.buttonId);
   },
-  startInputHandler: function(context) {
+  startInputHandler: function(handlerInput) {
     // We'll allow them to press the button again
-    context.response._addDirective({
+    handlerInput.responseBuilder.addDirective({
       'type': 'GameEngine.StartInputHandler',
-      'timeout': 60000,
+      'timeout': 30000,
       'recognizers': {
         'button_down_recognizer': {
           'type': 'match',
@@ -47,7 +47,7 @@ module.exports = {
       },
     });
   },
-  buildButtonDownAnimationDirective: function(context, targetGadgets) {
+  buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {
     const buttonDownDirective = {
       'type': 'GadgetController.SetLight',
       'version': 1,
@@ -67,10 +67,11 @@ module.exports = {
         'triggerEventTimeMs': 0,
       },
     };
-    context.response._addDirective(buttonDownDirective);
+
+    handlerInput.responseBuilder.addDirective(buttonDownDirective);
   },
-  colorButton: function(context, buttonId, buttonColor, longPause) {
-    let i;
+  colorButton: function(handlerInput, buttonId, buttonColor) {
+    // Pulse the button based on whether they won or lost
     const buttonIdleDirective = {
       'type': 'GadgetController.SetLight',
       'version': 1,
@@ -79,35 +80,19 @@ module.exports = {
         'animations': [{
           'repeat': 1,
           'targetLights': ['1'],
-          'sequence': [],
+          'sequence': [{
+            'durationMs': 5000,
+            'color': 'FFFFFF',
+            'blend': true,
+          }],
         }],
         'triggerEvent': 'none',
         'triggerEventTimeMs': 0,
       },
     };
 
-    // Pulse a few times white
-    for (i = 0; i < 4; i++) {
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 400,
-        'color': 'FFFFFF',
-        'blend': true,
-      });
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 300,
-        'color': '000000',
-        'blend': true,
-      });
-    }
-
-    // Then solid white (long is an extra four seconds)
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': (longPause ? 8000 : 4000),
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-
-    // Pulse based on whether they won or lost
+    // Add to the animations array
+    let i;
     for (i = 0; i < 4; i++) {
       buttonIdleDirective.parameters.animations[0].sequence.push({
         'durationMs': 400,
@@ -121,15 +106,12 @@ module.exports = {
       });
     }
 
-    // And then back to white
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 60000,
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-    context.response._addDirective(buttonIdleDirective);
+    handlerInput.responseBuilder
+      .addDirective(buttonIdleDirective)
+      .addDirective(utils.buildButtonDownAnimationDirective(
+          [buttonId]));
   },
-  turnOffButtons: function(context) {
+  disableButtons: function(handlerInput) {
     const disableButtonDirective = {
       'type': 'GadgetController.SetLight',
       'version': 1,
@@ -150,46 +132,76 @@ module.exports = {
         'triggerEventTimeMs': 0,
       },
     };
-    context.response._addDirective(disableButtonDirective);
+
+    handlerInput.responseBuilder
+      .addDirective(disableButtonDirective);
   },
-  addLaunchAnimation: function(context) {
-    // Flash the buttons white a few times
-    // Then place them all in a steady white state
-    const buttonIdleDirective = {
+  addButtons: function(handlerInput) {
+    // Build idle breathing animation that will play immediately
+    // and button down animation for when the button is pressed
+    module.exports.startInputHandler(handlerInput);
+    const breathAnimation = buildBreathAnimation('000000', 'FFFFFF', 30, 1200);
+    const idleDirective = {
       'type': 'GadgetController.SetLight',
       'version': 1,
       'targetGadgets': [],
       'parameters': {
         'animations': [{
-          'repeat': 1,
+          'repeat': 100,
           'targetLights': ['1'],
-          'sequence': [],
+          'sequence': breathAnimation,
         }],
         'triggerEvent': 'none',
         'triggerEventTimeMs': 0,
       },
     };
 
-    // Add to the animations array
-    let i;
-    for (i = 0; i < 4; i++) {
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 400,
-        'color': 'FFFFFF',
-        'blend': true,
-      });
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 300,
-        'color': '000000',
-        'blend': true,
-      });
-    }
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 60000,
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-    context.response._addDirective(buttonIdleDirective);
+    handlerInput.responseBuilder.addDirective(idleDirective);
   },
 };
 
+function buildBreathAnimation(fromRgbHex, toRgbHex, steps, totalDuration) {
+  const halfSteps = steps / 2;
+  const halfTotalDuration = totalDuration / 2;
+  return buildSeqentialAnimation(fromRgbHex, toRgbHex, halfSteps, halfTotalDuration)
+    .concat(buildSeqentialAnimation(toRgbHex, fromRgbHex, halfSteps, halfTotalDuration));
+};
+
+function buildSeqentialAnimation(fromRgbHex, toRgbHex, steps, totalDuration) {
+  const fromRgb = parseInt(fromRgbHex, 16);
+  let fromRed = fromRgb >> 16;
+  let fromGreen = (fromRgb & 0xff00) >> 8;
+  let fromBlue = fromRgb & 0xff;
+
+  const toRgb = parseInt(toRgbHex, 16);
+  const toRed = toRgb >> 16;
+  const toGreen = (toRgb & 0xff00) >> 8;
+  const toBlue = toRgb & 0xff;
+
+  const deltaRed = (toRed - fromRed) / steps;
+  const deltaGreen = (toGreen - fromGreen) / steps;
+  const deltaBlue = (toBlue - fromBlue) / steps;
+
+  const oneStepDuration = Math.floor(totalDuration / steps);
+
+  const result = [];
+
+  for (let i = 0; i < steps; i++) {
+    result.push({
+      'durationMs': oneStepDuration,
+      'color': '' + n2h(fromRed) + n2h(fromGreen) + n2h(fromBlue),
+      'intensity': 255,
+      'blend': true,
+    });
+    fromRed += deltaRed;
+    fromGreen += deltaGreen;
+    fromBlue += deltaBlue;
+  }
+
+  return result;
+};
+
+// number to hex with leading zeroes
+function n2h(n) {
+  return ('00' + (Math.floor(n)).toString(16)).substr(-2);
+};

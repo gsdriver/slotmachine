@@ -302,56 +302,13 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
 
   // Update the color of the echo button (if present)
   if (attributes.temp.buttonId) {
-    colorButton(handlerInput, (game.result.payout > 0));
+    buttons.colorButton(handlerInput, attributes.temp.buttonId, (game.result.payout > 0) ? '00FE10' : 'FF0000');
+    buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.temp.buttonId]);
   }
 
   game.lastbet = lastbet;
   game.bet = undefined;
   callback(speech, reprompt);
-}
-
-function colorButton(handlerInput, winner) {
-  const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-  // Pulse the button based on whether they won or lost
-  const buttonIdleDirective = {
-    'type': 'GadgetController.SetLight',
-    'version': 1,
-    'targetGadgets': [attributes.temp.buttonId],
-    'parameters': {
-      'animations': [{
-        'repeat': 1,
-        'targetLights': ['1'],
-        'sequence': [{
-          'durationMs': 5000,
-          'color': 'FFFFFF',
-          'blend': true,
-        }],
-      }],
-      'triggerEvent': 'none',
-      'triggerEventTimeMs': 0,
-    },
-  };
-
-  // Add to the animations array
-  let i;
-  for (i = 0; i < 4; i++) {
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 400,
-      'color': (winner ? '00FE10' : 'FF0000'),
-      'blend': true,
-    });
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 300,
-      'color': '000000',
-      'blend': true,
-    });
-  }
-
-  handlerInput.responseBuilder
-    .addDirective(buttonIdleDirective)
-    .addDirective(utils.buildButtonDownAnimationDirective(
-        [attributes.temp.buttonId]));
 }
 
 function getBet(event, attributes) {

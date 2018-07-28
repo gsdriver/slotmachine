@@ -41,7 +41,7 @@ module.exports = {
       if (process.env.TESTCOINS) {
         attributes.paid = {coins: {
           productId: '12',
-          state: 'PURCHASED',
+          state: process.env.TESTCOINS,
         }};
       }
 
@@ -98,7 +98,8 @@ module.exports = {
       }
 
       // For a new user, just tell them to bet or say spin (which places a bet)
-      addButtons(handlerInput);
+      buttons.addButtons(handlerInput);
+      buttons.buildButtonDownAnimationDirective(handlerInput, []);
       if (attributes.newUser) {
         handlerInput.responseBuilder
           .speak(res.strings.LAUNCH_NEWUSER)
@@ -129,75 +130,4 @@ module.exports = {
       }
     });
   },
-};
-
-function addButtons(handlerInput) {
-  // Build idle breathing animation that will play immediately
-  // and button down animation for when the button is pressed
-  utils.startButtonInput(handlerInput);
-  const breathAnimation = buildBreathAnimation('000000', 'FFFFFF', 30, 1200);
-  const idleDirective = {
-    'type': 'GadgetController.SetLight',
-    'version': 1,
-    'targetGadgets': [],
-    'parameters': {
-      'animations': [{
-        'repeat': 100,
-        'targetLights': ['1'],
-        'sequence': breathAnimation,
-      }],
-      'triggerEvent': 'none',
-      'triggerEventTimeMs': 0,
-    },
-  };
-
-  handlerInput.responseBuilder
-    .addDirective(idleDirective)
-    .addDirective(utils.buildButtonDownAnimationDirective([]));
-}
-
-function buildBreathAnimation(fromRgbHex, toRgbHex, steps, totalDuration) {
-  const halfSteps = steps / 2;
-  const halfTotalDuration = totalDuration / 2;
-  return buildSeqentialAnimation(fromRgbHex, toRgbHex, halfSteps, halfTotalDuration)
-    .concat(buildSeqentialAnimation(toRgbHex, fromRgbHex, halfSteps, halfTotalDuration));
-};
-
-function buildSeqentialAnimation(fromRgbHex, toRgbHex, steps, totalDuration) {
-  const fromRgb = parseInt(fromRgbHex, 16);
-  let fromRed = fromRgb >> 16;
-  let fromGreen = (fromRgb & 0xff00) >> 8;
-  let fromBlue = fromRgb & 0xff;
-
-  const toRgb = parseInt(toRgbHex, 16);
-  const toRed = toRgb >> 16;
-  const toGreen = (toRgb & 0xff00) >> 8;
-  const toBlue = toRgb & 0xff;
-
-  const deltaRed = (toRed - fromRed) / steps;
-  const deltaGreen = (toGreen - fromGreen) / steps;
-  const deltaBlue = (toBlue - fromBlue) / steps;
-
-  const oneStepDuration = Math.floor(totalDuration / steps);
-
-  const result = [];
-
-  for (let i = 0; i < steps; i++) {
-    result.push({
-      'durationMs': oneStepDuration,
-      'color': '' + n2h(fromRed) + n2h(fromGreen) + n2h(fromBlue),
-      'intensity': 255,
-      'blend': true,
-    });
-    fromRed += deltaRed;
-    fromGreen += deltaGreen;
-    fromBlue += deltaBlue;
-  }
-
-  return result;
-};
-
-// number to hex with leading zeroes
-function n2h(n) {
-  return ('00' + (Math.floor(n)).toString(16)).substr(-2);
 };

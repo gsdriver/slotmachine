@@ -4,8 +4,8 @@
 
 'use strict';
 
-const utils = require('../utils');
 const Spin = require('./Spin');
+const buttons = require('../buttons');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -16,24 +16,12 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const gameEngineEvents = event.request.events || [];
 
-    gameEngineEvents.forEach((engineEvent) => {
-      // in this request type, we'll see one or more incoming events
-      // corresponding to the StartInputHandler we sent above
-      if (engineEvent.name === 'timeout') {
-        console.log('Timed out waiting for button');
-      } else if (engineEvent.name === 'button_down_event') {
-        // id of the button that triggered event
-        // we only support one button so save it here
-        console.log('Received button down request');
-        attributes.usedButton = true;
-        attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
-
-        // We'll allow them to press the button again
-        utils.startButtonInput(handlerInput);
-        Spin.handle(handlerInput);
-      }
+    if (buttons.getPressedButton(event.request, attributes)) {
+      // We'll allow them to press this button again and disable the others
+      buttons.disableButtons(handlerInput);
+      buttons.startButtonInput(handlerInput);
+      Spin.handle(handlerInput);
     }
   },
 };
