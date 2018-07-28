@@ -12,7 +12,7 @@ const resources = {
       'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
       'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
       'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. ',
-      'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
+      'LAUNCH_NEWUSER': '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> Welcome to Slot Machine. Say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
       'LAUNCH_BUSTED': 'You are out of coins. Come back tomorrow for {0} more coins. ',
       'LAUNCH_BUSTED_UPSELL': 'You are out of coins. Come back tomorrow for {0} more coins or buy a subscription to reset your bankroll whenever you go bust. ',
