@@ -136,7 +136,7 @@
           "samples": [
             "return {Product}",
             "refund {Product}",
-            "cancel {Product}",
+            "cancel {Product}"
           ]
         },
         {

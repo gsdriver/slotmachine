@@ -7,6 +7,7 @@
 module.exports = {
   getPressedButton: function(request, attributes) {
     const gameEngineEvents = request.events || [];
+    let buttonId;
 
     gameEngineEvents.forEach((engineEvent) => {
       // in this request type, we'll see one or more incoming events
@@ -16,12 +17,11 @@ module.exports = {
       } else if (engineEvent.name === 'button_down_event') {
         // save id of the button that triggered event
         console.log('Received button down request');
-        attributes.usedButton = true;
-        attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
+        buttonId = engineEvent.inputEvents[0].gadgetId;
       }
     });
 
-    return (attributes.temp.buttonId);
+    return buttonId;
   },
   startInputHandler: function(handlerInput) {
     // We'll allow them to press the button again
@@ -67,7 +67,6 @@ module.exports = {
         'triggerEventTimeMs': 0,
       },
     };
-
     handlerInput.responseBuilder.addDirective(buttonDownDirective);
   },
   colorButton: function(handlerInput, buttonId, buttonColor) {
@@ -105,11 +104,8 @@ module.exports = {
         'blend': true,
       });
     }
-
     handlerInput.responseBuilder
-      .addDirective(buttonIdleDirective)
-      .addDirective(utils.buildButtonDownAnimationDirective(
-          [buttonId]));
+      .addDirective(buttonIdleDirective);
   },
   disableButtons: function(handlerInput) {
     const disableButtonDirective = {
@@ -132,7 +128,6 @@ module.exports = {
         'triggerEventTimeMs': 0,
       },
     };
-
     handlerInput.responseBuilder
       .addDirective(disableButtonDirective);
   },
@@ -155,7 +150,6 @@ module.exports = {
         'triggerEventTimeMs': 0,
       },
     };
-
     handlerInput.responseBuilder.addDirective(idleDirective);
   },
 };

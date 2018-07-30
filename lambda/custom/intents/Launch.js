@@ -21,6 +21,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       ms.getInSkillProducts(handlerInput.requestEnvelope.request.locale)
       .then((result) => {
+        console.log('In Skill Products response: ' + JSON.stringify(result));
         if (Array.isArray(result.inSkillProducts)) {
           if (!attributes.paid) {
             attributes.paid = {};

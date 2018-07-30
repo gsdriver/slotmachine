@@ -649,13 +649,13 @@ module.exports = {
         });
 
         image = new Alexa.ImageHelper()
-          .withDescription(res.strings.SELECT_GAME)
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
         response.addRenderTemplateDirective({
           type: 'ListTemplate1',
           token: 'listToken',
           backButton: 'HIDDEN',
+          title: res.strings.SELECT_GAME,
           backgroundImage: image,
           listItems: listItems,
         });
@@ -673,12 +673,12 @@ module.exports = {
           : res.strings.DISPLAY_PAYOUT_LOSER;
 
         image = new Alexa.ImageHelper()
-          .withDescription(title)
           .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
           .getImage();
         response.addRenderTemplateDirective({
           type: 'BodyTemplate1',
           backButton: 'HIDDEN',
+          title: title,
           backgroundImage: image,
         });
       } else {
