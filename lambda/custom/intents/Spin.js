@@ -301,6 +301,7 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
   }
 
   // Update the color of the echo button (if present)
+  buttons.disableButtons(handlerInput);
   if (attributes.temp.buttonId) {
     buttons.colorButton(handlerInput, attributes.temp.buttonId, (game.result.payout > 0) ? '00FE10' : 'FF0000');
     buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.temp.buttonId]);

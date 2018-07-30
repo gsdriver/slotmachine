@@ -16,12 +16,19 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const buttonId = buttons.getPressedButton(event.request, attributes);
 
-    if (buttons.getPressedButton(event.request, attributes)) {
-      // We'll allow them to press this button again and disable the others
+    // We'll allow them to press this button again and disable the others
+    if (buttonId) {
+      attributes.usedButton = true;
       buttons.disableButtons(handlerInput);
-      buttons.startButtonInput(handlerInput);
-      Spin.handle(handlerInput);
+      buttons.startInputHandler(handlerInput);
+
+      // If they pressed a different button than the one they did before, ignore it
+      if (!attributes.temp.buttonId || (buttonId == attributes.temp.buttonId)) {
+        attributes.temp.buttonId = buttonId;
+        Spin.handle(handlerInput);
+      }
     }
   },
 };
