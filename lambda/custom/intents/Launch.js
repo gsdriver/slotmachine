@@ -76,9 +76,12 @@ module.exports = {
           }
         }
 
-        // For a new user, just tell them to bet or say spin (which places a bet)
-        buttons.addButtons(handlerInput);
+        // Set up the buttons to all flash, welcoming the user to press a button
+        buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
+        buttons.startInputHandler(handlerInput);
+
+        // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {
           handlerInput.responseBuilder
             .speak(res.strings.LAUNCH_NEWUSER)

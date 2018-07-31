@@ -18,17 +18,20 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const buttonId = buttons.getPressedButton(event.request, attributes);
 
-    // We'll allow them to press this button again and disable the others
     if (buttonId) {
-      attributes.usedButton = true;
-      buttons.disableButtons(handlerInput);
-      buttons.startInputHandler(handlerInput);
+      return new Promise((resolve, reject) => {
+        // We'll allow them to press this button again and disable the others
+        attributes.usedButton = true;
+        buttons.startInputHandler(handlerInput);
 
-      // If they pressed a different button than the one they did before, ignore it
-      if (!attributes.temp.buttonId || (buttonId == attributes.temp.buttonId)) {
-        attributes.temp.buttonId = buttonId;
-        Spin.handle(handlerInput);
-      }
+        // If they pressed a different button than the one they did before, ignore it
+        if (!attributes.temp.buttonId || (buttonId == attributes.temp.buttonId)) {
+          attributes.temp.buttonId = buttonId;
+          Spin.handle(handlerInput).then(resolve, reject);
+        } else {
+          resolve();
+        }
+      });
     }
   },
 };
