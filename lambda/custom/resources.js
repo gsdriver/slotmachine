@@ -22,10 +22,6 @@ const resources = {
       'PURCHASE_RESETBANKROLL': 'We have a Reset Bankroll subscription available for purchase. Would you like to buy it? ',
       'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy Reset Bankroll',
       'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
-      // From Refund.js
-      'REFUND_RESETBANKROLL': 'OK, as a reminder you will need to wait a day to receive additional coins when you lose all your coins. Would you like to cancel your Reset Bankroll subscription? ',
-      'REFUND_CONFIRM_REPROMPT': 'Would you like to refund Reset Bankroll?',
-      'REFUND_NO_REFUND': 'What else can I help you with?',
       // Select.js
       'SELECT_WELCOME': 'Welcome to {0}. ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
