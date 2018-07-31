@@ -198,16 +198,7 @@ module.exports = {
               request.post(params, (err, res, body) => {
               });
 
-              updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
-                speech += speechText;
-                handlerInput.responseBuilder.speak(speech);
-                if (reprompt) {
-                  handlerInput.responseBuilder.reprompt(reprompt);
-                } else {
-                  handlerInput.responseBuilder.withShouldEndSession(true);
-                }
-                resolve();
-              });
+              updateGamePostPayout(handlerInput, speech, game, bet, outcome, resolve);
             });
             return;
           } else {
@@ -227,27 +218,18 @@ module.exports = {
 
         // Update coins in the progressive (async call)
         utils.incrementProgressive(attributes, bet);
-        updateGamePostPayout(handlerInput, game, bet, outcome, (speechText, reprompt) => {
-          speech += speechText;
-          handlerInput.responseBuilder.speak(speech);
-          if (reprompt) {
-            handlerInput.responseBuilder.reprompt(reprompt);
-          } else {
-            handlerInput.responseBuilder.withShouldEndSession(true);
-          }
-          resolve();
-        });
+        updateGamePostPayout(handlerInput, speech, game, bet, outcome, resolve);
       });
     });
   },
 };
 
-function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
+function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, callback) {
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
   const res = require('../resources')(event.request.locale);
   let lastbet = bet;
-  let speech = '';
+  let speech = partialSpeech;
   let reprompt = res.strings.SPIN_PLAY_AGAIN;
 
   // If this is the tournament, force a save
@@ -301,15 +283,27 @@ function updateGamePostPayout(handlerInput, game, bet, outcome, callback) {
   }
 
   // Update the color of the echo button (if present)
-  buttons.disableButtons(handlerInput);
+  buttons.turnOffButtons(handlerInput);
   if (attributes.temp.buttonId) {
-    buttons.colorButton(handlerInput, attributes.temp.buttonId, (game.result.payout > 0) ? '00FE10' : 'FF0000');
+    // Look for the first wheel sound to see if there is starting text
+    // That tells us whether to have a longer or shorter length of time on the buttons
+    const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
+    buttons.colorButton(handlerInput, attributes.temp.buttonId,
+      (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
     buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.temp.buttonId]);
+  }
+
+  // Set the speech
+  handlerInput.responseBuilder.speak(speech);
+  if (reprompt) {
+    handlerInput.responseBuilder.reprompt(reprompt);
+  } else {
+    handlerInput.responseBuilder.withShouldEndSession(true);
   }
 
   game.lastbet = lastbet;
   game.bet = undefined;
-  callback(speech, reprompt);
+  callback();
 }
 
 function getBet(event, attributes) {

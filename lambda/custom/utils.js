@@ -13,7 +13,6 @@ const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 const querystring = require('querystring');
 const https = require('https');
-const buttons = require('./buttons');
 
 const games = {
   // Has 99.8% payout
@@ -600,8 +599,6 @@ module.exports = {
       }
     }
 
-    // Listen for button input since we've selected a new game
-    buttons.startInputHandler(handlerInput);
     const game = attributes[attributes.currentGame];
     return new Promise((resolve, reject) => {
       // Check if there is a progressive jackpot and save it
