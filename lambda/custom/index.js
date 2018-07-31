@@ -182,7 +182,7 @@ function runGame(event, context, callback) {
     .addResponseInterceptors(saveResponseInterceptor)
     .withTableName('Slots')
     .withAutoCreateTable(true)
-    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
+    .withSkillId('amzn1.ask.skill.8a22bc2a-b526-41d2-b25d-c9b0ad05e992')
     .lambda();
   skillFunction(event, context, (err, response) => {
     if (response) {

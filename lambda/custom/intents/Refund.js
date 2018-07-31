@@ -14,7 +14,7 @@ module.exports = {
     if ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.coins
       && ((!attributes.temp.refunding && (request.intent.name === 'RefundIntent')) ||
        (attributes.temp.refunding &&
-        (request.intent.name === 'AMAZON.YesIntent') || (request.intent.name === 'AMAZON.NoIntent')))) {
+        ((request.intent.name === 'AMAZON.YesIntent') || (request.intent.name === 'AMAZON.NoIntent'))))) {
       return true;
     }
 

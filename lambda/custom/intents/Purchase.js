@@ -14,7 +14,7 @@ module.exports = {
     if ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.coins
       && ((!attributes.temp.purchasing && (request.intent.name === 'PurchaseIntent')) ||
        (attributes.temp.purchasing &&
-        (request.intent.name === 'AMAZON.YesIntent') || (request.intent.name === 'AMAZON.NoIntent')))) {
+        ((request.intent.name === 'AMAZON.YesIntent') || (request.intent.name === 'AMAZON.NoIntent'))))) {
       return true;
     }
 
@@ -27,7 +27,7 @@ module.exports = {
     const res = require('../resources')(event.request.locale);
 
     if (attributes.temp.purchasing) {
-      if (event.request.name === 'AMAZON.YesIntent') {
+      if (event.request.intent.name === 'AMAZON.YesIntent') {
         handlerInput.responseBuilder
           .addDirective(utils.getPurchaseDirective(attributes, 'Buy'))
           .withShouldEndSession(true);

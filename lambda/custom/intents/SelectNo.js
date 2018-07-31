@@ -38,7 +38,7 @@ module.exports = {
       }
 
       return new Promise((resolve, reject) => {
-        utils.selectGame(attributes, 0).then(() => {
+        utils.selectGame(handlerInput, 0).then(() => {
           speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
           const game = attributes[attributes.currentGame];
