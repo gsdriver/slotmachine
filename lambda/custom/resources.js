@@ -15,7 +15,7 @@ const resources = {
       'LAUNCH_NEWUSER': '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> Welcome to Slot Machine. Say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
       'LAUNCH_BUSTED': 'You are out of coins. Come back tomorrow for {0} more coins. ',
-      'LAUNCH_BUSTED_UPSELL': 'You are out of coins. Come back tomorrow for {0} more coins or buy a subscription to reset your bankroll whenever you go bust. ',
+      'LAUNCH_BUSTED_UPSELL': 'You are out of coins and can come back tomorrow for {0} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? ',
       'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are {0} coins to get you back in the game. ',
       'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
       // From Purchase.js

@@ -17,9 +17,7 @@
         "examplePhrases": [
           "Alexa, buy more coins",
           "Alexa, get more coins",
-          "Alexa, purchase more coins",
-          "Alexa, buy coins",
-          "Alexa, purchase coins"
+          "Alexa, purchase more coins"
         ],
         "keywords": [
           "slot machine",

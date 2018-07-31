@@ -34,7 +34,7 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       // First let's see if they selected an element via touch
-      utils.selectGame(attributes, getSelectedIndex(event)).then(() => {
+      utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
         speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
         const game = attributes[attributes.currentGame];
@@ -62,7 +62,7 @@ module.exports = {
   },
 };
 
-function getSelectedIndex(event) {
+function getSelectedIndex(event, attributes) {
   let index;
 
   if (event.request.token) {

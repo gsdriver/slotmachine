@@ -12,6 +12,8 @@ const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 const querystring = require('querystring');
+const https = require('https');
+const buttons = require('./buttons');
 
 const games = {
   // Has 99.8% payout
@@ -580,7 +582,8 @@ module.exports = {
       });
     }
   },
-  selectGame: function(attributes, choice) {
+  selectGame: function(handlerInput, choice) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     attributes.currentGame = attributes.choices[choice];
     attributes.choices = undefined;
     attributes.originalChoices = undefined;
@@ -597,6 +600,8 @@ module.exports = {
       }
     }
 
+    // Listen for button input since we've selected a new game
+    buttons.startInputHandler(handlerInput);
     const game = attributes[attributes.currentGame];
     return new Promise((resolve, reject) => {
       // Check if there is a progressive jackpot and save it
@@ -705,7 +710,59 @@ module.exports = {
         },
         'upsellMessage': message,
       },
+      'token': name,
     };
+  },
+  getPurchasedProducts: function(handlerInput, callback) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // Invoke the entitlement API to load products
+    const options = {
+      host: 'api.amazonalexa.com',
+      path: '/v1/users/~current/skills/~current/inSkillProducts',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+    const req = https.get(options, (res) => {
+      let returnData = '';
+      res.setEncoding('utf8');
+      if (res.statusCode != 200) {
+        console.log('inSkillProducts returned status code ' + res.statusCode);
+        callback(res.statusCode);
+      } else {
+        res.on('data', (chunk) => {
+          returnData += chunk;
+        });
+
+        res.on('end', () => {
+          const inSkillProductInfo = JSON.parse(returnData);
+          if (Array.isArray(inSkillProductInfo.inSkillProducts)) {
+            // Let's see what they paid for
+            if (!attributes.paid) {
+              attributes.paid = {};
+            }
+
+            inSkillProductInfo.inSkillProducts.forEach((product) => {
+              attributes.paid[product.referenceName] = {
+                productId: product.productId,
+                state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
+              };
+            });
+          }
+          callback();
+        });
+      }
+    });
+
+    req.on('error', (err) => {
+      console.log('Error calling inSkillProducts API: ' + err.message);
+      callback(err);
+    });
   },
 };
 

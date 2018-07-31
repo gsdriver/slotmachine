@@ -352,7 +352,7 @@ function selectGame(handlerInput, callback) {
 
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
-    utils.selectGame(attributes, 0).then(() => {
+    utils.selectGame(handlerInput, 0).then(() => {
       speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
 
       const game = attributes[attributes.currentGame];

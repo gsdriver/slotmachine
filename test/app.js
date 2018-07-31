@@ -6,7 +6,8 @@ const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
-const LOCALE='en-GB';
+const LOCALE='en-US';
+const APPID = 'amzn1.ask.skill.8a22bc2a-b526-41d2-b25d-c9b0ad05e992';
 
 function BuildEvent(argv)
 {
@@ -27,7 +28,7 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+        "applicationId": APPID
       },
       "attributes": {},
       "user": {
@@ -50,7 +51,7 @@ function BuildEvent(argv)
        "Display": {},
        "System": {
          "application": {
-           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+           "applicationId": APPID
          },
          "user": {
            "userId": "not-amazon",
@@ -75,7 +76,7 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+        "applicationId": APPID
       },
       "attributes": {},
       "user": {
@@ -98,7 +99,7 @@ function BuildEvent(argv)
        "Display": {},
        "System": {
          "application": {
-           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+           "applicationId": APPID
          },
          "user": {
            "userId": "not-amazon",
@@ -207,7 +208,7 @@ function myResponse(err, result) {
   if (err) {
     console.log('ERROR; ' + err.stack);
   } else if (!result.response || !result.response.outputSpeech) {
-    console.log('GOT ' + JSON.stringify(result));
+    console.log('RETURNED ' + JSON.stringify(result));
   } else {
     if (result.response.outputSpeech.ssml) {
       console.log('AS SSML: ' + result.response.outputSpeech.ssml);

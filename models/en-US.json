@@ -118,11 +118,14 @@
             "tell me what I can buy",
             "what can I pay for",
             "tell what what I can pay for",
+            "tell what what I can sign up for",
             "I want to buy {Product}",
             "I want {Product}",
+            "I want to sign up for {Product}",
             "give me {Product}",
             "buy {Product}",
-            "pay for {Product}"
+            "pay for {Product}",
+            "sign up for {Product}"
           ]
         },
         {
