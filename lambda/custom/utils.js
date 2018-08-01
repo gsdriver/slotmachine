@@ -510,7 +510,8 @@ module.exports = {
       params.game = game;
       myScore = attributes[game].bankroll;
     } else {
-      myScore = attributes.bankroll;
+      params.game = 'high';
+      myScore = attributes.high;
     }
     params.userId = userId;
     params.score = myScore;
@@ -532,7 +533,24 @@ module.exports = {
           leaders = JSON.parse(body);
           leaders.score = myScore;
         }
+
         callback(err, leaders);
+    });
+  },
+  updateLeaderBoard: function(event, attributes) {
+    // Update the leader board
+    const formData = {
+      userId: event.session.user.userId,
+      attributes: JSON.stringify(attributes),
+    };
+    const params = {
+      url: process.env.SERVICEURL + 'slots/updateLeaderBoard',
+      formData: formData,
+    };
+    request.post(params, (err, res, body) => {
+      if (err) {
+        console.log(err);
+      }
     });
   },
   getProgressivePayout: function(attributes, callback) {

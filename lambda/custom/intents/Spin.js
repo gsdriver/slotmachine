@@ -301,6 +301,8 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     handlerInput.responseBuilder.withShouldEndSession(true);
   }
 
+  // Update the leader board
+  utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
   callback();
