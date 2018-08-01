@@ -62,9 +62,12 @@ const requestInterceptor = {
                 let maxGameBankroll;
                 let maxHigh;
                 let game;
+                let totalSpins = 0;
+                let lastPlay;
                 for (game in attributes) {
                   if (attributes[game] && attributes[game].bankroll &&
                     (game !== 'tournament')) {
+                    totalSpins += attributes[game].spins;
                     if ((maxGameBankroll === undefined) ||
                       (attributes[game].bankroll > maxGameBankroll)) {
                       maxGameBankroll = attributes[game].bankroll;
@@ -73,9 +76,23 @@ const requestInterceptor = {
                       (attributes[game].high > maxHigh)) {
                       maxHigh = attributes[game].high;
                     }
+                    if ((lastPlay == undefined) ||
+                      (attributes[game].timestamp > lastPlay)) {
+                      lastPlay = attributes[game].timestamp;
+                    }
+
                     attributes[game].bankroll = undefined;
                     attributes[game].high = undefined;
                   }
+                }
+
+                // OK, if they haven't done more than 10 total spins, or
+                // they haven't played for more than 30 days and have less than 100 spins
+                // we will reset them to the starting bankroll
+                if ((totalSpins < 10) ||
+                  ((totalSpins < 100) && (Date.now() - lastPlay > 30*24*60*60*1000))) {
+                  maxGameBankroll = utils.STARTING_BANKROLL;
+                  maxHigh = utils.STARTING_BANKROLL;
                 }
 
                 attributes.bankroll = maxGameBankroll;
