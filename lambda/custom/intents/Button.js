@@ -5,27 +5,22 @@
 'use strict';
 
 const utils = require('../utils');
+const buttons = require('../buttons');
 
 module.exports = {
   handleIntent: function() {
-    const gameEngineEvents = this.event.request.events || [];
+    const buttonId = buttons.getPressedButton(this.event.request, this.attributes);
 
-    gameEngineEvents.forEach((engineEvent) => {
-      // in this request type, we'll see one or more incoming events
-      // corresponding to the StartInputHandler we sent above
-      if (engineEvent.name === 'timeout') {
-        console.log('Timed out waiting for button');
-      } else if (engineEvent.name === 'button_down_event') {
-        // id of the button that triggered event
-        // we only support one button so save it here
-        console.log('Received button down request');
-        this.attributes.usedButton = true;
-        this.attributes.temp.buttonId = engineEvent.inputEvents[0].gadgetId;
+    if (buttonId) {
+      // We'll allow them to press this button again and disable the others
+      this.attributes.usedButton = true;
+      buttons.startInputHandler(this);
 
-        // We'll allow them to press the button again
-        utils.startButtonInput(this);
+      // If they pressed a different button than the one they did before, ignore it
+      if (!this.attributes.temp.buttonId || (buttonId == this.attributes.temp.buttonId)) {
+        this.attributes.temp.buttonId = buttonId;
         this.emitWithState('SpinIntent');
       }
-    });
+    }
   },
 };

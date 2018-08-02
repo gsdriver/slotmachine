@@ -7,6 +7,7 @@
 const utils = require('../utils');
 const request = require('request');
 const seedrandom = require('seedrandom');
+const buttons = require('../buttons');
 
 module.exports = {
   handleIntent: function() {
@@ -212,11 +213,6 @@ module.exports = {
       outcome = 'lose';
     }
 
-    // Update the color of the echo button (if present)
-    if (this.attributes.temp.buttonId) {
-      colorButton(this, (game.result.payout > 0));
-    }
-
     // Update coins in the progressive (async call)
     utils.incrementProgressive(this.attributes, bet);
     updateGamePostPayout(this, game, bet, outcome, (speechText, reprompt) => {
@@ -315,49 +311,19 @@ function updateGamePostPayout(context, game, bet, outcome, callback) {
     speech += reprompt;
   }
 
+  // Update the color of the echo button (if present)
+  buttons.turnOffButtons(context);
+  if (attributes.temp.buttonId) {
+    // Look for the first wheel sound to see if there is starting text
+    // That tells us whether to have a longer or shorter length of time on the buttons
+    const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
+    buttons.colorButton(context, attributes.temp.buttonId,
+      (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
+    buttons.buildButtonDownAnimationDirective(context, [attributes.temp.buttonId]);
+  }
+
   // And reprompt
   game.lastbet = lastbet;
   game.bet = undefined;
   callback(speech, reprompt);
-}
-
-function colorButton(context, winner) {
-  // Pulse the button based on whether they won or lost
-  const buttonIdleDirective = {
-    'type': 'GadgetController.SetLight',
-    'version': 1,
-    'targetGadgets': [context.attributes.temp.buttonId],
-    'parameters': {
-      'animations': [{
-        'repeat': 1,
-        'targetLights': ['1'],
-        'sequence': [{
-          'durationMs': 5000,
-          'color': 'FFFFFF',
-          'blend': true,
-        }],
-      }],
-      'triggerEvent': 'none',
-      'triggerEventTimeMs': 0,
-    },
-  };
-
-  // Add to the animations array
-  let i;
-  for (i = 0; i < 4; i++) {
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 400,
-      'color': (winner ? '00FE10' : 'FF0000'),
-      'blend': true,
-    });
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 300,
-      'color': '000000',
-      'blend': true,
-    });
-  }
-
-  context.response._addDirective(buttonIdleDirective);
-  context.response._addDirective(utils.buildButtonDownAnimationDirective(
-    [context.attributes.temp.buttonId]));
 }
