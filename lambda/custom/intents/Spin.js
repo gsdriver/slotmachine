@@ -51,7 +51,7 @@ module.exports = {
           attributes.currentGame = 'basic';
           handlerInput.responseBuilder
             .speak(res.strings.TOURNAMENT_ENDED)
-            .reprompt(res.strings.ERROR_REPROMPT);
+            .withShouldEndSession(true);
           resolve();
           return;
         }
