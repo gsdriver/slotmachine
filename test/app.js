@@ -71,13 +71,74 @@ function BuildEvent(argv)
      },
   };
 
-  var openEvent = {
+  var buttonEvent = {
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
         "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
       },
       "attributes": {},
+      "user": {
+        "userId": "not-amazon",
+      },
+      "new": false
+    },
+    "request": {
+      "type": "GameEngine.InputHandlerEvent",
+      "requestId": "amzn1.echo-api.request.f25e7902-62bc-4661-90d9-aaac30c1a937",
+      "timestamp": "2018-08-02T01:05:33Z",
+      "locale": "en-US",
+      "originatingRequestId": "amzn1.echo-api.request.0b7a4f65-115d-427c-9aa0-5c78c57c740f",
+      "events": [
+        {
+          "name": "button_down_event",
+          "inputEvents": [
+            {
+              "gadgetId": "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKGUBVM9A7T9FD3V4OR7ASISG8HIIRQT3O4IF0KGJVKUMT0LLB45D78QBJFTLVOEM32UFCRVKLBKMJM9ADL7CEU4EUBO5DNQ83L7EE9PFQQ3LUFE8929JPSGKLN6GTBIKVQBPOUH6SU7C27OEO86DIF32ET8",
+              "timestamp": "2018-08-02T01:05:29.371Z",
+              "color": "000000",
+              "feature": "press",
+              "action": "down"
+            }
+          ]
+        }
+      ]
+    },
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": "",
+       }
+     },
+  };
+
+  var openEvent = {
+    "session": {
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
+      "application": {
+        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+      },
       "user": {
         "userId": "not-amazon",
       },
@@ -125,7 +186,7 @@ function BuildEvent(argv)
     data = fs.readFileSync(attributeFile, 'utf8');
     if (data) {
       lambda.session.attributes = JSON.parse(data);
-      openEvent.session.attributes = JSON.parse(data);
+      buttonEvent.session.attributes = JSON.parse(data);
     }
   }
 
@@ -156,6 +217,8 @@ function BuildEvent(argv)
     lambda.request.intent = select;
   } else if (argv[2] == 'launch') {
     return openEvent;
+  } else if (argv[2] == 'button') {
+    return buttonEvent;
   } else if (argv[2] == 'highscore') {
     lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
