@@ -26,7 +26,7 @@ module.exports = {
           }};
         }
 
-        let speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ';
+        let speech = '';
         if (attributes.tournamentResult) {
           speech += attributes.tournamentResult;
           attributes.tournamentResult = undefined;
@@ -37,6 +37,11 @@ module.exports = {
           if (attributes.paid && attributes.paid.coins && (attributes.paid.coins.state == 'PURCHASED')) {
             speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
             attributes.bankroll += utils.STARTING_BANKROLL;
+            attributes.busted = undefined;
+          } else if (attributes.temp.tournamentAvailable) {
+            // If the tournament is available, we'll throw 5 coins at you to play
+            speech += res.strings.LAUNCH_BUSTED_TOURNAMENT;
+            attributes.bankroll += 5;
             attributes.busted = undefined;
           } else {
             // Is it the next day or not?
@@ -59,7 +64,7 @@ module.exports = {
               if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coins) {
                 handlerInput.responseBuilder
                   .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
-                    res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
+                    speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
               } else {
                 speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
                 handlerInput.responseBuilder
@@ -76,6 +81,9 @@ module.exports = {
           }
         }
 
+        // If they made it this far, prepend the welcome sound
+        speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
+
         // Set up the buttons to all flash, welcoming the user to press a button
         buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
@@ -87,14 +95,13 @@ module.exports = {
             .speak(res.strings.LAUNCH_NEWUSER)
             .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT);
         } else {
-          speech += res.strings.LAUNCH_WELCOME;
-
           // Read the available games then prompt for each one
           const availableGames = utils.readAvailableGames(event, attributes, true);
           if (availableGames.choices.indexOf('tournament') > -1) {
-            speech = res.strings.LAUNCH_WELCOME_TOURNAMENT
+            speech += res.strings.LAUNCH_WELCOME_TOURNAMENT
               .replace('{0}', utils.getRemainingTournamentTime(event));
           } else {
+            speech += res.strings.LAUNCH_WELCOME;
             speech += availableGames.speech;
           }
           attributes.choices = availableGames.choices;

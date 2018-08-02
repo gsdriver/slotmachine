@@ -40,6 +40,8 @@ const requestInterceptor = {
         // No session attributes - so get the persistent ones
         attributesManager.getPersistentAttributes()
           .then((attributes) => {
+            attributes.temp = {};
+            utils.checkForTournament(attributes);
             utils.getTournamentComplete(event, attributes, (result) => {
               if (!attributes.currentGame) {
                 attributes.currentGame = 'basic';
@@ -105,10 +107,8 @@ const requestInterceptor = {
 
               // Since there were no session attributes, this is the first
               // round of the session - set the temp attributes
-              attributes.temp = {};
               attributes.sessions = (attributes.sessions + 1) || 1;
               attributes.bot = sessionAttributes.bot;
-              utils.checkForTournament(attributes);
               attributesManager.setSessionAttributes(attributes);
               responseBuilder = handlerInput.responseBuilder;
               resolve();
