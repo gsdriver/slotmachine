@@ -31,19 +31,13 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
 
-    if (attributes.platform && (attributes.platform !== 'alexa')) {
-      handlerInput.responseBuilder
-        .speak(res.strings.EXIT_GAME.replace('{0}', ''))
-        .withShouldEndSession(true);
-    } else {
-      return new Promise((resolve, reject) => {
-        ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
-          handlerInput.responseBuilder
-            .speak(res.strings.EXIT_GAME.replace('{0}', adText))
-            .withShouldEndSession(true);
-          resolve();
-        });
+    return new Promise((resolve, reject) => {
+      ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
+        handlerInput.responseBuilder
+          .speak(res.strings.EXIT_GAME.replace('{0}', adText))
+          .withShouldEndSession(true);
+        resolve();
       });
-    }
+    });
   },
 };

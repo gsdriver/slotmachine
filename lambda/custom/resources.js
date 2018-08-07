@@ -57,7 +57,7 @@ const resources = {
       'ANY_SLOT': 'any',
       'PAYOUT_PAYS': 'pays {0} coins.',
       'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
-      'LEADER_RANKING': 'You peak bankroll of {0} coins ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
+      'LEADER_RANKING': 'Your peak bankroll of {0} coins ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
       'LEADER_GAME_RANKING': 'Your current bankroll of {0} coins on {3} ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
       'LEADER_NO_SCORES': 'Sorry, I\'m unable to read the current leader board. ',
       'LEADER_FORMAT': '{0} coins',
