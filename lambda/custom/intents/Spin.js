@@ -14,6 +14,16 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
+    // Button press counts as spin if it's a new button
+    // or one that's been pressed before
+    if (request.type === 'GameEngine.InputHandlerEvent') {
+      const buttonId = buttons.getPressedButton(request, attributes);
+      if (!attributes.temp.buttonId || (buttonId == attributes.temp.buttonId)) {
+        attributes.temp.buttonId = buttonId;
+        return true;
+      }
+    }
+
     // Bet or Spin can be done while you are selecting a game
     if ((request.type === 'IntentRequest')
       && (attributes.choices && (attributes.choices.length > 0))
@@ -247,7 +257,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     reprompt = undefined;
   } else if (attributes.bankroll < 1) {
     // If they subscribed to reset bankroll, then reset for them
-    if (attributes.paid && attributes.paid.coins && (attributes.paid.coins.state == 'PURCHASED')) {
+    if (attributes.paid && attributes.paid.resetcoins && (attributes.paid.resetcoins.state == 'PURCHASED')) {
       speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
@@ -283,7 +293,6 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   }
 
   // Update the color of the echo button (if present)
-  buttons.turnOffButtons(handlerInput);
   if (attributes.temp.buttonId) {
     // Look for the first wheel sound to see if there is starting text
     // That tells us whether to have a longer or shorter length of time on the buttons

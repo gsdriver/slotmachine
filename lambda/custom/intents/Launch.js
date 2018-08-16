@@ -20,7 +20,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       utils.getPurchasedProducts(handlerInput, (err, result) => {
         if (process.env.TESTCOINS) {
-          attributes.paid = {coins: {
+          attributes.paid = {resetcoins: {
             productId: '12',
             state: process.env.TESTCOINS,
           }};
@@ -34,7 +34,7 @@ module.exports = {
 
         // First off - are they out of money?
         if (attributes.busted) {
-          if (attributes.paid && attributes.paid.coins && (attributes.paid.coins.state == 'PURCHASED')) {
+          if (attributes.paid && attributes.paid.resetcoins && (attributes.paid.resetcoins.state == 'PURCHASED')) {
             speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
             attributes.bankroll += utils.STARTING_BANKROLL;
             attributes.busted = undefined;
@@ -61,7 +61,7 @@ module.exports = {
 
             if (!nextDay) {
               // Here's the place to do an upsell if we can!
-              if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coins) {
+              if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.resetcoins) {
                 handlerInput.responseBuilder
                   .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
                     speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
@@ -81,9 +81,6 @@ module.exports = {
           }
         }
 
-        // If they made it this far, prepend the welcome sound
-        speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
-
         // Set up the buttons to all flash, welcoming the user to press a button
         buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
@@ -94,6 +91,11 @@ module.exports = {
           handlerInput.responseBuilder
             .speak(res.strings.LAUNCH_NEWUSER)
             .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT);
+        } else if (attributes.temp.resumeGame) {
+          attributes.temp.resumeGame = undefined;
+          handlerInput.responseBuilder
+            .speak(res.strings.LAUNCH_RESUME_GAME)
+            .reprompt(res.strings.LAUNCH_RESUME_GAME_REPROMPT);
         } else {
           // Read the available games then prompt for each one
           const availableGames = utils.readAvailableGames(event, attributes, true);
@@ -108,6 +110,7 @@ module.exports = {
           attributes.originalChoices = availableGames.choices;
 
           // Ask for the first one
+          speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
           const reprompt = res.strings.LAUNCH_REPROMPT
             .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
           speech += reprompt;

@@ -12,8 +12,11 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const res = require('../resources')(event.request.locale);
 
-    handlerInput.responseBuilder
-      .speak(res.strings.UNKNOWN_INTENT)
-      .reprompt(res.strings.UNKNOWN_INTENT_REPROMPT);
+    // Fail silently if this was an unhandled button event
+    if (event.request.type !== 'GameEngine.InputHandlerEvent') {
+      handlerInput.responseBuilder
+        .speak(res.strings.UNKNOWN_INTENT)
+        .reprompt(res.strings.UNKNOWN_INTENT_REPROMPT);
+    }
   },
 };
