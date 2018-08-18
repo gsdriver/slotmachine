@@ -10,7 +10,9 @@ module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
 
-    return ((request.type === 'IntentRequest') && (request.intent.name === 'AMAZON.HelpIntent'));
+    return ((request.type === 'IntentRequest') &&
+      ((request.intent.name === 'AMAZON.HelpIntent') ||
+      (request.intent.name === 'AMAZON.FallbackIntent')));
   },
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
@@ -18,15 +20,19 @@ module.exports = {
     const res = require('../resources')(event.request.locale);
     const bankroll = utils.getBankroll(attributes);
     const rules = utils.getGame(attributes.currentGame);
-    let speech;
+    let speech = '';
 
+    // If this was fallback intent, let them know we didn't understand first
+    if (event.request.intent.name === 'AMAZON.FallbackIntent') {
+      speech += res.strings.HELP_FALLBACK;
+    }
     attributes.temp.readingRules = false;
     if (attributes.choices && (attributes.choices.length > 0)) {
       // If selecting a game, help string is different
       const reprompt = res.strings.LAUNCH_REPROMPT
         .replace('{0}', utils.sayGame(event, attributes.choices[0]));
 
-      speech = res.strings.HELP_SELECT_TEXT;
+      speech += res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
       handlerInput.responseBuilder
         .speak(speech)
@@ -36,13 +42,13 @@ module.exports = {
 
       if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
-        speech = res.strings.HELP_TOURNAMENT
+        speech += res.strings.HELP_TOURNAMENT
           .replace('{0}', utils.getRemainingTournamentTime(event))
           .replace('{1}', utils.TOURNAMENT_PAYOUT);
         speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       } else {
-        speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
+        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       }
       speech += reprompt;

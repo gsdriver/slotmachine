@@ -7,7 +7,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 const LOCALE='en-US';
-const APPID = 'amzn1.ask.skill.8a22bc2a-b526-41d2-b25d-c9b0ad05e992';
+const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
 function BuildEvent(argv)
 {
@@ -20,6 +20,7 @@ function BuildEvent(argv)
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
   var no = {'name': 'AMAZON.NoIntent', 'slots': {}};
   var help = {'name': 'AMAZON.HelpIntent', 'slots': {}};
+  var fallback = {'name': 'AMAZON.FallbackIntent', 'slots': {}};
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
   var highScore = {'name': 'HighScoreIntent', 'slots': {}};
@@ -225,6 +226,8 @@ function BuildEvent(argv)
     lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
     lambda.request.intent = help;
+  } else if (argv[2] == 'fallback') {
+    lambda.request.intent = fallback;
   } else if (argv[2] == 'stop') {
     lambda.request.intent = stop;
   } else if (argv[2] == 'cancel') {

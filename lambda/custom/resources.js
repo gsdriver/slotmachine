@@ -40,6 +40,7 @@ const resources = {
       'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
       'HELP_CARD_TITLE': 'Payout Table',
       'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
+      'HELP_FALLBACK': 'Sorry, I didn\'t get that. <break time=\"200ms\"/> ',
       // From Rules.js
       'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
       'RULES_SELECT_REPROMPT': 'Say yes to play this game or no to hear the next option.',
