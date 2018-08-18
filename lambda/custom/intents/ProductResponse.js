@@ -50,6 +50,8 @@ module.exports = {
           attributes.temp.noUpsell = true;
         }
 
+        // We will drop them directly into a game
+        attributes.temp.resumeGame = true;
         Launch.handle(handlerInput)
         .then(() => {
           resolve();

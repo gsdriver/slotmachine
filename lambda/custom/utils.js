@@ -721,7 +721,7 @@ module.exports = {
       'name': name,
       'payload': {
         'InSkillProduct': {
-          'productId': attributes.paid.coins.productId,
+          'productId': attributes.paid.resetcoins.productId,
         },
         'upsellMessage': message,
       },

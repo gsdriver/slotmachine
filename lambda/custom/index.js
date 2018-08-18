@@ -7,7 +7,6 @@
 const Alexa = require('ask-sdk');
 const CanFulfill = require('./intents/CanFulfill');
 const Spin = require('./intents/Spin');
-const Button = require('./intents/Button');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
@@ -186,7 +185,6 @@ function runGame(event, context, callback) {
       Select,
       SelectYes,
       SelectNo,
-      Button,
       Spin,
       Help,
       Stop,
@@ -199,7 +197,7 @@ function runGame(event, context, callback) {
     .addResponseInterceptors(saveResponseInterceptor)
     .withTableName('Slots')
     .withAutoCreateTable(true)
-    .withSkillId('amzn1.ask.skill.8a22bc2a-b526-41d2-b25d-c9b0ad05e992')
+    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
     .lambda();
   skillFunction(event, context, (err, response) => {
     if (response) {

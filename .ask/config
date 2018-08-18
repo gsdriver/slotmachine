@@ -14,10 +14,45 @@
           }
         }
       },
+      "resources": {
+        "manifest": {
+          "eTag": "92177aa326f2ce4fd8d46c2a7b9b3345"
+        },
+        "interactionModel": {
+          "en-AU": {
+            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+          },
+          "en-GB": {
+            "eTag": "3b7eaee33159842118d61da4a6be961e"
+          },
+          "en-CA": {
+            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+          },
+          "en-US": {
+            "eTag": "922ce55ff541a831633d54891a66381f"
+          },
+          "en-IN": {
+            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+          }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v6",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v6",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "4cc75a5b-1856-4be4-86c6-feeb7af3c06f"
+          }
+        ]
+      },
       "in_skill_products": [
         {
-          "deploy_status": "Add",
-          "filePath": "isps\\subscription\\coins.json"
+          "deploy_status": "Update",
+          "filePath": "isps\\subscription\\resetcoins.json",
+          "productId": "amzn1.adg.product.8d998cd5-d9c1-47e9-ad9b-094330535458",
+          "eTag": "23314968fd23bdbe06f33ca4fe4cf9cd"
         }
       ]
     }
