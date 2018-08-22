@@ -146,6 +146,15 @@ const saveResponseInterceptor = {
             && response.reprompt.outputSpeech.ssml) {
             attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
           }
+
+          if (attributes.platform === 'google') {
+            // Save state each round in case the user unexpectedly exits
+            const temp = attributes.temp;
+            attributes.temp = undefined;
+            handlerInput.attributesManager.setPersistentAttributes(attributes);
+            handlerInput.attributesManager.savePersistentAttributes();
+            attributes.temp = temp;
+          }
         }
       }
       resolve();
