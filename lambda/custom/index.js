@@ -136,6 +136,16 @@ const saveResponseInterceptor = {
         if (response.shouldEndSession) {
           // We are meant to end the session
           SessionEnd.handle(handlerInput);
+        } else {
+          // Save the response and reprompt for repeat
+          const attributes = handlerInput.attributesManager.getSessionAttributes();
+          if (response.outputSpeech && response.outputSpeech.ssml) {
+            attributes.temp.lastResponse = response.outputSpeech.ssml;
+          }
+          if (response.reprompt && response.reprompt.outputSpeech
+            && response.reprompt.outputSpeech.ssml) {
+            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+          }
         }
       }
       resolve();
