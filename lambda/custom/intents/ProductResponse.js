@@ -53,8 +53,8 @@ module.exports = {
         // We will drop them directly into a game
         attributes.temp.resumeGame = true;
         Launch.handle(handlerInput)
-        .then(() => {
-          resolve();
+        .then((response) => {
+          resolve(response);
         });
       }
     });
