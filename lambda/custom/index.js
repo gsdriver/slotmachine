@@ -24,8 +24,6 @@ const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
 const request = require('request');
 
-let responseBuilder;
-
 const requestInterceptor = {
   process(handlerInput) {
     return new Promise((resolve, reject) => {
@@ -109,7 +107,6 @@ const requestInterceptor = {
               attributes.sessions = (attributes.sessions + 1) || 1;
               attributes.platform = sessionAttributes.platform;
               attributesManager.setSessionAttributes(attributes);
-              responseBuilder = handlerInput.responseBuilder;
               resolve();
             });
           })
@@ -119,7 +116,6 @@ const requestInterceptor = {
       } else {
         const attributes = handlerInput.attributesManager.getSessionAttributes();
         utils.checkForTournament(attributes);
-        responseBuilder = handlerInput.responseBuilder;
         resolve();
       }
     });
@@ -219,9 +215,6 @@ function runGame(event, context, callback) {
     .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
     .lambda();
   skillFunction(event, context, (err, response) => {
-    if (response) {
-      response.response = responseBuilder.getResponse();
-    }
     callback(err, response);
   });
 }

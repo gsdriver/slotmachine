@@ -28,29 +28,33 @@ module.exports = {
 
     if (attributes.temp.purchasing) {
       if (event.request.intent.name === 'AMAZON.YesIntent') {
-        handlerInput.responseBuilder
+        return handlerInput.responseBuilder
           .addDirective(utils.getPurchaseDirective(attributes, 'Buy'))
-          .withShouldEndSession(true);
+          .withShouldEndSession(true)
+          .getResponse();
       } else {
         attributes.temp.purchasing = undefined;
-        handlerInput.responseBuilder
+        return handlerInput.responseBuilder
           .speak(res.strings.PURCHASE_NO_PURCHASE)
-          .reprompt(res.strings.PURCHASE_NO_PURCHASE);
+          .reprompt(res.strings.PURCHASE_NO_PURCHASE)
+          .getResponse();
       }
     } else {
       if (event.request.intent.slots && event.request.intent.slots.Product
         && event.request.intent.slots.Product.value) {
         // They specified a product - we'll assume it's Reset Bankroll
         // since that's all we support for now
-        handlerInput.responseBuilder
+        return handlerInput.responseBuilder
           .addDirective(utils.getPurchaseDirective(attributes, 'Buy'))
-          .withShouldEndSession(true);
+          .withShouldEndSession(true)
+          .getResponse();
       } else {
         // Prompt them
         attributes.temp.purchasing = true;
-        handlerInput.responseBuilder
+        return handlerInput.responseBuilder
           .speak(res.strings.PURCHASE_RESETBANKROLL)
-          .reprompt(res.strings.PURCHASE_CONFIRM_REPROMPT);
+          .reprompt(res.strings.PURCHASE_CONFIRM_REPROMPT)
+          .getResponse();
       }
     }
   },

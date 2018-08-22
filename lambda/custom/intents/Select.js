@@ -33,8 +33,9 @@ module.exports = {
     const reprompt = res.strings.LAUNCH_REPROMPT
         .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
     speech += reprompt;
-    handlerInput.responseBuilder
+    return handlerInput.responseBuilder
       .speak(speech)
-      .reprompt(reprompt);
+      .reprompt(reprompt)
+      .getResponse();
   },
 };

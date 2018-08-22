@@ -21,8 +21,9 @@ module.exports = {
     const res = require('../resources')(event.request.locale);
 
     attributes.temp.readingRules = false;
-    handlerInput.responseBuilder
+    return handlerInput.responseBuilder
       .speak(res.strings.ERROR_REPROMPT)
-      .reprompt(res.strings.ERROR_REPROMPT);
+      .reprompt(res.strings.ERROR_REPROMPT)
+      .getResponse();
   },
 };

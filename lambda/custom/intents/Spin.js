@@ -59,10 +59,11 @@ module.exports = {
         attributes.temp.readingRules = false;
         if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
           attributes.currentGame = 'basic';
-          handlerInput.responseBuilder
+          const response = handlerInput.responseBuilder
             .speak(res.strings.TOURNAMENT_ENDED)
-            .withShouldEndSession(true);
-          resolve();
+            .withShouldEndSession(true)
+            .getResponse();
+          resolve(response);
           return;
         }
 
@@ -314,7 +315,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
-  callback();
+  callback(handlerInput.responseBuilder.getResponse());
 }
 
 function getBet(event, attributes) {

@@ -34,9 +34,10 @@ module.exports = {
 
       speech += res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
-      handlerInput.responseBuilder
+      return handlerInput.responseBuilder
         .speak(speech)
-        .reprompt(reprompt);
+        .reprompt(reprompt)
+        .getResponse();
     } else {
       const reprompt = res.strings.HELP_REPROMPT;
 
@@ -53,10 +54,11 @@ module.exports = {
       }
       speech += reprompt;
 
-      handlerInput.responseBuilder
+      return handlerInput.responseBuilder
         .speak(speech)
         .reprompt(reprompt)
-        .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules));
+        .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
+        .getResponse();
     }
   },
 };

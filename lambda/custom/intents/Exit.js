@@ -33,10 +33,11 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
-        handlerInput.responseBuilder
+        const response = handlerInput.responseBuilder
           .speak(res.strings.EXIT_GAME.replace('{0}', adText))
-          .withShouldEndSession(true);
-        resolve();
+          .withShouldEndSession(true)
+          .getResponse();
+        resolve(response);
       });
     });
   },

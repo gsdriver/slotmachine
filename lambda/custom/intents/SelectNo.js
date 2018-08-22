@@ -31,10 +31,10 @@ module.exports = {
       // Just in case they were trying to play at the last minute...
       if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
         attributes.currentGame = 'basic';
-        handlerInput.responseBuilder
+        return handlerInput.responseBuilder
           .speak(res.strings.TOURNAMENT_ENDED)
-          .withShouldEndSession(true);
-        return;
+          .withShouldEndSession(true)
+          .getResponse();
       }
 
       return new Promise((resolve, reject) => {
@@ -58,18 +58,20 @@ module.exports = {
           } else {
             speech += reprompt;
           }
-          handlerInput.responseBuilder
+          const response = handlerInput.responseBuilder
             .speak(speech)
-            .reprompt(reprompt);
-          resolve();
+            .reprompt(reprompt)
+            .getResponse();
+          resolve(response);
         });
       });
     } else {
       const speech = res.strings.LAUNCH_REPROMPT.replace('{0}', utils.sayGame(event, attributes.choices[0]));
 
-      handlerInput.responseBuilder
+      return handlerInput.responseBuilder
         .speak(speech)
-        .reprompt(speech);
+        .reprompt(speech)
+        .getResponse();
     }
   },
 };

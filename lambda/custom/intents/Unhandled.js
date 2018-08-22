@@ -14,9 +14,10 @@ module.exports = {
 
     // Fail silently if this was an unhandled button event
     if (event.request.type !== 'GameEngine.InputHandlerEvent') {
-      handlerInput.responseBuilder
+      return handlerInput.responseBuilder
         .speak(res.strings.UNKNOWN_INTENT)
-        .reprompt(res.strings.UNKNOWN_INTENT_REPROMPT);
+        .reprompt(res.strings.UNKNOWN_INTENT_REPROMPT)
+        .getResponse();
     }
   },
 };

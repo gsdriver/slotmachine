@@ -18,8 +18,9 @@ module.exports = {
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    handlerInput.responseBuilder
+    return handlerInput.responseBuilder
       .addDirective(utils.getPurchaseDirective(attributes, 'Cancel'))
-      .withShouldEndSession(true);
+      .withShouldEndSession(true)
+      .getResponse();
   },
 };

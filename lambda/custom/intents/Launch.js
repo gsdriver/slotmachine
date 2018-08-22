@@ -18,6 +18,7 @@ module.exports = {
     const res = require('../resources')(event.request.locale);
 
     return new Promise((resolve, reject) => {
+      let response;
       utils.getPurchasedProducts(handlerInput, (err, result) => {
         if (process.env.TESTCOINS) {
           attributes.paid = {resetcoins: {
@@ -70,8 +71,10 @@ module.exports = {
                 handlerInput.responseBuilder
                   .speak(speech);
               }
-              handlerInput.responseBuilder.withShouldEndSession(true);
-              resolve();
+              response = handlerInput.responseBuilder
+                .withShouldEndSession(true)
+                .getResponse();
+              resolve(response);
               return;
             } else {
               speech += res.strings.LAUNCH_BUSTED_REPLENISH.replace('{0}', utils.REFRESH_BANKROLL);
@@ -88,14 +91,16 @@ module.exports = {
 
         // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {
-          handlerInput.responseBuilder
+          response = handlerInput.responseBuilder
             .speak(res.strings.LAUNCH_NEWUSER)
-            .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT);
+            .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT)
+            .getResponse();
         } else if (attributes.temp.resumeGame) {
           attributes.temp.resumeGame = undefined;
-          handlerInput.responseBuilder
+          response = handlerInput.responseBuilder
             .speak(res.strings.LAUNCH_RESUME_GAME)
-            .reprompt(res.strings.LAUNCH_RESUME_GAME_REPROMPT);
+            .reprompt(res.strings.LAUNCH_RESUME_GAME_REPROMPT)
+            .getResponse();
         } else {
           // Read the available games then prompt for each one
           const availableGames = utils.readAvailableGames(event, attributes, true);
@@ -114,11 +119,12 @@ module.exports = {
           const reprompt = res.strings.LAUNCH_REPROMPT
             .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
           speech += reprompt;
-          handlerInput.responseBuilder
+          response = handlerInput.responseBuilder
             .speak(speech)
-            .reprompt(reprompt);
+            .reprompt(reprompt)
+            .getResponse();
         }
-        resolve();
+        resolve(response);
       });
     });
   },
