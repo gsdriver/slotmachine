@@ -20,13 +20,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let response;
       utils.getPurchasedProducts(handlerInput, (err, result) => {
-        if (process.env.TESTCOINS) {
-          attributes.paid = {resetcoins: {
-            productId: '12',
-            state: process.env.TESTCOINS,
-          }};
-        }
-
         let speech = '';
         if (attributes.tournamentResult) {
           speech += attributes.tournamentResult;

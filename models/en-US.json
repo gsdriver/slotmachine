@@ -105,44 +105,6 @@
           ]
         },
         {
-          "name": "PurchaseIntent",
-          "slots": [
-            {
-              "name": "Product",
-              "type": "LIST_OF_PRODUCTS"
-            }
-          ],
-          "samples": [
-            "what can I buy",
-            "what can I shop for",
-            "tell me what I can buy",
-            "what can I pay for",
-            "tell what what I can pay for",
-            "tell what what I can sign up for",
-            "I want to buy {Product}",
-            "I want {Product}",
-            "I want to sign up for {Product}",
-            "give me {Product}",
-            "buy {Product}",
-            "pay for {Product}",
-            "sign up for {Product}"
-          ]
-        },
-        {
-          "name": "RefundIntent",
-          "slots": [
-            {
-              "name": "Product",
-              "type": "LIST_OF_PRODUCTS"
-            }
-          ],
-          "samples": [
-            "return {Product}",
-            "refund {Product}",
-            "cancel {Product}"
-          ]
-        },
-        {
           "name": "AMAZON.YesIntent",
           "samples": []
         },
@@ -225,23 +187,6 @@
             "pick {Number}",
             "pick number {Number}"
           ]
-        }
-      ],
-      "types": [
-        {
-          "values": [
-            {
-              "name": {
-                "value": "reset bankroll"
-              }
-            },
-            {
-              "name": {
-                "value": "reset coins"
-              }
-            }
-          ],
-          "name": "LIST_OF_PRODUCTS"
         }
       ]
     }

@@ -55,6 +55,13 @@ const resources = {
       'SPIN_BUSTED': 'You lost all your money. Come back tomorrow for {0} coins. ',
       'SPIN_OUTOFMONEY': 'You are out of coins and out of the tournament. Better luck next week! ',
       'SPIN_NEWUSER': 'If you would like to try a different machine, say change machine or say spin to spin again. ',
+      // From Testing.js
+      'TEST_CONFIRM_BANKRUPT': 'Do you want to test going bankrupt?  Say yes to set your bankroll to 1 coin or no to continue play.',
+      'TEST_CONFIRM_BANKRUPT_REPROMPT': 'Say yes enter test mode or no to continue play.',
+      'TEST_BANKRUPT_SET': 'Your bankroll has been reset to 1 coin and you will lose your next spin.  Say spin to test.',
+      'TEST_BANKRUPT_REPROMPT': 'Say spin to test.',
+      'TEST_BANKRUPT_NOT_SET': 'Test mode not enabled. Say spin to pull the handle.',
+      'TEST_BARNKUPT_NOT_SET_REPROMPT': 'Say spin to pull the handle.',
       // From utils.js
       'ERROR_REPROMPT': 'What else can I help with?',
       'ANY_SLOT': 'any',

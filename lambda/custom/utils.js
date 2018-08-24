@@ -255,7 +255,7 @@ const tournaments = [
 
 module.exports = {
   STARTING_BANKROLL: 100,
-  REFRESH_BANKROLL: 25,
+  REFRESH_BANKROLL: 100,
   TOURNAMENT_PAYOUT: 50,
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
@@ -280,13 +280,6 @@ module.exports = {
         Math.floor((Date.now() - anchor) / (1000*60*60*24*7)) % tournaments.length;
       console.log('Adding tournament ' + tournamentIndex);
       Object.assign(games, {tournament: tournaments[tournamentIndex]});
-    }
-
-    if (attributes.temp.tournamentAvailable && !tournamentAvailable) {
-      // Tournament was available, now it's not - force a database save
-      attributes.temp.forceSave = true;
-    } else {
-      attributes.temp.forceSave = undefined;
     }
 
     attributes.temp.tournamentAvailable = tournamentAvailable;
@@ -389,6 +382,7 @@ module.exports = {
               attributes.currentGame = 'basic';
             }
             attributes['tournament'] = undefined;
+            attributes.temp.forceSave = true;
           } else {
             // Tournament hasn't closed yet - is it active?  If not, flip to basic and
             // let them know the tournament is over
@@ -731,6 +725,12 @@ module.exports = {
   getPurchasedProducts: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // Until Alexa allows in skill purchases for simulated, casino-style gambling
+    // skills, we will just return no available products
+    attributes.paid = undefined;
+    callback();
+    return;
 
     // Invoke the entitlement API to load products
     const options = {

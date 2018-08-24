@@ -158,6 +158,10 @@ module.exports = {
           }
         }
 
+        // IF we are testing bankrupcy, then you didn't match
+        if (attributes.temp.testBankrupt) {
+          matchedPayout = undefined;
+        }
         game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
         if (game.result.payout > 0) {
           // You won!  If more than 50:1, play the jackpot sound
