@@ -292,6 +292,8 @@ module.exports = {
           });
 
           res.on('end', () => {
+            // Strip quotes
+            returnData = returnData.replace(/['"]+/g, '');
             if (moment.tz.zone(returnData)) {
               timezone = returnData;
               isDefaultTimezone = false;
