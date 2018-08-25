@@ -13,6 +13,7 @@ const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 const querystring = require('querystring');
 const https = require('https');
+const moment = require('moment-timezone');
 
 const games = {
   // Has 99.8% payout
@@ -260,6 +261,63 @@ module.exports = {
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
+  },
+  getLocalTournamentTime: function(event, callback) {
+    // Invoke the entitlement API to load products
+    const options = {
+      host: 'api.amazonalexa.com',
+      path: '/v2/devices' + event.context.System.device.deviceId + '/settings/System.timeZone',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+
+    const times = getTournamentTimes(true);
+    if (times) {
+      // What is the default time?
+      let timezone = 'America/Los_Angeles';
+      let isDefaultTimezone = true;
+
+      const req = https.get(options, (res) => {
+        let returnData = '';
+        res.setEncoding('utf8');
+        if (res.statusCode != 200) {
+          console.log('deviceTimezone returned status code ' + res.statusCode);
+          done();
+        } else {
+          res.on('data', (chunk) => {
+            returnData += chunk;
+          });
+
+          res.on('end', () => {
+            timezone = returnData;
+            isDefaultTimezone = false;
+            done();
+          });
+        }
+      });
+
+      req.on('error', (err) => {
+        console.log('Error calling inSkillProducts API: ' + err.message);
+        done();
+      });
+
+      function done() {
+        const res = require('./resources')(event.request.locale);
+        const time = moment.tz(times.start.getTime(), timezone).toString();
+        let result = res.speakTime(time);
+
+        if (isDefaultTimezone) {
+          result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
+        }
+        callback(result);
+      }
+    } else {
+      callback();
+    }
   },
   checkForTournament: function(attributes) {
     // Active on Wednesday PST (Day=3) from 6-7 PM
@@ -800,18 +858,18 @@ function readPayoutInternal(event, game, payout, pause) {
   return text;
 }
 
-function getTournamentTimes() {
+function getTournamentTimes(leaveUTC) {
   let retVal;
 
   if (process.env.TOURNEYTIME) {
     const times = JSON.parse(process.env.TOURNEYTIME);
-
+    const tzOffset = moment.tz.zone('America/Los_Angeles').utcOffset(Date.now());
     if ((times.day !== undefined) && (times.hour !== undefined)) {
       retVal = {};
 
       // First build off today's date
       const d = new Date();
-      d.setHours(d.getHours() - 7);
+      d.setMinutes(d.getMinutes() - tzOffset);
 
       const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
       start.setHours(times.hour);
@@ -841,6 +899,12 @@ function getTournamentTimes() {
       if (end.getTime() < d.getTime()) {
         start.setDate(start.getDate() + 7);
         end.setDate(end.getDate() + 7);
+      }
+
+      if (leaveUTC) {
+        start.setMinutes(start.getMinutes() + tzOffset);
+        end.setMinutes(end.getMinutes() + tzOffset);
+        d.setMinutes(d.getMinutes() + tzOffset);
       }
 
       retVal.start = start;

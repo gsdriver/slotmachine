@@ -11,11 +11,11 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return ((request.type === 'IntentRequest')
-      && (attributes.choices && (attributes.choices.length > 0))
-      && ((request.intent.name === 'ElementSelected')
-        || (request.intent.name === 'GameIntent')
-        || (request.intent.name === 'AMAZON.YesIntent')));
+    return ((attributes.choices && (attributes.choices.length > 0))
+      && (((request.type === 'IntentRequest') &&
+        ((request.intent.name === 'GameIntent')
+        || (request.intent.name === 'AMAZON.YesIntent')))
+      || (request.type === 'Display.ElementSelected')));
   },
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;

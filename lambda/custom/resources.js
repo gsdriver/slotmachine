@@ -30,13 +30,12 @@ const resources = {
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
       // From Exit.js
       'EXIT_GAME': '{0} Goodbye.',
-      'EXIT_TOURNAMENT_TODAY': 'Thanks for playing! Come back between 6 and 7 PM Pacific Time for the slot machine tournament!',
-      'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Come back on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
       // From HighScore.js
       'HIGHSCORE_REPROMPT': 'What else can I help you with?',
       // From Help.js
       'HELP_TOURNAMENT': 'There are {0} left in tournament play. At the end of the tournament the highest bankroll will win {1} coins. ',
-      'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
+      'HELP_COMMANDS': 'Say spin to pull the handle <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
+      'HELP_TOURNAMENT': 'Play the tournament round every {0} for a chance to win an extra {1} coins! ',
       'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
       'HELP_CARD_TITLE': 'Payout Table',
       'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
@@ -90,6 +89,7 @@ const resources = {
       'TOURNAMENT_TIMELEFT_MINUTES': '{0} minutes',
       'TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS': '{0} minutes and {1} seconds',
       'TOURNAMENT_TIMELEFT_SECONDS': '{0} seconds',
+      'TOURNAMENT_DEFAULT_TIMEZONE': ' Pacific time',
       // General
       'SINGLE_COIN': 'coin',
       'PLURAL_COIN': 'coins',
@@ -113,6 +113,27 @@ const utils = (locale) => {
 
   return {
     strings: translation,
+    speakTime: function(time) {
+      let response;
+      const dowMapping = {'Sat': 'Saturday', 'Sun': 'Sunday', 'Mon': 'Monday',
+        'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday'};
+      const dow = time.substring(0, 3);
+
+      response = dowMapping[dow] ? dowMapping[dow] : '';
+      const colon = time.indexOf(':');
+      if (colon > 0) {
+        const hour = parseInt(time.substring(colon - 2, colon));
+        if (!isNaN(hour)) {
+          const isPM = (hour > 11);
+
+          response += ' at ';
+          response += (hour % 12 === 0) ? 12 : (hour % 12);
+          response += (isPM) ? ' PM' : ' AM';
+        }
+      }
+
+      return response;
+    },
   };
 };
 

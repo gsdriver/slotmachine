@@ -52,13 +52,34 @@ module.exports = {
         speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       }
-      speech += reprompt;
 
-      return handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt)
-        .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
-        .getResponse();
+
+      if (!attributes.temp.tournamentAvailable) {
+        return new Promise((resolve, reject) => {
+          utils.getLocalTournamentTime(event, (tournamentTime) => {
+            if (tournamentTime) {
+              speech += res.strings.HELP_TOURNAMENT
+                .replace('{0}', tournamentTime)
+                .replace('{1}', utils.TOURNAMENT_PAYOUT);
+            }
+            speech += reprompt;
+
+            const response = handlerInput.responseBuilder
+              .speak(speech)
+              .reprompt(reprompt)
+              .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
+              .getResponse();
+            resolve(response);
+          });
+        });
+      } else {
+        speech += reprompt;
+        return handlerInput.responseBuilder
+          .speak(speech)
+          .reprompt(reprompt)
+          .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
+          .getResponse();
+      }
     }
   },
 };
