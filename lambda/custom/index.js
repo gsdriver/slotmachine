@@ -145,7 +145,7 @@ const saveResponseInterceptor = {
           }
 
           // Save state if we need to (but just for certain platforms)
-          if (attributes.temp.forceSave) {
+          if (attributes.temp && attributes.temp.forceSave) {
             attributes.temp.forceSave = undefined;
             if (attributes.platform === 'google') {
               // Save state each round in case the user unexpectedly exits

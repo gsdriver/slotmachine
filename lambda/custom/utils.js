@@ -266,7 +266,7 @@ module.exports = {
     // Invoke the entitlement API to load products
     const options = {
       host: 'api.amazonalexa.com',
-      path: '/v2/devices' + event.context.System.device.deviceId + '/settings/System.timeZone',
+      path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -280,7 +280,6 @@ module.exports = {
       // What is the default time?
       let timezone = 'America/Los_Angeles';
       let isDefaultTimezone = true;
-
       const req = https.get(options, (res) => {
         let returnData = '';
         res.setEncoding('utf8');
@@ -293,8 +292,13 @@ module.exports = {
           });
 
           res.on('end', () => {
-            timezone = returnData;
-            isDefaultTimezone = false;
+            if (moment.tz.zone(returnData)) {
+              timezone = returnData;
+              isDefaultTimezone = false;
+              console.log('Got timezone ' + timezone);
+            } else {
+              console.log('Got unknown timezone ' + returnData);
+            }
             done();
           });
         }
