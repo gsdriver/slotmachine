@@ -35,7 +35,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       // First let's see if they selected an element via touch
       utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
-        speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
+        speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
+          .replace('{0}', utils.sayGame(event, attributes.currentGame));
 
         const game = attributes[attributes.currentGame];
         const rules = utils.getGame(attributes.currentGame);

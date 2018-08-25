@@ -1,5 +1,7 @@
 // Localized resources
 
+const seedrandom = require('seedrandom');
+
 const resources = {
   'en-US': {
     'translation': {
@@ -10,23 +12,23 @@ const resources = {
       'UNKNOWN_SELECT_INTENT_REPROMPT': 'Try saying Yes.',
       // Launch.js
       'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
-      'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
-      'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. ',
+      'LAUNCH_WELCOME': 'Welcome to Slot Machine. |It\'s time to play Slot Machine! |Let\'s play Slot Machine! ',
+      'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. |It\'s tournament time on Slot machine for the next {0}. |We\'ve got a tournament for the next {0}! ',
       'LAUNCH_NEWUSER': '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> Welcome to Slot Machine. Say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
       'LAUNCH_RESUME_GAME': 'Say spin to pull the handle.',
       'LAUNCH_RESUME_GAME_REPROMPT': 'Say spin to pull the handle.',
       'LAUNCH_BUSTED': 'You are out of coins. Come back tomorrow for {0} more coins. ',
       'LAUNCH_BUSTED_UPSELL': 'You are out of coins and can come back tomorrow for {0} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? ',
-      'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are {0} coins to get you back in the game. ',
-      'LAUNCH_BUSTED_TOURNAMENT': 'You are out of coins, here are 5 coins on the house in honor of the tournament round. <break time=\"200ms\"/> ',
+      'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are {0} coins to get you back in the game. |Good to see you again! Here are {0} coins to keep playing. |Hey you! Here are {0} coins to get you back in the game. ',
+      'LAUNCH_BUSTED_TOURNAMENT': 'You know <break time=\"500ms\"/> I\'m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ',
       'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
       // From Purchase.js
       'PURCHASE_RESETBANKROLL': 'We have a Reset Bankroll subscription available for purchase. This subscription will automatically reset your bankroll whenever you run out of coins. Would you like to buy it? ',
       'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy Reset Bankroll',
       'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
       // Select.js
-      'SELECT_WELCOME': 'Welcome to {0}. ',
+      'SELECT_WELCOME': 'Welcome to {0}. |Starting {0}. |Let\'s give {0} a spin. |Time for {0}! ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
       // From Exit.js
       'EXIT_GAME': '{0} Goodbye.',
@@ -48,9 +50,10 @@ const resources = {
       'SPIN_YOU_BET': 'You bet {0}. ',
       'SPIN_RESULT': ' {0}. ',
       'SPIN_PROGRESSIVE_WINNER': 'You hit the progressive jackpot and won {0}! ',
-      'SPIN_WINNER': 'You matched {0} and won {1}. ',
-      'SPIN_LOSER': 'Sorry, you lost. ',
-      'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
+      'SPIN_WINNER': 'You matched {0} and won {1}. |you won {1}. |that gives you {1}. |<break time=\"200ms\"/> winner winner chicken dinner! You\'re getting {1}. ',
+      'SPIN_LOSER': 'Sorry, you lost. |That hurt. |No coins for you this time. |Sorry, you lost. |You lost. ',
+      'SPIN_BIG_LOSER': 'Sorry, you lost. |Lost again? Maybe you should try a different machine. |You lost, hang in there <break time=\"200ms\"/> you\'re due. |Wow, you\'ve lost a lot on this machine. |You\'re probably getting used to hearing this <break time=\"200ms\"/> you lost. ',
+      'SPIN_PLAY_AGAIN': 'Would you like to spin again?|Spin again?|Try again?|One more spin?',
       'SPIN_BUSTED': 'You lost all your money. Come back tomorrow for {0} coins. ',
       'SPIN_OUTOFMONEY': 'You are out of coins and out of the tournament. Better luck next week! ',
       'SPIN_NEWUSER': 'If you would like to try a different machine, say change machine or say spin to spin again. ',
@@ -113,6 +116,19 @@ const utils = (locale) => {
 
   return {
     strings: translation,
+    pickRandomOption: function(event, attributes, res) {
+      if (res && translation[res]) {
+        const options = translation[res].split('|');
+        let seed = event.session.user.userId;
+        if (attributes.currentGame && attributes[attributes.currentGame]
+          && attributes[attributes.currentGame].timestamp) {
+          seed += attributes[attributes.currentGame].timestamp;
+        }
+        return options[Math.floor(seedrandom(seed)() * options.length)];
+      } else {
+        return undefined;
+      }
+    },
     speakTime: function(time) {
       let response;
       const dowMapping = {'Sat': 'Saturday', 'Sun': 'Sunday', 'Mon': 'Monday',

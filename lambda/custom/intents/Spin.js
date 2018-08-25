@@ -163,6 +163,8 @@ module.exports = {
           matchedPayout = undefined;
         }
         game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
+        attributes.temp.losingStreak = (game.result.payout === 0)
+            ? ((attributes.temp.losingStreak + 1) || 1) : 0;
         if (game.result.payout > 0) {
           // You won!  If more than 50:1, play the jackpot sound
           if (rules.payouts[matchedPayout] >= 50) {
@@ -218,7 +220,7 @@ module.exports = {
             return;
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
-            speech += res.strings.SPIN_WINNER
+            speech += res.pickRandomOption(event, attributes, 'SPIN_WINNER')
                 .replace('{0}', utils.readPayout(event, rules, matchedPayout))
                 .replace('{1}', utils.readCoins(event, bet * rules.payouts[matchedPayout]));
           }
@@ -227,7 +229,11 @@ module.exports = {
           if (rules.lose) {
             speech += rules.lose;
           }
-          speech += res.strings.SPIN_LOSER;
+          if (attributes.temp.losingStreak > 5) {
+            speech += res.pickRandomOption(event, attributes, 'SPIN_BIG_LOSER');
+          } else {
+            speech += res.pickRandomOption(event, attributes, 'SPIN_LOSER');
+          }
           outcome = 'lose';
         }
 
@@ -245,7 +251,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = partialSpeech;
-  let reprompt = res.strings.SPIN_PLAY_AGAIN;
+  let reprompt = res.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
@@ -363,15 +369,14 @@ function selectGame(handlerInput, callback) {
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
     utils.selectGame(handlerInput, 0).then(() => {
-      speech = res.strings.SELECT_WELCOME.replace('{0}', utils.sayGame(event, attributes.currentGame));
+      speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
+        .replace('{0}', utils.sayGame(event, attributes.currentGame));
 
       const game = attributes[attributes.currentGame];
       const rules = utils.getGame(attributes.currentGame);
       if (rules.welcome) {
         speech += res.strings[rules.welcome];
       }
-
-      speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
 
       if (game.progressiveJackpot) {
         speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', game.progressiveJackpot);

@@ -278,8 +278,8 @@ module.exports = {
     const times = getTournamentTimes(true);
     if (times) {
       // What is the default time?
-      let timezone = 'America/Los_Angeles';
-      let isDefaultTimezone = true;
+      let timezone;
+      let useDefaultTimezone = true;
       const req = https.get(options, (res) => {
         let returnData = '';
         res.setEncoding('utf8');
@@ -293,14 +293,8 @@ module.exports = {
 
           res.on('end', () => {
             // Strip quotes
-            returnData = returnData.replace(/['"]+/g, '');
-            if (moment.tz.zone(returnData)) {
-              timezone = returnData;
-              isDefaultTimezone = false;
-              console.log('Got timezone ' + timezone);
-            } else {
-              console.log('Got unknown timezone ' + returnData);
-            }
+            timezone = returnData.replace(/['"]+/g, '');
+            useDefaultTimezone = !moment.tz.zone(timezone);
             done();
           });
         }
@@ -312,11 +306,15 @@ module.exports = {
       });
 
       function done() {
+        if (useDefaultTimezone) {
+          timezone = 'America/Los_Angeles';
+        }
+
         const res = require('./resources')(event.request.locale);
         const time = moment.tz(times.start.getTime(), timezone).toString();
         let result = res.speakTime(time);
 
-        if (isDefaultTimezone) {
+        if (useDefaultTimezone) {
           result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
         }
         callback(result);
@@ -762,7 +760,7 @@ module.exports = {
       } else {
         // Just show the background image
         image = new Alexa.ImageHelper()
-          .withDescription(res.strings.LAUNCH_WELCOME)
+          .withDescription(res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME'))
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
         response.addRenderTemplateDirective({

@@ -70,7 +70,8 @@ module.exports = {
               resolve(response);
               return;
             } else {
-              speech += res.strings.LAUNCH_BUSTED_REPLENISH.replace('{0}', utils.REFRESH_BANKROLL);
+              speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH')
+                  .replace('{0}', utils.REFRESH_BANKROLL);
               attributes.bankroll += utils.REFRESH_BANKROLL;
               attributes.busted = undefined;
             }
@@ -98,10 +99,10 @@ module.exports = {
           // Read the available games then prompt for each one
           const availableGames = utils.readAvailableGames(event, attributes, true);
           if (availableGames.choices.indexOf('tournament') > -1) {
-            speech += res.strings.LAUNCH_WELCOME_TOURNAMENT
+            speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT')
               .replace('{0}', utils.getRemainingTournamentTime(event));
           } else {
-            speech += res.strings.LAUNCH_WELCOME;
+            speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
             speech += availableGames.speech;
           }
           attributes.choices = availableGames.choices;
