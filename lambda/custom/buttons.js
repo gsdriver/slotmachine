@@ -24,149 +24,162 @@ module.exports = {
     return buttonId;
   },
   startInputHandler: function(handlerInput) {
-    // We'll allow them to press the button again
-    handlerInput.responseBuilder.addDirective({
-      'type': 'GameEngine.StartInputHandler',
-      'timeout': 60000,
-      'recognizers': {
-        'button_down_recognizer': {
-          'type': 'match',
-          'fuzzy': false,
-          'anchor': 'end',
-          'pattern': [{
-            'action': 'down',
-          }],
+    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+      // We'll allow them to press the button again
+      handlerInput.responseBuilder.addDirective({
+        'type': 'GameEngine.StartInputHandler',
+        'timeout': 60000,
+        'recognizers': {
+          'button_down_recognizer': {
+            'type': 'match',
+            'fuzzy': false,
+            'anchor': 'end',
+            'pattern': [{
+              'action': 'down',
+            }],
+          },
         },
-      },
-      'events': {
-        'button_down_event': {
-          'meets': ['button_down_recognizer'],
-          'reports': 'matches',
-          'shouldEndInputHandler': false,
+        'events': {
+          'button_down_event': {
+            'meets': ['button_down_recognizer'],
+            'reports': 'matches',
+            'shouldEndInputHandler': false,
+          },
         },
-      },
-    });
+      });
+    }
   },
   buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {
-    const buttonDownDirective = {
-      'type': 'GadgetController.SetLight',
-      'version': 1,
-      'targetGadgets': targetGadgets,
-      'parameters': {
-        'animations': [{
-          'repeat': 1,
-          'targetLights': ['1'],
-          'sequence': [{
-            'durationMs': 500,
-            'color': 'FFFF00',
-            'intensity': 255,
-            'blend': false,
+    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+      const buttonDownDirective = {
+        'type': 'GadgetController.SetLight',
+        'version': 1,
+        'targetGadgets': targetGadgets,
+        'parameters': {
+          'animations': [{
+            'repeat': 1,
+            'targetLights': ['1'],
+            'sequence': [{
+              'durationMs': 500,
+              'color': 'FFFF00',
+              'intensity': 255,
+              'blend': false,
+            }],
           }],
-        }],
-        'triggerEvent': 'buttonDown',
-        'triggerEventTimeMs': 0,
-      },
-    };
-    handlerInput.responseBuilder.addDirective(buttonDownDirective);
+          'triggerEvent': 'buttonDown',
+          'triggerEventTimeMs': 0,
+        },
+      };
+      handlerInput.responseBuilder.addDirective(buttonDownDirective);
+    }
   },
   colorButton: function(handlerInput, buttonId, buttonColor, longPause) {
-    let i;
-    const buttonIdleDirective = {
-      'type': 'GadgetController.SetLight',
-      'version': 1,
-      'targetGadgets': [buttonId],
-      'parameters': {
-        'animations': [{
-          'repeat': 1,
-          'targetLights': ['1'],
-          'sequence': [],
-        }],
-        'triggerEvent': 'none',
-        'triggerEventTimeMs': 0,
-      },
-    };
+    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+      let i;
+      const buttonIdleDirective = {
+        'type': 'GadgetController.SetLight',
+        'version': 1,
+        'targetGadgets': [buttonId],
+        'parameters': {
+          'animations': [{
+            'repeat': 1,
+            'targetLights': ['1'],
+            'sequence': [],
+          }],
+          'triggerEvent': 'none',
+          'triggerEventTimeMs': 0,
+        },
+      };
 
-    // Pulse a few times white
-    for (i = 0; i < 4; i++) {
+      // Pulse a few times white
+      for (i = 0; i < 4; i++) {
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 400,
+          'color': 'FFFFFF',
+          'blend': true,
+        });
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 300,
+          'color': '000000',
+          'blend': true,
+        });
+      }
+
+      // Then solid white (long is an extra four seconds)
       buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 400,
+        'durationMs': (longPause ? 8000 : 4000),
         'color': 'FFFFFF',
-        'blend': true,
+        'blend': false,
       });
+
+      // Pulse based on whether they won or lost
+      for (i = 0; i < 4; i++) {
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 400,
+          'color': buttonColor,
+          'blend': true,
+        });
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 300,
+          'color': '000000',
+          'blend': true,
+        });
+      }
+
+      // And then back to white
       buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 300,
-        'color': '000000',
-        'blend': true,
+        'durationMs': 60000,
+        'color': 'FFFFFF',
+        'blend': false,
       });
+      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
     }
-
-    // Then solid white (long is an extra four seconds)
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': (longPause ? 8000 : 4000),
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-
-    // Pulse based on whether they won or lost
-    for (i = 0; i < 4; i++) {
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 400,
-        'color': buttonColor,
-        'blend': true,
-      });
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 300,
-        'color': '000000',
-        'blend': true,
-      });
-    }
-
-    // And then back to white
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 60000,
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-    handlerInput.responseBuilder.addDirective(buttonIdleDirective);
   },
   addLaunchAnimation: function(handlerInput) {
-    // Flash the buttons white a few times
-    // Then place them all in a steady white state
-    const buttonIdleDirective = {
-      'type': 'GadgetController.SetLight',
-      'version': 1,
-      'targetGadgets': [],
-      'parameters': {
-        'animations': [{
-          'repeat': 1,
-          'targetLights': ['1'],
-          'sequence': [],
-        }],
-        'triggerEvent': 'none',
-        'triggerEventTimeMs': 0,
-      },
-    };
+    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+      // Flash the buttons white a few times
+      // Then place them all in a steady white state
+      const buttonIdleDirective = {
+        'type': 'GadgetController.SetLight',
+        'version': 1,
+        'targetGadgets': [],
+        'parameters': {
+          'animations': [{
+            'repeat': 1,
+            'targetLights': ['1'],
+            'sequence': [],
+          }],
+          'triggerEvent': 'none',
+          'triggerEventTimeMs': 0,
+        },
+      };
 
-    // Add to the animations array
-    let i;
-    for (i = 0; i < 4; i++) {
+      // Add to the animations array
+      let i;
+      for (i = 0; i < 4; i++) {
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 400,
+          'color': 'FFFFFF',
+          'blend': true,
+        });
+        buttonIdleDirective.parameters.animations[0].sequence.push({
+          'durationMs': 300,
+          'color': '000000',
+          'blend': true,
+        });
+      }
       buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 400,
+        'durationMs': 60000,
         'color': 'FFFFFF',
-        'blend': true,
+        'blend': false,
       });
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 300,
-        'color': '000000',
-        'blend': true,
-      });
+      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
     }
-    buttonIdleDirective.parameters.animations[0].sequence.push({
-      'durationMs': 60000,
-      'color': 'FFFFFF',
-      'blend': false,
-    });
-    handlerInput.responseBuilder.addDirective(buttonIdleDirective);
   },
 };
 
+function buttonsSupported(locale) {
+  const localeList = ['en-US', 'en-CA', 'en-IN', 'en-GB'];
+
+  return (localeList.indexOf(locale) >= 0);
+}

@@ -51,7 +51,7 @@
           "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a422/5ba2ae87c511460bb6a57921433a6841/APP_ICON_LARGE?versionId=8CRPfSKdmp0cS5xLhanBd_nrRB7ZRHaj&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=UgEFDMOLq9HlA8SepRgLuaxPfBo%3D"
         },
         "en-AU": {
-          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
+          "summary": "Play a game of slots. Try your luck for the big jackpot!",
           "examplePhrases": [
             "Alexa, open slot machine",
             "Read high scores",
@@ -63,7 +63,7 @@
           ],
           "name": "Slot Machine",
           "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/95fe/bdea1f8869c94b6db77d1a49f71a18c8/APP_ICON?versionId=KEIyFbPnRyrxk_uUVphIZclrygW3O9Pe&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=pfC4ZF%2BCVJa5L6kPKGc8jtNHxO8%3D",
-          "description": "Play one of several different slot machines with optional support for an Echo Button, including an exciting progressive jackpot that grows based on aggregate play.  You start with 100 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 100 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
           "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/2bac/04253a64e6cc475d9298c853f3997802/APP_ICON_LARGE?versionId=VV8.X4HAnGnrYjWUd3.4uRTAml5QQXRo&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=mx0Ma1AB%2BohaxA8NhiyhNC86Y1M%3D"
         },
         "en-GB": {
