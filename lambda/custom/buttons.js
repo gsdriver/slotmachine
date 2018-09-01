@@ -6,10 +6,12 @@
 
 module.exports = {
   supportButtons: function(handlerInput) {
+    const localeList = ['en-US', 'en-CA', 'en-IN', 'en-GB'];
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const locale = handlerInput.requestEnvelope.request.locale;
 
-    return (buttonsSupported(handlerInput.requestEnvelope.request.locale)
-      && (attributes.platform !== 'google'));
+    return ((localeList.indexOf(locale) >= 0) &&
+      (attributes.platform !== 'google') && !attributes.bot);
   },
   getPressedButton: function(request, attributes) {
     const gameEngineEvents = request.events || [];
@@ -30,7 +32,7 @@ module.exports = {
     return buttonId;
   },
   startInputHandler: function(handlerInput) {
-    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+    if (module.exports.supportButtons(handlerInput)) {
       // We'll allow them to press the button again
       handlerInput.responseBuilder.addDirective({
         'type': 'GameEngine.StartInputHandler',
@@ -56,7 +58,7 @@ module.exports = {
     }
   },
   buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {
-    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+    if (module.exports.supportButtons(handlerInput)) {
       const buttonDownDirective = {
         'type': 'GadgetController.SetLight',
         'version': 1,
@@ -80,7 +82,7 @@ module.exports = {
     }
   },
   colorButton: function(handlerInput, buttonId, buttonColor, longPause) {
-    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+    if (module.exports.supportButtons(handlerInput)) {
       let i;
       const buttonIdleDirective = {
         'type': 'GadgetController.SetLight',
@@ -142,7 +144,7 @@ module.exports = {
     }
   },
   addLaunchAnimation: function(handlerInput) {
-    if (buttonsSupported(handlerInput.requestEnvelope.request.locale)) {
+    if (module.exports.supportButtons(handlerInput)) {
       // Flash the buttons white a few times
       // Then place them all in a steady white state
       const buttonIdleDirective = {
@@ -183,9 +185,3 @@ module.exports = {
     }
   },
 };
-
-function buttonsSupported(locale) {
-  const localeList = ['en-US', 'en-CA', 'en-IN', 'en-GB'];
-
-  return (localeList.indexOf(locale) >= 0);
-}

@@ -5,6 +5,7 @@ const attributeFile = 'attributes.txt';
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const fs = require('fs');
 
 const LOCALE='en-US';
 const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
@@ -185,7 +186,6 @@ function BuildEvent(argv)
   };
 
   // If there is an attributes.txt file, read the attributes from there
-  const fs = require('fs');
   if (fs.existsSync(attributeFile)) {
     data = fs.readFileSync(attributeFile, 'utf8');
     if (data) {
@@ -278,34 +278,37 @@ function myResponse(appId) {
 }
 
 function myResponse(err, result) {
-  if (err) {
-    console.log('ERROR; ' + err.stack);
-  } else if (!result.response || !result.response.outputSpeech) {
-    console.log('RETURNED ' + JSON.stringify(result));
-  } else {
-    if (result.response.outputSpeech.ssml) {
-      console.log('AS SSML: ' + result.response.outputSpeech.ssml);
-      console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
+  // Write the last action
+  fs.writeFile('lastResponse.txt', JSON.stringify(result), (err) => {
+    if (err) {
+      console.log('ERROR; ' + err.stack);
+    } else if (!result.response || !result.response.outputSpeech) {
+      console.log('RETURNED ' + JSON.stringify(result));
     } else {
-      console.log(result.response.outputSpeech.text);
+      if (result.response.outputSpeech.ssml) {
+        console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+        console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
+      } else {
+        console.log(result.response.outputSpeech.text);
+      }
+      if (result.response.card && result.response.card.content) {
+        console.log('Card Content: ' + result.response.card.content);
+      }
+      console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
+      if (result.sessionAttributes && !process.env.NOLOG) {
+        console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
+      }
+      if (result.sessionAttributes) {
+        // Output the attributes too
+        const fs = require('fs');
+        fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
     }
-    if (result.response.card && result.response.card.content) {
-      console.log('Card Content: ' + result.response.card.content);
-    }
-    console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
-    if (result.sessionAttributes && !process.env.NOLOG) {
-      console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
-    }
-    if (result.sessionAttributes) {
-      // Output the attributes too
-      const fs = require('fs');
-      fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-  }
+  });
 }
 
 // Build the event object and call the app
