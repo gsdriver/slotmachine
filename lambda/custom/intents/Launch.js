@@ -85,11 +85,17 @@ module.exports = {
 
         // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {
+          speech = (buttons.supportButtons(handlerInput))
+            ? res.strings.LAUNCH_NEWUSER_BUTTON
+            : res.strings.LAUNCH_NEWUSER;
           response = handlerInput.responseBuilder
-            .speak(res.strings.LAUNCH_NEWUSER)
+            .speak(speech)
             .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT)
             .getResponse();
         } else if (attributes.temp.resumeGame) {
+          speech = (buttons.supportButtons(handlerInput))
+            ? res.strings.LAUNCH_RESUME_GAME_BUTTON
+            : res.strings.LAUNCH_RESUME_GAME;
           attributes.temp.resumeGame = undefined;
           response = handlerInput.responseBuilder
             .speak(res.strings.LAUNCH_RESUME_GAME)
@@ -103,7 +109,9 @@ module.exports = {
               .replace('{0}', utils.getRemainingTournamentTime(event));
           } else {
             speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
-            speech += availableGames.speech;
+            if (!buttons.supportButtons(handlerInput)) {
+              speech += availableGames.speech;
+            }
           }
           attributes.choices = availableGames.choices;
           attributes.originalChoices = availableGames.choices;
@@ -112,7 +120,14 @@ module.exports = {
           speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
           const reprompt = res.strings.LAUNCH_REPROMPT
             .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
-          speech += reprompt;
+
+          if (buttons.supportButtons(handlerInput)) {
+            speech += res.strings.LAUNCH_WELCOME_BUTTON
+              .replace('{0}', utils.sayGame(event, availableGames.choices[0]))
+              .replace('{1}', utils.sayGame(event, availableGames.choices[0]));
+          } else {
+            speech += reprompt;
+          }
           response = handlerInput.responseBuilder
             .speak(speech)
             .reprompt(reprompt)

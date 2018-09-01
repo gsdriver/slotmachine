@@ -5,6 +5,12 @@
 'use strict';
 
 module.exports = {
+  supportButtons: function(handlerInput) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    return (buttonsSupported(handlerInput.requestEnvelope.request.locale)
+      && (attributes.platform !== 'google'));
+  },
   getPressedButton: function(request, attributes) {
     const gameEngineEvents = request.events || [];
     let buttonId;
