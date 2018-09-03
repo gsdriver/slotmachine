@@ -256,7 +256,7 @@ const tournaments = [
 
 module.exports = {
   STARTING_BANKROLL: 100,
-  REFRESH_BANKROLL: 50,
+  REFRESH_BANKROLL: 100,
   TOURNAMENT_PAYOUT: 50,
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
