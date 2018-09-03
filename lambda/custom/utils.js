@@ -281,6 +281,15 @@ module.exports = {
       }
     });
   },
+  isNextDay: function(event, attributes, callback) {
+    getUserTimezone(event, (timezone) => {
+      const tz = (timezone) ? timezone : 'America/Los_Angeles';
+      const busted = moment.tz(attributes.busted, tz).format('YYYY-MM-DD');
+      const now = moment.tz(Date.now(), tz).format('YYYY-MM-DD');
+
+      callback(busted !== now);
+    });
+  },
   getLocalTournamentTime: function(event, callback) {
     const times = getTournamentTimes(true);
     if (times) {
@@ -918,7 +927,7 @@ function getUserTimezone(event, callback) {
       res.setEncoding('utf8');
       if (res.statusCode != 200) {
         console.log('deviceTimezone returned status code ' + res.statusCode);
-        done();
+        callback();
       } else {
         res.on('data', (chunk) => {
           returnData += chunk;
