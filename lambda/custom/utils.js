@@ -915,6 +915,7 @@ function getUserTimezone(event, callback) {
       host: 'api.amazonalexa.com',
       path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
       method: 'GET',
+      timeout: 1000,
       headers: {
         'Content-Type': 'application/json',
         'Accept-Language': event.request.locale,
