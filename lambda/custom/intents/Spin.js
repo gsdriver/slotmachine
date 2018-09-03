@@ -8,6 +8,9 @@ const utils = require('../utils');
 const request = require('request');
 const seedrandom = require('seedrandom');
 const buttons = require('../buttons');
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+const SNS = new AWS.SNS();
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -252,6 +255,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   let lastbet = bet;
   let speech = partialSpeech;
   let reprompt = res.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
+  let snsPublication;
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
@@ -272,6 +276,15 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
       speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
+      // Publish to SNS so we know someone busted out
+      if (process.env.SNSTOPIC) {
+        snsPublication = {
+          Message: 'User ' + event.session.user.userId + ' busted out',
+          TopicArn: process.env.SNSTOPIC,
+          Subject: 'Slot Machine Busted Bankroll',
+        };
+      }
+
       lastbet = undefined;
       attributes.busted = Date.now();
       speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
@@ -325,7 +338,14 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
-  callback(handlerInput.responseBuilder.getResponse());
+
+  if (snsPublication) {
+    SNS.publish(snsPublication, () => {
+      callback(handlerInput.responseBuilder.getResponse());
+    });
+  } else {
+    callback(handlerInput.responseBuilder.getResponse());
+  }
 }
 
 function getBet(event, attributes) {

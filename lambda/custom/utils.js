@@ -256,69 +256,48 @@ const tournaments = [
 
 module.exports = {
   STARTING_BANKROLL: 100,
-  REFRESH_BANKROLL: 100,
+  REFRESH_BANKROLL: 50,
   TOURNAMENT_PAYOUT: 50,
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
+  getGreeting: function(event, callback) {
+    const res = require('./resources')(event.request.locale);
+    getUserTimezone(event, (timezone) => {
+      if (timezone) {
+        const hour = moment.tz(Date.now(), timezone).format('H');
+        let greeting;
+        if ((hour > 5) && (hour < 12)) {
+          greeting = res.strings.GOOD_MORNING;
+        } else if ((hour >= 12) && (hour < 18)) {
+          greeting = res.strings.GOOD_AFTERNOON;
+        } else {
+          greeting = res.strings.GOOD_EVENING;
+        }
+        callback(greeting);
+      } else {
+        callback('');
+      }
+    });
+  },
   getLocalTournamentTime: function(event, callback) {
-    // Invoke the entitlement API to load products
-    const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': event.request.locale,
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-    };
-
     const times = getTournamentTimes(true);
     if (times) {
-      // What is the default time?
-      let timezone;
-      let useDefaultTimezone = true;
-      const req = https.get(options, (res) => {
-        let returnData = '';
-        res.setEncoding('utf8');
-        if (res.statusCode != 200) {
-          console.log('deviceTimezone returned status code ' + res.statusCode);
-          done();
-        } else {
-          res.on('data', (chunk) => {
-            returnData += chunk;
-          });
-
-          res.on('end', () => {
-            // Strip quotes
-            timezone = returnData.replace(/['"]+/g, '');
-            useDefaultTimezone = !moment.tz.zone(timezone);
-            done();
-          });
-        }
-      });
-
-      req.on('error', (err) => {
-        console.log('Error calling inSkillProducts API: ' + err.message);
-        done();
-      });
-
-      function done() {
-        if (useDefaultTimezone) {
-          timezone = 'America/Los_Angeles';
-        }
+      // Get the user timezone
+      getUserTimezone(event, (timezone) => {
+        const useDefaultTimezone = (timezone === undefined);
+        const tz = (timezone) ? timezone : 'America/Los_Angeles';
 
         const res = require('./resources')(event.request.locale);
-        const time = moment.tz(times.start.getTime(), timezone).toString();
+        const time = moment.tz(times.start.getTime(), tz).toString();
         let result = res.speakTime(time);
 
         if (useDefaultTimezone) {
           result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
         }
         callback(result);
-      }
+      });
     } else {
       callback();
     }
@@ -918,4 +897,47 @@ function getTournamentTimes(leaveUTC) {
   }
 
   return retVal;
+}
+
+function getUserTimezone(event, callback) {
+  if (event.context.System.apiAccessToken) {
+    // Invoke the entitlement API to load timezone
+    const options = {
+      host: 'api.amazonalexa.com',
+      path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+
+    const req = https.get(options, (res) => {
+      let returnData = '';
+      res.setEncoding('utf8');
+      if (res.statusCode != 200) {
+        console.log('deviceTimezone returned status code ' + res.statusCode);
+        done();
+      } else {
+        res.on('data', (chunk) => {
+          returnData += chunk;
+        });
+
+        res.on('end', () => {
+          // Strip quotes
+          const timezone = returnData.replace(/['"]+/g, '');
+          callback(moment.tz.zone(timezone) ? timezone : undefined);
+        });
+      }
+    });
+
+    req.on('error', (err) => {
+      console.log('Error calling user settings API: ' + err.message);
+      callback();
+    });
+  } else {
+    // No API token - no user timezone
+    callback();
+  }
 }

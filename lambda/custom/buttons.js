@@ -10,7 +10,8 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const locale = handlerInput.requestEnvelope.request.locale;
 
-    return ((localeList.indexOf(locale) >= 0) &&
+    return (!process.env.NOBUTTONS &&
+      (localeList.indexOf(locale) >= 0) &&
       (attributes.platform !== 'google') && !attributes.bot);
   },
   getPressedButton: function(request, attributes) {
