@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "188be75c453e752b43bdfc3aa03e43cf"
+          "eTag": "32665ea64d8ee648163d1e4d2ea93410"
         },
         "interactionModel": {
           "en-AU": {
@@ -29,7 +29,7 @@
             "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
           },
           "en-US": {
-            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
+            "eTag": "922ce55ff541a831633d54891a66381f"
           },
           "en-IN": {
             "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
@@ -43,16 +43,22 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "48404ef8-ba96-4e3b-a4b3-5bfc5452ea61"
+            "revisionId": "bd40bc72-a9da-4cbd-b9cd-de53e1a897c9"
           }
         ]
       },
       "in_skill_products": [
         {
+          "deploy_status": "Update",
+          "filePath": "isps\\subscription\\coinreset.json",
+          "productId": "amzn1.adg.product.9ca0c5e9-4986-4dd8-be66-77fc928197ef",
+          "eTag": "0b236940f87f87341c57d35b48e6f5d7"
+        },
+        {
           "deploy_status": "Remove",
           "filePath": "isps\\subscription\\resetcoins.json",
           "productId": "amzn1.adg.product.8d998cd5-d9c1-47e9-ad9b-094330535458",
-          "eTag": "23314968fd23bdbe06f33ca4fe4cf9cd"
+          "eTag": "f2b590d0e541a27786b0971a07b2c850"
         }
       ]
     }

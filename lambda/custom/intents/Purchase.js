@@ -11,7 +11,7 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    if ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.resetcoins
+    if ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.coinreset
       && ((!attributes.temp.purchasing && (request.intent.name === 'PurchaseIntent')) ||
        (attributes.temp.purchasing &&
         ((request.intent.name === 'AMAZON.YesIntent') || (request.intent.name === 'AMAZON.NoIntent'))))) {

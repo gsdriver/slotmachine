@@ -164,6 +164,7 @@ module.exports = {
         // IF we are testing bankrupcy, then you didn't match
         if (attributes.temp.testBankrupt) {
           matchedPayout = undefined;
+          attributes.temp.testBankrupt = undefined;
         }
         game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
         attributes.temp.losingStreak = (game.result.payout === 0)
@@ -256,6 +257,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   let speech = partialSpeech;
   let reprompt = res.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
   let snsPublication;
+  let noSpeech;
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
@@ -272,7 +274,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     reprompt = undefined;
   } else if (attributes.bankroll < 1) {
     // If they subscribed to reset bankroll, then reset for them
-    if (attributes.paid && attributes.paid.resetcoins && (attributes.paid.resetcoins.state == 'PURCHASED')) {
+    if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
       speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
@@ -287,7 +289,14 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
       lastbet = undefined;
       attributes.busted = Date.now();
-      speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+      if (attributes.paid && attributes.paid.coinreset) {
+        noSpeech = true;
+        handlerInput.responseBuilder
+          .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
+            speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
+      } else {
+        speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+      }
       reprompt = undefined;
     }
   } else {
@@ -327,7 +336,9 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   }
 
   // Set the speech
-  handlerInput.responseBuilder.speak(speech);
+  if (!noSpeech) {
+    handlerInput.responseBuilder.speak(speech);
+  }
   if (reprompt) {
     handlerInput.responseBuilder.reprompt(reprompt);
   } else {

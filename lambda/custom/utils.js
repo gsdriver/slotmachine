@@ -765,7 +765,7 @@ module.exports = {
       'name': name,
       'payload': {
         'InSkillProduct': {
-          'productId': attributes.paid.resetcoins.productId,
+          'productId': attributes.paid.coinreset.productId,
         },
         'upsellMessage': message,
       },
@@ -775,12 +775,6 @@ module.exports = {
   getPurchasedProducts: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    // Until Alexa allows in skill purchases for simulated, casino-style gambling
-    // skills, we will just return no available products
-    attributes.paid = undefined;
-    callback();
-    return;
 
     // Invoke the entitlement API to load products
     const options = {

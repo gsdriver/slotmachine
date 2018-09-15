@@ -11,8 +11,8 @@ module.exports = {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.resetcoins
-      && (attributes.paid.resetcoins.state == 'PURCHASED')
+    return ((request.type === 'IntentRequest') && attributes.paid && attributes.paid.coinreset
+      && (attributes.paid.coinreset.state == 'PURCHASED')
       && (request.intent.name === 'RefundIntent'));
   },
   handle: function(handlerInput) {

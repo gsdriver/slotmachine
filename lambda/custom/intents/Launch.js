@@ -29,7 +29,7 @@ module.exports = {
 
           // First off - are they out of money?
           if (attributes.busted) {
-            if (attributes.paid && attributes.paid.resetcoins && (attributes.paid.resetcoins.state == 'PURCHASED')) {
+            if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
               speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
               attributes.bankroll += utils.STARTING_BANKROLL;
               attributes.busted = undefined;
@@ -45,7 +45,7 @@ module.exports = {
               utils.isNextDay(event, attributes, (nextDay) => {
                 if (!nextDay) {
                   // Here's the place to do an upsell if we can!
-                  if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.resetcoins) {
+                  if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
                     handlerInput.responseBuilder
                       .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
                         speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));

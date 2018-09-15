@@ -26,6 +26,7 @@ module.exports = {
       } else if (engineEvent.name === 'button_down_event') {
         // save id of the button that triggered event
         console.log('Received button down request');
+        attributes.usedButton = true;
         buttonId = engineEvent.inputEvents[0].gadgetId;
       }
     });
