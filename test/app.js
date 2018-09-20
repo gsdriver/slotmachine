@@ -5,8 +5,10 @@ const attributeFile = 'attributes.txt';
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const fs = require('fs');
 
-const LOCALE='en-GB';
+const LOCALE='en-US';
+const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 
 function BuildEvent(argv)
 {
@@ -15,10 +17,12 @@ function BuildEvent(argv)
   var spin = {'name': 'SpinIntent', 'slots': {}};
   var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
+  var game = {'name': 'GameIntent', 'slots': {'Number': {'name': 'Number', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
   var no = {'name': 'AMAZON.NoIntent', 'slots': {}};
   var help = {'name': 'AMAZON.HelpIntent', 'slots': {}};
+  var fallback = {'name': 'AMAZON.FallbackIntent', 'slots': {}};
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
   var highScore = {'name': 'HighScoreIntent', 'slots': {}};
@@ -27,7 +31,7 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+        "applicationId": APPID
       },
       "attributes": {},
       "user": {
@@ -50,7 +54,7 @@ function BuildEvent(argv)
        "Display": {},
        "System": {
          "application": {
-           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+           "applicationId": APPID
          },
          "user": {
            "userId": "not-amazon",
@@ -75,7 +79,69 @@ function BuildEvent(argv)
     "session": {
       "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+        "applicationId": APPID
+      },
+      "attributes": {},
+      "user": {
+        "userId": "not-amazon",
+      },
+      "new": false
+    },
+    "request": {
+      "type": "GameEngine.InputHandlerEvent",
+      "requestId": "amzn1.echo-api.request.f25e7902-62bc-4661-90d9-aaac30c1a937",
+      "timestamp": "2018-08-02T01:05:33Z",
+      "locale": LOCALE,
+      "originatingRequestId": "amzn1.echo-api.request.0b7a4f65-115d-427c-9aa0-5c78c57c740f",
+      "events": [
+        {
+          "name": "button_down_event",
+          "inputEvents": [
+            {
+              "gadgetId": "amzn1.ask.gadget.05RPH7PJG9C61DHI4QR0RLOQOHKGUBVM9A7T9FD3V4OR7ASISG8HIIRQT3O4IF0KGJVKUMT0LLB45D78QBJFTLVOEM32UFCRVKLBKMJM9ADL7CEU4EUBO5DNQ83L7EE9PFQQ3LUFE8929JPSGKLN6GTBIKVQBPOUH6SU7C27OEO86DIF32ET8",
+              "timestamp": "2018-08-02T01:05:29.371Z",
+              "color": "000000",
+              "feature": "press",
+              "action": "down"
+            }
+          ]
+        }
+      ]
+    },
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": APPID
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": "",
+       }
+     },
+  };
+
+  var buttonEvent = {
+    "session": {
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
+      "application": {
+        "applicationId": APPID
       },
       "attributes": {},
       "user": {
@@ -159,7 +225,7 @@ function BuildEvent(argv)
        "Display": {},
        "System": {
          "application": {
-           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+           "applicationId": APPID
          },
          "user": {
            "userId": "not-amazon",
@@ -181,7 +247,6 @@ function BuildEvent(argv)
   };
 
   // If there is an attributes.txt file, read the attributes from there
-  const fs = require('fs');
   if (fs.existsSync(attributeFile)) {
     data = fs.readFileSync(attributeFile, 'utf8');
     if (data) {
@@ -211,6 +276,11 @@ function BuildEvent(argv)
     if (argv.length > 3) {
       rules.slots.Rules.value = argv[3];
     }
+  } else if (argv[2] == 'game') {
+    lambda.request.intent = game;
+    if (argv.length > 3) {
+      game.slots.Number.value = argv[3];
+    }
   } else if (argv[2] == 'spin') {
     lambda.request.intent = spin;
   } else if (argv[2] == 'select') {
@@ -223,6 +293,8 @@ function BuildEvent(argv)
     lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
     lambda.request.intent = help;
+  } else if (argv[2] == 'fallback') {
+    lambda.request.intent = fallback;
   } else if (argv[2] == 'stop') {
     lambda.request.intent = stop;
   } else if (argv[2] == 'cancel') {
@@ -249,38 +321,55 @@ function BuildEvent(argv)
   return lambda;
 }
 
+function ssmlToText(ssml) {
+  let text = ssml;
+
+  // Replace break with ...
+  text = text.replace(/<break[^>]+>/g, ' ... ');
+
+  // Remove all other angle brackets
+  text = text.replace(/<\/?[^>]+(>|$)/g, '');
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
+}
+
 // Simple response - just print out what I'm given
 function myResponse(appId) {
   this._appId = appId;
 }
 
-myResponse.succeed = function(result) {
-  if (!result || !result.response || !result.response.outputSpeech) {
-    console.log(JSON.stringify(result));
-  } else {
-    if (result.response.outputSpeech.ssml) {
-      console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+function myResponse(err, result) {
+  // Write the last action
+  fs.writeFile('lastResponse.txt', JSON.stringify(result), (err) => {
+    if (err) {
+      console.log('ERROR; ' + err.stack);
+    } else if (!result.response || !result.response.outputSpeech) {
+      console.log('RETURNED ' + JSON.stringify(result));
     } else {
-      console.log(result.response.outputSpeech.text);
+      if (result.response.outputSpeech.ssml) {
+        console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+        console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
+      } else {
+        console.log(result.response.outputSpeech.text);
+      }
+      if (result.response.card && result.response.card.content) {
+        console.log('Card Content: ' + result.response.card.content);
+      }
+      console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
+      if (result.sessionAttributes && !process.env.NOLOG) {
+        console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
+      }
+      if (result.sessionAttributes) {
+        // Output the attributes too
+        const fs = require('fs');
+        fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
     }
-    if (result.response.card && result.response.card.content) {
-      console.log('Card Content: ' + result.response.card.content);
-    }
-    console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
-    if (result.sessionAttributes) {
-      // Output the attributes too
-      const fs = require('fs');
-      fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
-        if (!process.env.NOLOG) {
-          console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
-        }
-      });
-    }
-  }
-}
-
-myResponse.fail = function(e) {
-  console.log(e);
+  });
 }
 
 // Build the event object and call the app
@@ -297,6 +386,6 @@ if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {
 } else {
   var event = BuildEvent(process.argv);
   if (event) {
-      mainApp.handler(event, myResponse);
+      mainApp.handler(event, null, myResponse);
   }
 }

@@ -4,20 +4,18 @@
   "description": "Alexa slot machine",
   "main": "index.js",
   "dependencies": {
-    "alexa-sdk": "^1.0.9",
     "alexa-speech-utils": "0.0.4",
-    "aws-sdk": "^2.28.0",
+    "ask-sdk": "^2.0.7",
+    "aws-sdk": "^2.282.1",
     "bluebird": "^3.5.0",
-    "dashbot": "^9.4.3",
+    "dashbot": "^9.9.2",
+    "moment-timezone": "^0.5.21",
     "request": "^2.85.0",
     "seedrandom": "^2.4.3"
   },
   "devDependencies": {
-    "del": "^2.2.2",
-    "eslint": "^3.18.0",
     "eslint-config-google": "^0.7.1",
-    "eslint-html-reporter": "^0.5.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-eslint": "^3.0.1"
   },
   "scripts": {

@@ -1,75 +1,82 @@
 // Localized resources
 
+const seedrandom = require('seedrandom');
+
 const resources = {
   'en-US': {
     'translation': {
       // From index.js
-      'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Bet.',
-      'UNKNOWN_INTENT_REPROMPT': 'Try saying Bet.',
+      'UNKNOWN_INTENT': 'Sorry, I didn\'t get that. Try saying Spin.',
+      'UNKNOWN_INTENT_REPROMPT': 'Try saying Spin.',
       'UNKNOWN_SELECT_INTENT': 'Sorry, I didn\'t get that. Try saying Yes.',
       'UNKNOWN_SELECT_INTENT_REPROMPT': 'Try saying Yes.',
       // Launch.js
       'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
-      'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
-      'LAUNCH_WELCOME_ACHIEVEMENT': 'Welcome back to Slot Machine. You have {0} achievement points. ',
-      'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. ',
-      'LAUNCH_NEWUSER': 'Welcome to Slot Machine. Say spin to pull the handle.',
+      'LAUNCH_WELCOME': 'Welcome to Slot Machine. |{0} Welcome to Slot Machine. |{0} It\'s time to play Slot Machine! |{0} Let\'s play Slot Machine! ',
+      'LAUNCH_WELCOME_TOURNAMENT': 'Welcome back to Slot Machine. We have a tournament under way for the next {0}. |It\'s tournament time on Slot machine for the next {0}. |We\'ve got a tournament for the next {0}! ',
+      'LAUNCH_WELCOME_BUTTON': 'If you have an Echo Button, press it to play {0} <break time=\"200ms\"/> You can also say spin to play {1} or no to pick a different machine.',
+      'LAUNCH_NEWUSER': '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {0} Welcome to Slot Machine. Say spin to pull the handle.',
+      'LAUNCH_NEWUSER_BUTTON': '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {0} Welcome to Slot Machine. If you have an Echo Button press it or say spin to pull the handle.',
       'LAUNCH_NEWUSER_REPROMPT': 'Say spin to pull the handle.',
+      'LAUNCH_RESUME_GAME': 'Say spin to pull the handle.',
+      'LAUNCH_RESUME_GAME_BUTTON': 'If you have an Echo Button press it or say spin to pull the handle.',
+      'LAUNCH_RESUME_GAME_REPROMPT': 'Say spin to pull the handle.',
+      'LAUNCH_BUSTED': 'You are out of coins. Come back to Slot Machine tomorrow for {0} more coins. ',
+      'LAUNCH_BUSTED_UPSELL': 'You are out of coins and can come back to Slot Machine tomorrow for {0} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? ',
+      'LAUNCH_BUSTED_REPLENISH': 'Thanks for coming back! Here are {0} coins to get you back in the game. |Good to see you again! Here are {0} coins to keep playing. |Hey you! Here are {0} coins to get you back in the game. ',
+      'LAUNCH_BUSTED_TOURNAMENT': 'You know <break time=\"500ms\"/> I\'m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ',
+      'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
+      // From Purchase.js
+      'PURCHASE_RESETBANKROLL': 'We have a Reset Bankroll subscription available for purchase. This subscription will automatically reset your bankroll whenever you run out of coins. Would you like to buy it? ',
+      'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy Reset Bankroll',
+      'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
       // Select.js
-      'SELECT_WELCOME': 'Welcome to {0}. ',
+      'SELECT_WELCOME': 'Welcome to {0}. |Starting {0}. |Let\'s give {0} a spin. |Time for {0}! ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
       // From Exit.js
       'EXIT_GAME': '{0} Goodbye.',
-      'EXIT_TOURNAMENT_TODAY': 'Thanks for playing! Come back between 6 and 7 PM Pacific Time for the slot machine tournament!',
-      'EXIT_TOURNAMENT_SOON': 'Thanks for playing! Come back on Wednesday from 6 to 7 PM Pacific Time for the slot machine tournament!',
       // From HighScore.js
       'HIGHSCORE_REPROMPT': 'What else can I help you with?',
-      // From Bet.js
-      'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
-      'BET_INVALID_REPROMPT': 'What else can I help you with?',
-      'BET_EXCEEDS_MAX': 'Sorry, this bet exceeds the maximum bet of {0}.',
-      'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
-      'BET_PLACED': 'You bet {0}. ',
-      'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
       // From Help.js
-      'HELP_TOURNAMENT': 'There are {0} left in tournament play. At the end of the tournament the highest bankroll will win 100 achievement points. ',
-      'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
+      'HELP_TOURNAMENT': 'There are {0} left in tournament play. At the end of the tournament the highest bankroll will win {1} coins. ',
+      'HELP_COMMANDS': 'Say spin to pull the handle <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
+      'HELP_TOURNAMENT': 'Play the tournament round every {0} for a chance to win an extra {1} coins! ',
       'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
       'HELP_CARD_TITLE': 'Payout Table',
       'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
-      'HELP_ACHIEVEMENT_POINTS': 'You earn 10 points per game each day you play <break time=\'200ms\'/> 25 points for each payout of 50 to 1 or more <break time=\'200ms\'/> 100 points for each tournament win <break time=\'200ms\'/> N points for each streak of N wins in a row. ',
-      'HELP_ACHIEVEMENT_CARD_TEXT': '\nYou earn achievement points as you play which is how the high score board is determined. You earn points as follows:\n - 10 achievement points per game each day you play \n - 25 points for each payout of 50 to 1 or more\n - 100 points for each tournament win \n - N points for each streak of N wins in a row.\n',
+      'HELP_FALLBACK': 'Sorry, I didn\'t get that. <break time=\"200ms\"/> ',
       // From Rules.js
       'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
       'RULES_SELECT_REPROMPT': 'Say yes to play this game or no to hear the next option.',
       'RULES_CARD_TITLE': 'Payout Table',
       // From Spin.js
-      'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
-      'SPIN_INVALID_REPROMPT': 'Place a bet',
-      'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
+      'SPIN_YOU_BET': 'You bet {0}. ',
       'SPIN_RESULT': ' {0}. ',
       'SPIN_PROGRESSIVE_WINNER': 'You hit the progressive jackpot and won {0}! ',
-      'SPIN_WINNER': 'You matched {0} and won {1}. ',
-      'SPIN_LOSER': 'Sorry, you lost. ',
-      'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
-      'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
-      'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+      'SPIN_WINNER': 'You matched {0} and won {1}. |you won {1}. |that gives you {1}. |<break time=\"200ms\"/> winner winner chicken dinner! You\'re getting {1}. ',
+      'SPIN_LOSER': 'Sorry, you lost. |That hurt. |No coins for you this time. |Sorry, you lost. |You lost. ',
+      'SPIN_BIG_LOSER': 'Sorry, you lost. |Lost again? Maybe you should try a different machine. |You lost, hang in there <break time=\"200ms\"/> you\'re due. |Wow, you\'ve lost a lot on this machine. |You\'re probably getting used to hearing this <break time=\"200ms\"/> you lost. ',
+      'SPIN_PLAY_AGAIN': 'Would you like to spin again?|Spin again?|Try again?|One more spin?',
+      'SPIN_BUSTED': 'You lost all your money. Come back tomorrow for {0} coins. ',
       'SPIN_OUTOFMONEY': 'You are out of coins and out of the tournament. Better luck next week! ',
-      'SPIN_JACKPOT_ACHIEVEMENT': 'You earned 25 achievement points for a jackpot. ',
-      'SPIN_FIRSTPLAY_ACHIEVEMENT': 'You earned 10 achievement points for your first time playing {0} today. ',
-      'SPIN_STREAK_ACHIEVEMENT': 'You earned {0} achievement points for {1} wins in a row. ',
       'SPIN_NEWUSER': 'If you would like to try a different machine, say change machine or say spin to spin again. ',
+      // From Testing.js
+      'TEST_CONFIRM_BANKRUPT': 'Do you want to test going bankrupt?  Say yes to set your bankroll to 1 coin or no to continue play.',
+      'TEST_CONFIRM_BANKRUPT_REPROMPT': 'Say yes enter test mode or no to continue play.',
+      'TEST_BANKRUPT_SET': 'Your bankroll has been reset to 1 coin and you will lose your next spin.  Say spin to test.',
+      'TEST_BANKRUPT_REPROMPT': 'Say spin to test.',
+      'TEST_BANKRUPT_NOT_SET': 'Test mode not enabled. Say spin to pull the handle.',
+      'TEST_BARNKUPT_NOT_SET_REPROMPT': 'Say spin to pull the handle.',
       // From utils.js
       'ERROR_REPROMPT': 'What else can I help with?',
       'ANY_SLOT': 'any',
       'PAYOUT_PAYS': 'pays {0} coins.',
       'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
-      'LEADER_RANKING': 'You have {0} achievement points ranking you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
-      'LEADER_GAME_RANKING': 'Your current bankroll of {0} coins on {1} ranks you as <say-as interpret-as="ordinal">{2}</say-as> of {3} players. ',
+      'LEADER_RANKING': 'Your peak bankroll of {0} coins ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
+      'LEADER_GAME_RANKING': 'Your current bankroll of {0} coins on {3} ranks you as <say-as interpret-as="ordinal">{1}</say-as> of {2} players. ',
       'LEADER_NO_SCORES': 'Sorry, I\'m unable to read the current leader board. ',
-      'LEADER_FORMAT': '{0} achievement points',
-      'LEADER_GAME_FORMAT': '{0} coins',
-      'LEADER_TOP_SCORES': 'The top {0} scores are {1}. ',
+      'LEADER_FORMAT': '{0} coins',
+      'LEADER_TOP_SCORES': 'The top {0} bankrolls are {1}. ',
       'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
       'WILD_SPECIAL': 'Cherries are wild. ',
       'PITY_PAYOUT': 'Every spin not mentioned wins 1 coin when 5 coins are played. ',
@@ -83,11 +90,15 @@ const resources = {
       'SELECT_GAME': 'Select a game to play',
       'DISPLAY_PAYOUT_WINNER': 'You won {0} coins',
       'DISPLAY_PAYOUT_LOSER': 'Sorry, you lost',
-      'TOURNAMENT_WINNER': 'Congratulations, you won the tournament with {0} coins! ',
+      'TOURNAMENT_WINNER': 'Congratulations, you won the tournament with {0} coins!  You win {1} coins for your tournament win! ',
       'TOURNAMENT_LOSER': 'Sorry, you didn\'t win the tournament. The high score was {0} coins and you had {1} coins. ',
       'TOURNAMENT_TIMELEFT_MINUTES': '{0} minutes',
       'TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS': '{0} minutes and {1} seconds',
       'TOURNAMENT_TIMELEFT_SECONDS': '{0} seconds',
+      'TOURNAMENT_DEFAULT_TIMEZONE': ' Pacific time',
+      'GOOD_MORNING': 'Good morning <break time=\"200ms\"/> ',
+      'GOOD_AFTERNOON': 'Good afternoon <break time=\"200ms\"/> ',
+      'GOOD_EVENING': 'Good evening <break time=\"200ms\"/> ',
       // General
       'SINGLE_COIN': 'coin',
       'PLURAL_COIN': 'coins',
@@ -101,13 +112,51 @@ const resources = {
   },
 };
 
-// Use a proxy in case we are asked for a language not called out above
-const handler = {
-  get: function(target, name) {
-    return target.hasOwnProperty(name) ? target[name] : target['en-US'];
-  },
+const utils = (locale) => {
+  let translation;
+  if (resources[locale]) {
+    translation = resources[locale].translation;
+  } else {
+    translation = resources['en-US'].translation;
+  }
+
+  return {
+    strings: translation,
+    pickRandomOption: function(event, attributes, res) {
+      if (res && translation[res]) {
+        const options = translation[res].split('|');
+        let seed = event.session.user.userId;
+        if (attributes.currentGame && attributes[attributes.currentGame]
+          && attributes[attributes.currentGame].timestamp) {
+          seed += attributes[attributes.currentGame].timestamp;
+        }
+        return options[Math.floor(seedrandom(seed)() * options.length)];
+      } else {
+        return undefined;
+      }
+    },
+    speakTime: function(time) {
+      let response;
+      const dowMapping = {'Sat': 'Saturday', 'Sun': 'Sunday', 'Mon': 'Monday',
+        'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday'};
+      const dow = time.substring(0, 3);
+
+      response = dowMapping[dow] ? dowMapping[dow] : '';
+      const colon = time.indexOf(':');
+      if (colon > 0) {
+        const hour = parseInt(time.substring(colon - 2, colon));
+        if (!isNaN(hour)) {
+          const isPM = (hour > 11);
+
+          response += ' at ';
+          response += (hour % 12 === 0) ? 12 : (hour % 12);
+          response += (isPM) ? ' PM' : ' AM';
+        }
+      }
+
+      return response;
+    },
+  };
 };
 
-module.exports = {
-  languageStrings: new Proxy(resources, handler),
-};
+module.exports = utils;
