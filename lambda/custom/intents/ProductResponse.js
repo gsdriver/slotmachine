@@ -54,13 +54,14 @@ module.exports = {
         }
 
         // If this was a game upsell, take them back to select game
-        if (event.request.token === 'crazydiamond') {
+        const options = event.request.token.split('.');
+        if ((options.length === 2) && (options[0] === 'select')) {
           // Did they accept the upsell?
           if ((event.request.name === 'Upsell') && event.request.payload
             && ((event.request.payload.purchaseResult == 'ACCEPTED') ||
              (event.request.payload.purchaseResult == 'ALREADY_PURCHASED'))) {
             // Auto select it
-            attributes.choices = ['crazydiamond'];
+            attributes.choices = [options[1]];
             SelectYes.handle(handlerInput)
             .then((response) => {
               resolve(response);

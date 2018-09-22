@@ -29,7 +29,7 @@
             "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
           },
           "en-US": {
-            "eTag": "d929a69eaf69fd2d47faec0c738f1466"
+            "eTag": "223131742e09721e22ba3e023ddd0c00"
           },
           "en-IN": {
             "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
@@ -43,7 +43,7 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "20078bec-2385-4eb8-ae06-d6d3c73bfcec"
+            "revisionId": "e4359b78-e472-4e84-ad76-07205d2629f1"
           }
         ]
       },
@@ -64,7 +64,7 @@
           "deploy_status": "Update",
           "filePath": "isps\\entitlement\\crazydiamond.json",
           "productId": "amzn1.adg.product.0f960bb3-f86c-4ff7-a2c0-06a14b558e91",
-          "eTag": "c8cad143da9923bb6be41ea25f34d56f"
+          "eTag": "b2be4d43217776e8d1df9e3c3be3ab63"
         }
       ]
     }

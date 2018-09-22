@@ -21,7 +21,7 @@
           "crazy diamond"
         ],
         "customProductPrompts": {
-          "purchasePromptDescription": "This will add Crazy Diamonds to the list slot machines you can play.",
+          "purchasePromptDescription": "This will add Crazy Diamonds to the list of slot machines you can play.",
           "boughtCardDescription": "Congratulations! You can now access Crazy Diamonds by saying select a new machine."
         }
       }

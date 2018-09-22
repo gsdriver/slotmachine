@@ -292,7 +292,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
       if (attributes.paid && attributes.paid.coinreset) {
         noSpeech = true;
         handlerInput.responseBuilder
-          .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell',
+          .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'coinreset',
             speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
       } else {
         speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);

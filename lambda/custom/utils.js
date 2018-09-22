@@ -803,7 +803,7 @@ module.exports = {
       }
     }
   },
-  getPurchaseDirective: function(attributes, product, name, message) {
+  getPurchaseDirective: function(attributes, product, name, token, message) {
     return {
       'type': 'Connections.SendRequest',
       'name': name,
@@ -813,7 +813,7 @@ module.exports = {
         },
         'upsellMessage': message,
       },
-      'token': product,
+      'token': ((token) ? token : product),
     };
   },
   getPurchasedProducts: function(handlerInput, callback) {
