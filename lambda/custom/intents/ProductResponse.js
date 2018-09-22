@@ -5,6 +5,8 @@
 'use strict';
 
 const Launch = require('./Launch');
+const Select = require('./Select');
+const SelectYes = require('./SelectYes');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const SNS = new AWS.SNS();
@@ -23,7 +25,8 @@ module.exports = {
       if (process.env.SNSTOPIC) {
         const start = Date.now();
         SNS.publish({
-          Message: event.request.name + ' was ' + event.request.payload.purchaseResult
+          Message: event.request.name + 'with token ' + event.request.token
+            + ' was ' + event.request.payload.purchaseResult
             + ' by user ' + event.session.user.userId,
           TopicArn: process.env.SNSTOPIC,
           Subject: 'Slot Machine Purchase Response',
@@ -50,12 +53,31 @@ module.exports = {
           attributes.temp.noUpsell = true;
         }
 
-        // We will drop them directly into a game
-        attributes.temp.resumeGame = true;
-        Launch.handle(handlerInput)
-        .then((response) => {
-          resolve(response);
-        });
+        // If this was a game upsell, take them back to select game
+        if (event.request.token === 'crazydiamond') {
+          // Did they accept the upsell?
+          if ((event.request.name === 'Upsell') && event.request.payload
+            && ((event.request.payload.purchaseResult == 'ACCEPTED') ||
+             (event.request.payload.purchaseResult == 'ALREADY_PURCHASED'))) {
+            // Auto select it
+            attributes.choices = ['crazydiamond'];
+            SelectYes.handle(handlerInput)
+            .then((response) => {
+              resolve(response);
+            });
+          } else {
+            // Go back to selecting a game
+            attributes.temp.noUpsellGame = true;
+            resolve(Select.handle(handlerInput));
+          }
+        } else {
+          // We will drop them directly into a game
+          attributes.temp.resumeGame = true;
+          Launch.handle(handlerInput)
+          .then((response) => {
+            resolve(response);
+          });
+        }
       }
     });
   },

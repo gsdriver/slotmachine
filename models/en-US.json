@@ -125,7 +125,8 @@
             "give me {Product}",
             "buy {Product}",
             "pay for {Product}",
-            "sign up for {Product}"
+            "sign up for {Product}",
+            "{Product}"
           ]
         },
         {
@@ -238,6 +239,21 @@
             {
               "name": {
                 "value": "reset coins"
+              }
+            },
+            {
+              "name": {
+                "value": "crazy diamonds"
+              }
+            },
+            {
+              "name": {
+                "value": "diamonds"
+              }
+            },
+            {
+              "name": {
+                "value": "crazy diamonds machine"
               }
             }
           ],

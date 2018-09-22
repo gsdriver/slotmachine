@@ -38,6 +38,13 @@ const requestInterceptor = {
         // No session attributes - so get the persistent ones
         attributesManager.getPersistentAttributes()
           .then((attributes) => {
+            // If they were playing loose, then please nuke it
+            if (attributes.loose) {
+              attributes.loose = undefined;
+            }
+            if (attributes.currentGame === 'loose') {
+              attributes.currentGame = 'standard';
+            }
             attributes.temp = {};
             utils.checkForTournament(attributes);
             utils.getTournamentComplete(event, attributes, (result) => {

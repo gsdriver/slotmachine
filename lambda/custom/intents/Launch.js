@@ -47,7 +47,7 @@ module.exports = {
                   // Here's the place to do an upsell if we can!
                   if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
                     handlerInput.responseBuilder
-                      .addDirective(utils.getPurchaseDirective(attributes, 'Upsell',
+                      .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell',
                         speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
                   } else {
                     speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);

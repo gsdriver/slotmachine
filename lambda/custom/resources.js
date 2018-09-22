@@ -1,5 +1,6 @@
 // Localized resources
 
+const leven = require('leven');
 const seedrandom = require('seedrandom');
 
 const resources = {
@@ -27,12 +28,17 @@ const resources = {
       'LAUNCH_BUSTED_TOURNAMENT': 'You know <break time=\"500ms\"/> I\'m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ',
       'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
       // From Purchase.js
-      'PURCHASE_RESETBANKROLL': 'We have a Reset Bankroll subscription available for purchase. This subscription will automatically reset your bankroll whenever you run out of coins. Would you like to buy it? ',
-      'PURCHASE_CONFIRM_REPROMPT': 'Say yes to buy Reset Bankroll',
+      'PURCHASE_PRODUCT_LIST': 'We have {0} available for purchase. Say the product you would like to buy or no to continue your game. ',
+      'PURCHASE_RESETBANKROLL': 'a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins ',
+      'PURCHASE_CRAZYDIAMOND': 'a Crazy Diamond machine with wild diamond symbols ',
+      'PURCHASE_CONFIRM_REPROMPT': 'Say the product you want to buy or no to continue your game.',
       'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
+      // From Refund.js
+      'REFUND_SAY_PRODUCT': 'Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.',
       // Select.js
       'SELECT_WELCOME': 'Welcome to {0}. |Starting {0}. |Let\'s give {0} a spin. |Time for {0}! ',
       'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
+      'SELECT_UPSELL': 'We have a Crazy Diamonds machine available for purchase. Want to learn more?',
       // From Exit.js
       'EXIT_GAME': '{0} Goodbye.',
       // From HighScore.js
@@ -79,6 +85,7 @@ const resources = {
       'LEADER_TOP_SCORES': 'The top {0} bankrolls are {1}. ',
       'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
       'WILD_SPECIAL': 'Cherries are wild. ',
+      'DIAMOND_SPECIAL': 'Diamonds are wild. ',
       'PITY_PAYOUT': 'Every spin not mentioned wins 1 coin when 5 coins are played. ',
       'HIGH_JACKPOT': 'Today\'s tournament features a 1000 to 1 maximum payout! ',
       'HIGH_PAYOUT': 'Today\'s tournament machine pays out at 110%! ',
@@ -106,8 +113,8 @@ const resources = {
       'PROGRESSIVE_JACKPOT_ONLY': 'The progressive jackpot is currently {0} coins. ',
       'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
       'TOURNAMENT_ENDED': 'The tournament has ended. Please check again later to hear the results! ',
-      'GAME_LIST': '{"basic": "the standard fruit game","wild": "wild cherry","loose": "the 105% payout game","progressive": "progressive jackpot","tournament": "the tournament round","steak": "the meat game"}',
-      'SYMBOL_LIST': '{"cherry": "cherry","lemon": "lemon","orange": "orange","plum": "plum","bar": "bar","blank": "blank","double bar": "double bar","seven": "seven","any bar": "any bar","any gold bar": "any gold bar","bell": "bell","heart": "heart","horseshoe": "horseshoe","gold bar": "gold bar","diamond": "diamond","chicken": "chicken","maggie": "Maggie","lisa": "Lisa","marge": "Marge","bart": "Bart","homer": "Homer","pork": "pork","veal": "veal","turkey": "turkey","steak": "steak","penguin": "Penguin","2face": "Two Face","riddler": "The Riddler","joker": "The Joker","batman": "Batman"}',
+      'GAME_LIST': '{"basic": "the standard fruit game","wild": "wild cherry","loose": "the 105% payout game","progressive": "progressive jackpot","tournament": "the tournament round","steak": "the meat game","crazydiamond": "crazy diamonds"}',
+      'SYMBOL_LIST': '{"cherry": "cherry","lemon": "lemon","orange": "orange","plum": "plum","bar": "bar","blank": "blank","double bar": "double bar","seven": "seven","any bar": "any bar","any gold bar": "any gold bar","bell": "bell","heart": "heart","horseshoe": "horseshoe","gold bar": "gold bar","diamond": "diamond","chicken": "chicken","maggie": "Maggie","lisa": "Lisa","marge": "Marge","bart": "Bart","homer": "Homer","pork": "pork","veal": "veal","turkey": "turkey","steak": "steak","penguin": "Penguin","2face": "Two Face","riddler": "The Riddler","joker": "The Joker","batman": "Batman","star": "star","watermelon": "watermelon"}',
     },
   },
 };
@@ -156,7 +163,38 @@ const utils = (locale) => {
 
       return response;
     },
+    mapProduct: function(product) {
+      const productList = {'RESET BANKROLL': 'coinreset', 'RESET COIN': 'reset coin',
+        'CRAZY DIAMONDS': 'crazydiamond', 'DIAMONDS': 'crazydiamond',
+        'CRAZY DIAMONDS MACHINE': 'crazydiamond'};
+
+      return getBestMatch(productList, product.toUpperCase());
+    },
   };
 };
 
 module.exports = utils;
+
+function getBestMatch(mapping, value) {
+  const valueLen = value.length;
+  let map;
+  let ratio;
+  let bestMapping;
+  let bestRatio = 0;
+
+  for (map in mapping) {
+    if (map) {
+      const lensum = map.length + valueLen;
+      ratio = Math.round(100 * ((lensum - leven(value, map)) / lensum));
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestMapping = map;
+      }
+    }
+  }
+
+  if (bestRatio < 90) {
+    console.log('Near match: ' + bestMapping + ', ' + bestRatio);
+  }
+  return mapping[bestMapping];
+}

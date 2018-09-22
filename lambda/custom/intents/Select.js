@@ -28,14 +28,20 @@ module.exports = {
     speech = availableGames.speech;
     attributes.choices = availableGames.choices;
     attributes.originalChoices = availableGames.choices;
-
-    // Ask for the first one
-    const reprompt = res.strings.LAUNCH_REPROMPT
-        .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
-    speech += reprompt;
-    return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
-      .getResponse();
+    if (availableGames.forPurchase.length && !attributes.temp.noUpsellGame) {
+      return handlerInput.responseBuilder
+        .addDirective(utils.getPurchaseDirective(attributes, 'crazydiamond', 'Upsell', res.strings.SELECT_UPSELL))
+        .withShouldEndSession(true)
+        .getResponse();
+    } else {
+      // Ask for the first one
+      const reprompt = res.strings.LAUNCH_REPROMPT
+          .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
+      speech += reprompt;
+      return handlerInput.responseBuilder
+        .speak(speech)
+        .reprompt(reprompt)
+        .getResponse();
+    }
   },
 };

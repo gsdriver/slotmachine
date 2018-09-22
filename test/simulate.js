@@ -1,4 +1,4 @@
-var utils = require('../utils');
+var utils = require('../lambda/custom/utils');
 
 // Get a game and do 1000 spins to simulate what happens
 let rules;
