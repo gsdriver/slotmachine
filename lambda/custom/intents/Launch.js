@@ -27,6 +27,15 @@ module.exports = {
             attributes.tournamentResult = undefined;
           }
 
+          // In case they refunded a purchased product, get rid of it here
+          if (attributes.currentGame === 'crazydiamond') {
+            if (attributes.paid && attributes.paid.crazydiamond &&
+              (attributes.paid.crazydiamond.state !== 'PURCHASED')) {
+              attributes.currentGame = 'standard';
+              attributes.crazydiamond = undefined;
+            }
+          }
+
           // First off - are they out of money?
           if (attributes.busted) {
             if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
@@ -47,7 +56,7 @@ module.exports = {
                   // Here's the place to do an upsell if we can!
                   if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
                     handlerInput.responseBuilder
-                      .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'coinreset',
+                      .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.launch',
                         speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
                   } else {
                     speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);

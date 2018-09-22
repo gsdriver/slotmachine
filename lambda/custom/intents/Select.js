@@ -31,7 +31,7 @@ module.exports = {
     if (availableGames.forPurchase.length && !attributes.temp.noUpsellGame) {
       return handlerInput.responseBuilder
         .addDirective(utils.getPurchaseDirective(attributes, 'crazydiamond', 'Upsell',
-          'select.crazydiamond', res.strings.SELECT_UPSELL))
+          'machine.crazydiamond.select', res.strings.SELECT_UPSELL))
         .withShouldEndSession(true)
         .getResponse();
     } else {

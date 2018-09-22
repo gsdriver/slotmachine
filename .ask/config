@@ -20,19 +20,19 @@
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           },
           "en-GB": {
-            "eTag": "3b7eaee33159842118d61da4a6be961e"
+            "eTag": "d232d2000e137f855f7a3f3dbdc249b2"
           },
           "en-CA": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           },
           "en-US": {
             "eTag": "223131742e09721e22ba3e023ddd0c00"
           },
           "en-IN": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           }
         },
         "lambda": [
@@ -43,17 +43,11 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "e4359b78-e472-4e84-ad76-07205d2629f1"
+            "revisionId": "2788f720-14a5-48bb-94bb-6e7b94a28b0c"
           }
         ]
       },
       "in_skill_products": [
-        {
-          "deploy_status": "Remove",
-          "filePath": "isps\\subscription\\resetcoins.json",
-          "productId": "amzn1.adg.product.8d998cd5-d9c1-47e9-ad9b-094330535458",
-          "eTag": "f2b590d0e541a27786b0971a07b2c850"
-        },
         {
           "deploy_status": "Update",
           "filePath": "isps\\subscription\\coinreset.json",

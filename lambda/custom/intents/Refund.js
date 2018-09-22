@@ -26,13 +26,16 @@ module.exports = {
     return canRefund;
   },
   handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../resources')(event.request.locale);
 
     if (event.request.intent.slots && event.request.intent.slots.Product
       && event.request.intent.slots.Product.value) {
       const product = res.mapProduct(event.request.intent.slots.Product.value);
+      const token = (product === 'coinreset') ? 'subscribe.coinreset.refund' : ('machine.' + product + '.refund');
       return handlerInput.responseBuilder
-        .addDirective(utils.getPurchaseDirective(attributes, product, 'Cancel'))
+        .addDirective(utils.getPurchaseDirective(attributes, product, 'Cancel', token))
         .withShouldEndSession(true)
         .getResponse();
     } else {
