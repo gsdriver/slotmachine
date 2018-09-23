@@ -509,36 +509,32 @@ module.exports = {
       }
     }
 
+    if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
+      && attributes.paid[games[gameToAdd].product]
+      && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
+      // Pick a different game to add
+      attributes[attributes.currentGame] = undefined;
+      attributes.currentGame = 'standard';
+      gameToAdd = 'standard';
+    }
+
     for (game in games) {
-      if (game) {
+      if (game && (game !== gameToAdd)) {
         if (games[game].product) {
           // We only offer this game if it is purchased
           if (attributes.paid && attributes.paid[games[game].product]) {
             if (attributes.paid[games[game].product].state === 'PURCHASED') {
-              if (game != gameToAdd) {
-                choices.push(game);
-                choiceText.push(module.exports.sayGame(event, game));
-              }
+              choices.push(game);
+              choiceText.push(module.exports.sayGame(event, game));
             } else {
-              // This game is available for purchase
-              // In case they have this game (e.g. are refunding)
-              // then we should make sure this isn't the current game
-              if (attributes.currentGame === games[game].product) {
-                attributes[attributes.currentGame] = undefined;
-                attributes.currentGame = 'standard';
-                gameToAdd = 'standard';
-              }
               availableProducts.push(game);
               forPurchase.push(module.exports.sayGame(event, game));
             }
           }
         } else if ((game != 'tournament') || offerTournament) {
-          // Put the last played game at the front of the list
-          if (game != gameToAdd) {
-           choices.push(game);
-           choiceText.push(module.exports.sayGame(event, game));
-         }
-       }
+          choices.push(game);
+          choiceText.push(module.exports.sayGame(event, game));
+        }
       }
     }
 
@@ -547,8 +543,8 @@ module.exports = {
         choices.unshift(gameToAdd);
         choiceText.unshift(module.exports.sayGame(event, gameToAdd));
       } else {
-         choices.push(gameToAdd);
-         choiceText.push(module.exports.sayGame(event, gameToAdd));
+        choices.push(gameToAdd);
+        choiceText.push(module.exports.sayGame(event, gameToAdd));
       }
     }
 
