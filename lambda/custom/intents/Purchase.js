@@ -44,8 +44,8 @@ module.exports = {
           .getResponse();
       } else {
         // Prompt them with a list of available products
-        const speech = res.strings.PURCHASE_PRODUCT_LIST
-          .replace('{0}', speechUtils.and([res.strings.PURCHASE_RESETBANKROLL, res.strings.PURCHASE_CRAZYDIAMOND],
+        const speech = res.strings.PURCHASE_PRODUCTS
+          .replace('{0}', speechUtils.and(JSON.parse(res.strings.PURCHASE_PRODUCT_LIST),
             {locale: event.request.locale}));
 
         attributes.temp.purchasing = true;

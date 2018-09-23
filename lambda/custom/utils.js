@@ -493,9 +493,9 @@ module.exports = {
     const choices = [];
     const choiceText = [];
     let game;
-    let count = 0;
     let gameToAdd = attributes.currentGame;
     let offerTournament = false;
+    const availableProducts = [];
     const forPurchase = [];
 
     if (attributes.temp.tournamentAvailable) {
@@ -515,15 +515,24 @@ module.exports = {
           // We only offer this game if it is purchased
           if (attributes.paid && attributes.paid[games[game].product]) {
             if (attributes.paid[games[game].product].state === 'PURCHASED') {
-              choices.push(game);
-              choiceText.push(module.exports.sayGame(event, game));
+              if (game != gameToAdd) {
+                choices.push(game);
+                choiceText.push(module.exports.sayGame(event, game));
+              }
             } else {
-              // There are available games for purchase
+              // This game is available for purchase
+              // In case they have this game (e.g. are refunding)
+              // then we should make sure this isn't the current game
+              if (attributes.currentGame === games[game].product) {
+                attributes[attributes.currentGame] = undefined;
+                attributes.currentGame = 'standard';
+                gameToAdd = 'standard';
+              }
+              availableProducts.push(game);
               forPurchase.push(module.exports.sayGame(event, game));
             }
           }
         } else if ((game != 'tournament') || offerTournament) {
-          count++;
           // Put the last played game at the front of the list
           if (game != gameToAdd) {
            choices.push(game);
@@ -543,10 +552,11 @@ module.exports = {
       }
     }
 
-    speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
+    speech = res.strings.AVAILABLE_GAMES.replace('{0}', choices.length);
     speech += speechUtils.and(choiceText, {locale: event.request.locale});
     speech += '. ';
-    return {speech: speech, choices: choices, forPurchase: forPurchase};
+    return {speech: speech, choices: choices, forPurchase: forPurchase,
+      availableProducts: availableProducts};
   },
   readCoins: function(event, coins) {
     const res = require('./resources')(event.request.locale);

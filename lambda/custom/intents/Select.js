@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const seedrandom = require('seedrandom');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -28,10 +29,18 @@ module.exports = {
     speech = availableGames.speech;
     attributes.choices = availableGames.choices;
     attributes.originalChoices = availableGames.choices;
-    if (availableGames.forPurchase.length && !attributes.temp.noUpsellGame) {
+    if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
+      // Pick one of the available games at random
+      let seed = event.session.user.userId;
+      if (attributes.currentGame && attributes[attributes.currentGame]
+        && attributes[attributes.currentGame].timestamp) {
+        seed += attributes[attributes.currentGame].timestamp;
+      }
+      const product = availableGames.availableProducts[
+        Math.floor(seedrandom(seed)() * availableGames.availableProducts.length)];
       return handlerInput.responseBuilder
-        .addDirective(utils.getPurchaseDirective(attributes, 'crazydiamond', 'Upsell',
-          'machine.crazydiamond.select', res.strings.SELECT_UPSELL))
+        .addDirective(utils.getPurchaseDirective(attributes, product, 'Upsell',
+          'machine.' + product + '.select', res.strings.SELECT_UPSELL))
         .withShouldEndSession(true)
         .getResponse();
     } else {

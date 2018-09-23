@@ -72,8 +72,15 @@ module.exports = {
               if (attributes.currentGame === options[1]) {
                 attributes.currentGame = 'standard';
               }
+              if (attributes.paid && attributes.paid[options[1]]) {
+                attributes.paid[options[1]].state = 'AVAILABLE';
+              }
             } else {
               // We'll auto-select
+              // Make sure we put it into the list of paid products as purchased
+              if (attributes.paid && attributes.paid[options[1]]) {
+                attributes.paid[options[1]].state = 'PURCHASED';
+              }
               nextAction = 'autoselect';
             }
           } else {

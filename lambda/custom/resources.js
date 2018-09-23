@@ -28,11 +28,10 @@ const resources = {
       'LAUNCH_BUSTED_TOURNAMENT': 'You know <break time=\"500ms\"/> I\'m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ',
       'SUBSCRIPTION_PAID_REPLENISH': 'Thanks to your Reset Bankroll subscription, your bankroll is reset to {0} coins. ',
       // From Purchase.js
-      'PURCHASE_PRODUCT_LIST': 'We have {0} available for purchase. Say the product you would like to buy or no to continue your game. ',
-      'PURCHASE_RESETBANKROLL': 'a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins ',
-      'PURCHASE_CRAZYDIAMOND': 'a Crazy Diamond machine with wild diamond symbols ',
+      'PURCHASE_PRODUCTS': 'We have {0} available for purchase. Say the product you would like to buy or no to continue your game. ',
       'PURCHASE_CONFIRM_REPROMPT': 'Say the product you want to buy or no to continue your game.',
       'PURCHASE_NO_PURCHASE': 'What else can I help you with?',
+      'PURCHASE_PRODUCT_LIST': '["a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins ", "a Crazy Diamond machine with wild diamond symbols "]',
       // From Refund.js
       'REFUND_SAY_PRODUCT': 'Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.',
       // Select.js

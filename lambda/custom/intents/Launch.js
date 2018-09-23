@@ -27,15 +27,6 @@ module.exports = {
             attributes.tournamentResult = undefined;
           }
 
-          // In case they refunded a purchased product, get rid of it here
-          if (attributes.currentGame === 'crazydiamond') {
-            if (attributes.paid && attributes.paid.crazydiamond &&
-              (attributes.paid.crazydiamond.state !== 'PURCHASED')) {
-              attributes.currentGame = 'standard';
-              attributes.crazydiamond = undefined;
-            }
-          }
-
           // First off - are they out of money?
           if (attributes.busted) {
             if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
