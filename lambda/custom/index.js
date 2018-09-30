@@ -45,6 +45,9 @@ const requestInterceptor = {
             if (attributes.currentGame === 'loose') {
               attributes.currentGame = 'standard';
             }
+            if (!attributes.prompts) {
+              attributes.prompts = {};
+            }
             attributes.temp = {};
             utils.checkForTournament(attributes);
             utils.getTournamentComplete(event, attributes, (result) => {

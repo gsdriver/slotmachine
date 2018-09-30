@@ -5,7 +5,6 @@
 'use strict';
 
 const utils = require('../utils');
-const seedrandom = require('seedrandom');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -19,9 +18,11 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
+    const now = Date.now();
 
     // Tell them the rules, their bankroll and offer a few things they can do
     let speech;
+    let upsellProduct;
 
     // Read the available games then prompt for each one
     attributes.temp.readingRules = false;
@@ -30,17 +31,22 @@ module.exports = {
     attributes.choices = availableGames.choices;
     attributes.originalChoices = availableGames.choices;
     if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
-      // Pick one of the available games at random
-      let seed = event.session.user.userId;
-      if (attributes.currentGame && attributes[attributes.currentGame]
-        && attributes[attributes.currentGame].timestamp) {
-        seed += attributes[attributes.currentGame].timestamp;
-      }
-      const product = availableGames.availableProducts[
-        Math.floor(seedrandom(seed)() * availableGames.availableProducts.length)];
+      // Go through and see if there is a machine we can offer as upsell
+      // We only offer each machine once every two days
+      // So as not to annoy our customers too much
+      availableGames.availableProducts.forEach((product) => {
+        if (!attributes.prompts[product] ||
+          ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
+            upsellProduct = product;
+        }
+      });
+    }
+
+    if (upsellProduct) {
+      attributes.prompts[upsellProduct] = now;
       return handlerInput.responseBuilder
-        .addDirective(utils.getPurchaseDirective(attributes, product, 'Upsell',
-          'machine.' + product + '.select', res.strings.SELECT_UPSELL))
+        .addDirective(utils.getPurchaseDirective(attributes, upsellProduct, 'Upsell',
+          'machine.' + upsellProduct + '.select', res.strings.SELECT_UPSELL))
         .withShouldEndSession(true)
         .getResponse();
     } else {
