@@ -11,7 +11,7 @@
     "dashbot": "^9.9.2",
     "leven": "^2.1.0",
     "moment-timezone": "^0.5.21",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "seedrandom": "^2.4.3"
   },
   "devDependencies": {
