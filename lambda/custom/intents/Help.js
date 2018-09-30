@@ -53,7 +53,6 @@ module.exports = {
         speech += res.strings.HELP_COMMANDS;
       }
 
-
       if (!attributes.temp.tournamentAvailable) {
         return new Promise((resolve, reject) => {
           utils.getLocalTournamentTime(event, (tournamentTime) => {

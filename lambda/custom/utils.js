@@ -63,27 +63,6 @@ const games = {
       'cherry|cherry|cherry': 500,
     },
   },
-  // Has 104.9% payout
-  'loose': {
-    'maxCoins': 5,
-    'slots': 3,
-    'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
-    'frequency': [
-      {'symbols': [5, 6, 10, 10, 1]},
-      {'symbols': [4, 12, 4, 6, 3]},
-      {'symbols': [20, 12, 8, 3, 2]},
-    ],
-    'payouts': {
-      'heart': 2,
-      'heart|heart': 4,
-      'bell|bell|bell': 5,
-      'horseshoe|horseshoe|horseshoe': 6,
-      'seven|seven|seven': 10,
-      'gold bar': 10,
-      'gold bar|gold bar': 25,
-      'gold bar|gold bar|gold bar': 1000,
-    },
-  },
   'progressive': {
     'maxCoins': 5,
     'slots': 3,
@@ -108,6 +87,32 @@ const games = {
       'diamond': 5,
       'diamond|diamond': 10,
       'diamond|diamond|diamond': 100,
+    },
+  },
+  // Has 102% payout
+  'crazydiamond': {
+    'product': 'crazydiamond',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['cherry', 'watermelon', 'star', 'seven', 'diamond'],
+    'frequency': [
+      {'symbols': [6, 12, 12, 2, 1]},
+      {'symbols': [8, 6, 3, 1, 2]},
+      {'symbols': [12, 3, 3, 3, 4]},
+    ],
+    'substitutes': {
+      'diamond': ['cherry', 'watermelon', 'star', 'seven'],
+    },
+    'special': 'DIAMOND_SPECIAL',
+    'payouts': {
+      'cherry|cherry': 2,
+      'watermelon|watermelon|watermelon': 4,
+      'star|star|star': 5,
+      'seven|seven': 10,
+      'seven|seven|seven': 20,
+      'diamond': 10,
+      'diamond|diamond': 25,
+      'diamond|diamond|diamond': 200,
     },
   },
 };
@@ -253,6 +258,33 @@ const tournaments = [
     },
   },
 ];
+
+/*
+// Games that may come back someday
+const graveyard = {
+  // Has 104.9% payout
+  'loose': {
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['heart', 'bell', 'horseshoe', 'seven', 'gold bar'],
+    'frequency': [
+      {'symbols': [5, 6, 10, 10, 1]},
+      {'symbols': [4, 12, 4, 6, 3]},
+      {'symbols': [20, 12, 8, 3, 2]},
+    ],
+    'payouts': {
+      'heart': 2,
+      'heart|heart': 4,
+      'bell|bell|bell': 5,
+      'horseshoe|horseshoe|horseshoe': 6,
+      'seven|seven|seven': 10,
+      'gold bar': 10,
+      'gold bar|gold bar': 25,
+      'gold bar|gold bar|gold bar': 1000,
+    },
+  },
+};
+*/
 
 module.exports = {
   STARTING_BANKROLL: 100,
@@ -461,9 +493,10 @@ module.exports = {
     const choices = [];
     const choiceText = [];
     let game;
-    let count = 0;
     let gameToAdd = attributes.currentGame;
     let offerTournament = false;
+    const availableProducts = [];
+    const forPurchase = [];
 
     if (attributes.temp.tournamentAvailable) {
       // If they already busted out, don't offer it
@@ -476,16 +509,32 @@ module.exports = {
       }
     }
 
+    if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
+      && attributes.paid[games[gameToAdd].product]
+      && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
+      // Pick a different game to add
+      attributes[attributes.currentGame] = undefined;
+      attributes.currentGame = 'standard';
+      gameToAdd = 'standard';
+    }
+
     for (game in games) {
-      if (game) {
-        if ((game != 'tournament') || offerTournament) {
-          count++;
-          // Put the last played game at the front of the list
-          if (game != gameToAdd) {
-           choices.push(game);
-           choiceText.push(module.exports.sayGame(event, game));
-         }
-       }
+      if (game && (game !== gameToAdd)) {
+        if (games[game].product) {
+          // We only offer this game if it is purchased
+          if (attributes.paid && attributes.paid[games[game].product]) {
+            if (attributes.paid[games[game].product].state === 'PURCHASED') {
+              choices.push(game);
+              choiceText.push(module.exports.sayGame(event, game));
+            } else {
+              availableProducts.push(game);
+              forPurchase.push(module.exports.sayGame(event, game));
+            }
+          }
+        } else if ((game != 'tournament') || offerTournament) {
+          choices.push(game);
+          choiceText.push(module.exports.sayGame(event, game));
+        }
       }
     }
 
@@ -494,15 +543,16 @@ module.exports = {
         choices.unshift(gameToAdd);
         choiceText.unshift(module.exports.sayGame(event, gameToAdd));
       } else {
-         choices.push(gameToAdd);
-         choiceText.push(module.exports.sayGame(event, gameToAdd));
+        choices.push(gameToAdd);
+        choiceText.push(module.exports.sayGame(event, gameToAdd));
       }
     }
 
-    speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
+    speech = res.strings.AVAILABLE_GAMES.replace('{0}', choices.length);
     speech += speechUtils.and(choiceText, {locale: event.request.locale});
     speech += '. ';
-    return {speech: speech, choices: choices};
+    return {speech: speech, choices: choices, forPurchase: forPurchase,
+      availableProducts: availableProducts};
   },
   readCoins: function(event, coins) {
     const res = require('./resources')(event.request.locale);
@@ -759,17 +809,17 @@ module.exports = {
       }
     }
   },
-  getPurchaseDirective: function(attributes, name, message) {
+  getPurchaseDirective: function(attributes, product, name, token, message) {
     return {
       'type': 'Connections.SendRequest',
       'name': name,
       'payload': {
         'InSkillProduct': {
-          'productId': attributes.paid.coinreset.productId,
+          'productId': attributes.paid[product].productId,
         },
         'upsellMessage': message,
       },
-      'token': name,
+      'token': ((token) ? token : product),
     };
   },
   getPurchasedProducts: function(handlerInput, callback) {

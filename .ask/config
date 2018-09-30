@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v6"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7"
               }
             }
           }
@@ -16,34 +16,34 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "32665ea64d8ee648163d1e4d2ea93410"
+          "eTag": "faf401e58e347340aa5436b717b3bd94"
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           },
           "en-GB": {
-            "eTag": "3b7eaee33159842118d61da4a6be961e"
+            "eTag": "d232d2000e137f855f7a3f3dbdc249b2"
           },
           "en-CA": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           },
           "en-US": {
-            "eTag": "922ce55ff541a831633d54891a66381f"
+            "eTag": "223131742e09721e22ba3e023ddd0c00"
           },
           "en-IN": {
-            "eTag": "0be4af1d7650e0b34dd2494bd5fa180e"
+            "eTag": "a7a9f6c4d3c7b9ce814047f97bd564ac"
           }
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v6",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v6",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
             "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "9acdf758-5aaf-4f22-bbef-4c8ad3d071fe"
+            "revisionId": "382ab315-2db1-4d28-8439-67267edeb114"
           }
         ]
       },
@@ -55,10 +55,10 @@
           "eTag": "0b236940f87f87341c57d35b48e6f5d7"
         },
         {
-          "deploy_status": "Remove",
-          "filePath": "isps\\subscription\\resetcoins.json",
-          "productId": "amzn1.adg.product.8d998cd5-d9c1-47e9-ad9b-094330535458",
-          "eTag": "f2b590d0e541a27786b0971a07b2c850"
+          "deploy_status": "Update",
+          "filePath": "isps\\entitlement\\crazydiamond.json",
+          "productId": "amzn1.adg.product.0f960bb3-f86c-4ff7-a2c0-06a14b558e91",
+          "eTag": "b2be4d43217776e8d1df9e3c3be3ab63"
         }
       ]
     }

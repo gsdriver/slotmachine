@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "type": "ENTITLEMENT",
+  "referenceName": "crazydiamond",
+  "publishingInformation": {
+    "locales": {
+      "en-US": {
+        "name": "Crazy Diamond Machine",
+        "summary": "Adds a crazy diamond machine to the list of games you can play",
+        "description": "This adds a crazy diamond machine featuring a wild diamond symbol to the list of games you can play",
+        "smallIconUri": "http://garrettvargas.com/img/crazydiamond108.png",
+        "largeIconUri": "http://garrettvargas.com/img/crazydiamond512.png",
+        "examplePhrases": [
+          "Alexa, buy crazy diamond machine",
+          "Alexa, give me crazy diamonds",
+          "Alexa, buy crazy diamonds"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "crazy diamond"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add Crazy Diamonds to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access Crazy Diamonds by saying select a new machine."
+        }
+      }
+    },
+    "distributionCountries": [
+      "US"
+    ],
+    "pricing": {
+      "amazon.com": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 0.99,
+          "currency": "USD"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "en-US": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      }
+    }
+  },
+  "testingInstructions": "After purchasing, Crazy Diamonds will show up in the list of games you can play when you say Select a new machine",
+  "purchasableState": "PURCHASABLE"
+}
