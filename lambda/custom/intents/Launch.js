@@ -66,7 +66,7 @@ module.exports = {
                   resolve(response);
                   return;
                 } else {
-                  speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH');
+                  speech += utils.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH');
                   attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                   attributes.bankroll += utils.REFRESH_BANKROLL;
                   attributes.busted = undefined;
@@ -109,10 +109,10 @@ module.exports = {
               // Read the available games then prompt for each one
               const availableGames = utils.readAvailableGames(event, attributes, true);
               if (availableGames.choices.indexOf('tournament') > -1) {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT');
+                speech += utils.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT');
                 attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
               } else {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
+                speech += utils.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
                 attributes.temp.speechParams.Greeting = greeting;
                 if (!buttons.supportButtons(handlerInput)) {
                   speech += availableGames.speech;

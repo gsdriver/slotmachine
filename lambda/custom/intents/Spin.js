@@ -227,7 +227,7 @@ module.exports = {
             return;
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
-            speech += res.pickRandomOption(event, attributes, 'SPIN_WINNER');
+            speech += utils.pickRandomOption(event, attributes, 'SPIN_WINNER');
             attributes.temp.speechParams.Match = utils.readPayout(event, rules, matchedPayout);
             attributes.temp.speechParams.AmountWon = utils.readCoins(event, bet * rules.payouts[matchedPayout]);
           }
@@ -237,9 +237,9 @@ module.exports = {
             speech += rules.lose;
           }
           if (attributes.temp.losingStreak > 5) {
-            speech += res.pickRandomOption(event, attributes, 'SPIN_BIG_LOSER');
+            speech += utils.pickRandomOption(event, attributes, 'SPIN_BIG_LOSER');
           } else {
-            speech += res.pickRandomOption(event, attributes, 'SPIN_LOSER');
+            speech += utils.pickRandomOption(event, attributes, 'SPIN_LOSER');
           }
           outcome = 'lose';
         }
@@ -258,7 +258,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = partialSpeech;
-  let reprompt = res.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
+  let reprompt = utils.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
   let snsPublication;
   let noSpeech;
 
@@ -410,7 +410,7 @@ function selectGame(handlerInput, callback) {
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
     utils.selectGame(handlerInput, 0).then(() => {
-      speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME');
+      speech = utils.pickRandomOption(event, attributes, 'SELECT_WELCOME');
       attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
 
       const game = attributes[attributes.currentGame];

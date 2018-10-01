@@ -15,6 +15,7 @@ const querystring = require('querystring');
 const https = require('https');
 const moment = require('moment-timezone');
 const leven = require('leven');
+const seedrandom = require('seedrandom');
 
 const games = {
   // Has 99.8% payout
@@ -309,6 +310,28 @@ module.exports = {
       }
     }
     return text;
+  },
+  pickRandomOption: function(event, attributes, key) {
+    const res = require('./resources')(event.request.locale);
+    const value = res.strings[key];
+    let result;
+
+    if (value) {
+      if (typeof value !== 'string') {
+        let seed = event.session.user.userId;
+        if (attributes.currentGame && attributes[attributes.currentGame]
+          && attributes[attributes.currentGame].timestamp) {
+          seed += attributes[attributes.currentGame].timestamp;
+        }
+
+        const choice = Math.floor(seedrandom(seed)() * Object.keys(value).length);
+        result = value[Object.keys(value)[choice]];
+      } else {
+        result = value;
+      }
+    }
+
+    return result;
   },
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
@@ -811,7 +834,7 @@ module.exports = {
       } else {
         // Just show the background image
         image = new Alexa.ImageHelper()
-          .withDescription(res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME'))
+          .withDescription(module.exports.pickRandomOption(event, attributes, 'LAUNCH_WELCOME'))
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
         response.addRenderTemplateDirective({

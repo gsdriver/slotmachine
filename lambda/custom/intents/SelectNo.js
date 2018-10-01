@@ -40,7 +40,7 @@ module.exports = {
 
       return new Promise((resolve, reject) => {
         utils.selectGame(handlerInput, 0).then(() => {
-          speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME');
+          speech = utils.pickRandomOption(event, attributes, 'SELECT_WELCOME');
           attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
 
           const game = attributes[attributes.currentGame];
