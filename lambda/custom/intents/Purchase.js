@@ -24,12 +24,16 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
+    let speech;
+    let reprompt;
 
     if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
       attributes.temp.purchasing = undefined;
+      speech = res.strings.PURCHASE_NO_PURCHASE;
+      reprompt = res.strings.PURCHASE_NO_PURCHASE;
       return handlerInput.responseBuilder
-        .speak(res.strings.PURCHASE_NO_PURCHASE)
-        .reprompt(res.strings.PURCHASE_NO_PURCHASE)
+        .speak(utils.ri(speech, attributes.temp.speechParams))
+        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
         .getResponse();
     } else {
       if (event.request.intent.slots && event.request.intent.slots.Product
@@ -43,13 +47,14 @@ module.exports = {
           .getResponse();
       } else {
         // Prompt them with a list of available products
-        const speech = res.strings.PURCHASE_PRODUCTS
-          .replace('{Products}', res.strings.PURCHASE_PRODUCT_LIST);
+        speech = res.strings.PURCHASE_PRODUCTS;
+        attributes.temp.speechParams.Products = res.strings.PURCHASE_PRODUCT_LIST;
 
         attributes.temp.purchasing = true;
+        reprompt = res.strings.PURCHASE_CONFIRM_REPROMPT;
         return handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(res.strings.PURCHASE_CONFIRM_REPROMPT)
+          .speak(utils.ri(speech, attributes.temp.speechParams))
+          .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
           .getResponse();
       }
     }

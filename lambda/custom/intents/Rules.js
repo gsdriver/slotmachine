@@ -46,8 +46,8 @@ module.exports = {
 
     attributes.temp.readingRules = true;
     return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
+      .speak(utils.ri(speech, attributes.temp.speechParams))
+      .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
       .withSimpleCard(res.strings.RULES_CARD_TITLE, utils.readPayoutTable(event, rules))
       .getResponse();
   },

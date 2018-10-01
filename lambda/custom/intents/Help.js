@@ -29,27 +29,30 @@ module.exports = {
     attributes.temp.readingRules = false;
     if (attributes.choices && (attributes.choices.length > 0)) {
       // If selecting a game, help string is different
-      const reprompt = res.strings.LAUNCH_REPROMPT
-        .replace('{Game}', utils.sayGame(event, attributes.choices[0]));
+      const reprompt = res.strings.LAUNCH_REPROMPT;
+      attributes.temp.repromptParams.Game = utils.sayGame(event, attributes.choices[0]);
+      Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
       speech += res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
       return handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt)
+        .speak(utils.ri(speech, attributes.temp.speechParams))
+        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
         .getResponse();
     } else {
       const reprompt = res.strings.HELP_REPROMPT;
 
       if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
-        speech += res.strings.HELP_ACTIVE_TOURNAMENT
-          .replace('{Time}', utils.getRemainingTournamentTime(event))
-          .replace('{Coins}', utils.TOURNAMENT_PAYOUT);
-        speech += res.strings.READ_BANKROLL.replace('{Amount}', utils.readCoins(event, bankroll));
+        speech += res.strings.HELP_ACTIVE_TOURNAMENT;
+        attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
+        attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+        speech += res.strings.READ_BANKROLL;
+        attributes.temp.speechParams.Amount = utils.readCoins(event, bankroll);
         speech += res.strings.HELP_COMMANDS;
       } else {
-        speech += res.strings.READ_BANKROLL.replace('{Amount}', utils.readCoins(event, bankroll));
+        speech += res.strings.READ_BANKROLL;
+        attributes.temp.speechParams.Amount = utils.readCoins(event, bankroll);
         speech += res.strings.HELP_COMMANDS;
       }
 
@@ -57,15 +60,15 @@ module.exports = {
         return new Promise((resolve, reject) => {
           utils.getLocalTournamentTime(event, (tournamentTime) => {
             if (tournamentTime) {
-              speech += res.strings.HELP_TOURNAMENT
-                .replace('{Time}', tournamentTime)
-                .replace('{Coins}', utils.TOURNAMENT_PAYOUT);
+              speech += res.strings.HELP_TOURNAMENT;
+              attributes.temp.speechParams.Time = tournamentTime;
+              attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
             }
             speech += reprompt;
 
             const response = handlerInput.responseBuilder
-              .speak(speech)
-              .reprompt(reprompt)
+              .speak(utils.ri(speech, attributes.temp.speechParams))
+              .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
               .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
               .getResponse();
             resolve(response);
@@ -74,8 +77,8 @@ module.exports = {
       } else {
         speech += reprompt;
         return handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(reprompt)
+          .speak(utils.ri(speech, attributes.temp.speechParams))
+          .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
           .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
           .getResponse();
       }

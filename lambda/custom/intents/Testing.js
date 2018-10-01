@@ -4,6 +4,8 @@
 
 'use strict';
 
+const utils = require('../utils');
+
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -55,8 +57,8 @@ module.exports = {
     }
 
     return handlerInput.responseBuilder
-      .speak(speech)
-      .reprompt(reprompt)
+      .speak(utils.ri(speech, attributes.temp.speechParams))
+      .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
       .getResponse();
   },
 };

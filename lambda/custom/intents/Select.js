@@ -44,20 +44,23 @@ module.exports = {
 
     if (upsellProduct) {
       attributes.prompts[upsellProduct] = now;
+      speech = res.strings.SELECT_UPSELL;
+      attributes.temp.speechParams.Game = utils.sayGame(event, upsellProduct);
       return handlerInput.responseBuilder
         .addDirective(utils.getPurchaseDirective(attributes, upsellProduct, 'Upsell',
-          'machine.' + upsellProduct + '.select',
-          res.strings.SELECT_UPSELL.replace('{Game}', utils.sayGame(event, upsellProduct))))
+          'machine.' + upsellProduct + '.select', utils.ri(speech, attributes.temp.speechParams)))
         .withShouldEndSession(true)
         .getResponse();
     } else {
       // Ask for the first one
-      const reprompt = res.strings.LAUNCH_REPROMPT
-          .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
+      const reprompt = res.strings.LAUNCH_REPROMPT;
+      attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
       speech += reprompt;
+      Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+
       return handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt)
+        .speak(utils.ri(speech, attributes.temp.speechParams))
+        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
         .getResponse();
     }
   },

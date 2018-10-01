@@ -39,9 +39,11 @@ module.exports = {
         .withShouldEndSession(true)
         .getResponse();
     } else {
+      const speech = res.strings.REFUND_SAY_PRODUCT;
+      const reprompt = res.strings.REFUND_SAY_PRODUCT;
       return handlerInput.responseBuilder
-        .speak(res.strings.REFUND_SAY_PRODUCT)
-        .reprompt(res.strings.REFUND_SAY_PRODUCT)
+        .speak(utils.ri(speech, attributes.temp.speechParams))
+        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
         .getResponse();
     }
   },

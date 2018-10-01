@@ -4,6 +4,8 @@
 
 'use strict';
 
+const utils = require('../utils');
+
 module.exports = {
   canHandle: function(handlerInput) {
     return true;
@@ -14,9 +16,11 @@ module.exports = {
 
     // Fail silently if this was an unhandled button event
     if (event.request.type !== 'GameEngine.InputHandlerEvent') {
+      const speech = res.strings.UNKNOWN_INTENT;
+      const reprompt = res.strings.UNKNOWN_INTENT_REPROMPT;
       return handlerInput.responseBuilder
-        .speak(res.strings.UNKNOWN_INTENT)
-        .reprompt(res.strings.UNKNOWN_INTENT_REPROMPT)
+        .speak(utils.ri(speech, attributes.temp.speechParams))
+        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
         .getResponse();
     }
   },

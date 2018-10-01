@@ -22,6 +22,8 @@ module.exports = {
       utils.getGreeting(event, (greeting) => {
         utils.getPurchasedProducts(handlerInput, (err, result) => {
           let speech = '';
+          let reprompt;
+
           if (attributes.tournamentResult) {
             speech += attributes.tournamentResult;
             attributes.tournamentResult = undefined;
@@ -30,7 +32,8 @@ module.exports = {
           // First off - are they out of money?
           if (attributes.busted) {
             if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
-              speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{Coins}', utils.STARTING_BANKROLL);
+              speech += res.strings.SUBSCRIPTION_PAID_REPLENISH;
+              attributes.temp.speechParams.Coins = utils.STARTING_BANKROLL;
               attributes.bankroll += utils.STARTING_BANKROLL;
               attributes.busted = undefined;
               finishResponse();
@@ -46,13 +49,16 @@ module.exports = {
                 if (!nextDay) {
                   // Here's the place to do an upsell if we can!
                   if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
+                    speech += res.strings.LAUNCH_BUSTED_UPSELL;
+                    attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                     handlerInput.responseBuilder
                       .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.launch',
-                        speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{Coins}', utils.REFRESH_BANKROLL)));
+                        utils.ri(speech, attributes.temp.speechParams)));
                   } else {
-                    speech += res.strings.LAUNCH_BUSTED.replace('{Coins}', utils.REFRESH_BANKROLL);
+                    speech += res.strings.LAUNCH_BUSTED;
+                    attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                     handlerInput.responseBuilder
-                      .speak(speech);
+                      .speak(utils.ri(speech, attributes.temp.speechParams))
                   }
                   response = handlerInput.responseBuilder
                     .withShouldEndSession(true)
@@ -60,8 +66,8 @@ module.exports = {
                   resolve(response);
                   return;
                 } else {
-                  speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH')
-                      .replace('{Coins}', utils.REFRESH_BANKROLL);
+                  speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH');
+                  attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                   attributes.bankroll += utils.REFRESH_BANKROLL;
                   attributes.busted = undefined;
                   finishResponse();
@@ -82,30 +88,32 @@ module.exports = {
             if (attributes.newUser) {
               speech = ((buttons.supportButtons(handlerInput))
                 ? res.strings.LAUNCH_NEWUSER_BUTTON
-                : res.strings.LAUNCH_NEWUSER)
-                .replace('{Greeting}', greeting);
+                : res.strings.LAUNCH_NEWUSER);
+              attributes.temp.speechParams.Greeting = greeting;
+              reprompt = res.strings.LAUNCH_NEWUSER_REPROMPT;
               response = handlerInput.responseBuilder
-                .speak(speech)
-                .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT)
+                .speak(utils.ri(speech, attributes.temp.speechParams))
+                .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
                 .getResponse();
             } else if (attributes.temp.resumeGame) {
               speech = (buttons.supportButtons(handlerInput))
                 ? res.strings.LAUNCH_RESUME_GAME_BUTTON
                 : res.strings.LAUNCH_RESUME_GAME;
               attributes.temp.resumeGame = undefined;
+              reprompt = res.strings.LAUNCH_RESUME_GAME_REPROMPT;
               response = handlerInput.responseBuilder
-                .speak(res.strings.LAUNCH_RESUME_GAME)
-                .reprompt(res.strings.LAUNCH_RESUME_GAME_REPROMPT)
+                .speak(utils.ri(speech, attributes.temp.speechParams))
+                .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
                 .getResponse();
             } else {
               // Read the available games then prompt for each one
               const availableGames = utils.readAvailableGames(event, attributes, true);
               if (availableGames.choices.indexOf('tournament') > -1) {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT')
-                  .replace('{Time}', utils.getRemainingTournamentTime(event));
+                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT');
+                attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
               } else {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME')
-                  .replace('{Greeting}', greeting);
+                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
+                attributes.temp.speechParams.Greeting = greeting;
                 if (!buttons.supportButtons(handlerInput)) {
                   speech += availableGames.speech;
                 }
@@ -115,19 +123,20 @@ module.exports = {
 
               // Ask for the first one
               speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
-              const reprompt = res.strings.LAUNCH_REPROMPT
-                .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
+              reprompt = res.strings.LAUNCH_REPROMPT;
+              attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
 
               if (buttons.supportButtons(handlerInput)) {
-                speech += res.strings.LAUNCH_WELCOME_BUTTON
-                  .replace('{Game}', utils.sayGame(event, availableGames.choices[0]))
-                  .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
+                speech += res.strings.LAUNCH_WELCOME_BUTTON;
+                attributes.temp.speechParams.Game1 = utils.sayGame(event, availableGames.choices[0]);
+                attributes.temp.speechParams.Game2 = utils.sayGame(event, availableGames.choices[0]);
               } else {
                 speech += reprompt;
+                Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
               }
               response = handlerInput.responseBuilder
-                .speak(speech)
-                .reprompt(reprompt)
+                .speak(utils.ri(speech, attributes.temp.speechParams))
+                .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
                 .getResponse();
             }
             resolve(response);

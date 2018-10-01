@@ -38,33 +38,34 @@ module.exports = {
               const format = (game.bankroll === undefined)
                 ? res.strings.LEADER_RANKING
                 : res.strings.LEADER_GAME_RANKING;
-              speech += format
-                 .replace('{Coins}', highScores.score)
-                 .replace('{Rank}', highScores.rank)
-                 .replace('{Players}', highScores.count)
-                 .replace('{Game}', utils.sayGame(event, attributes.currentGame));
+              speech += format;
+              attributes.temp.speechParams.Coins = highScores.score;
+              attributes.temp.speechParams.Rank = highScores.rank;
+              attributes.temp.speechParams.Players = highScores.count;
+              attributes.temp.speechParams.CurrentGame = utils.sayGame(event, attributes.currentGame);
             }
 
             // And what is the leader board?
             const topScores = highScores.top.map((x) => res.strings.LEADER_FORMAT.replace('{Coins}', x));
-            speech += res.strings.LEADER_TOP_SCORES
-                .replace('{NumberOfLeaders}', topScores.length)
-                .replace('{Bankrolls}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
+            speech += res.strings.LEADER_TOP_SCORES;
+            attributes.temp.speechParams.NumberOfLeaders = topScores.length;
+            attributes.temp.speechParams.Bankrolls = speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'});
           }
         }
 
         if (attributes.choices && (attributes.choices.length > 0)) {
           // Ask for the first one
-          reprompt = res.strings.LAUNCH_REPROMPT
-              .replace('{Game}', utils.sayGame(event, attributes.choices[0]));
+          reprompt = res.strings.LAUNCH_REPROMPT;
+          attributes.temp.repromptParams.Game = utils.sayGame(event, attributes.choices[0]);
         } else {
           reprompt = res.strings.HIGHSCORE_REPROMPT;
         }
         speech += reprompt;
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
         const response = handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(reprompt)
+          .speak(utils.ri(speech, attributes.temp.speechParams))
+          .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
           .getResponse();
         resolve(response);
       });

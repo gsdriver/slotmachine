@@ -4,6 +4,8 @@
 
 'use strict';
 
+const utils = require('../utils');
+
 module.exports = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -21,9 +23,11 @@ module.exports = {
     const res = require('../resources')(event.request.locale);
 
     attributes.temp.readingRules = false;
+    const speech = res.strings.ERROR_REPROMPT;
+    const reprompt = res.strings.ERROR_REPROMPT;
     return handlerInput.responseBuilder
-      .speak(res.strings.ERROR_REPROMPT)
-      .reprompt(res.strings.ERROR_REPROMPT)
+      .speak(utils.ri(speech, attributes.temp.speechParams))
+      .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
       .getResponse();
   },
 };

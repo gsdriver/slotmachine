@@ -49,6 +49,8 @@ const requestInterceptor = {
               attributes.prompts = {};
             }
             attributes.temp = {};
+            attributes.temp.speechParams = {};
+            attributes.temp.repromptParams = {};
             utils.checkForTournament(attributes);
             utils.getTournamentComplete(event, attributes, (result) => {
               if (!attributes.currentGame) {
@@ -126,6 +128,8 @@ const requestInterceptor = {
           });
       } else {
         const attributes = handlerInput.attributesManager.getSessionAttributes();
+        attributes.temp.speechParams = {};
+        attributes.temp.repromptParams = {};
         utils.checkForTournament(attributes);
         resolve();
       }

@@ -291,6 +291,25 @@ module.exports = {
   STARTING_BANKROLL: 100,
   REFRESH_BANKROLL: 100,
   TOURNAMENT_PAYOUT: 50,
+  ri: function(key, params) {
+    let param;
+    let text;
+
+    if (typeof key !== 'string') {
+      // Pick one of the options at random
+      const choice = Math.floor(Math.random() * Object.keys(params).length);
+      text = key[Object.keys(params)[choice]];
+    } else {
+      text = key;
+    }
+
+    for (param in params) {
+      if (param) {
+        text = text.replace('{' + param + '}', params[param]);
+      }
+    }
+    return text;
+  },
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
@@ -383,7 +402,9 @@ module.exports = {
 
     return undefined;
   },
-  getRemainingTournamentTime: function(event) {
+  getRemainingTournamentTime: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('./resources')(event.request.locale);
     let text = '';
     const times = getTournamentTimes();

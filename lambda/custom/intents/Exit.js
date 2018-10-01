@@ -5,6 +5,7 @@
 'use strict';
 
 const ads = require('../ads');
+const utils = require('../utils');
 
 module.exports = {
   canHandle(handlerInput) {
@@ -33,8 +34,10 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
+        const speech = res.strings.EXIT_GAME;
+        attributes.temp.speechParams.Ad = adText;
         const response = handlerInput.responseBuilder
-          .speak(res.strings.EXIT_GAME.replace('{Ad}', adText))
+          .speak(utils.ri(speech, attributes.temp.speechParams))
           .withShouldEndSession(true)
           .getResponse();
         resolve(response);

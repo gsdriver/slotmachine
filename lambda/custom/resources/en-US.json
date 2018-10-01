@@ -15,7 +15,7 @@
     "v2": "It's tournament time on Slot machine for the next {Time}. ",
     "v3": "We've got a tournament for the next {Time}! "
   },
-  "LAUNCH_WELCOME_BUTTON": "If you have an Echo Button, press it to play {Game} <break time=\"200ms\"/> You can also say spin to play {Game} or no to pick a different machine.",
+  "LAUNCH_WELCOME_BUTTON": "If you have an Echo Button, press it to play {Game1} <break time=\"200ms\"/> You can also say spin to play {Game2} or no to pick a different machine.",
   "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Welcome to Slot Machine. Say spin to pull the handle.",
   "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Welcome to Slot Machine. If you have an Echo Button press it or say spin to pull the handle.",
   "LAUNCH_NEWUSER_REPROMPT": "Say spin to pull the handle.",
@@ -56,14 +56,14 @@
   "RULES_REPROMPT": "Say bet to insert coins or spin to pull the handle.",
   "RULES_SELECT_REPROMPT": "Say yes to play this game or no to hear the next option.",
   "RULES_CARD_TITLE": "Payout Table",
-  "SPIN_YOU_BET": "You bet {Amount}. ",
+  "SPIN_YOU_BET": "You bet {AmountBet}. ",
   "SPIN_RESULT": " {Result}. ",
-  "SPIN_PROGRESSIVE_WINNER": "You hit the progressive jackpot and won {Amount}! ",
+  "SPIN_PROGRESSIVE_WINNER": "You hit the progressive jackpot and won {AmountWon}! ",
   "SPIN_WINNER": {
-    "v1": "You matched {Match} and won {Amount}. ",
-    "v2": "you won {Amount}. ",
-    "v3": "that gives you {Amount}. ",
-    "v4": "<break time=\"200ms\"/> winner winner chicken dinner! You're getting {Amount}. "
+    "v1": "You matched {Match} and won {AmountWon}. ",
+    "v2": "you won {AmountWon}. ",
+    "v3": "that gives you {AmountWon}. ",
+    "v4": "<break time=\"200ms\"/> winner winner chicken dinner! You're getting {AmountWon}. "
   },
   "SPIN_LOSER": {
     "v1": "Sorry, you lost. ",
@@ -99,7 +99,7 @@
   "PAYOUT_PAYS": "pays {Coins} coins.",
   "PAYOUT_PROGRESSIVE": "pays the progessive jackpot.",
   "LEADER_RANKING": "Your peak bankroll of {Coins} coins ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. ",
-  "LEADER_GAME_RANKING": "Your current bankroll of {Coins} coins on {Game} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. ",
+  "LEADER_GAME_RANKING": "Your current bankroll of {Coins} coins on {CurrentGame} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. ",
   "LEADER_NO_SCORES": "Sorry, I'm unable to read the current leader board. ",
   "LEADER_FORMAT": "{Coins} coins",
   "LEADER_TOP_SCORES": "The top {NumberOfLeaders} bankrolls are {Bankrolls}. ",
