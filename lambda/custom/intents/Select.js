@@ -46,13 +46,14 @@ module.exports = {
       attributes.prompts[upsellProduct] = now;
       return handlerInput.responseBuilder
         .addDirective(utils.getPurchaseDirective(attributes, upsellProduct, 'Upsell',
-          'machine.' + upsellProduct + '.select', res.strings.SELECT_UPSELL))
+          'machine.' + upsellProduct + '.select',
+          res.strings.SELECT_UPSELL.replace('{Game}', utils.sayGame(event, upsellProduct))))
         .withShouldEndSession(true)
         .getResponse();
     } else {
       // Ask for the first one
       const reprompt = res.strings.LAUNCH_REPROMPT
-          .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
+          .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
       speech += reprompt;
       return handlerInput.responseBuilder
         .speak(speech)

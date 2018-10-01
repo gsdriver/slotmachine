@@ -34,7 +34,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
         const response = handlerInput.responseBuilder
-          .speak(res.strings.EXIT_GAME.replace('{0}', adText))
+          .speak(res.strings.EXIT_GAME.replace('{Ad}', adText))
           .withShouldEndSession(true)
           .getResponse();
         resolve(response);

@@ -39,24 +39,24 @@ module.exports = {
                 ? res.strings.LEADER_RANKING
                 : res.strings.LEADER_GAME_RANKING;
               speech += format
-                 .replace('{0}', highScores.score)
-                 .replace('{1}', highScores.rank)
-                 .replace('{2}', highScores.count)
-                 .replace('{3}', utils.sayGame(event, attributes.currentGame));
+                 .replace('{Coins}', highScores.score)
+                 .replace('{Rank}', highScores.rank)
+                 .replace('{Players}', highScores.count)
+                 .replace('{Game}', utils.sayGame(event, attributes.currentGame));
             }
 
             // And what is the leader board?
-            const topScores = highScores.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
+            const topScores = highScores.top.map((x) => res.strings.LEADER_FORMAT.replace('{Coins}', x));
             speech += res.strings.LEADER_TOP_SCORES
-                .replace('{0}', topScores.length)
-                .replace('{1}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
+                .replace('{NumberOfLeaders}', topScores.length)
+                .replace('{Bankrolls}', speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'}));
           }
         }
 
         if (attributes.choices && (attributes.choices.length > 0)) {
           // Ask for the first one
           reprompt = res.strings.LAUNCH_REPROMPT
-              .replace('{0}', utils.sayGame(event, attributes.choices[0]));
+              .replace('{Game}', utils.sayGame(event, attributes.choices[0]));
         } else {
           reprompt = res.strings.HIGHSCORE_REPROMPT;
         }

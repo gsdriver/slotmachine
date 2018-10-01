@@ -5,7 +5,6 @@
 'use strict';
 
 const utils = require('../utils');
-const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -36,7 +35,7 @@ module.exports = {
       if (event.request.intent.slots && event.request.intent.slots.Product
         && event.request.intent.slots.Product.value) {
         // They specified a product so let's go with that one
-        const product = res.mapProduct(event.request.intent.slots.Product.value);
+        const product = utils.mapProduct(event.request.intent.slots.Product.value);
         const token = (product === 'coinreset') ? 'subscribe.coinreset.refund' : ('machine.' + product + '.refund');
         return handlerInput.responseBuilder
           .addDirective(utils.getPurchaseDirective(attributes, product, 'Buy', token))
@@ -45,8 +44,7 @@ module.exports = {
       } else {
         // Prompt them with a list of available products
         const speech = res.strings.PURCHASE_PRODUCTS
-          .replace('{0}', speechUtils.and(JSON.parse(res.strings.PURCHASE_PRODUCT_LIST),
-            {locale: event.request.locale}));
+          .replace('{Products}', res.strings.PURCHASE_PRODUCT_LIST);
 
         attributes.temp.purchasing = true;
         return handlerInput.responseBuilder

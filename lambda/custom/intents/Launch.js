@@ -30,7 +30,7 @@ module.exports = {
           // First off - are they out of money?
           if (attributes.busted) {
             if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
-              speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
+              speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{Coins}', utils.STARTING_BANKROLL);
               attributes.bankroll += utils.STARTING_BANKROLL;
               attributes.busted = undefined;
               finishResponse();
@@ -48,9 +48,9 @@ module.exports = {
                   if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
                     handlerInput.responseBuilder
                       .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.launch',
-                        speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
+                        speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{Coins}', utils.REFRESH_BANKROLL)));
                   } else {
-                    speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+                    speech += res.strings.LAUNCH_BUSTED.replace('{Coins}', utils.REFRESH_BANKROLL);
                     handlerInput.responseBuilder
                       .speak(speech);
                   }
@@ -61,7 +61,7 @@ module.exports = {
                   return;
                 } else {
                   speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH')
-                      .replace('{0}', utils.REFRESH_BANKROLL);
+                      .replace('{Coins}', utils.REFRESH_BANKROLL);
                   attributes.bankroll += utils.REFRESH_BANKROLL;
                   attributes.busted = undefined;
                   finishResponse();
@@ -83,7 +83,7 @@ module.exports = {
               speech = ((buttons.supportButtons(handlerInput))
                 ? res.strings.LAUNCH_NEWUSER_BUTTON
                 : res.strings.LAUNCH_NEWUSER)
-                .replace('{0}', greeting);
+                .replace('{Greeting}', greeting);
               response = handlerInput.responseBuilder
                 .speak(speech)
                 .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT)
@@ -102,10 +102,10 @@ module.exports = {
               const availableGames = utils.readAvailableGames(event, attributes, true);
               if (availableGames.choices.indexOf('tournament') > -1) {
                 speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT')
-                  .replace('{0}', utils.getRemainingTournamentTime(event));
+                  .replace('{Time}', utils.getRemainingTournamentTime(event));
               } else {
                 speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME')
-                  .replace('{0}', greeting);
+                  .replace('{Greeting}', greeting);
                 if (!buttons.supportButtons(handlerInput)) {
                   speech += availableGames.speech;
                 }
@@ -116,12 +116,12 @@ module.exports = {
               // Ask for the first one
               speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
               const reprompt = res.strings.LAUNCH_REPROMPT
-                .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
+                .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
 
               if (buttons.supportButtons(handlerInput)) {
                 speech += res.strings.LAUNCH_WELCOME_BUTTON
-                  .replace('{0}', utils.sayGame(event, availableGames.choices[0]))
-                  .replace('{1}', utils.sayGame(event, availableGames.choices[0]));
+                  .replace('{Game}', utils.sayGame(event, availableGames.choices[0]))
+                  .replace('{Game}', utils.sayGame(event, availableGames.choices[0]));
               } else {
                 speech += reprompt;
               }

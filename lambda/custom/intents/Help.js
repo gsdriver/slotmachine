@@ -30,7 +30,7 @@ module.exports = {
     if (attributes.choices && (attributes.choices.length > 0)) {
       // If selecting a game, help string is different
       const reprompt = res.strings.LAUNCH_REPROMPT
-        .replace('{0}', utils.sayGame(event, attributes.choices[0]));
+        .replace('{Game}', utils.sayGame(event, attributes.choices[0]));
 
       speech += res.strings.HELP_SELECT_TEXT;
       speech += reprompt;
@@ -43,13 +43,13 @@ module.exports = {
 
       if (attributes.currentGame == 'tournament') {
         // Give some details about the tournament
-        speech += res.strings.HELP_TOURNAMENT
-          .replace('{0}', utils.getRemainingTournamentTime(event))
-          .replace('{1}', utils.TOURNAMENT_PAYOUT);
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
+        speech += res.strings.HELP_ACTIVE_TOURNAMENT
+          .replace('{Time}', utils.getRemainingTournamentTime(event))
+          .replace('{Coins}', utils.TOURNAMENT_PAYOUT);
+        speech += res.strings.READ_BANKROLL.replace('{Amount}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       } else {
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
+        speech += res.strings.READ_BANKROLL.replace('{Amount}', utils.readCoins(event, bankroll));
         speech += res.strings.HELP_COMMANDS;
       }
 
@@ -58,8 +58,8 @@ module.exports = {
           utils.getLocalTournamentTime(event, (tournamentTime) => {
             if (tournamentTime) {
               speech += res.strings.HELP_TOURNAMENT
-                .replace('{0}', tournamentTime)
-                .replace('{1}', utils.TOURNAMENT_PAYOUT);
+                .replace('{Time}', tournamentTime)
+                .replace('{Coins}', utils.TOURNAMENT_PAYOUT);
             }
             speech += reprompt;
 

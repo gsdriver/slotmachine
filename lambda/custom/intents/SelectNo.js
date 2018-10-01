@@ -40,22 +40,22 @@ module.exports = {
       return new Promise((resolve, reject) => {
         utils.selectGame(handlerInput, 0).then(() => {
           speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
-            .replace('{0}', utils.sayGame(event, attributes.currentGame));
+            .replace('{Game}', utils.sayGame(event, attributes.currentGame));
 
           const game = attributes[attributes.currentGame];
           const rules = utils.getGame(attributes.currentGame);
-          const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
+          const reprompt = res.strings.SELECT_REPROMPT.replace('{Coins}', rules.maxCoins);
 
           if (rules.welcome) {
             speech += res.strings[rules.welcome];
           }
 
-          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
+          speech += res.strings.READ_BANKROLL.replace('{Amount}', utils.readCoins(event, utils.getBankroll(attributes)));
           if (game.progressiveJackpot) {
             // For progressive, just tell them the jackpot and to bet max coins
             speech += res.strings.PROGRESSIVE_JACKPOT
-                .replace('{0}', game.progressiveJackpot)
-                .replace('{1}', rules.maxCoins);
+                .replace('{Jackpot}', game.progressiveJackpot)
+                .replace('{Coins}', rules.maxCoins);
           } else {
             speech += reprompt;
           }
@@ -67,7 +67,7 @@ module.exports = {
         });
       });
     } else {
-      const speech = res.strings.LAUNCH_REPROMPT.replace('{0}', utils.sayGame(event, attributes.choices[0]));
+      const speech = res.strings.LAUNCH_REPROMPT.replace('{Game}', utils.sayGame(event, attributes.choices[0]));
 
       return handlerInput.responseBuilder
         .speak(speech)

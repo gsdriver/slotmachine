@@ -14,6 +14,7 @@ const request = require('request');
 const querystring = require('querystring');
 const https = require('https');
 const moment = require('moment-timezone');
+const leven = require('leven');
 
 const games = {
   // Has 99.8% payout
@@ -331,9 +332,7 @@ module.exports = {
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
 
         const res = require('./resources')(event.request.locale);
-        const time = moment.tz(times.start.getTime(), tz).toString();
-        let result = res.speakTime(time);
-
+        let result = moment.tz(times.start.getTime(), tz).format('dddd h a');
         if (useDefaultTimezone) {
           result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
         }
@@ -400,15 +399,15 @@ module.exports = {
           minutesLeft++;
         }
         text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
-          .replace('{0}', minutesLeft);
+          .replace('{Minutes}', minutesLeft);
       } else {
         if (minutesLeft) {
           text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
-            .replace('{0}', minutesLeft)
-            .replace('{1}', secondsLeft);
+            .replace('{Minutes}', minutesLeft)
+            .replace('{Seconds}', secondsLeft);
         } else {
           text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
-            .replace('{0}', secondsLeft);
+            .replace('{Seconds}', secondsLeft);
         }
       }
     }
@@ -454,10 +453,12 @@ module.exports = {
               }
               attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
               speech = res.strings.TOURNAMENT_WINNER
-                  .replace('{0}', game.bankroll)
-                  .replace('{1}', module.exports.TOURNAMENT_PAYOUT);
+                  .replace('{TournamentResult}', game.bankroll)
+                  .replace('{Coins}', module.exports.TOURNAMENT_PAYOUT);
             } else {
-              speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
+              speech = res.strings.TOURNAMENT_LOSER
+                  .replace('{TournamentWinner}', result.highScore)
+                  .replace('{TournamentResult}', game.bankroll);
             }
 
             if (attributes.currentGame == 'tournament') {
@@ -548,7 +549,7 @@ module.exports = {
       }
     }
 
-    speech = res.strings.AVAILABLE_GAMES.replace('{0}', choices.length);
+    speech = res.strings.AVAILABLE_GAMES.replace('{Number}', choices.length);
     speech += speechUtils.and(choiceText, {locale: event.request.locale});
     speech += '. ';
     return {speech: speech, choices: choices, forPurchase: forPurchase,
@@ -562,15 +563,8 @@ module.exports = {
     return readPayoutInternal(event, game, payout, ' <break time=\"200ms\"/> ');
   },
   readPayoutTable: function(event, game) {
-    const res = require('./resources')(event.request.locale);
     let text = '';
     let payout;
-    let i;
-
-    for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
-      text += res.strings.WILD_SYMBOL.replace('{0}', module.exports.saySymbol(event, game.wild[i]));
-      text += '\n';
-    }
 
     for (payout in game.payouts) {
       if (payout) {
@@ -590,7 +584,7 @@ module.exports = {
     if (game.progressive && (game.progressive.match === payout)) {
       text = res.strings.PAYOUT_PROGRESSIVE;
     } else {
-      text = res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
+      text = res.strings.PAYOUT_PAYS.replace('{Coins}', game.payouts[payout]);
     }
 
     return text;
@@ -724,13 +718,11 @@ module.exports = {
   },
   sayGame: function(event, game) {
     const res = require('./resources')(event.request.locale);
-    const gameMap = JSON.parse(res.strings.GAME_LIST);
-    return (gameMap[game]) ? gameMap[game] : game;
+    return res.strings['GAME_NAME_' + game.toUpperCase()];
   },
   saySymbol: function(event, symbol) {
     const res = require('./resources')(event.request.locale);
-    const symbolMap = JSON.parse(res.strings.SYMBOL_LIST);
-    return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
+    return res.strings['SYMBOL_NAME_' + symbol.toUpperCase()];
   },
   drawTable: function(handlerInput) {
     const response = handlerInput.responseBuilder;
@@ -783,7 +775,7 @@ module.exports = {
         });
 
         const title = (game.result.payout)
-          ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
+          ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{Coins}', game.result.payout)
           : res.strings.DISPLAY_PAYOUT_LOSER;
 
         image = new Alexa.ImageHelper()
@@ -872,6 +864,15 @@ module.exports = {
       console.log('Error calling inSkillProducts API: ' + err.message);
       callback(err);
     });
+  },
+  mapProduct: function(product) {
+    // Note these come from the language model
+    // If product names get localized we'll deal with this then
+    const productList = {'RESET BANKROLL': 'coinreset', 'RESET COIN': 'reset coin',
+      'CRAZY DIAMONDS': 'crazydiamond', 'DIAMONDS': 'crazydiamond',
+      'CRAZY DIAMONDS MACHINE': 'crazydiamond'};
+
+    return getBestMatch(productList, product.toUpperCase());
   },
 };
 
@@ -994,4 +995,28 @@ function getUserTimezone(event, callback) {
     // No API token - no user timezone
     callback();
   }
+}
+
+function getBestMatch(mapping, value) {
+  const valueLen = value.length;
+  let map;
+  let ratio;
+  let bestMapping;
+  let bestRatio = 0;
+
+  for (map in mapping) {
+    if (map) {
+      const lensum = map.length + valueLen;
+      ratio = Math.round(100 * ((lensum - leven(value, map)) / lensum));
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestMapping = map;
+      }
+    }
+  }
+
+  if (bestRatio < 90) {
+    console.log('Near match: ' + bestMapping + ', ' + bestRatio);
+  }
+  return mapping[bestMapping];
 }
