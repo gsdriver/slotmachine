@@ -11,6 +11,7 @@ const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const SNS = new AWS.SNS();
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -63,8 +64,8 @@ module.exports = {
         if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
           attributes.currentGame = 'basic';
           speech = res.strings.TOURNAMENT_ENDED;
-          const response = handlerInput.responseBuilder
-            .speak(utils.ri(speech, attributes.temp.speechParams))
+          const response = handlerInput.jrb
+            .speak(ri('TOURNAMENT_ENDED'))
             .withShouldEndSession(true)
             .getResponse();
           resolve(response);
