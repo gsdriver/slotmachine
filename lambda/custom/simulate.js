@@ -1,4 +1,4 @@
-var utils = require('../lambda/custom/utils');
+const utils = require('../lambda/custom/utils');
 
 // Get a game and do 1000 spins to simulate what happens
 let rules;
@@ -88,7 +88,6 @@ function runSimulation() {
   let matchedPayout;
   const results = {};
   let result;
-  let progressive;
   let spinsThisProgressive = 0;
 
   for (i = 0; i < SPINCOUNT; i++) {
@@ -101,7 +100,8 @@ function runSimulation() {
       // Is this the progressive?
       if (rules.progressive && (rules.progressive.match === matchedPayout)) {
         // Yep - calculate as starting plus losers times the rate
-        payoutAmount = Math.floor(rules.progressive.start + rules.progressive.rate * spinsThisProgressive);
+        payoutAmount = Math.floor(rules.progressive.start
+          + rules.progressive.rate * spinsThisProgressive);
         console.log('Progressive win ' + payoutAmount);
         spinsThisProgressive = 0;
       } else {
