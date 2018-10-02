@@ -42,7 +42,8 @@ module.exports = {
               attributes.temp.speechParams.Coins = highScores.score;
               attributes.temp.speechParams.Rank = highScores.rank;
               attributes.temp.speechParams.Players = highScores.count;
-              attributes.temp.speechParams.CurrentGame = utils.sayGame(event, attributes.currentGame);
+              attributes.temp.speechParams.CurrentGame =
+                utils.sayGame(event, attributes.currentGame);
             }
 
             // And what is the leader board?

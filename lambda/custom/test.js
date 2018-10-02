@@ -1,4 +1,4 @@
-var mainApp = require('../lambda/custom/index');
+var mainApp = require('./index');
 
 const attributeFile = 'attributes.txt';
 

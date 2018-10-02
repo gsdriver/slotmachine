@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -24,16 +25,12 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../resources')(event.request.locale);
-    let speech;
-    let reprompt;
 
     if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
       attributes.temp.purchasing = undefined;
-      speech = res.strings.PURCHASE_NO_PURCHASE;
-      reprompt = res.strings.PURCHASE_NO_PURCHASE;
-      return handlerInput.responseBuilder
-        .speak(utils.ri(speech, attributes.temp.speechParams))
-        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
+      return handlerInput.jrb
+        .speak(ri('PURCHASE_NO_PURCHASE'))
+        .reprompt(ri('PURCHASE_NO_PURCHASE'))
         .getResponse();
     } else {
       if (event.request.intent.slots && event.request.intent.slots.Product
@@ -47,14 +44,11 @@ module.exports = {
           .getResponse();
       } else {
         // Prompt them with a list of available products
-        speech = res.strings.PURCHASE_PRODUCTS;
         attributes.temp.speechParams.Products = res.strings.PURCHASE_PRODUCT_LIST;
-
         attributes.temp.purchasing = true;
-        reprompt = res.strings.PURCHASE_CONFIRM_REPROMPT;
-        return handlerInput.responseBuilder
-          .speak(utils.ri(speech, attributes.temp.speechParams))
-          .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
+        return handlerInput.jrb
+          .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
+          .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
           .getResponse();
       }
     }

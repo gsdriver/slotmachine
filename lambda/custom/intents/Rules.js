@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -15,40 +16,39 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
-    let speech = '';
+    let speech;
     let payout;
     let reprompt;
     let rules;
 
     if (attributes.choices && (attributes.choices.length > 0)) {
-      reprompt = res.strings.RULES_SELECT_REPROMPT;
+      reprompt = 'RULES_SELECT_REPROMPT';
+      speech = 'RULES_SELECT_RULES';
       rules = utils.getGame(attributes.choices[0]);
     } else {
-      reprompt = res.strings.RULES_REPROMPT;
+      reprompt = 'RULES_REPROMPT';
+      speech = 'RULES_RULES';
       rules = utils.getGame(attributes.currentGame);
     }
 
     // Wild symbols
-    if (rules.special) {
-      speech += res.strings[rules.special];
-    }
+    attributes.temp.speechParams.SpecialText = (rules.special)
+      ? utils.getResource(handlerInput, rules.special) : '';
 
+    attributes.temp.speechParams.PayoutTable = '';
     for (payout in rules.payouts) {
       if (payout && (rules.payouts[payout] >= 1)) {
-        speech += utils.readPayout(event, rules, payout);
-        speech += utils.readPayoutAmount(event, rules, payout);
-        speech += ' <break time=\"200ms\"/>';
+        attributes.temp.speechParams.PayoutTable += utils.readPayout(event, rules, payout);
+        attributes.temp.speechParams.PayoutTable += utils.readPayoutAmount(event, rules, payout);
+        attributes.temp.speechParams.PayoutTable += ' <break time=\"200ms\"/>';
       }
     }
 
-    speech += reprompt;
-
     attributes.temp.readingRules = true;
-    return handlerInput.responseBuilder
-      .speak(utils.ri(speech, attributes.temp.speechParams))
-      .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
-      .withSimpleCard(res.strings.RULES_CARD_TITLE, utils.readPayoutTable(event, rules))
+    return handlerInput.jrb
+      .speak(ri(speech, attributes.temp.speechParams))
+      .reprompt(ri(reprompt))
+      .withSimpleCard('RULES_CARD_TITLE', utils.readPayoutTable(event, rules))
       .getResponse();
   },
 };

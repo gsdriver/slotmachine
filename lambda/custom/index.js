@@ -24,6 +24,7 @@ const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
 const request = require('request');
+const Jargon = require('@jargon/alexa-skill-sdk');
 
 const requestInterceptor = {
   process(handlerInput) {
@@ -197,7 +198,7 @@ if (process.env.DASHBOTKEY) {
 }
 
 function runGame(event, context, callback) {
-  const skillBuilder = Alexa.SkillBuilders.custom();
+  const skillBuilder = new Jargon.JargonSkillBuilder().wrap(Alexa.SkillBuilders.custom());
 
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));

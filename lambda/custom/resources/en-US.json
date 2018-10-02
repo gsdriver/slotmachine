@@ -42,6 +42,8 @@
     "v3": "Let's give {Game} a spin. ",
     "v4": "Time for {Game}! "
   },
+  "SELECT_PICK_GAME": "{AvailableGames} Would you like to play {Game}?",
+  "SELECT_PICK_GAME_REPROMPT": "Would you like to play {Game}? ",
   "SELECT_REPROMPT": "You can bet up to {Coins} coins or say read high scores to hear the leader board.",
   "SELECT_UPSELL": "We have {Game} machine available for purchase. Want to learn more?",
   "EXIT_GAME": "{Ad} Goodbye.",
@@ -53,6 +55,8 @@
   "HELP_CARD_TITLE": "Payout Table",
   "HELP_SELECT_TEXT": "Say yes to select the offered machine, or no for a different machine. ",
   "HELP_FALLBACK": "Sorry, I didn't get that. <break time=\"200ms\"/> ",
+  "RULES_RULES": "{SpecialText} {PayoutTable} Say bet to insert coins or spin to pull the handle.",
+  "RULES_SELECT_RULES": "{SpecialText} {PayoutTable} Say yes to play this game or no to hear the next option.",
   "RULES_REPROMPT": "Say bet to insert coins or spin to pull the handle.",
   "RULES_SELECT_REPROMPT": "Say yes to play this game or no to hear the next option.",
   "RULES_CARD_TITLE": "Payout Table",

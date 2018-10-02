@@ -53,7 +53,8 @@ module.exports = {
           }
 
           speech += res.strings.READ_BANKROLL;
-          attributes.temp.speechParams.Amount = utils.readCoins(event, utils.getBankroll(attributes));
+          attributes.temp.speechParams.Amount =
+            utils.readCoins(event, utils.getBankroll(attributes));
           if (game.progressiveJackpot) {
             // For progressive, just tell them the jackpot and to bet max coins
             speech += res.strings.PROGRESSIVE_JACKPOT;

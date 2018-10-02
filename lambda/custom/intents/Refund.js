@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -28,7 +29,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
 
     if (event.request.intent.slots && event.request.intent.slots.Product
       && event.request.intent.slots.Product.value) {
@@ -39,11 +39,10 @@ module.exports = {
         .withShouldEndSession(true)
         .getResponse();
     } else {
-      const speech = res.strings.REFUND_SAY_PRODUCT;
-      const reprompt = res.strings.REFUND_SAY_PRODUCT;
+      const speech = ri('REFUND_SAY_PRODUCT');
       return handlerInput.responseBuilder
-        .speak(utils.ri(speech, attributes.temp.speechParams))
-        .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
+        .speak(speech)
+        .reprompt(speech)
         .getResponse();
     }
   },

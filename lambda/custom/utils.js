@@ -292,6 +292,10 @@ module.exports = {
   STARTING_BANKROLL: 100,
   REFRESH_BANKROLL: 100,
   TOURNAMENT_PAYOUT: 50,
+  getResource: function(handlerInput, res) {
+    const event = handlerInput.requestEnvelope;
+    return handlerInput.jrm.translator.getResource(event.request.locale, 'translation', res);
+  },
   ri: function(key, params) {
     let param;
     let text;
@@ -427,7 +431,6 @@ module.exports = {
   },
   getRemainingTournamentTime: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('./resources')(event.request.locale);
     let text = '';
     const times = getTournamentTimes();

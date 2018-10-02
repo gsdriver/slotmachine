@@ -58,7 +58,7 @@ module.exports = {
                     speech += res.strings.LAUNCH_BUSTED;
                     attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                     handlerInput.responseBuilder
-                      .speak(utils.ri(speech, attributes.temp.speechParams))
+                      .speak(utils.ri(speech, attributes.temp.speechParams));
                   }
                   response = handlerInput.responseBuilder
                     .withShouldEndSession(true)
@@ -128,8 +128,10 @@ module.exports = {
 
               if (buttons.supportButtons(handlerInput)) {
                 speech += res.strings.LAUNCH_WELCOME_BUTTON;
-                attributes.temp.speechParams.Game1 = utils.sayGame(event, availableGames.choices[0]);
-                attributes.temp.speechParams.Game2 = utils.sayGame(event, availableGames.choices[0]);
+                attributes.temp.speechParams.Game1 =
+                  utils.sayGame(event, availableGames.choices[0]);
+                attributes.temp.speechParams.Game2 =
+                  utils.sayGame(event, availableGames.choices[0]);
               } else {
                 speech += reprompt;
                 Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);

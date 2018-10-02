@@ -229,7 +229,8 @@ module.exports = {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
             speech += utils.pickRandomOption(event, attributes, 'SPIN_WINNER');
             attributes.temp.speechParams.Match = utils.readPayout(event, rules, matchedPayout);
-            attributes.temp.speechParams.AmountWon = utils.readCoins(event, bet * rules.payouts[matchedPayout]);
+            attributes.temp.speechParams.AmountWon =
+              utils.readCoins(event, bet * rules.payouts[matchedPayout]);
           }
         } else {
           // Sorry, you lost
