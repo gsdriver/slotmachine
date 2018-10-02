@@ -290,11 +290,11 @@
   "SPIN_JOINGAME_LOSER_BIG_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
   "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
   "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-
-
-  "SPIN_BUSTED": "You lost all your money. Come back tomorrow for {Coins} coins. ",
-  "SPIN_OUTOFMONEY": "You are out of coins and out of the tournament. Better luck next week! ",
-  "SPIN_NEWUSER": "If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_PLAY_AGAIN": {
+    "v1": "Want to spin again?",
+    "v2": "What to play again?",
+    "v3": "One more time?"
+  },
   "TEST_CONFIRM_BANKRUPT": "Do you want to test going bankrupt?  Say yes to set your bankroll to 1 coin or no to continue play.",
   "TEST_CONFIRM_BANKRUPT_REPROMPT": "Say yes enter test mode or no to continue play.",
   "TEST_BANKRUPT_SET": "Your bankroll has been reset to 1 coin and you will lose your next spin.  Say spin to test.",
@@ -302,6 +302,7 @@
   "TEST_BANKRUPT_NOT_SET": "Test mode not enabled. Say spin to pull the handle.",
   "TEST_BARNKUPT_NOT_SET_REPROMPT": "Say spin to pull the handle.",
   "ERROR_REPROMPT": "What else can I help with?",
+  "SKILL_ERROR": "An error was encountered while handling your request. Try again later",
   "ANY_SLOT": "any",
   "PAYOUT_PAYS": "pays {Coins} coins.",
   "PAYOUT_PROGRESSIVE": "pays the progessive jackpot.",

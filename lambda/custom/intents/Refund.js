@@ -34,13 +34,13 @@ module.exports = {
       && event.request.intent.slots.Product.value) {
       const product = utils.mapProduct(event.request.intent.slots.Product.value);
       const token = (product === 'coinreset') ? 'subscribe.coinreset.refund' : ('machine.' + product + '.refund');
-      return handlerInput.responseBuilder
+      return handlerInput.jrb
         .addDirective(utils.getPurchaseDirective(attributes, product, 'Cancel', token))
         .withShouldEndSession(true)
         .getResponse();
     } else {
       const speech = ri('REFUND_SAY_PRODUCT');
-      return handlerInput.responseBuilder
+      return handlerInput.jrb
         .speak(speech)
         .reprompt(speech)
         .getResponse();

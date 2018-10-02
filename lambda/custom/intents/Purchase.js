@@ -38,7 +38,7 @@ module.exports = {
         // They specified a product so let's go with that one
         const product = utils.mapProduct(event.request.intent.slots.Product.value);
         const token = (product === 'coinreset') ? 'subscribe.coinreset.refund' : ('machine.' + product + '.refund');
-        return handlerInput.responseBuilder
+        return handlerInput.jrb
           .addDirective(utils.getPurchaseDirective(attributes, product, 'Buy', token))
           .withShouldEndSession(true)
           .getResponse();

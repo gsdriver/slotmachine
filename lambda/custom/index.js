@@ -141,7 +141,7 @@ const requestInterceptor = {
 const saveResponseInterceptor = {
   process(handlerInput) {
     return new Promise((resolve, reject) => {
-      const response = handlerInput.responseBuilder.getResponse();
+      const response = handlerInput.jrb.getResponse();
 
       if (response) {
         utils.drawTable(handlerInput);
@@ -184,8 +184,8 @@ const ErrorHandler = {
     return error.name.startsWith('AskSdk');
   },
   handle(handlerInput, error) {
-    return handlerInput.responseBuilder
-      .speak('An error was encountered while handling your request. Try again later')
+    return handlerInput.jrb
+      .speak(Jargon.ri('SKILL_ERROR'))
       .getResponse();
   },
 };

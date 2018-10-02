@@ -772,7 +772,7 @@ module.exports = {
     return res.strings['SYMBOL_NAME_' + symbol.toUpperCase()];
   },
   drawTable: function(handlerInput) {
-    const response = handlerInput.responseBuilder;
+    const response = handlerInput.jrb;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('./resources')(event.request.locale);

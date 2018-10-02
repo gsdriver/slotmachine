@@ -63,7 +63,6 @@ module.exports = {
         attributes.temp.readingRules = false;
         if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
           attributes.currentGame = 'basic';
-          speech = res.strings.TOURNAMENT_ENDED;
           const response = handlerInput.jrb
             .speak(ri('TOURNAMENT_ENDED'))
             .withShouldEndSession(true)
@@ -77,7 +76,7 @@ module.exports = {
         updateBankroll(attributes, -bet);
         if (bet !== game.lastbet) {
           // Say the amount they are betting
-          speech += res.strings.SPIN_YOU_BET;
+          speech += '_BET';
           attributes.temp.speechParams.AmountBet = utils.readCoins(event, bet);
         }
 
@@ -121,8 +120,7 @@ module.exports = {
           spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
           spinText += utils.saySymbol(event, spinResult[i]);
         }
-        speech += res.strings.SPIN_RESULT;
-        attributes.temp.speechParams.Result = spinText;
+        attributes.temp.speechParams.SpinResult = spinText;
 
         // Now let's determine the payouts
         let matchedPayout;
@@ -175,8 +173,8 @@ module.exports = {
             ? ((attributes.temp.losingStreak + 1) || 1) : 0;
         if (game.result.payout > 0) {
           // You won!  If more than 50:1, play the jackpot sound
+          speech += '_WIN';
           if (rules.payouts[matchedPayout] >= 50) {
-            speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
             game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
             outcome = 'jackpot';
 
@@ -184,6 +182,7 @@ module.exports = {
             // in which case we'll write it out once we know the amount
             if (!(rules.progressive && (matchedPayout == rules.progressive.match)
                           && (bet == rules.maxCoins))) {
+              speech += '_JACKPOT';
               const params = {
                 url: process.env.SERVICEURL + 'slots/updateJackpot',
                 formData: {
@@ -197,7 +196,7 @@ module.exports = {
             }
           } else {
             if (rules.win) {
-              speech += rules.win;
+              attributes.temp.speechParams.SpinResult += rules.win;
             }
             outcome = 'win';
           }
@@ -208,7 +207,7 @@ module.exports = {
             // OK, read the jackpot from the database
             utils.getProgressivePayout(attributes, (coinsWon) => {
               updateBankroll(attributes, coinsWon);
-              speech += res.strings.SPIN_PROGRESSIVE_WINNER;
+              speech += '_PROGRESSIVE';
               attributes.temp.speechParams.AmountWon = utils.readCoins(event, coinsWon);
 
               const params = {
@@ -228,7 +227,6 @@ module.exports = {
             return;
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
-            speech += utils.pickRandomOption(event, attributes, 'SPIN_WINNER');
             attributes.temp.speechParams.Match = utils.readPayout(event, rules, matchedPayout);
             attributes.temp.speechParams.AmountWon =
               utils.readCoins(event, bet * rules.payouts[matchedPayout]);
@@ -236,12 +234,11 @@ module.exports = {
         } else {
           // Sorry, you lost
           if (rules.lose) {
-            speech += rules.lose;
+            attributes.temp.speechParams.SpinResult += rules.lose;
           }
+          speech += '_LOSER';
           if (attributes.temp.losingStreak > 5) {
-            speech += utils.pickRandomOption(event, attributes, 'SPIN_BIG_LOSER');
-          } else {
-            speech += utils.pickRandomOption(event, attributes, 'SPIN_LOSER');
+            speech += '_BIG';
           }
           outcome = 'lose';
         }
@@ -260,7 +257,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = partialSpeech;
-  let reprompt = utils.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
+  let reprompt = 'SPIN_PLAY_AGAIN';
   let snsPublication;
   let noSpeech;
 
@@ -275,12 +272,13 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     // Sorry, you are out
     game.busted = true;
     attributes.currentGame = 'basic';
-    speech += res.strings.SPIN_OUTOFMONEY;
+    speech += '_BUSTED_OUTOFMONEY';
     reprompt = undefined;
   } else if (attributes.bankroll < 1) {
     // If they subscribed to reset bankroll, then reset for them
+    speech += '_BUSTED';
     if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
-      speech += res.strings.SUBSCRIPTION_PAID_REPLENISH;
+      speech += '_SUBSCRIBED_REPLENISH';
       attributes.temp.speechParams.Coins = utils.STARTING_BANKROLL;
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
@@ -297,19 +295,17 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
       attributes.busted = Date.now();
       if (attributes.paid && attributes.paid.coinreset) {
         noSpeech = true;
-        speech += res.strings.LAUNCH_BUSTED_UPSELL;
+        speech += '_UPSELL';
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-        handlerInput.responseBuilder
+        handlerInput.jrb
           .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.spin',
-            utils.ri(speech, attributes.temp.speechParams)));
+            ri(speech, attributes.temp.speechParams)));
       } else {
-        speech += res.strings.SPIN_BUSTED;
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
       }
       reprompt = undefined;
     }
   } else {
-    speech += res.strings.READ_BANKROLL;
     attributes.temp.speechParams.Amount = utils.readCoins(event, utils.getBankroll(attributes));
   }
 
@@ -329,10 +325,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   // If it's a new user, clear that state and let them know about other games
   if (attributes.newUser) {
     attributes.newUser = undefined;
-    speech += res.strings.SPIN_NEWUSER;
-  } else if (reprompt) {
-    speech += reprompt;
-    Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+    speech += '_NEWUSER';
   }
 
   // Update the color of the echo button (if present)
@@ -347,14 +340,13 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
   // Set the speech
   if (!noSpeech) {
-    handlerInput.responseBuilder
-      .speak(utils.ri(speech, attributes.temp.speechParams));
+    handlerInput.jrb
+      .speak(ri(speech, attributes.temp.speechParams));
   }
   if (reprompt) {
-    handlerInput.responseBuilder
-      .reprompt(utils.ri(reprompt, attributes.temp.repromptParams));
+    handlerInput.jrb.reprompt(ri(reprompt));
   } else {
-    handlerInput.responseBuilder.withShouldEndSession(true);
+    handlerInput.jrb.withShouldEndSession(true);
   }
 
   // Update the leader board
@@ -364,10 +356,10 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
   if (snsPublication) {
     SNS.publish(snsPublication, () => {
-      callback(handlerInput.responseBuilder.getResponse());
+      callback(handlerInput.jrb.getResponse());
     });
   } else {
-    callback(handlerInput.responseBuilder.getResponse());
+    callback(handlerInput.jrb.getResponse());
   }
 }
 
@@ -407,27 +399,27 @@ function selectGame(handlerInput, callback) {
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
   const res = require('../resources')(event.request.locale);
-  let speech = '';
+  let speech;
 
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
     utils.selectGame(handlerInput, 0).then(() => {
-      speech = utils.pickRandomOption(event, attributes, 'SELECT_WELCOME');
+      speech = 'SPIN_JOINGAME';
       attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
 
       const game = attributes[attributes.currentGame];
       const rules = utils.getGame(attributes.currentGame);
-      if (rules.welcome) {
-        speech += res.strings[rules.welcome];
-      }
+
+      attributes.temp.speechParams.GameWelcome = (rules.welcome) ? rules.welcome : '';
 
       if (game.progressiveJackpot) {
-        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY;
+        speech += '_PROGRESSIVE';
         attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
       }
       callback(speech);
     });
   } else {
+    speech = 'SPIN';
     callback(speech);
   }
 }
