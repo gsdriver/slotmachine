@@ -21,9 +21,9 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       utils.getGreeting(event, (greeting) => {
+        attributes.temp.speechParams.Greeting = greeting;
         utils.getPurchasedProducts(handlerInput, (err, result) => {
           let speech = 'LAUNCH';
-          let reprompt;
 
           attributes.temp.speechParams.TournamentResult = (attributes.tournamentResult)
             ? attributes.tournamentResult : '';
@@ -38,7 +38,7 @@ module.exports = {
               finishResponse();
             } else if (attributes.temp.tournamentAvailable) {
               // If the tournament is available, we'll throw 5 coins at you to play
-              speech += '_BUSTED_TOURNAMENT';
+              speech += '_BUSTED';
               attributes.bankroll += 5;
               attributes.busted = undefined;
               finishResponse();
@@ -59,7 +59,7 @@ module.exports = {
                     handlerInput.jrb
                       .speak(ri(speech, attributes.temp.speechParams));
                   }
-                  response = handlerInput.responseBuilder
+                  response = handlerInput.jrb
                     .withShouldEndSession(true)
                     .getResponse();
                   resolve(response);
@@ -107,37 +107,25 @@ module.exports = {
               const availableGames = utils.readAvailableGames(event, attributes, true);
               if (availableGames.choices.indexOf('tournament') > -1) {
                 speech += '_TOURNAMENT';
-                speech += utils.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT');
                 attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
-              } else {
-                speech += utils.pickRandomOption(event, attributes, 'LAUNCH_WELCOME');
-                attributes.temp.speechParams.Greeting = greeting;
-                if (!buttons.supportButtons(handlerInput)) {
-                  speech += availableGames.speech;
-                }
               }
               attributes.choices = availableGames.choices;
               attributes.originalChoices = availableGames.choices;
 
               // Ask for the first one
-              speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
-              reprompt = res.strings.LAUNCH_REPROMPT;
               attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
-
               if (buttons.supportButtons(handlerInput)) {
                 speech += '_BUTTON';
-                speech += res.strings.LAUNCH_WELCOME_BUTTON;
                 attributes.temp.speechParams.Game1 =
                   utils.sayGame(event, availableGames.choices[0]);
                 attributes.temp.speechParams.Game2 =
                   utils.sayGame(event, availableGames.choices[0]);
               } else {
-                speech += reprompt;
                 Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
               }
-              response = handlerInput.responseBuilder
-                .speak(utils.ri(speech, attributes.temp.speechParams))
-                .reprompt(utils.ri(reprompt, attributes.temp.repromptParams))
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
                 .getResponse();
             }
             resolve(response);

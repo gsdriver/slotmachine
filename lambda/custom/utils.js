@@ -837,7 +837,7 @@ module.exports = {
       } else {
         // Just show the background image
         image = new Alexa.ImageHelper()
-          .withDescription(module.exports.pickRandomOption(event, attributes, 'LAUNCH_WELCOME'))
+          .withDescription(module.exports.pickRandomOption(event, attributes, 'DISPLAY_WELCOME'))
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
         response.addRenderTemplateDirective({
