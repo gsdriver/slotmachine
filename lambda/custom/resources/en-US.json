@@ -4,6 +4,34 @@
   "UNKNOWN_SELECT_INTENT": "Sorry, I didn't get that. Try saying Yes.",
   "UNKNOWN_SELECT_INTENT_REPROMPT": "Try saying Yes.",
   "LAUNCH_REPROMPT": "Would you like to play {Game}? ",
+
+  "LAUNCH_BUSTED_SUBSCRIBED": "{TournamentResult}",
+  "LAUNCH_BUSTED_TOURNAMENT": "{TournamentResult} You know <break time=\"500ms\"/> I\"m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ",
+  "LAUNCH_BUSTED_REPLENISH": {
+    "v1": "{Greeting} Thanks for coming back! {TournamentResult} Let's set you up with {Coins} coins to get playing {Game} again. Say spin to start.",
+    "v2": "{Greeting} It's time to play Slot Machine! {TournamentResult} Here are {Coins} coins to keep playing. Would you like to play {Game}?",
+    "v3": "{Greeting} Let's play Slot Machine! {TournamentResult} Here are {Coins} coins to get you back into {Game}. Say spin to start.",
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED_TOURNAMENT": "{TournamentResult}",
+  "LAUNCH_BUSTED_REPLENISH_TOURNAMENT": {
+    "v1": "{Greeting} Thanks for coming back! {TournamentResult} Let's set you up with {Coins} coins to get playing again. <break time=\"300ms\"/> Good time to come back because we have a tournament underway for the next {Time}. Say spin to start.",
+    "v2": "{Greeting} It's time to play Slot Machine! {TournamentResult} Here are {Coins} coins to keep playing. <break time=\"300ms\"/> Oh we have a special tournament machine available for the next {Time. Would you like to play it?",
+    "v3": "{Greeting} Let's play Slot Machine! {TournamentResult} Here are {Coins} coins to get you back into <break time=\"500ms\"/> Wait, this just in, there's a tournament machine available for {Time}. Would you like to play it?",
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED_BUTTON": "{TournamentResult}",
+  "LAUNCH_BUSTED_TOURNAMENT_BUTTON": "{TournamentResult} You know <break time=\"500ms\"/> I\"m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ",
+  "LAUNCH_BUSTED_REPLENISH_BUTTON": {
+    "v1": "{Greeting} Thanks for coming back! {TournamentResult} Let's set you up with {Coins} coins to get playing {Game} again. Say spin or press an Echo Button to start.",
+    "v2": "{Greeting} It's time to play Slot Machine! {TournamentResult} Here are {Coins} coins to keep playing. Would you like to play {Game}?",
+    "v3": "{Greeting} Let's play Slot Machine! {TournamentResult} Here are {Coins} coins to get you back into {Game}. Say spin or press an Echo Button to start.",
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED_TOURNAMENT_BUTTON": "{TournamentResult}",
+  "LAUNCH_BUSTED_REPLENISH_TOURNAMENT_BUTTON": {
+    "v1": "{Greeting} Thanks for coming back! {TournamentResult} Let's set you up with {Coins} coins to get playing again. <break time=\"300ms\"/> Good time to come back because we have a tournament underway for the next {Time}. Say spin or press an Echo Button to start.",
+    "v2": "{Greeting} It's time to play Slot Machine! {TournamentResult} Here are {Coins} coins to keep playing. <break time=\"300ms\"/> Oh we have a special tournament machine available for the next {Time. Would you like to play it? Say yes or press an Echo Button to join in.",
+    "v3": "{Greeting} Let's play Slot Machine! {TournamentResult} Here are {Coins} coins to get you back into <break time=\"500ms\"/> Wait, this just in, there's a tournament machine available for {Time}. Would you like to play it? Say yes or press an Echo Button o play.",
+  },
+
   "LAUNCH_WELCOME": {
     "v1": "Welcome to Slot Machine. ",
     "v2": "{Greeting} Welcome to Slot Machine. ",
@@ -16,21 +44,15 @@
     "v3": "We've got a tournament for the next {Time}! "
   },
   "LAUNCH_WELCOME_BUTTON": "If you have an Echo Button, press it to play {Game1} <break time=\"200ms\"/> You can also say spin to play {Game2} or no to pick a different machine.",
-  "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Welcome to Slot Machine. Say spin to pull the handle.",
-  "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Welcome to Slot Machine. If you have an Echo Button press it or say spin to pull the handle.",
+  "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Welcome to Slot Machine. Say spin to pull the handle.",
+  "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Welcome to Slot Machine. If you have an Echo Button press it or say spin to pull the handle.",
   "LAUNCH_NEWUSER_REPROMPT": "Say spin to pull the handle.",
-  "LAUNCH_RESUME_GAME": "Say spin to pull the handle.",
-  "LAUNCH_RESUME_GAME_BUTTON": "If you have an Echo Button press it or say spin to pull the handle.",
+  "LAUNCH_RESUME_GAME": "{TournamentResult} Say spin to pull the handle.",
+  "LAUNCH_RESUME_GAME_BUTTON": "{TournamentResult} If you have an Echo Button press it or say spin to pull the handle.",
   "LAUNCH_RESUME_GAME_REPROMPT": "Say spin to pull the handle.",
-  "LAUNCH_BUSTED": "You are out of coins. Come back to Slot Machine tomorrow for {Coins} more coins. ",
-  "LAUNCH_BUSTED_UPSELL": "You are out of coins and can come back to Slot Machine tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? ",
-  "LAUNCH_BUSTED_REPLENISH": {
-    "v1": "Thanks for coming back! Here are {Coins} coins to get you back in the game. ",
-    "v2": "Good to see you again! Here are {Coins} coins to keep playing. ",
-    "v3": "Hey you! Here are {Coins} coins to get you back in the game. "
-  },
-  "LAUNCH_BUSTED_TOURNAMENT": "You know <break time=\"500ms\"/> I\"m not supposed to do this <break time=\"400ms\"/> but here are 5 coins just so you can enter the tournament round. ",
-  "SUBSCRIPTION_PAID_REPLENISH": "Thanks to your Reset Bankroll subscription, your bankroll is reset to {Coins} coins. ",
+  "LAUNCH_BUSTED": "{TournamentResult} You are out of coins. Come back to Slot Machine tomorrow for {Coins} more coins. ",
+  "LAUNCH_BUSTED_UPSELL": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? ",
+  "LAUNCH_SUBSCRIBED_": "Thanks to your Reset Bankroll subscription, your bankroll is reset to {Coins} coins. ",
   "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
