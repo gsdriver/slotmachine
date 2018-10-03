@@ -4,12 +4,12 @@
   "description": "Alexa slot machine",
   "main": "index.js",
   "dependencies": {
+    "@jargon/alexa-skill-sdk": "^1.0.0",
     "alexa-speech-utils": "0.0.4",
     "ask-sdk": "^2.0.7",
     "aws-sdk": "^2.282.1",
     "bluebird": "^3.5.0",
     "dashbot": "^9.9.2",
-    "jargon": "^0.2.0",
     "leven": "^2.1.0",
     "moment-timezone": "^0.5.21",
     "request": "^2.88.0",

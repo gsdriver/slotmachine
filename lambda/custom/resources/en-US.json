@@ -60,12 +60,12 @@
     "v1": "Welcome to {Game}. {GameWelcome} You have {Amount}. <break time=\"300ms\"/> You can bet up to {Coins} coins or say read high scores to hear the leader board.",
     "v2": "Starting {Game}. {GameWelcome} With {Amount} you can bet up to {Coins} coins. <break time=\"300ms\"/> Say spin to start the game.",
     "v3": "Let's give {Game} a spin. {GameWelcome} You have {Amount} and can bet up to {Coins} coins. <break time=\"300ms\"/> Say spin to start playing!",
-    "v4": "Time for {Game}! {GameWelcome} You have {Amount}. <break time=\"300ms\"/> Try saying bet {Coins} coins."
+    "v4": "Time for {Game}! {GameWelcome} You have {Amount}. <break time=\"300ms\"/> Try saying insert {Coins} coins."
   },
   "SELECT_WELCOME_PROGRESSIVE": {
     "v1": "Welcome to {Game}. {GameWelcome} You have {Amount} to try to win the progressive jackpot of {Jackpot} coins. <break time=\"300ms\"/> Say spin to start the game.",
     "v2": "Starting {Game}. {GameWelcome} With {Amount} you can bet up to {Coins} coins to win a progressive jackpot of {Jackpot} coins. <break time=\"300ms\"/> Say spin to get started.",
-    "v3": "Let's give {Game} a spin. {GameWelcome} The progressive jackpot is {Jackpot} coins. <break time=\"300ms\"/> You have {Amount}. Try aaying bet {Coins} coins.",
+    "v3": "Let's give {Game} a spin. {GameWelcome} The progressive jackpot is {Jackpot} coins. <break time=\"300ms\"/> You have {Amount}. Try aaying insert {Coins} coins.",
     "v4": "Time for {Game}! {GameWelcome} You have {Amount} and the progressive jackpot is {Jackpot} coins. Try betting {Coins} coins."
   },
   "SELECT_PICK_GAME": "{AvailableGames} Would you like to play {Game}?",
@@ -339,7 +339,7 @@
   "PLURAL_COIN": "coins",
   "READ_BANKROLL": "You have {Amount}. ",
   "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently {Jackpot} coins. ",
-  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot} coins. Bet {Coins} coins to win the progressive jackpot. ",
+  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot} coins. Insert {Coins} coins to win the progressive jackpot. ",
   "TOURNAMENT_ENDED": "The tournament has ended. Please check again later to hear the results! ",
   "GAME_NAME_BASIC": "the standard fruit game",
   "GAME_NAME_WILD": "wild cherry",
