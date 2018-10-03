@@ -745,13 +745,13 @@ module.exports = {
     const res = require('./resources')(event.request.locale);
     return res.strings['SYMBOL_NAME_' + symbol.toUpperCase()];
   },
-  drawTable: function(handlerInput) {
+  drawTable: function(handlerInput, callback) {
     const response = handlerInput.jrb;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('./resources')(event.request.locale);
     const game = attributes[attributes.currentGame];
     let image;
+    const displayParams = {};
 
     if (event.context && event.context.System &&
       event.context.System.device &&
@@ -778,13 +778,12 @@ module.exports = {
         image = new Alexa.ImageHelper()
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
-        response.addRenderTemplateDirective({
-          type: 'ListTemplate1',
-          token: 'listToken',
-          backButton: 'HIDDEN',
-          title: res.strings.SELECT_GAME,
-          backgroundImage: image,
-          listItems: listItems,
+
+        handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
+          directive.backgroundImage = image;
+          directive.listItem = listItems;
+          response.addRenderTemplateDirective(directive);
+          callback();
         });
       } else if (game && game.result && game.result.spin) {
         let name = '';
@@ -795,31 +794,33 @@ module.exports = {
           name += spin;
         });
 
-        const title = (game.result.payout)
-          ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{Coins}', game.result.payout)
-          : res.strings.DISPLAY_PAYOUT_LOSER;
-
+        const title = (game.result.payout) ? 'DISPLAY_PAYOUT_WINNER' : 'DISPLAY_PAYOUT_LOSER';
+        displayParams.Coins = game.result.payout;
         image = new Alexa.ImageHelper()
           .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
           .getImage();
-        response.addRenderTemplateDirective({
-          type: 'BodyTemplate1',
-          backButton: 'HIDDEN',
-          title: title,
-          backgroundImage: image,
+        handlerInput.jrm.renderObject(ri(title, displayParams)).then((directive) => {
+          directive.backgroundImage = image;
+          response.addRenderTemplateDirective(directive);
+          callback();
         });
       } else {
         // Just show the background image
-        image = new Alexa.ImageHelper()
-          .withDescription(module.exports.getResource(handlerInput, 'DISPLAY_WELCOME'))
-          .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-          .getImage();
-        response.addRenderTemplateDirective({
-          type: 'BodyTemplate1',
-          backButton: 'HIDDEN',
-          backgroundImage: image,
+        handlerInput.jrm.render(ri('DISPLAY_WELCOME')).then((welcome) => {
+          image = new Alexa.ImageHelper()
+            .withDescription(welcome)
+            .addImageInstance('http://garrettvargas.com/img/slot-background.png')
+            .getImage();
+          response.addRenderTemplateDirective({
+            type: 'BodyTemplate1',
+            backButton: 'HIDDEN',
+            backgroundImage: image,
+          });
+          callback();
         });
       }
+    } else {
+      callback();
     }
   },
   getPurchaseDirective: function(attributes, product, name, token, message) {

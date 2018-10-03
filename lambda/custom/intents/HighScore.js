@@ -45,12 +45,12 @@ module.exports = {
             }
 
             // And what is the leader board?
-            const topScores = highScores.top.map((x) => {
-              return utils.getResource(handlerInput, 'HIGHSCORE_FORMAT').replace('{Coins}', x);
-            });
-            attributes.temp.speechParams.NumberOfLeaders = topScores.length;
-            attributes.temp.speechParams.Bankrolls =
-              speechUtils.and(topScores, {locale: event.request.locale, pause: '300ms'});
+            let i;
+            for (i = 0; i < 5; i++) {
+              attributes.temp.speechParams['HighScore' + (i + 1)] = (highScores.top.length > i)
+                ? highScores.top[i] : 0;
+            }
+            attributes.temp.speechParams.NumberOfLeaders = highScores.top.length;
           }
         }
 

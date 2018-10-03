@@ -77,10 +77,10 @@
   "SELECT_REPROMPT": "You can bet up to {Coins} coins or say read high scores to hear the leader board.",
   "SELECT_UPSELL": "We have {Game} machine available for purchase. Want to learn more?",
   "EXIT_GAME": "{Ad} Goodbye.",
-  "HIGHSCORE_RANKING": "Your peak bankroll of {Coins, plural, =1 {one con} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {Bankrolls}. What else can I help you with?",
-  "HIGHSCORE_RANKING_SELECT": "Your peak bankroll of {Coins, plural, =1 {one con} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {Bankrolls}. Would you like to play {Game}? ",
-  "HIGHSCORE_GAME_RANKING": "Your current bankroll of {Coins, plural, =1 {one con} other {# coins}} on {CurrentGame} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {Bankrolls}. What else can I help you with?",
-  "HIGHSCORE_GAME_RANKING_SELECT": "Your current bankroll of {Coins, plural, =1 {one con} other {# coins}} on {CurrentGame} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {Bankrolls}. Would you like to play {Game}? ",
+  "HIGHSCORE_RANKING": "Your peak bankroll of {Coins, plural, =1 {one coin} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. What else can I help you with?",
+  "HIGHSCORE_RANKING_SELECT": "Your peak bankroll of {Coins, plural, =1 {one coin} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Would you like to play {Game}? ",
+  "HIGHSCORE_GAME_RANKING": "Your current bankroll of {Coins, plural, =1 {one coin} other {# coins}} on {CurrentGame} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. What else can I help you with?",
+  "HIGHSCORE_GAME_RANKING_SELECT": "Your current bankroll of {Coins, plural, =1 {one coin} other {# coins}} on {CurrentGame} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Would you like to play {Game}? ",
   "HIGHSCORE_NO_SCORES": "Sorry, I'm unable to read the current leader board. What else can I help you with?",
   "HIGHSCORE_NO_SCORES_SELECT": "Sorry, I'm unable to read the current leader board. Would you like to play {Game}? ",
   "HIGHSCORE_FORMAT": "{Coins} coins",
@@ -327,9 +327,6 @@
   "SIMPSON_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3\"/> ",
   "BATMAN_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
   "PROGRESSIVE_SPECIAL": "Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ",
-  "SELECT_GAME": "Select a game to play",
-  "DISPLAY_PAYOUT_WINNER": "You won {Coins} coins",
-  "DISPLAY_PAYOUT_LOSER": "Sorry, you lost",
   "TOURNAMENT_WINNER": "Congratulations, you won the tournament with {TournamentResult, plural, =1 {one coin} other {# coins}}!  You win {Coins, plural, =1 {one coin} other {# coins}} for your tournament win! ",
   "TOURNAMENT_LOSER": "Sorry, you didn't win the tournament. The high score was {TournamentWinner, plural, =1 {one coin} other {# coins}} and you had {TournamentResult, plural, =1 {one coin} other {# coins}}. ",
   "TOURNAMENT_TIMELEFT_MINUTES": "{Minutes} minutes",
@@ -339,8 +336,8 @@
   "GOOD_MORNING": "Good morning <break time=\"200ms\"/> ",
   "GOOD_AFTERNOON": "Good afternoon <break time=\"200ms\"/> ",
   "GOOD_EVENING": "Good evening <break time=\"200ms\"/> ",
-  "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently {Jackpot} coins. ",
-  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot} coins. Insert {Coins} coins to win the progressive jackpot. ",
+  "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. ",
+  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. Insert {Coins, plural, =1 {one coin} other {# coins}} to win the progressive jackpot. ",
   "TOURNAMENT_ENDED": "The tournament has ended. Please check again later to hear the results! ",
   "GAME_NAME_BASIC": "the standard fruit game",
   "GAME_NAME_WILD": "wild cherry",
@@ -381,5 +378,21 @@
   "SYMBOL_NAME_BATMAN": "Batman",
   "SYMBOL_NAME_STAR": "star",
   "SYMBOL_NAME_WATERMELON": "watermelon",
-  "DISPLAY_WELCOME": "Welcome to Slot Machine. "
+  "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
+  "DISPLAY_DIRECTIVE_CHOICES": {
+    "type": "ListTemplate1",
+    "token": "listToken",
+    "backButton": "HIDDEN",
+    "title": "Select a game to play"
+  },
+  "DISPLAY_PAYOUT_WINNER": {
+    "type": "BodyTemplate1",
+    "backButton": "HIDDEN",
+    "title": "You won {Coins, plural, =1 {one coin} other {# coins}}"
+  },
+  "DISPLAY_PAYOUT_LOSER": {
+    "type": "BodyTemplate1",
+    "backButton": "HIDDEN",
+    "title": "Sorry, you lost"
+  }
 }

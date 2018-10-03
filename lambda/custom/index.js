@@ -144,36 +144,39 @@ const saveResponseInterceptor = {
       const response = handlerInput.responseBuilder.getResponse();
 
       if (response) {
-        utils.drawTable(handlerInput);
-        if (response.shouldEndSession) {
-          // We are meant to end the session
-          SessionEnd.handle(handlerInput);
-        } else {
-          // Save the response and reprompt for repeat
-          const attributes = handlerInput.attributesManager.getSessionAttributes();
-          if (response.outputSpeech && response.outputSpeech.ssml) {
-            attributes.temp.lastResponse = response.outputSpeech.ssml;
-          }
-          if (response.reprompt && response.reprompt.outputSpeech
-            && response.reprompt.outputSpeech.ssml) {
-            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
-          }
+        utils.drawTable(handlerInput, () => {
+          if (response.shouldEndSession) {
+            // We are meant to end the session
+            SessionEnd.handle(handlerInput);
+          } else {
+            // Save the response and reprompt for repeat
+            const attributes = handlerInput.attributesManager.getSessionAttributes();
+            if (response.outputSpeech && response.outputSpeech.ssml) {
+              attributes.temp.lastResponse = response.outputSpeech.ssml;
+            }
+            if (response.reprompt && response.reprompt.outputSpeech
+              && response.reprompt.outputSpeech.ssml) {
+              attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+            }
 
-          // Save state if we need to (but just for certain platforms)
-          if (attributes.temp && attributes.temp.forceSave) {
-            attributes.temp.forceSave = undefined;
-            if (attributes.platform === 'google') {
-              // Save state each round in case the user unexpectedly exits
-              const temp = attributes.temp;
-              attributes.temp = undefined;
-              handlerInput.attributesManager.setPersistentAttributes(attributes);
-              handlerInput.attributesManager.savePersistentAttributes();
-              attributes.temp = temp;
+            // Save state if we need to (but just for certain platforms)
+            if (attributes.temp && attributes.temp.forceSave) {
+              attributes.temp.forceSave = undefined;
+              if (attributes.platform === 'google') {
+                // Save state each round in case the user unexpectedly exits
+                const temp = attributes.temp;
+                attributes.temp = undefined;
+                handlerInput.attributesManager.setPersistentAttributes(attributes);
+                handlerInput.attributesManager.savePersistentAttributes();
+                attributes.temp = temp;
+              }
             }
           }
-        }
+          resolve();
+        });
+      } else {
+        resolve();
       }
-      resolve();
     });
   },
 };
