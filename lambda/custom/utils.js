@@ -15,6 +15,7 @@ const querystring = require('querystring');
 const https = require('https');
 const moment = require('moment-timezone');
 const leven = require('leven');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
   // Has 99.8% payout
@@ -324,13 +325,14 @@ module.exports = {
         const hour = moment.tz(Date.now(), timezone).format('H');
         let greeting;
         if ((hour > 5) && (hour < 12)) {
-          greeting = module.exports.getResource(handlerInput, 'GOOD_MORNING');
+          greeting = 'GOOD_MORNING';
         } else if ((hour >= 12) && (hour < 18)) {
-          greeting = module.exports.getResource(handlerInput, 'GOOD_AFTERNOON');
+          greeting = 'GOOD_AFTERNOON';
         } else {
-          greeting = module.exports.getResource(handlerInput, 'GOOD_EVENING');
+          greeting = 'GOOD_EVENING';
         }
-        callback(greeting);
+
+        handlerInput.jrm.render(ri(greeting)).then(callback);
       } else {
         callback('');
       }
@@ -353,12 +355,14 @@ module.exports = {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
         const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
-        let defaultTimezone = '';
 
         if (useDefaultTimezone) {
-          defaultTimezone = module.exports.getResource(handlerInput, 'TOURNAMENT_DEFAULT_TIMEZONE');
+          handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
+            callback(result, text);
+          });
+        } else {
+          callback(result, '');
         }
-        callback(result, defaultTimezone);
       });
     } else {
       callback();

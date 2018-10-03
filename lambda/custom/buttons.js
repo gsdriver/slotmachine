@@ -6,7 +6,7 @@
 
 module.exports = {
   supportButtons: function(handlerInput) {
-    const localeList = ['en-CA', 'en-GB'];
+    const localeList = ['en-US', 'en-GB'];
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const locale = handlerInput.requestEnvelope.request.locale;
 

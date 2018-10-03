@@ -257,11 +257,16 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   let reprompt = 'SPIN_PLAY_AGAIN';
   let snsPublication;
   let noSpeech;
+  let response;
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
     attributes.temp.forceSave = true;
   }
+
+  // Keep track of spins
+  game.timestamp = Date.now();
+  game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
 
   // If you run out of coins, sorry - you need to come back tomorrow or buy more
   // Buying more is only allowed if the game doesn't have its own bankroll
@@ -294,9 +299,21 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
         noSpeech = true;
         speech += '_UPSELL';
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-        handlerInput.jrb
-          .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.spin',
-            ri(speech, attributes.temp.speechParams)));
+
+        handlerInput.jrm.render(ri(speech, attributes.temp.speechParams))
+        .then((text) => {
+          response = handlerInput.jrb
+            .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.spin', text))
+            .getResponse();
+          if (snsPublication) {
+            SNS.publish(snsPublication, () => {
+              callback(response);
+            });
+          } else {
+            callback(response);
+          }
+        });
+        return;
       } else {
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
       }
@@ -305,10 +322,6 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   } else {
     attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
   }
-
-  // Keep track of spins
-  game.timestamp = Date.now();
-  game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
 
   // Is this a new high?
   if (game.bankroll !== undefined) {
@@ -350,13 +363,13 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
-
+  response = handlerInput.jrb.getResponse();
   if (snsPublication) {
     SNS.publish(snsPublication, () => {
-      callback(handlerInput.jrb.getResponse());
+      callback(response);
     });
   } else {
-    callback(handlerInput.jrb.getResponse());
+    callback(response);
   }
 }
 
