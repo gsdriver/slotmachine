@@ -19,7 +19,7 @@ module.exports = {
     let response;
 
     return new Promise((resolve, reject) => {
-      utils.getGreeting(event, (greeting) => {
+      utils.getGreeting(handlerInput, (greeting) => {
         attributes.temp.speechParams.Greeting = greeting;
         utils.getPurchasedProducts(handlerInput, (err, result) => {
           let speech = 'LAUNCH';

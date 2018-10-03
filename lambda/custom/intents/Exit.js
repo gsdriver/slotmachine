@@ -31,7 +31,6 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-console.log(handlerInput.jrm.translator.getResource(event.request.locale, 'translation', 'EXIT_GAME'));
     return new Promise((resolve, reject) => {
       ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
         attributes.temp.speechParams.Ad = adText;

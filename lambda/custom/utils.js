@@ -15,7 +15,6 @@ const querystring = require('querystring');
 const https = require('https');
 const moment = require('moment-timezone');
 const leven = require('leven');
-const seedrandom = require('seedrandom');
 
 const games = {
   // Has 99.8% payout
@@ -294,7 +293,7 @@ module.exports = {
   TOURNAMENT_PAYOUT: 50,
   getResource: function(handlerInput, res) {
     const event = handlerInput.requestEnvelope;
-    return handlerInput.jrm.translator.getResource(event.request.locale, 'translation', res);
+    return handlerInput.jrm._translator.getResource(event.request.locale, 'translation', res);
   },
   ri: function(key, params) {
     let param;
@@ -315,44 +314,21 @@ module.exports = {
     }
     return text;
   },
-  pickRandomOption: function(event, attributes, key) {
-    const res = require('./resources')(event.request.locale);
-    const value = res.strings[key];
-    let result;
-
-    if (value) {
-      if (typeof value !== 'string') {
-        let seed = event.session.user.userId;
-        if (attributes.currentGame && attributes[attributes.currentGame]
-          && attributes[attributes.currentGame].timestamp) {
-          seed += attributes[attributes.currentGame].timestamp;
-        }
-
-        const choice = Math.floor(seedrandom(seed)() * Object.keys(value).length);
-        result = value[Object.keys(value)[choice]];
-      } else {
-        result = value;
-      }
-    }
-
-    return result;
-  },
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
-  getGreeting: function(event, callback) {
-    const res = require('./resources')(event.request.locale);
-    getUserTimezone(event, (timezone) => {
+  getGreeting: function(handlerInput, callback) {
+    getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
       if (timezone) {
         const hour = moment.tz(Date.now(), timezone).format('H');
         let greeting;
         if ((hour > 5) && (hour < 12)) {
-          greeting = res.strings.GOOD_MORNING;
+          greeting = module.exports.getResource(handlerInput, 'GOOD_MORNING');
         } else if ((hour >= 12) && (hour < 18)) {
-          greeting = res.strings.GOOD_AFTERNOON;
+          greeting = module.exports.getResource(handlerInput, 'GOOD_AFTERNOON');
         } else {
-          greeting = res.strings.GOOD_EVENING;
+          greeting = module.exports.getResource(handlerInput, 'GOOD_EVENING');
         }
         callback(greeting);
       } else {
@@ -369,20 +345,20 @@ module.exports = {
       callback(busted !== now);
     });
   },
-  getLocalTournamentTime: function(event, callback) {
+  getLocalTournamentTime: function(handlerInput, callback) {
     const times = getTournamentTimes(true);
     if (times) {
       // Get the user timezone
-      getUserTimezone(event, (timezone) => {
+      getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
+        const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
+        let defaultTimezone = '';
 
-        const res = require('./resources')(event.request.locale);
-        let result = moment.tz(times.start.getTime(), tz).format('dddd h a');
         if (useDefaultTimezone) {
-          result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
+          defaultTimezone = module.exports.getResource(handlerInput, 'TOURNAMENT_DEFAULT_TIMEZONE');
         }
-        callback(result);
+        callback(result, defaultTimezone);
       });
     } else {
       callback();
@@ -601,10 +577,6 @@ module.exports = {
     speech += '. ';
     return {speech: speech, choices: choices, forPurchase: forPurchase,
       availableProducts: availableProducts};
-  },
-  readCoins: function(event, coins) {
-    const res = require('./resources')(event.request.locale);
-    return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
   },
   readPayout: function(event, game, payout) {
     return readPayoutInternal(event, game, payout, ' <break time=\"200ms\"/> ');
@@ -837,7 +809,7 @@ module.exports = {
       } else {
         // Just show the background image
         image = new Alexa.ImageHelper()
-          .withDescription(module.exports.pickRandomOption(event, attributes, 'DISPLAY_WELCOME'))
+          .withDescription(module.exports.getResource(handlerInput, 'DISPLAY_WELCOME'))
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
         response.addRenderTemplateDirective({

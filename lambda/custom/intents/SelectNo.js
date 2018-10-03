@@ -46,8 +46,7 @@ module.exports = {
           attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
           attributes.temp.speechParams.GameWelcome =
             (rules.welcome) ? utils.getResource(handlerInput, rules.welcome) : '';
-          attributes.temp.speechParams.Amount =
-            utils.readCoins(event, utils.getBankroll(attributes));
+          attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
 
           if (game.progressiveJackpot) {
             // For progressive, just tell them the jackpot and to bet max coins

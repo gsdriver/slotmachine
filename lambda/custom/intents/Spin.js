@@ -76,7 +76,7 @@ module.exports = {
         if (bet !== game.lastbet) {
           // Say the amount they are betting
           speech += '_BET';
-          attributes.temp.speechParams.AmountBet = utils.readCoins(event, bet);
+          attributes.temp.speechParams.AmountBet = bet;
         }
 
         // Pick random numbers based on the rules of the game
@@ -195,7 +195,7 @@ module.exports = {
             }
           } else {
             if (rules.win) {
-              attributes.temp.speechParams.SpinResult += rules.win;
+              attributes.temp.speechParams.SpinResult += utils.getResource(handlerInput, rules.win);
             }
             outcome = 'win';
           }
@@ -207,7 +207,7 @@ module.exports = {
             utils.getProgressivePayout(attributes, (coinsWon) => {
               updateBankroll(attributes, coinsWon);
               speech += '_PROGRESSIVE';
-              attributes.temp.speechParams.AmountWon = utils.readCoins(event, coinsWon);
+              attributes.temp.speechParams.AmountWon = coinsWon;
 
               const params = {
                 url: process.env.SERVICEURL + 'slots/updateJackpot',
@@ -227,13 +227,12 @@ module.exports = {
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
             attributes.temp.speechParams.Match = utils.readPayout(event, rules, matchedPayout);
-            attributes.temp.speechParams.AmountWon =
-              utils.readCoins(event, bet * rules.payouts[matchedPayout]);
+            attributes.temp.speechParams.AmountWon = bet * rules.payouts[matchedPayout];
           }
         } else {
           // Sorry, you lost
           if (rules.lose) {
-            attributes.temp.speechParams.SpinResult += rules.lose;
+            attributes.temp.speechParams.SpinResult += utils.getResource(handlerInput, rules.lose);
           }
           speech += '_LOSER';
           if (attributes.temp.losingStreak > 5) {
@@ -304,7 +303,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
       reprompt = undefined;
     }
   } else {
-    attributes.temp.speechParams.Amount = utils.readCoins(event, utils.getBankroll(attributes));
+    attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
   }
 
   // Keep track of spins
@@ -338,8 +337,6 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
   // Set the speech
   if (!noSpeech) {
-  console.log(speech);
-  console.log(attributes.temp.speechParams);
     handlerInput.jrb
       .speak(ri(speech, attributes.temp.speechParams));
   }
