@@ -53,7 +53,7 @@ const requestInterceptor = {
             attributes.temp.speechParams = {};
             attributes.temp.repromptParams = {};
             utils.checkForTournament(attributes);
-            utils.getTournamentComplete(event, attributes, (result) => {
+            utils.getTournamentComplete(handlerInput, attributes, (result) => {
               if (!attributes.currentGame) {
                 attributes.currentGame = 'basic';
                 attributes.newUser = true;
@@ -141,7 +141,7 @@ const requestInterceptor = {
 const saveResponseInterceptor = {
   process(handlerInput) {
     return new Promise((resolve, reject) => {
-      const response = handlerInput.jrb.getResponse();
+      const response = handlerInput.responseBuilder.getResponse();
 
       if (response) {
         utils.drawTable(handlerInput);

@@ -51,9 +51,18 @@ module.exports = {
           if (attributes.currentGame == 'tournament') {
             // Give some details about the tournament
             speech = 'HELP_IN_TOURNAMENT';
-            attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
             attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
             attributes.temp.speechParams.Amount = bankroll;
+            utils.getRemainingTournamentTime(handlerInput, (text) => {
+              attributes.temp.speechParams.Time = text;
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('HELP_REPROMPT'))
+                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
+                .getResponse();
+              resolve(response);
+            });
+            return;
           } else {
             speech = 'HELP_NO_TOURNAMENT';
             attributes.temp.speechParams.Amount = bankroll;
@@ -81,7 +90,7 @@ module.exports = {
               .reprompt(ri('HELP_REPROMPT'))
               .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
               .getResponse();
-            response(response);
+            resolve(response);
           }
         }
       });

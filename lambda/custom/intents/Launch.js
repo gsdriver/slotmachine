@@ -92,6 +92,7 @@ module.exports = {
                 .speak(ri(speech, attributes.temp.speechParams))
                 .reprompt(ri('LAUNCH_NEWUSER_REPROMPT'))
                 .getResponse();
+              resolve(response);
             } else if (attributes.temp.resumeGame) {
               speech = (buttons.supportButtons(handlerInput))
                 ? 'LAUNCH_RESUME_GAME_BUTTON'
@@ -101,33 +102,43 @@ module.exports = {
                 .speak(ri(speech, attributes.temp.speechParams))
                 .reprompt(ri('LAUNCH_RESUME_GAME_REPROMPT'))
                 .getResponse();
+              resolve(response);
             } else {
               // Read the available games then prompt for each one
               const availableGames = utils.readAvailableGames(event, attributes, true);
-              if (availableGames.choices.indexOf('tournament') > -1) {
-                speech += '_TOURNAMENT';
-                attributes.temp.speechParams.Time = utils.getRemainingTournamentTime(handlerInput);
-              }
-              attributes.choices = availableGames.choices;
-              attributes.originalChoices = availableGames.choices;
+              new Promise((resolve, reject) => {
+                if (availableGames.choices.indexOf('tournament') > -1) {
+                  speech += '_TOURNAMENT';
+                  utils.getRemainingTournamentTime(handlerInput, (text) => {
+                    attributes.temp.speechParams.Time = text;
+                    resolve();
+                  });
+                } else {
+                  resolve();
+                }
+              }).then(() => {
+                attributes.choices = availableGames.choices;
+                attributes.originalChoices = availableGames.choices;
 
-              // Ask for the first one
-              attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
-              if (buttons.supportButtons(handlerInput)) {
-                speech += '_BUTTON';
-                attributes.temp.speechParams.Game1 =
+                // Ask for the first one
+                attributes.temp.repromptParams.Game =
                   utils.sayGame(event, availableGames.choices[0]);
-                attributes.temp.speechParams.Game2 =
-                  utils.sayGame(event, availableGames.choices[0]);
-              } else {
-                Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
-              }
-              response = handlerInput.jrb
-                .speak(ri(speech, attributes.temp.speechParams))
-                .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
-                .getResponse();
+                if (buttons.supportButtons(handlerInput)) {
+                  speech += '_BUTTON';
+                  attributes.temp.speechParams.Game1 =
+                    utils.sayGame(event, availableGames.choices[0]);
+                  attributes.temp.speechParams.Game2 =
+                    utils.sayGame(event, availableGames.choices[0]);
+                } else {
+                  Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+                }
+                response = handlerInput.jrb
+                  .speak(ri(speech, attributes.temp.speechParams))
+                  .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+                  .getResponse();
+                resolve(response);
+              });
             }
-            resolve(response);
           }
         });
       });

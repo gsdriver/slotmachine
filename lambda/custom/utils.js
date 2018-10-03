@@ -409,44 +409,37 @@ module.exports = {
 
     return undefined;
   },
-  getRemainingTournamentTime: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
-    const res = require('./resources')(event.request.locale);
-    let text = '';
+  getRemainingTournamentTime: function(handlerInput, callback) {
     const times = getTournamentTimes();
 
     if (times) {
       let secondsLeft = Math.floor((times.end.getTime() - times.now.getTime()) / 1000);
       let minutesLeft = Math.floor(secondsLeft / 60);
       secondsLeft -= (minutesLeft * 60);
+      let format;
 
       if (minutesLeft > 5) {
         // Just read minutes, rounded
         if (secondsLeft > 30) {
           minutesLeft++;
         }
-        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
-          .replace('{Minutes}', minutesLeft);
-      } else {
-        if (minutesLeft) {
-          text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
-            .replace('{Minutes}', minutesLeft)
-            .replace('{Seconds}', secondsLeft);
-        } else {
-          text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
-            .replace('{Seconds}', secondsLeft);
-        }
-      }
-    }
 
-    return text;
+        format = 'TOURNAMENT_TIMELEFT_MINUTES';
+      } else {
+        format = (minutesLeft) ? 'TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS' : 'TOURNAMENT_TIMELEFT_SECONDS';
+      }
+
+      const speechParams = {Minutes: minutesLeft, Seconds: secondsLeft};
+      handlerInput.jrm.render(ri(format, speechParams)).then(callback);
+    } else {
+      callback('');
+    }
   },
-  getTournamentComplete: function(event, attributes, callback) {
+  getTournamentComplete: function(handlerInput, attributes, callback) {
     // If the user is in a tournament, we check to see if that tournament
     // is complete.  If so, we set certain attributes and return a result
     // string via the callback for the user
     const game = attributes.tournament;
-    const res = require('./resources')(event.request.locale);
 
     if (game) {
       // You are in a tournament - let's see if it's completed
@@ -459,7 +452,8 @@ module.exports = {
           const results = JSON.parse(data.Body.toString('ascii'));
           let i;
           let result;
-          let speech = '';
+          let speech;
+          const speechParams = {};
 
           // Go through the results and find one that closed AFTER our last play
           for (i = 0; i < (results ? results.length : 0); i++) {
@@ -479,13 +473,13 @@ module.exports = {
                 attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
               }
               attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
-              speech = res.strings.TOURNAMENT_WINNER
-                  .replace('{TournamentResult}', game.bankroll)
-                  .replace('{Coins}', module.exports.TOURNAMENT_PAYOUT);
+              speech = 'TOURNAMENT_WINNER';
+              speechParams.TournamentResult = game.bankroll;
+              speechParams.Coins = module.exports.TOURNAMENT_PAYOUT;
             } else {
-              speech = res.strings.TOURNAMENT_LOSER
-                  .replace('{TournamentWinner}', result.highScore)
-                  .replace('{TournamentResult}', game.bankroll);
+              speech = 'TOURNAMENT_LOSER';
+              speechParams.TournamentWinner = result.highScore;
+              speechParams.TournamentResult = game.bankroll;
             }
 
             if (attributes.currentGame == 'tournament') {
@@ -497,14 +491,18 @@ module.exports = {
             // Tournament hasn't closed yet - is it active?  If not, flip to basic and
             // let them know the tournament is over
             if (!attributes.temp.tournamentAvailable) {
-              speech = res.strings.TOURNAMENT_ENDED;
+              speech = 'TOURNAMENT_ENDED';
               if (attributes.currentGame == 'tournament') {
                 attributes.currentGame = 'basic';
               }
             }
           }
 
-          callback(speech);
+          if (speech) {
+            handlerInput.jrm.render(ri(speech, speechParams)).then(callback);
+          } else {
+            callback('');
+          }
         }
       });
     } else {

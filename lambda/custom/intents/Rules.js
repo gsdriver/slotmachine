@@ -45,9 +45,12 @@ module.exports = {
         attributes.temp.speechParams.PayoutTable = '';
         for (payout in rules.payouts) {
           if (payout && (rules.payouts[payout] >= 1)) {
-            attributes.temp.speechParams.PayoutTable += utils.readPayout(event, rules, payout);
-            attributes.temp.speechParams.PayoutTable += utils.readPayoutAmount(event, rules, payout);
-            attributes.temp.speechParams.PayoutTable += ' <break time=\"200ms\"/>';
+            attributes.temp.speechParams.PayoutTable +=
+              utils.readPayout(event, rules, payout);
+            attributes.temp.speechParams.PayoutTable +=
+              utils.readPayoutAmount(event, rules, payout);
+            attributes.temp.speechParams.PayoutTable +=
+              ' <break time=\"200ms\"/>';
           }
         }
 

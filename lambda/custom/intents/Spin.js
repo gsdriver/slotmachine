@@ -419,13 +419,20 @@ function selectGame(handlerInput, callback) {
       const game = attributes[attributes.currentGame];
       const rules = utils.getGame(attributes.currentGame);
 
-      attributes.temp.speechParams.GameWelcome = (rules.welcome) ? rules.welcome : '';
-
-      if (game.progressiveJackpot) {
-        speech += '_PROGRESSIVE';
-        attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
-      }
-      callback(speech);
+      new Promise((resolve, reject) => {
+        if (rules.welcome) {
+          handlerInput.jrm.render(ri(rules.welcome)).then(resolve);
+        } else {
+          resolve('');
+        }
+      }).then((text) => {
+        attributes.temp.speechParams.GameWelcome = text;
+        if (game.progressiveJackpot) {
+          speech += '_PROGRESSIVE';
+          attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
+        }
+        callback(speech);
+      });
     });
   } else {
     speech = 'SPIN';
