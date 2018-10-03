@@ -52,7 +52,6 @@ module.exports = {
       selectGame(handlerInput, (welcome) => {
         const event = handlerInput.requestEnvelope;
         const attributes = handlerInput.attributesManager.getSessionAttributes();
-        const res = require('../resources')(event.request.locale);
 
         // When you spin, you either have to have bets or prior bets
         let speech = welcome;
@@ -254,7 +253,6 @@ module.exports = {
 function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, callback) {
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
-  const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = partialSpeech;
   let reprompt = 'SPIN_PLAY_AGAIN';
@@ -340,6 +338,8 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
   // Set the speech
   if (!noSpeech) {
+  console.log(speech);
+  console.log(attributes.temp.speechParams);
     handlerInput.jrb
       .speak(ri(speech, attributes.temp.speechParams));
   }
@@ -398,7 +398,6 @@ function getBet(event, attributes) {
 function selectGame(handlerInput, callback) {
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
-  const res = require('../resources')(event.request.locale);
   let speech;
 
   // If they were in the midst of selecting a game, make that selection

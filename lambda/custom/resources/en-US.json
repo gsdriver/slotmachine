@@ -4,6 +4,12 @@
   "UNKNOWN_SELECT_INTENT": "Sorry, I didn't get that. Try saying Yes.",
   "UNKNOWN_SELECT_INTENT_REPROMPT": "Try saying Yes.",
   "LAUNCH_REPROMPT": "Would you like to play {Game}? ",
+  "LAUNCH": {
+    "v1": "Welcome to Slot Machine. ",
+    "v2": "{Greeting} Welcome to Slot Machine. ",
+    "v3": "We've got a tournament for the next {Time}! "
+  },
+  "LAUNCH_BUTTON": "If you have an Echo Button, press it to play {Game1} <break time=\"200ms\"/> You can also say spin to play {Game2} or no to pick a different machine.",
   "LAUNCH_BUSTED_SUBSCRIBED": {
     "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Thanks to your Reset Bankroll subscription, your bankroll is reset to {Coins} coins. Would you like to play {Game}? ",
     "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Say spin to play {Game}. "
@@ -131,7 +137,7 @@
     "v1": "You bet {AmountBet}. {SpinResult}. Sorry, you lost. You have {Amount}. Would you like to spin again?",
     "v2": "You bet {AmountBet}. {SpinResult}. You lose bringing you down to {Amount}. Play again?",
     "v3": "Betting {AmountBet}. {SpinResult}. Sorry, no coins for you. Your total is now {Amount}. Try again?",
-    "v4": "Betting {AmountBet]. {SpinResult}. That hurt. You have {Amount} left. One more spin? "
+    "v4": "Betting {AmountBet}. {SpinResult}. That hurt. You have {Amount} left. One more spin? "
   },
   "SPIN_LOSER_BIG": {
     "v1": "{SpinResult}. Sorry, you lost. You have {Amount}. Would you like to spin again?",
@@ -143,7 +149,7 @@
     "v1": "You bet {AmountBet}. {SpinResult}. Sorry, you lost. You have {Amount}. Would you like to spin again?",
     "v2": "You bet {AmountBet}. {SpinResult}. Lost again? Maybe you should take your {Amount} and try a different machine. Play again?",
     "v3": "Betting {AmountBet}. {SpinResult}. You're probably getting used to hearing this <break time=\"200ms\"/> you lost. Your total is now {Amount}. Try again?",
-    "v4": "Betting {AmountBet]. {SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount} left. One more spin? "
+    "v4": "Betting {AmountBet}. {SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount} left. One more spin? "
   },
   "SPIN_JOINGAME_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. You matched {Match} and won {AmountWon}. You have {Amount}. Spin again? ",
   "SPIN_JOINGAME_BET_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet}. {SpinResult}. You matched {Match} and won {AmountWon}. You have {Amount}. Spin again? ",

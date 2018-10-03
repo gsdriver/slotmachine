@@ -16,7 +16,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
     let response;
 
     return new Promise((resolve, reject) => {
@@ -85,7 +84,7 @@ module.exports = {
 
             // For a new user, just tell them to bet or say spin (which places a bet)
             if (attributes.newUser) {
-              speech = ((buttons.supportButtons(handlerInput))
+              speech = (buttons.supportButtons(handlerInput))
                 ? 'LAUNCH_NEWUSER_BUTTON'
                 : 'LAUNCH_NEWUSER';
               attributes.temp.speechParams.Greeting = greeting;

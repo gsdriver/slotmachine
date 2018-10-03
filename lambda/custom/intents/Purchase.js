@@ -24,7 +24,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
 
     if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
       attributes.temp.purchasing = undefined;
@@ -44,7 +43,6 @@ module.exports = {
           .getResponse();
       } else {
         // Prompt them with a list of available products
-        attributes.temp.speechParams.Products = res.strings.PURCHASE_PRODUCT_LIST;
         attributes.temp.purchasing = true;
         return handlerInput.jrb
           .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
