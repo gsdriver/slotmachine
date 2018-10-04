@@ -606,14 +606,13 @@ module.exports = {
     return text;
   },
   readPayoutAmount: function(handlerInput, game, payout) {
-    const event = handlerInput.requestEnvelope;
-    const res = require('./resources')(event.request.locale);
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     let text;
 
     if (game.progressive && (game.progressive.match === payout)) {
-      text = res.strings.PAYOUT_PROGRESSIVE;
+      text = attributes.temp.payoutRates.progressive;
     } else {
-      text = res.strings.PAYOUT_PAYS.replace('{Coins}', game.payouts[payout]);
+      text = attributes.temp.payoutRates.coins.replace('[Coins]', game.payouts[payout]);
     }
 
     return text;
@@ -781,7 +780,7 @@ module.exports = {
 
         handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
           directive.backgroundImage = image;
-          directive.listItem = listItems;
+          directive.listItems = listItems;
           response.addRenderTemplateDirective(directive);
           callback();
         });

@@ -126,16 +126,16 @@ const requestInterceptor = {
             attributes.platform = sessionAttributes.platform;
             attributesManager.setSessionAttributes(attributes);
             return;
-          })
-          .then(() => {
+          }).then(() => {
             return handlerInput.jrm.renderObject(Jargon.ri('GAME_LIST'));
-          })
-          .then((gameList) => {
+          }).then((gameList) => {
             attributes.temp.gameList = gameList;
             return handlerInput.jrm.renderObject(Jargon.ri('SYMBOL_LIST'));
-          })
-          .then((symbolList) => {
+          }).then((symbolList) => {
             attributes.temp.symbolList = symbolList;
+            return handlerInput.jrm.renderObject(Jargon.ri('PAYOUT_RATES'));
+          }).then((payoutRates) => {
+            attributes.temp.payoutRates = payoutRates;
             resolve();
           })
           .catch((error) => {
@@ -185,6 +185,9 @@ const saveResponseInterceptor = {
                 attributes.temp = temp;
               }
             }
+          }
+          if (!process.env.NOLOG) {
+            console.log(JSON.stringify(response));
           }
           resolve();
         });
