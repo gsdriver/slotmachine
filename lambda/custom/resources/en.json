@@ -59,7 +59,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins, plural, =1 {one coin} other {# coins}} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? "
+      "upsellMessage": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins, plural, =1 {one more coin} other {# more coins}}. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? "
     },
     "token": "subscribe.coinreset.launch"
   },
