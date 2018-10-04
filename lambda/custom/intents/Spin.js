@@ -117,7 +117,7 @@ module.exports = {
         let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
         for (i = 0; i < spinResult.length; i++) {
           spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
-          spinText += utils.saySymbol(event, spinResult[i]);
+          spinText += attributes.temp.symbolList[spinResult[i]];
         }
         attributes.temp.speechParams.SpinResult = spinText;
 
@@ -226,8 +226,10 @@ module.exports = {
             return;
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
-            attributes.temp.speechParams.Match = utils.readPayout(event, rules, matchedPayout);
-            attributes.temp.speechParams.AmountWon = bet * rules.payouts[matchedPayout];
+            attributes.temp.speechParams.Match =
+              utils.readPayout(handlerInput, rules, matchedPayout);
+            attributes.temp.speechParams.AmountWon =
+              bet * rules.payouts[matchedPayout];
           }
         } else {
           // Sorry, you lost
@@ -405,7 +407,6 @@ function getBet(event, attributes) {
 }
 
 function selectGame(handlerInput, callback) {
-  const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
   let speech;
 
@@ -413,7 +414,7 @@ function selectGame(handlerInput, callback) {
   if (attributes.choices && (attributes.choices.length > 0)) {
     utils.selectGame(handlerInput, 0).then(() => {
       speech = 'SPIN_JOINGAME';
-      attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
+      attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
 
       const game = attributes[attributes.currentGame];
       const rules = utils.getGame(attributes.currentGame);

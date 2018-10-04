@@ -37,7 +37,7 @@ module.exports = {
         attributes.temp.readingRules = false;
         if (attributes.choices && (attributes.choices.length > 0)) {
           // If selecting a game, help string is different
-          attributes.temp.repromptParams.Game = utils.sayGame(event, attributes.choices[0]);
+          attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
           Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
           response = handlerInput.jrb
@@ -46,7 +46,7 @@ module.exports = {
             .getResponse();
           resolve(response);
         } else {
-          const cardParams = {PayoutTable: utils.readPayoutTable(event, rules)};
+          const cardParams = {PayoutTable: utils.readPayoutTable(handlerInput, rules)};
 
           if (attributes.currentGame == 'tournament') {
             // Give some details about the tournament

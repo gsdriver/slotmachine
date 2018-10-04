@@ -19,7 +19,6 @@ module.exports = {
         || (request.intent.name === 'AMAZON.NoIntent')));
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speech;
 
@@ -43,7 +42,7 @@ module.exports = {
           attributes.temp.repromptParams.Coins = rules.maxCoins;
 
           speech = 'SELECT_WELCOME';
-          attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
+          attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
           attributes.temp.speechParams.GameWelcome =
             (rules.welcome) ? utils.getResource(handlerInput, rules.welcome) : '';
           attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
@@ -65,7 +64,7 @@ module.exports = {
         });
       });
     } else {
-      attributes.temp.repromptParams.Game = utils.sayGame(event, attributes.choices[0]);
+      attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
       Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
       return handlerInput.jrb

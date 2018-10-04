@@ -14,7 +14,6 @@ module.exports = {
     return ((request.type === 'IntentRequest') && (request.intent.name === 'RulesIntent'));
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speech;
     let payout;
@@ -46,9 +45,9 @@ module.exports = {
         for (payout in rules.payouts) {
           if (payout && (rules.payouts[payout] >= 1)) {
             attributes.temp.speechParams.PayoutTable +=
-              utils.readPayout(event, rules, payout);
+              utils.readPayout(handlerInput, rules, payout);
             attributes.temp.speechParams.PayoutTable +=
-              utils.readPayoutAmount(event, rules, payout);
+              utils.readPayoutAmount(handlerInput, rules, payout);
             attributes.temp.speechParams.PayoutTable +=
               ' <break time=\"200ms\"/>';
           }
@@ -58,7 +57,7 @@ module.exports = {
         const response = handlerInput.jrb
           .speak(ri(speech, attributes.temp.speechParams))
           .reprompt(ri(reprompt))
-          .withSimpleCard('RULES_CARD_TITLE', utils.readPayoutTable(event, rules))
+          .withSimpleCard('RULES_CARD_TITLE', utils.readPayoutTable(handlerInput, rules))
           .getResponse();
         resolve(response);
       });

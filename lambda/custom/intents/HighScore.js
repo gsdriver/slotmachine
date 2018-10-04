@@ -5,7 +5,6 @@
 'use strict';
 
 const utils = require('../utils');
-const speechUtils = require('alexa-speech-utils')();
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -41,7 +40,7 @@ module.exports = {
               attributes.temp.speechParams.Rank = highScores.rank;
               attributes.temp.speechParams.Players = highScores.count;
               attributes.temp.speechParams.CurrentGame =
-                utils.sayGame(event, attributes.currentGame);
+                attributes.temp.gameList[attributes.currentGame];
             }
 
             // And what is the leader board?
@@ -58,7 +57,7 @@ module.exports = {
           // Ask for the first one
           speech += '_SELECT';
           reprompt = 'LAUNCH_REPROMPT';
-          attributes.temp.repromptParams.Game = utils.sayGame(event, attributes.choices[0]);
+          attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
           Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
         } else {
           reprompt = 'HIGHSCORE_REPROMPT';

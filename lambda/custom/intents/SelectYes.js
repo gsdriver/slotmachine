@@ -40,7 +40,7 @@ module.exports = {
         attributes.temp.repromptParams.Coins = rules.maxCoins;
 
         speech = 'SELECT_WELCOME';
-        attributes.temp.speechParams.Game = utils.sayGame(event, attributes.currentGame);
+        attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
         attributes.temp.speechParams.GameWelcome =
           (rules.welcome) ? utils.getResource(handlerInput, rules.welcome) : '';
         attributes.temp.speechParams.Amount = utils.getBankroll(attributes);

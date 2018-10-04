@@ -41,7 +41,7 @@ module.exports = {
           'payload': {
             'InSkillProduct': {
               'productId': attributes.paid[product].productId,
-            }
+            },
           },
           'token': token,
         })

@@ -50,8 +50,10 @@ module.exports = {
                     if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
                       speech += '_BUSTED_UPSELL';
                       attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-                      handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams)).then((directive) => {
-                        directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
+                      handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
+                      .then((directive) => {
+                        directive.payload.InSkillProduct.productId =
+                          attributes.paid.coinreset.productId;
                         handlerInput.jrb.addDirective(directive);
                         resolve();
                       });
@@ -111,30 +113,30 @@ module.exports = {
               resolve(response);
             } else {
               // Read the available games then prompt for each one
-              const availableGames = utils.readAvailableGames(event, attributes, true);
-              new Promise((resolve, reject) => {
+              utils.readAvailableGames(handlerInput, true)
+              .then((availableGames) => {
                 if (availableGames.choices.indexOf('tournament') > -1) {
                   speech += '_TOURNAMENT';
                   utils.getRemainingTournamentTime(handlerInput, (text) => {
                     attributes.temp.speechParams.Time = text;
-                    resolve();
+                    return availableGames;
                   });
                 } else {
-                  resolve();
+                  return availableGames;
                 }
-              }).then(() => {
+              }).then((availableGames) => {
                 attributes.choices = availableGames.choices;
                 attributes.originalChoices = availableGames.choices;
 
                 // Ask for the first one
                 attributes.temp.repromptParams.Game =
-                  utils.sayGame(event, availableGames.choices[0]);
+                  attributes.temp.gameList[availableGames.choices[0]];
                 if (buttons.supportButtons(handlerInput)) {
                   speech += '_BUTTON';
                   attributes.temp.speechParams.Game1 =
-                    utils.sayGame(event, availableGames.choices[0]);
+                  attributes.temp.gameList[availableGames.choices[0]];
                   attributes.temp.speechParams.Game2 =
-                    utils.sayGame(event, availableGames.choices[0]);
+                  attributes.temp.gameList[availableGames.choices[0]];
                 } else {
                   Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
                 }
