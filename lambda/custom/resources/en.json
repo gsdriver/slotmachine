@@ -64,10 +64,9 @@
     "token": "subscribe.coinreset.launch"
   },
   "LAUNCH_SUBSCRIBED_": "Thanks to your Reset Bankroll subscription, your bankroll is reset to {Coins} coins. ",
-  "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",
+  "PURCHASE_PRODUCTS": "We have a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins and a Crazy Diamond machine with wild diamond symbols available for purchase. Say the product you would like to buy or no to continue your game. ",
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
-  "PURCHASE_PRODUCT_LIST": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins and a Crazy Diamond machine with wild diamond symbols ",
   "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",
   "SELECT_WELCOME": {
     "v1": "Welcome to {Game}. {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}}. <break time=\"300ms\"/> You can bet up to {Coins} coins or say read high scores to hear the leader board.",

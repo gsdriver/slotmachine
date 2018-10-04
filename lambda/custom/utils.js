@@ -748,7 +748,7 @@ module.exports = {
     let image;
     const displayParams = {};
 
-    if (event.context && event.context.System &&
+    if (attributes.temp && event.context && event.context.System &&
       event.context.System.device &&
       event.context.System.device.supportedInterfaces &&
       event.context.System.device.supportedInterfaces.Display) {

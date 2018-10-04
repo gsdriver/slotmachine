@@ -51,7 +51,7 @@ module.exports = {
           .getResponse();
       } else {
         const speech = ri('REFUND_SAY_PRODUCT');
-        reponse = handlerInput.jrb
+        response = handlerInput.jrb
           .speak(speech)
           .reprompt(speech)
           .getResponse();

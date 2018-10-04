@@ -39,7 +39,7 @@ module.exports = {
           // They specified a product so let's go with that one
           const product = utils.mapProduct(event.request.intent.slots.Product.value);
           const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
-          reponse = handlerInput.jrb
+          response = handlerInput.jrb
             .addDirective({
               'type': 'Connections.SendRequest',
               'name': 'Buy',
@@ -55,7 +55,7 @@ module.exports = {
         } else {
           // Prompt them with a list of available products
           attributes.temp.purchasing = true;
-          reponse = handlerInput.jrb
+          response = handlerInput.jrb
             .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
             .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
             .getResponse();

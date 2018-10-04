@@ -131,14 +131,13 @@ module.exports = {
                 // Ask for the first one
                 attributes.temp.repromptParams.Game =
                   attributes.temp.gameList[availableGames.choices[0]];
+                Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
                 if (buttons.supportButtons(handlerInput)) {
                   speech += '_BUTTON';
                   attributes.temp.speechParams.Game1 =
                   attributes.temp.gameList[availableGames.choices[0]];
                   attributes.temp.speechParams.Game2 =
                   attributes.temp.gameList[availableGames.choices[0]];
-                } else {
-                  Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
                 }
                 response = handlerInput.jrb
                   .speak(ri(speech, attributes.temp.speechParams))
