@@ -29,30 +29,34 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    let response;
 
-    if (event.request.intent.slots && event.request.intent.slots.Product
-      && event.request.intent.slots.Product.value) {
-      const product = utils.mapProduct(event.request.intent.slots.Product.value);
-      const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
-      return handlerInput.jrb
-        .addDirective({
-          'type': 'Connections.SendRequest',
-          'name': 'Cancel',
-          'payload': {
-            'InSkillProduct': {
-              'productId': attributes.paid[product].productId,
+    return new Promise((resolve, reject) => {
+      if (event.request.intent.slots && event.request.intent.slots.Product
+        && event.request.intent.slots.Product.value) {
+        const product = utils.mapProduct(event.request.intent.slots.Product.value);
+        const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+        response = handlerInput.jrb
+          .addDirective({
+            'type': 'Connections.SendRequest',
+            'name': 'Cancel',
+            'payload': {
+              'InSkillProduct': {
+                'productId': attributes.paid[product].productId,
+              },
             },
-          },
-          'token': token,
-        })
-        .withShouldEndSession(true)
-        .getResponse();
-    } else {
-      const speech = ri('REFUND_SAY_PRODUCT');
-      return handlerInput.jrb
-        .speak(speech)
-        .reprompt(speech)
-        .getResponse();
-    }
+            'token': token,
+          })
+          .withShouldEndSession(true)
+          .getResponse();
+      } else {
+        const speech = ri('REFUND_SAY_PRODUCT');
+        reponse = handlerInput.jrb
+          .speak(speech)
+          .reprompt(speech)
+          .getResponse();
+      }
+      resolve(response);
+    });
   },
 };

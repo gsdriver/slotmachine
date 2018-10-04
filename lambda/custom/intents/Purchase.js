@@ -24,40 +24,44 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    let response;
 
-    if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
-      attributes.temp.purchasing = undefined;
-      return handlerInput.jrb
-        .speak(ri('PURCHASE_NO_PURCHASE'))
-        .reprompt(ri('PURCHASE_NO_PURCHASE'))
-        .getResponse();
-    } else {
-      if (event.request.intent.slots && event.request.intent.slots.Product
-        && event.request.intent.slots.Product.value) {
-        // They specified a product so let's go with that one
-        const product = utils.mapProduct(event.request.intent.slots.Product.value);
-        const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
-        return handlerInput.jrb
-          .addDirective({
-            'type': 'Connections.SendRequest',
-            'name': 'Buy',
-            'payload': {
-              'InSkillProduct': {
-                'productId': attributes.paid[product].productId,
-              },
-            },
-            'token': token,
-          })
-          .withShouldEndSession(true)
+    return new Promise((resolve, reject) => {
+      if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
+        attributes.temp.purchasing = undefined;
+        response = handlerInput.jrb
+          .speak(ri('PURCHASE_NO_PURCHASE'))
+          .reprompt(ri('PURCHASE_NO_PURCHASE'))
           .getResponse();
       } else {
-        // Prompt them with a list of available products
-        attributes.temp.purchasing = true;
-        return handlerInput.jrb
-          .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
-          .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
-          .getResponse();
+        if (event.request.intent.slots && event.request.intent.slots.Product
+          && event.request.intent.slots.Product.value) {
+          // They specified a product so let's go with that one
+          const product = utils.mapProduct(event.request.intent.slots.Product.value);
+          const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+          reponse = handlerInput.jrb
+            .addDirective({
+              'type': 'Connections.SendRequest',
+              'name': 'Buy',
+              'payload': {
+                'InSkillProduct': {
+                  'productId': attributes.paid[product].productId,
+                },
+              },
+              'token': token,
+            })
+            .withShouldEndSession(true)
+            .getResponse();
+        } else {
+          // Prompt them with a list of available products
+          attributes.temp.purchasing = true;
+          reponse = handlerInput.jrb
+            .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
+            .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
+            .getResponse();
+        }
       }
-    }
+      resolve(response);
+    });
   },
 };

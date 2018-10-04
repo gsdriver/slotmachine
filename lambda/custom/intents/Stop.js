@@ -20,10 +20,13 @@ module.exports = {
     // Stop reading the rules
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    attributes.temp.readingRules = false;
-    return handlerInput.jrb
-      .speak(ri('ERROR_REPROMPT'))
-      .reprompt(ri('ERROR_REPROMPT'))
-      .getResponse();
+    return new Promise((resolve, reject) => {
+      attributes.temp.readingRules = false;
+      const response = handlerInput.jrb
+        .speak(ri('ERROR_REPROMPT'))
+        .reprompt(ri('ERROR_REPROMPT'))
+        .getResponse();
+      resolve(response);
+    });
   },
 };
