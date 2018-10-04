@@ -41,8 +41,6 @@ module.exports = {
 
         speech = 'SELECT_WELCOME';
         attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
-        attributes.temp.speechParams.GameWelcome =
-          (rules.welcome) ? utils.getResource(handlerInput, rules.welcome) : '';
         attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
 
         if (game.progressiveJackpot) {
@@ -53,6 +51,14 @@ module.exports = {
         } else {
           Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
         }
+
+        if (rules.welcome) {
+          return handlerInput.jrm.render(ri(rules.welcome));
+        } else {
+          return '';
+        }
+      }).then((welcome) => {
+        attributes.temp.speechParams.GameWelcome = welcome;
         const response = handlerInput.jrb
           .speak(ri(speech, attributes.temp.speechParams))
           .reprompt(ri('SELECT_REPROMPT', attributes.temp.repromptParams))

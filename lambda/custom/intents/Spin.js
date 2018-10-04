@@ -195,7 +195,7 @@ module.exports = {
             }
           } else {
             if (rules.win) {
-              attributes.temp.speechParams.SpinResult += utils.getResource(handlerInput, rules.win);
+              attributes.temp.speechParams.SpinResult += rules.win;
             }
             outcome = 'win';
           }
@@ -234,7 +234,7 @@ module.exports = {
         } else {
           // Sorry, you lost
           if (rules.lose) {
-            attributes.temp.speechParams.SpinResult += utils.getResource(handlerInput, rules.lose);
+            attributes.temp.speechParams.SpinResult += rules.lose;
           }
           speech += '_LOSER';
           if (attributes.temp.losingStreak > 5) {
