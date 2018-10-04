@@ -45,23 +45,29 @@ module.exports = {
               // Is it the next day or not?
               utils.isNextDay(event, attributes, (nextDay) => {
                 if (!nextDay) {
-                  // Here's the place to do an upsell if we can!
-                  if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
-                    speech += '_BUSTED_UPSELL';
-                    attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-                    handlerInput.jrb
-                      .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.launch',
-                        ri(speech, attributes.temp.speechParams)));
-                  } else {
-                    speech += '_BUSTED';
-                    attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-                    handlerInput.jrb
-                      .speak(ri(speech, attributes.temp.speechParams));
-                  }
-                  response = handlerInput.jrb
-                    .withShouldEndSession(true)
-                    .getResponse();
-                  resolve(response);
+                  new Promise((resolve, reject) => {
+                    // Here's the place to do an upsell if we can!
+                    if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
+                      speech += '_BUSTED_UPSELL';
+                      attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+                      handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams)).then((directive) => {
+                        directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
+                        handlerInput.jrb.addDirective(directive);
+                        resolve();
+                      });
+                    } else {
+                      speech += '_BUSTED';
+                      attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+                      handlerInput.jrb
+                        .speak(ri(speech, attributes.temp.speechParams));
+                      resolve();
+                    }
+                  }).then(() => {
+                    response = handlerInput.jrb
+                      .withShouldEndSession(true)
+                      .getResponse();
+                    resolve(response);
+                  });
                   return;
                 } else {
                   speech += '_BUSTED_REPLENISH';

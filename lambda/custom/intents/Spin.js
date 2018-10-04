@@ -300,11 +300,10 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
         speech += '_UPSELL';
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
 
-        handlerInput.jrm.render(ri(speech, attributes.temp.speechParams))
-        .then((text) => {
-          response = handlerInput.jrb
-            .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.spin', text))
-            .getResponse();
+        handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
+        .then((directive) => {
+          directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
+          response = handlerInput.jrb.addDirective(directive).getResponse();
           if (snsPublication) {
             SNS.publish(snsPublication, () => {
               callback(response);

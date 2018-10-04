@@ -20,42 +20,49 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const now = Date.now();
     let upsellProduct;
+    let response;
 
-    // Read the available games then prompt for each one
-    attributes.temp.readingRules = false;
-    const availableGames = utils.readAvailableGames(event, attributes, false);
-    attributes.temp.speechParams.AvailableGames = availableGames.speech;
-    attributes.choices = availableGames.choices;
-    attributes.originalChoices = availableGames.choices;
-    if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
-      // Go through and see if there is a machine we can offer as upsell
-      // We only offer each machine once every two days
-      // So as not to annoy our customers too much
-      availableGames.availableProducts.forEach((product) => {
-        if (!attributes.prompts[product] ||
-          ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
-            upsellProduct = product;
-        }
-      });
-    }
+    return new Promise((resolve, reject) => {
+      // Read the available games then prompt for each one
+      attributes.temp.readingRules = false;
+      const availableGames = utils.readAvailableGames(event, attributes, false);
+      attributes.temp.speechParams.AvailableGames = availableGames.speech;
+      attributes.choices = availableGames.choices;
+      attributes.originalChoices = availableGames.choices;
+      if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
+        // Go through and see if there is a machine we can offer as upsell
+        // We only offer each machine once every two days
+        // So as not to annoy our customers too much
+        availableGames.availableProducts.forEach((product) => {
+          if (!attributes.prompts[product] ||
+            ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
+              upsellProduct = product;
+          }
+        });
+      }
 
-    if (upsellProduct) {
-      attributes.prompts[upsellProduct] = now;
-      attributes.temp.speechParams.Game = utils.sayGame(event, upsellProduct);
-      return handlerInput.jrb
-        .addDirective(utils.getPurchaseDirective(attributes, upsellProduct, 'Upsell',
-          'machine.' + upsellProduct + '.select', ri('SELECT_UPSELL', attributes.temp.speechParams)))
-        .withShouldEndSession(true)
-        .getResponse();
-    } else {
-      // Ask for the first one
-      attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
-      Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+      if (upsellProduct) {
+        attributes.prompts[upsellProduct] = now;
+        attributes.temp.speechParams.Game = utils.sayGame(event, upsellProduct);
+        handlerInput.jrm.renderObject(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((directive) => {
+          directive.payload.InSkillProduct.productId = attributes.paid[upsellProduct].productId;
+          directive.token = 'machine.' + upsellProduct + '.select';
+          response = handlerInput.jrb.addDirective(directive)
+            .withShouldEndSession(true)
+            .getResponse();
+          resolve(response);
+        });
+      } else {
+        // Ask for the first one
+        attributes.temp.repromptParams.Game = utils.sayGame(event, availableGames.choices[0]);
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-      return handlerInput.jrb
-        .speak(ri('SELECT_PICK_GAME', attributes.temp.speechParams))
-        .reprompt(ri('SELECT_PICK_GAME_REPROMPT', attributes.temp.repromptParams))
-        .getResponse();
-    }
+        response = handlerInput.jrb
+          .speak(ri('SELECT_PICK_GAME', attributes.temp.speechParams))
+          .reprompt(ri('SELECT_PICK_GAME_REPROMPT', attributes.temp.repromptParams))
+          .getResponse();
+        resolve(response);
+      }
+    });
   },
 };

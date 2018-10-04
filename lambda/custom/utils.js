@@ -823,19 +823,6 @@ module.exports = {
       callback();
     }
   },
-  getPurchaseDirective: function(attributes, product, name, token, message) {
-    return {
-      'type': 'Connections.SendRequest',
-      'name': name,
-      'payload': {
-        'InSkillProduct': {
-          'productId': attributes.paid[product].productId,
-        },
-        'upsellMessage': message,
-      },
-      'token': ((token) ? token : product),
-    };
-  },
   getPurchasedProducts: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();

@@ -38,7 +38,16 @@ module.exports = {
         const product = utils.mapProduct(event.request.intent.slots.Product.value);
         const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
         return handlerInput.jrb
-          .addDirective(utils.getPurchaseDirective(attributes, product, 'Buy', token))
+          .addDirective({
+            'type': 'Connections.SendRequest',
+            'name': 'Buy',
+            'payload': {
+              'InSkillProduct': {
+                'productId': attributes.paid[product].productId,
+              }
+            },
+            'token': token,
+          })
           .withShouldEndSession(true)
           .getResponse();
       } else {
