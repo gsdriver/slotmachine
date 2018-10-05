@@ -36,7 +36,7 @@ module.exports = {
   startInputHandler: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
       // We'll allow them to press the button again
-      handlerInput.responseBuilder.addDirective({
+      handlerInput.jrb.addDirective({
         'type': 'GameEngine.StartInputHandler',
         'timeout': 60000,
         'recognizers': {
@@ -80,7 +80,7 @@ module.exports = {
           'triggerEventTimeMs': 0,
         },
       };
-      handlerInput.responseBuilder.addDirective(buttonDownDirective);
+      handlerInput.jrb.addDirective(buttonDownDirective);
     }
   },
   colorButton: function(handlerInput, buttonId, buttonColor, longPause) {
@@ -142,7 +142,7 @@ module.exports = {
         'color': 'FFFFFF',
         'blend': false,
       });
-      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
+      handlerInput.jrb.addDirective(buttonIdleDirective);
     }
   },
   addLaunchAnimation: function(handlerInput) {
@@ -183,7 +183,7 @@ module.exports = {
         'color': 'FFFFFF',
         'blend': false,
       });
-      handlerInput.responseBuilder.addDirective(buttonIdleDirective);
+      handlerInput.jrb.addDirective(buttonIdleDirective);
     }
   },
 };

@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const buttons = require('../buttons');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -15,28 +16,28 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
     let response;
 
     return new Promise((resolve, reject) => {
-      utils.getGreeting(event, (greeting) => {
+      utils.getGreeting(handlerInput, (greeting) => {
+        attributes.temp.speechParams.Greeting = greeting;
         utils.getPurchasedProducts(handlerInput, (err, result) => {
-          let speech = '';
-          if (attributes.tournamentResult) {
-            speech += attributes.tournamentResult;
-            attributes.tournamentResult = undefined;
-          }
+          let speech = 'LAUNCH';
+
+          attributes.temp.speechParams.TournamentResult = (attributes.tournamentResult)
+            ? attributes.tournamentResult : '';
 
           // First off - are they out of money?
           if (attributes.busted) {
             if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
-              speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
+              speech += '_BUSTED_SUBSCRIBED';
+              attributes.temp.speechParams.Coins = utils.STARTING_BANKROLL;
               attributes.bankroll += utils.STARTING_BANKROLL;
               attributes.busted = undefined;
               finishResponse();
             } else if (attributes.temp.tournamentAvailable) {
               // If the tournament is available, we'll throw 5 coins at you to play
-              speech += res.strings.LAUNCH_BUSTED_TOURNAMENT;
+              speech += '_BUSTED';
               attributes.bankroll += 5;
               attributes.busted = undefined;
               finishResponse();
@@ -44,24 +45,35 @@ module.exports = {
               // Is it the next day or not?
               utils.isNextDay(event, attributes, (nextDay) => {
                 if (!nextDay) {
-                  // Here's the place to do an upsell if we can!
-                  if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
-                    handlerInput.responseBuilder
-                      .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.launch',
-                        speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
-                  } else {
-                    speech += res.strings.LAUNCH_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
-                    handlerInput.responseBuilder
-                      .speak(speech);
-                  }
-                  response = handlerInput.responseBuilder
-                    .withShouldEndSession(true)
-                    .getResponse();
-                  resolve(response);
+                  new Promise((resolve, reject) => {
+                    // Here's the place to do an upsell if we can!
+                    if (!attributes.temp.noUpsell && attributes.paid && attributes.paid.coinreset) {
+                      speech += '_BUSTED_UPSELL';
+                      attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+                      handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
+                      .then((directive) => {
+                        directive.payload.InSkillProduct.productId =
+                          attributes.paid.coinreset.productId;
+                        handlerInput.jrb.addDirective(directive);
+                        resolve();
+                      });
+                    } else {
+                      speech += '_BUSTED';
+                      attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+                      handlerInput.jrb
+                        .speak(ri(speech, attributes.temp.speechParams));
+                      resolve();
+                    }
+                  }).then(() => {
+                    response = handlerInput.jrb
+                      .withShouldEndSession(true)
+                      .getResponse();
+                    resolve(response);
+                  });
                   return;
                 } else {
-                  speech += res.pickRandomOption(event, attributes, 'LAUNCH_BUSTED_REPLENISH')
-                      .replace('{0}', utils.REFRESH_BANKROLL);
+                  speech += '_BUSTED_REPLENISH';
+                  attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
                   attributes.bankroll += utils.REFRESH_BANKROLL;
                   attributes.busted = undefined;
                   finishResponse();
@@ -80,57 +92,60 @@ module.exports = {
 
             // For a new user, just tell them to bet or say spin (which places a bet)
             if (attributes.newUser) {
-              speech = ((buttons.supportButtons(handlerInput))
-                ? res.strings.LAUNCH_NEWUSER_BUTTON
-                : res.strings.LAUNCH_NEWUSER)
-                .replace('{0}', greeting);
-              response = handlerInput.responseBuilder
-                .speak(speech)
-                .reprompt(res.strings.LAUNCH_NEWUSER_REPROMPT)
+              speech = (buttons.supportButtons(handlerInput))
+                ? 'LAUNCH_NEWUSER_BUTTON'
+                : 'LAUNCH_NEWUSER';
+              attributes.temp.speechParams.Greeting = greeting;
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('LAUNCH_NEWUSER_REPROMPT'))
                 .getResponse();
+              resolve(response);
             } else if (attributes.temp.resumeGame) {
               speech = (buttons.supportButtons(handlerInput))
-                ? res.strings.LAUNCH_RESUME_GAME_BUTTON
-                : res.strings.LAUNCH_RESUME_GAME;
+                ? 'LAUNCH_RESUME_GAME_BUTTON'
+                : 'LAUNCH_RESUME_GAME';
               attributes.temp.resumeGame = undefined;
-              response = handlerInput.responseBuilder
-                .speak(res.strings.LAUNCH_RESUME_GAME)
-                .reprompt(res.strings.LAUNCH_RESUME_GAME_REPROMPT)
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('LAUNCH_RESUME_GAME_REPROMPT'))
                 .getResponse();
+              resolve(response);
             } else {
               // Read the available games then prompt for each one
-              const availableGames = utils.readAvailableGames(event, attributes, true);
-              if (availableGames.choices.indexOf('tournament') > -1) {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME_TOURNAMENT')
-                  .replace('{0}', utils.getRemainingTournamentTime(event));
-              } else {
-                speech += res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME')
-                  .replace('{0}', greeting);
-                if (!buttons.supportButtons(handlerInput)) {
-                  speech += availableGames.speech;
+              utils.readAvailableGames(handlerInput, true)
+              .then((availableGames) => {
+                if (availableGames.choices.indexOf('tournament') > -1) {
+                  speech += '_TOURNAMENT';
+                  utils.getRemainingTournamentTime(handlerInput, (text) => {
+                    attributes.temp.speechParams.Time = text;
+                    return availableGames;
+                  });
+                } else {
+                  return availableGames;
                 }
-              }
-              attributes.choices = availableGames.choices;
-              attributes.originalChoices = availableGames.choices;
+              }).then((availableGames) => {
+                attributes.choices = availableGames.choices;
+                attributes.originalChoices = availableGames.choices;
 
-              // Ask for the first one
-              speech = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> ' + speech;
-              const reprompt = res.strings.LAUNCH_REPROMPT
-                .replace('{0}', utils.sayGame(event, availableGames.choices[0]));
-
-              if (buttons.supportButtons(handlerInput)) {
-                speech += res.strings.LAUNCH_WELCOME_BUTTON
-                  .replace('{0}', utils.sayGame(event, availableGames.choices[0]))
-                  .replace('{1}', utils.sayGame(event, availableGames.choices[0]));
-              } else {
-                speech += reprompt;
-              }
-              response = handlerInput.responseBuilder
-                .speak(speech)
-                .reprompt(reprompt)
-                .getResponse();
+                // Ask for the first one
+                attributes.temp.repromptParams.Game =
+                  attributes.temp.gameList[availableGames.choices[0]];
+                Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+                if (buttons.supportButtons(handlerInput)) {
+                  speech += '_BUTTON';
+                  attributes.temp.speechParams.Game1 =
+                  attributes.temp.gameList[availableGames.choices[0]];
+                  attributes.temp.speechParams.Game2 =
+                  attributes.temp.gameList[availableGames.choices[0]];
+                }
+                response = handlerInput.jrb
+                  .speak(ri(speech, attributes.temp.speechParams))
+                  .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+                  .getResponse();
+                resolve(response);
+              });
             }
-            resolve(response);
           }
         });
       });

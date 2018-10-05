@@ -4,6 +4,8 @@
 
 'use strict';
 
+const ri = require('@jargon/alexa-skill-sdk').ri;
+
 module.exports = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -16,14 +18,15 @@ module.exports = {
   },
   handle: function(handlerInput) {
     // Stop reading the rules
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
 
-    attributes.temp.readingRules = false;
-    return handlerInput.responseBuilder
-      .speak(res.strings.ERROR_REPROMPT)
-      .reprompt(res.strings.ERROR_REPROMPT)
-      .getResponse();
+    return new Promise((resolve, reject) => {
+      attributes.temp.readingRules = false;
+      const response = handlerInput.jrb
+        .speak(ri('ERROR_REPROMPT'))
+        .reprompt(ri('ERROR_REPROMPT'))
+        .getResponse();
+      resolve(response);
+    });
   },
 };

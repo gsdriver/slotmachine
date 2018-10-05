@@ -11,6 +11,7 @@ const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const SNS = new AWS.SNS();
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -51,7 +52,6 @@ module.exports = {
       selectGame(handlerInput, (welcome) => {
         const event = handlerInput.requestEnvelope;
         const attributes = handlerInput.attributesManager.getSessionAttributes();
-        const res = require('../resources')(event.request.locale);
 
         // When you spin, you either have to have bets or prior bets
         let speech = welcome;
@@ -62,8 +62,8 @@ module.exports = {
         attributes.temp.readingRules = false;
         if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
           attributes.currentGame = 'basic';
-          const response = handlerInput.responseBuilder
-            .speak(res.strings.TOURNAMENT_ENDED)
+          const response = handlerInput.jrb
+            .speak(ri('TOURNAMENT_ENDED'))
             .withShouldEndSession(true)
             .getResponse();
           resolve(response);
@@ -75,7 +75,8 @@ module.exports = {
         updateBankroll(attributes, -bet);
         if (bet !== game.lastbet) {
           // Say the amount they are betting
-          speech += res.strings.SPIN_YOU_BET.replace('{0}', utils.readCoins(event, bet));
+          speech += '_BET';
+          attributes.temp.speechParams.AmountBet = bet;
         }
 
         // Pick random numbers based on the rules of the game
@@ -116,9 +117,9 @@ module.exports = {
         let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
         for (i = 0; i < spinResult.length; i++) {
           spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
-          spinText += utils.saySymbol(event, spinResult[i]);
+          spinText += attributes.temp.symbolList[spinResult[i]];
         }
-        speech += res.strings.SPIN_RESULT.replace('{0}', spinText);
+        attributes.temp.speechParams.SpinResult = spinText;
 
         // Now let's determine the payouts
         let matchedPayout;
@@ -171,8 +172,8 @@ module.exports = {
             ? ((attributes.temp.losingStreak + 1) || 1) : 0;
         if (game.result.payout > 0) {
           // You won!  If more than 50:1, play the jackpot sound
+          speech += '_WIN';
           if (rules.payouts[matchedPayout] >= 50) {
-            speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
             game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
             outcome = 'jackpot';
 
@@ -180,6 +181,7 @@ module.exports = {
             // in which case we'll write it out once we know the amount
             if (!(rules.progressive && (matchedPayout == rules.progressive.match)
                           && (bet == rules.maxCoins))) {
+              speech += '_JACKPOT';
               const params = {
                 url: process.env.SERVICEURL + 'slots/updateJackpot',
                 formData: {
@@ -193,7 +195,7 @@ module.exports = {
             }
           } else {
             if (rules.win) {
-              speech += rules.win;
+              attributes.temp.speechParams.SpinResult += rules.win;
             }
             outcome = 'win';
           }
@@ -204,8 +206,8 @@ module.exports = {
             // OK, read the jackpot from the database
             utils.getProgressivePayout(attributes, (coinsWon) => {
               updateBankroll(attributes, coinsWon);
-              speech += res.strings.SPIN_PROGRESSIVE_WINNER
-                  .replace('{0}', utils.readCoins(event, coinsWon));
+              speech += '_PROGRESSIVE';
+              attributes.temp.speechParams.AmountWon = coinsWon;
 
               const params = {
                 url: process.env.SERVICEURL + 'slots/updateJackpot',
@@ -224,19 +226,19 @@ module.exports = {
             return;
           } else {
             updateBankroll(attributes, bet * rules.payouts[matchedPayout]);
-            speech += res.pickRandomOption(event, attributes, 'SPIN_WINNER')
-                .replace('{0}', utils.readPayout(event, rules, matchedPayout))
-                .replace('{1}', utils.readCoins(event, bet * rules.payouts[matchedPayout]));
+            attributes.temp.speechParams.Match =
+              utils.readPayout(handlerInput, rules, matchedPayout);
+            attributes.temp.speechParams.AmountWon =
+              bet * rules.payouts[matchedPayout];
           }
         } else {
           // Sorry, you lost
           if (rules.lose) {
-            speech += rules.lose;
+            attributes.temp.speechParams.SpinResult += rules.lose;
           }
+          speech += '_LOSER';
           if (attributes.temp.losingStreak > 5) {
-            speech += res.pickRandomOption(event, attributes, 'SPIN_BIG_LOSER');
-          } else {
-            speech += res.pickRandomOption(event, attributes, 'SPIN_LOSER');
+            speech += '_BIG';
           }
           outcome = 'lose';
         }
@@ -252,17 +254,21 @@ module.exports = {
 function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, callback) {
   const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
-  const res = require('../resources')(event.request.locale);
   let lastbet = bet;
   let speech = partialSpeech;
-  let reprompt = res.pickRandomOption(event, attributes, 'SPIN_PLAY_AGAIN');
+  let reprompt = 'SPIN_PLAY_AGAIN';
   let snsPublication;
   let noSpeech;
+  let response;
 
   // If this is the tournament, force a save
   if (attributes.currentGame == 'tournament') {
     attributes.temp.forceSave = true;
   }
+
+  // Keep track of spins
+  game.timestamp = Date.now();
+  game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
 
   // If you run out of coins, sorry - you need to come back tomorrow or buy more
   // Buying more is only allowed if the game doesn't have its own bankroll
@@ -270,12 +276,14 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     // Sorry, you are out
     game.busted = true;
     attributes.currentGame = 'basic';
-    speech += res.strings.SPIN_OUTOFMONEY;
+    speech += '_BUSTED_OUTOFMONEY';
     reprompt = undefined;
   } else if (attributes.bankroll < 1) {
     // If they subscribed to reset bankroll, then reset for them
+    speech += '_BUSTED';
     if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
-      speech += res.strings.SUBSCRIPTION_PAID_REPLENISH.replace('{0}', utils.STARTING_BANKROLL);
+      speech += '_SUBSCRIBED_REPLENISH';
+      attributes.temp.speechParams.Coins = utils.STARTING_BANKROLL;
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
       // Publish to SNS so we know someone busted out
@@ -291,22 +299,30 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
       attributes.busted = Date.now();
       if (attributes.paid && attributes.paid.coinreset) {
         noSpeech = true;
-        handlerInput.responseBuilder
-          .addDirective(utils.getPurchaseDirective(attributes, 'coinreset', 'Upsell', 'subscribe.coinreset.spin',
-            speech + res.strings.LAUNCH_BUSTED_UPSELL.replace('{0}', utils.REFRESH_BANKROLL)));
+        speech += '_UPSELL';
+        attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+
+        handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
+        .then((directive) => {
+          directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
+          response = handlerInput.jrb.addDirective(directive).getResponse();
+          if (snsPublication) {
+            SNS.publish(snsPublication, () => {
+              callback(response);
+            });
+          } else {
+            callback(response);
+          }
+        });
+        return;
       } else {
-        speech += res.strings.SPIN_BUSTED.replace('{0}', utils.REFRESH_BANKROLL);
+        attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
       }
       reprompt = undefined;
     }
   } else {
-    speech += res.strings.READ_BANKROLL
-        .replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
+    attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
   }
-
-  // Keep track of spins
-  game.timestamp = Date.now();
-  game.spins = (game.spins === undefined) ? 1 : (game.spins + 1);
 
   // Is this a new high?
   if (game.bankroll !== undefined) {
@@ -320,9 +336,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   // If it's a new user, clear that state and let them know about other games
   if (attributes.newUser) {
     attributes.newUser = undefined;
-    speech += res.strings.SPIN_NEWUSER;
-  } else if (reprompt) {
-    speech += reprompt;
+    speech += '_NEWUSER';
   }
 
   // Update the color of the echo button (if present)
@@ -337,25 +351,26 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
 
   // Set the speech
   if (!noSpeech) {
-    handlerInput.responseBuilder.speak(speech);
+    handlerInput.jrb
+      .speak(ri(speech, attributes.temp.speechParams));
   }
   if (reprompt) {
-    handlerInput.responseBuilder.reprompt(reprompt);
+    handlerInput.jrb.reprompt(ri(reprompt));
   } else {
-    handlerInput.responseBuilder.withShouldEndSession(true);
+    handlerInput.jrb.withShouldEndSession(true);
   }
 
   // Update the leader board
   utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
-
+  response = handlerInput.jrb.getResponse();
   if (snsPublication) {
     SNS.publish(snsPublication, () => {
-      callback(handlerInput.responseBuilder.getResponse());
+      callback(response);
     });
   } else {
-    callback(handlerInput.responseBuilder.getResponse());
+    callback(response);
   }
 }
 
@@ -392,29 +407,35 @@ function getBet(event, attributes) {
 }
 
 function selectGame(handlerInput, callback) {
-  const event = handlerInput.requestEnvelope;
   const attributes = handlerInput.attributesManager.getSessionAttributes();
-  const res = require('../resources')(event.request.locale);
-  let speech = '';
+  let speech;
 
   // If they were in the midst of selecting a game, make that selection
   if (attributes.choices && (attributes.choices.length > 0)) {
     utils.selectGame(handlerInput, 0).then(() => {
-      speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
-        .replace('{0}', utils.sayGame(event, attributes.currentGame));
+      speech = 'SPIN_JOINGAME';
+      attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
 
       const game = attributes[attributes.currentGame];
       const rules = utils.getGame(attributes.currentGame);
-      if (rules.welcome) {
-        speech += res.strings[rules.welcome];
-      }
 
-      if (game.progressiveJackpot) {
-        speech += res.strings.PROGRESSIVE_JACKPOT_ONLY.replace('{0}', game.progressiveJackpot);
-      }
-      callback(speech);
+      new Promise((resolve, reject) => {
+        if (rules.welcome) {
+          handlerInput.jrm.render(ri(rules.welcome)).then(resolve);
+        } else {
+          resolve('');
+        }
+      }).then((text) => {
+        attributes.temp.speechParams.GameWelcome = text;
+        if (game.progressiveJackpot) {
+          speech += '_PROGRESSIVE';
+          attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
+        }
+        callback(speech);
+      });
     });
   } else {
+    speech = 'SPIN';
     callback(speech);
   }
 }

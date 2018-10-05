@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -28,21 +29,37 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
+    let response;
 
-    if (event.request.intent.slots && event.request.intent.slots.Product
-      && event.request.intent.slots.Product.value) {
-      const product = res.mapProduct(event.request.intent.slots.Product.value);
-      const token = (product === 'coinreset') ? 'subscribe.coinreset.refund' : ('machine.' + product + '.refund');
-      return handlerInput.responseBuilder
-        .addDirective(utils.getPurchaseDirective(attributes, product, 'Cancel', token))
-        .withShouldEndSession(true)
-        .getResponse();
-    } else {
-      return handlerInput.responseBuilder
-        .speak(res.strings.REFUND_SAY_PRODUCT)
-        .reprompt(res.strings.REFUND_SAY_PRODUCT)
-        .getResponse();
-    }
+    return new Promise((resolve, reject) => {
+      if (event.request.intent.slots && event.request.intent.slots.Product
+        && event.request.intent.slots.Product.value) {
+        utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
+        .then((product) => {
+          const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+          response = handlerInput.jrb
+            .addDirective({
+              'type': 'Connections.SendRequest',
+              'name': 'Cancel',
+              'payload': {
+                'InSkillProduct': {
+                  'productId': attributes.paid[product].productId,
+                },
+              },
+              'token': token,
+            })
+            .withShouldEndSession(true)
+            .getResponse();
+          resolve(response);
+        });
+      } else {
+        const speech = ri('REFUND_SAY_PRODUCT');
+        response = handlerInput.jrb
+          .speak(speech)
+          .reprompt(speech)
+          .getResponse();
+        resolve(response);
+      }
+    });
   },
 };

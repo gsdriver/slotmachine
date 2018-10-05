@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -20,14 +21,13 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
     let speech;
 
     // Just in case they were trying to play at the last minute...
     if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
       attributes.currentGame = 'basic';
-      return handlerInput.responseBuilder
-        .speak(res.strings.TOURNAMENT_ENDED)
+      return handlerInput.jrb
+        .speak(ri('TOURNAMENT_ENDED'))
         .withShouldEndSession(true)
         .getResponse();
     }
@@ -35,28 +35,33 @@ module.exports = {
     return new Promise((resolve, reject) => {
       // First let's see if they selected an element via touch
       utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
-        speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
-          .replace('{0}', utils.sayGame(event, attributes.currentGame));
-
         const game = attributes[attributes.currentGame];
         const rules = utils.getGame(attributes.currentGame);
-        const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
-        if (rules.welcome) {
-          speech += res.strings[rules.welcome];
-        }
+        attributes.temp.repromptParams.Coins = rules.maxCoins;
 
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
+        speech = 'SELECT_WELCOME';
+        attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
+        attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
+
         if (game.progressiveJackpot) {
           // For progressive, just tell them the jackpot and to bet max coins
-          speech += res.strings.PROGRESSIVE_JACKPOT
-            .replace('{0}', game.progressiveJackpot)
-            .replace('{1}', rules.maxCoins);
+          speech += '_PROGRESSIVE';
+          attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
+          attributes.temp.speechParams.Coins = rules.maxCoins;
         } else {
-          speech += reprompt;
+          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
         }
-        const response = handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(reprompt)
+
+        if (rules.welcome) {
+          return handlerInput.jrm.render(ri(rules.welcome));
+        } else {
+          return '';
+        }
+      }).then((welcome) => {
+        attributes.temp.speechParams.GameWelcome = welcome;
+        const response = handlerInput.jrb
+          .speak(ri(speech, attributes.temp.speechParams))
+          .reprompt(ri('SELECT_REPROMPT', attributes.temp.repromptParams))
           .getResponse();
         resolve(response);
       });

@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -18,60 +19,62 @@ module.exports = {
         || (request.intent.name === 'AMAZON.NoIntent')));
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
+    let speech;
 
     // OK, pop this choice and go to the next one - if no other choices, we'll go with the last one
     attributes.choices.shift();
     if (attributes.choices.length === 1) {
       // OK, we're going with this one
-      let speech;
-
       // Just in case they were trying to play at the last minute...
       if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
         attributes.currentGame = 'basic';
-        return handlerInput.responseBuilder
-          .speak(res.strings.TOURNAMENT_ENDED)
+        return handlerInput.jrb
+          .speak(ri('TOURNAMENT_ENDED'))
           .withShouldEndSession(true)
           .getResponse();
       }
 
       return new Promise((resolve, reject) => {
         utils.selectGame(handlerInput, 0).then(() => {
-          speech = res.pickRandomOption(event, attributes, 'SELECT_WELCOME')
-            .replace('{0}', utils.sayGame(event, attributes.currentGame));
-
           const game = attributes[attributes.currentGame];
           const rules = utils.getGame(attributes.currentGame);
-          const reprompt = res.strings.SELECT_REPROMPT.replace('{0}', rules.maxCoins);
+          attributes.temp.repromptParams.Coins = rules.maxCoins;
 
-          if (rules.welcome) {
-            speech += res.strings[rules.welcome];
-          }
+          speech = 'SELECT_WELCOME';
+          attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
+          attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
 
-          speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, utils.getBankroll(attributes)));
           if (game.progressiveJackpot) {
             // For progressive, just tell them the jackpot and to bet max coins
-            speech += res.strings.PROGRESSIVE_JACKPOT
-                .replace('{0}', game.progressiveJackpot)
-                .replace('{1}', rules.maxCoins);
+            speech += '_PROGRESSIVE';
+            attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
+            attributes.temp.speechParams.Coins = rules.maxCoins;
           } else {
-            speech += reprompt;
+            Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
           }
-          const response = handlerInput.responseBuilder
-            .speak(speech)
-            .reprompt(reprompt)
+
+          if (rules.welcome) {
+            return handlerInput.jrm.render(ri(rules.welcome));
+          } else {
+            return '';
+          }
+        }).then((welcome) => {
+          attributes.temp.speechParams.GameWelcome = welcome;
+          const response = handlerInput.jrb
+            .speak(ri(speech, attributes.temp.speechParams))
+            .reprompt(ri('SELECT_REPROMPT', attributes.temp.repromptParams))
             .getResponse();
           resolve(response);
         });
       });
     } else {
-      const speech = res.strings.LAUNCH_REPROMPT.replace('{0}', utils.sayGame(event, attributes.choices[0]));
+      attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
+      Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-      return handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(speech)
+      return handlerInput.jrb
+        .speak(ri('LAUNCH_REPROMPT', attributes.temp.speechParams))
+        .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
         .getResponse();
     }
   },

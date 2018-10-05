@@ -14,6 +14,8 @@ const request = require('request');
 const querystring = require('querystring');
 const https = require('https');
 const moment = require('moment-timezone');
+const leven = require('leven');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
   // Has 99.8% payout
@@ -290,24 +292,43 @@ module.exports = {
   STARTING_BANKROLL: 100,
   REFRESH_BANKROLL: 100,
   TOURNAMENT_PAYOUT: 50,
+  ri: function(key, params) {
+    let param;
+    let text;
+
+    if (typeof key !== 'string') {
+      // Pick one of the options at random
+      const choice = Math.floor(Math.random() * Object.keys(params).length);
+      text = key[Object.keys(params)[choice]];
+    } else {
+      text = key;
+    }
+
+    for (param in params) {
+      if (param) {
+        text = text.replace('{' + param + '}', params[param]);
+      }
+    }
+    return text;
+  },
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
-  getGreeting: function(event, callback) {
-    const res = require('./resources')(event.request.locale);
-    getUserTimezone(event, (timezone) => {
+  getGreeting: function(handlerInput, callback) {
+    getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
       if (timezone) {
         const hour = moment.tz(Date.now(), timezone).format('H');
         let greeting;
         if ((hour > 5) && (hour < 12)) {
-          greeting = res.strings.GOOD_MORNING;
+          greeting = 'GOOD_MORNING';
         } else if ((hour >= 12) && (hour < 18)) {
-          greeting = res.strings.GOOD_AFTERNOON;
+          greeting = 'GOOD_AFTERNOON';
         } else {
-          greeting = res.strings.GOOD_EVENING;
+          greeting = 'GOOD_EVENING';
         }
-        callback(greeting);
+
+        handlerInput.jrm.render(ri(greeting)).then(callback);
       } else {
         callback('');
       }
@@ -322,22 +343,22 @@ module.exports = {
       callback(busted !== now);
     });
   },
-  getLocalTournamentTime: function(event, callback) {
+  getLocalTournamentTime: function(handlerInput, callback) {
     const times = getTournamentTimes(true);
     if (times) {
       // Get the user timezone
-      getUserTimezone(event, (timezone) => {
+      getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
-
-        const res = require('./resources')(event.request.locale);
-        const time = moment.tz(times.start.getTime(), tz).toString();
-        let result = res.speakTime(time);
+        const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
 
         if (useDefaultTimezone) {
-          result += res.strings.TOURNAMENT_DEFAULT_TIMEZONE;
+          handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
+            callback(result, text);
+          });
+        } else {
+          callback(result, '');
         }
-        callback(result);
       });
     } else {
       callback();
@@ -384,112 +405,115 @@ module.exports = {
 
     return undefined;
   },
-  getRemainingTournamentTime: function(event) {
-    const res = require('./resources')(event.request.locale);
-    let text = '';
+  getRemainingTournamentTime: function(handlerInput, callback) {
     const times = getTournamentTimes();
 
     if (times) {
       let secondsLeft = Math.floor((times.end.getTime() - times.now.getTime()) / 1000);
       let minutesLeft = Math.floor(secondsLeft / 60);
       secondsLeft -= (minutesLeft * 60);
+      let format;
 
       if (minutesLeft > 5) {
         // Just read minutes, rounded
         if (secondsLeft > 30) {
           minutesLeft++;
         }
-        text = res.strings.TOURNAMENT_TIMELEFT_MINUTES
-          .replace('{0}', minutesLeft);
-      } else {
-        if (minutesLeft) {
-          text = res.strings.TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS
-            .replace('{0}', minutesLeft)
-            .replace('{1}', secondsLeft);
-        } else {
-          text = res.strings.TOURNAMENT_TIMELEFT_SECONDS
-            .replace('{0}', secondsLeft);
-        }
-      }
-    }
 
-    return text;
+        format = 'TOURNAMENT_TIMELEFT_MINUTES';
+      } else {
+        format = (minutesLeft) ? 'TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS' : 'TOURNAMENT_TIMELEFT_SECONDS';
+      }
+
+      const speechParams = {Minutes: minutesLeft, Seconds: secondsLeft};
+      handlerInput.jrm.render(ri(format, speechParams)).then(callback);
+    } else {
+      callback('');
+    }
   },
-  getTournamentComplete: function(event, attributes, callback) {
+  getTournamentComplete: function(handlerInput, attributes) {
     // If the user is in a tournament, we check to see if that tournament
     // is complete.  If so, we set certain attributes and return a result
     // string via the callback for the user
     const game = attributes.tournament;
-    const res = require('./resources')(event.request.locale);
 
-    if (game) {
-      // You are in a tournament - let's see if it's completed
-      s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}, (err, data) => {
-        if (err) {
-          console.log(err, err.stack);
-          callback('');
-        } else {
-          // Yeah, I can do a binary search (this is sorted), but straight search for now
-          const results = JSON.parse(data.Body.toString('ascii'));
-          let i;
-          let result;
-          let speech = '';
-
-          // Go through the results and find one that closed AFTER our last play
-          for (i = 0; i < (results ? results.length : 0); i++) {
-            if (results[i].timestamp > game.timestamp) {
-              // This is the one
-              result = results[i];
-              break;
-            }
-          }
-
-          if (result) {
-            if (game.bankroll >= result.highScore) {
-              // Congratulations, you won!
-              if (!attributes.achievements) {
-                attributes.achievements = {trophy: 1};
-              } else {
-                attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
-              }
-              attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
-              speech = res.strings.TOURNAMENT_WINNER
-                  .replace('{0}', game.bankroll)
-                  .replace('{1}', module.exports.TOURNAMENT_PAYOUT);
-            } else {
-              speech = res.strings.TOURNAMENT_LOSER.replace('{0}', result.highScore).replace('{1}', game.bankroll);
-            }
-
-            if (attributes.currentGame == 'tournament') {
-              attributes.currentGame = 'basic';
-            }
-            attributes['tournament'] = undefined;
-            attributes.temp.forceSave = true;
+    return new Promise((resolve, reject) => {
+      if (game) {
+        // You are in a tournament - let's see if it's completed
+        s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}, (err, data) => {
+          if (err) {
+            console.log(err, err.stack);
+            resolve('');
           } else {
-            // Tournament hasn't closed yet - is it active?  If not, flip to basic and
-            // let them know the tournament is over
-            if (!attributes.temp.tournamentAvailable) {
-              speech = res.strings.TOURNAMENT_ENDED;
+            // Yeah, I can do a binary search (this is sorted), but straight search for now
+            const results = JSON.parse(data.Body.toString('ascii'));
+            let i;
+            let result;
+            let speech;
+            const speechParams = {};
+
+            // Go through the results and find one that closed AFTER our last play
+            for (i = 0; i < (results ? results.length : 0); i++) {
+              if (results[i].timestamp > game.timestamp) {
+                // This is the one
+                result = results[i];
+                break;
+              }
+            }
+
+            if (result) {
+              if (game.bankroll >= result.highScore) {
+                // Congratulations, you won!
+                if (!attributes.achievements) {
+                  attributes.achievements = {trophy: 1};
+                } else {
+                  attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
+                }
+                attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
+                speech = 'TOURNAMENT_WINNER';
+                speechParams.TournamentResult = game.bankroll;
+                speechParams.Coins = module.exports.TOURNAMENT_PAYOUT;
+              } else {
+                speech = 'TOURNAMENT_LOSER';
+                speechParams.TournamentWinner = result.highScore;
+                speechParams.TournamentResult = game.bankroll;
+              }
+
               if (attributes.currentGame == 'tournament') {
                 attributes.currentGame = 'basic';
               }
+              attributes['tournament'] = undefined;
+              attributes.temp.forceSave = true;
+            } else {
+              // Tournament hasn't closed yet - is it active?  If not, flip to basic and
+              // let them know the tournament is over
+              if (!attributes.temp.tournamentAvailable) {
+                speech = 'TOURNAMENT_ENDED';
+                if (attributes.currentGame == 'tournament') {
+                  attributes.currentGame = 'basic';
+                }
+              }
+            }
+
+            if (speech) {
+              handlerInput.jrm.render(ri(speech, speechParams)).then(resolve);
+            } else {
+              resolve('');
             }
           }
-
-          callback(speech);
-        }
-      });
-    } else {
-      // No-op, you weren't playing
-      callback('');
-    }
+        });
+      } else {
+        // No-op, you weren't playing
+        resolve('');
+      }
+    });
   },
   getGame: function(name) {
     return games[name];
   },
-  readAvailableGames: function(event, attributes, currentFirst) {
-    const res = require('./resources')(event.request.locale);
-    let speech;
+  readAvailableGames: function(handlerInput, currentFirst) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     const choices = [];
     const choiceText = [];
     let game;
@@ -498,99 +522,93 @@ module.exports = {
     const availableProducts = [];
     const forPurchase = [];
 
-    if (attributes.temp.tournamentAvailable) {
-      // If they already busted out, don't offer it
-      if (!attributes.tournament || !attributes.tournament.busted) {
-        // Offer the tournament
-        offerTournament = true;
-        if (currentFirst) {
-          gameToAdd = 'tournament';
-        }
-      }
-    }
-
-    if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
-      && attributes.paid[games[gameToAdd].product]
-      && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
-      // Pick a different game to add
-      attributes[attributes.currentGame] = undefined;
-      attributes.currentGame = 'standard';
-      gameToAdd = 'standard';
-    }
-
-    for (game in games) {
-      if (game && (game !== gameToAdd)) {
-        if (games[game].product) {
-          // We only offer this game if it is purchased
-          if (attributes.paid && attributes.paid[games[game].product]) {
-            if (attributes.paid[games[game].product].state === 'PURCHASED') {
-              choices.push(game);
-              choiceText.push(module.exports.sayGame(event, game));
-            } else {
-              availableProducts.push(game);
-              forPurchase.push(module.exports.sayGame(event, game));
-            }
+    return new Promise((resolve, reject) => {
+      if (attributes.temp.tournamentAvailable) {
+        // If they already busted out, don't offer it
+        if (!attributes.tournament || !attributes.tournament.busted) {
+          // Offer the tournament
+          offerTournament = true;
+          if (currentFirst) {
+            gameToAdd = 'tournament';
           }
-        } else if ((game != 'tournament') || offerTournament) {
-          choices.push(game);
-          choiceText.push(module.exports.sayGame(event, game));
         }
       }
-    }
 
-    if (gameToAdd && games[gameToAdd]) {
-      if (currentFirst) {
-        choices.unshift(gameToAdd);
-        choiceText.unshift(module.exports.sayGame(event, gameToAdd));
-      } else {
-        choices.push(gameToAdd);
-        choiceText.push(module.exports.sayGame(event, gameToAdd));
+      if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
+        && attributes.paid[games[gameToAdd].product]
+        && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
+        // Pick a different game to add
+        attributes[attributes.currentGame] = undefined;
+        attributes.currentGame = 'standard';
+        gameToAdd = 'standard';
       }
-    }
 
-    speech = res.strings.AVAILABLE_GAMES.replace('{0}', choices.length);
-    speech += speechUtils.and(choiceText, {locale: event.request.locale});
-    speech += '. ';
-    return {speech: speech, choices: choices, forPurchase: forPurchase,
-      availableProducts: availableProducts};
+      for (game in games) {
+        if (game && (game !== gameToAdd)) {
+          if (games[game].product) {
+            // We only offer this game if it is purchased
+            if (attributes.paid && attributes.paid[games[game].product]) {
+              if (attributes.paid[games[game].product].state === 'PURCHASED') {
+                choices.push(game);
+                choiceText.push(attributes.temp.gameList[game]);
+              } else {
+                availableProducts.push(game);
+                forPurchase.push(attributes.temp.gameList[game]);
+              }
+            }
+          } else if ((game != 'tournament') || offerTournament) {
+            choices.push(game);
+            choiceText.push(attributes.temp.gameList[game]);
+          }
+        }
+      }
+
+      if (gameToAdd && games[gameToAdd]) {
+        if (currentFirst) {
+          choices.unshift(gameToAdd);
+          choiceText.unshift(attributes.temp.gameList[gameToAdd]);
+        } else {
+          choices.push(gameToAdd);
+          choiceText.push(attributes.temp.gameList[gameToAdd]);
+        }
+      }
+
+      const speechParams = {};
+      speechParams.GameChoices = speechUtils.and(choiceText, {locale: event.request.locale});
+      speechParams.Number = choices.length;
+      handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams))
+      .then((speech) => {
+        resolve({speech: speech, choices: choices, forPurchase: forPurchase,
+          availableProducts: availableProducts});
+      });
+    });
   },
-  readCoins: function(event, coins) {
-    const res = require('./resources')(event.request.locale);
-    return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
+  readPayout: function(handlerInput, game, payout) {
+    return readPayoutInternal(handlerInput, game, payout, ' <break time=\"200ms\"/> ');
   },
-  readPayout: function(event, game, payout) {
-    return readPayoutInternal(event, game, payout, ' <break time=\"200ms\"/> ');
-  },
-  readPayoutTable: function(event, game) {
-    const res = require('./resources')(event.request.locale);
+  readPayoutTable: function(handlerInput, game) {
     let text = '';
     let payout;
-    let i;
-
-    for (i = 0; i < (game.wild ? game.wild.length : 0); i++) {
-      text += res.strings.WILD_SYMBOL.replace('{0}', module.exports.saySymbol(event, game.wild[i]));
-      text += '\n';
-    }
 
     for (payout in game.payouts) {
       if (payout) {
         // Special case if it's the progressive
-        text += readPayoutInternal(event, game, payout, ' ');
-        text += module.exports.readPayoutAmount(event, game, payout);
+        text += readPayoutInternal(handlerInput, game, payout, ' ');
+        text += module.exports.readPayoutAmount(handlerInput, game, payout);
         text += '\n';
       }
     }
 
     return text;
   },
-  readPayoutAmount: function(event, game, payout) {
-    const res = require('./resources')(event.request.locale);
+  readPayoutAmount: function(handlerInput, game, payout) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     let text;
 
     if (game.progressive && (game.progressive.match === payout)) {
-      text = res.strings.PAYOUT_PROGRESSIVE;
+      text = attributes.temp.payoutRates.progressive;
     } else {
-      text = res.strings.PAYOUT_PAYS.replace('{0}', game.payouts[payout]);
+      text = attributes.temp.payoutRates.coins.replace('[Coins]', game.payouts[payout]);
     }
 
     return text;
@@ -722,25 +740,15 @@ module.exports = {
       });
     });
   },
-  sayGame: function(event, game) {
-    const res = require('./resources')(event.request.locale);
-    const gameMap = JSON.parse(res.strings.GAME_LIST);
-    return (gameMap[game]) ? gameMap[game] : game;
-  },
-  saySymbol: function(event, symbol) {
-    const res = require('./resources')(event.request.locale);
-    const symbolMap = JSON.parse(res.strings.SYMBOL_LIST);
-    return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
-  },
-  drawTable: function(handlerInput) {
-    const response = handlerInput.responseBuilder;
+  drawTable: function(handlerInput, callback) {
+    const response = handlerInput.jrb;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('./resources')(event.request.locale);
     const game = attributes[attributes.currentGame];
     let image;
+    const displayParams = {};
 
-    if (event.context && event.context.System &&
+    if (attributes.temp && event.context && event.context.System &&
       event.context.System.device &&
       event.context.System.device.supportedInterfaces &&
       event.context.System.device.supportedInterfaces.Display) {
@@ -756,7 +764,7 @@ module.exports = {
             'textContent': {
               'primaryText': {
                 'type': 'RichText',
-                'text': '<font size=\"7\">' + module.exports.sayGame(event, choice) + '</font>',
+                'text': '<font size=\"7\">' + attributes.temp.gameList[choice] + '</font>',
               },
             },
           });
@@ -765,13 +773,12 @@ module.exports = {
         image = new Alexa.ImageHelper()
           .addImageInstance('http://garrettvargas.com/img/slot-background.png')
           .getImage();
-        response.addRenderTemplateDirective({
-          type: 'ListTemplate1',
-          token: 'listToken',
-          backButton: 'HIDDEN',
-          title: res.strings.SELECT_GAME,
-          backgroundImage: image,
-          listItems: listItems,
+
+        handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
+          directive.backgroundImage = image;
+          directive.listItems = listItems;
+          response.addRenderTemplateDirective(directive);
+          callback();
         });
       } else if (game && game.result && game.result.spin) {
         let name = '';
@@ -782,45 +789,34 @@ module.exports = {
           name += spin;
         });
 
-        const title = (game.result.payout)
-          ? res.strings.DISPLAY_PAYOUT_WINNER.replace('{0}', game.result.payout)
-          : res.strings.DISPLAY_PAYOUT_LOSER;
-
+        const title = (game.result.payout) ? 'DISPLAY_PAYOUT_WINNER' : 'DISPLAY_PAYOUT_LOSER';
+        displayParams.Coins = game.result.payout;
         image = new Alexa.ImageHelper()
           .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
           .getImage();
-        response.addRenderTemplateDirective({
-          type: 'BodyTemplate1',
-          backButton: 'HIDDEN',
-          title: title,
-          backgroundImage: image,
+        handlerInput.jrm.renderObject(ri(title, displayParams)).then((directive) => {
+          directive.backgroundImage = image;
+          response.addRenderTemplateDirective(directive);
+          callback();
         });
       } else {
         // Just show the background image
-        image = new Alexa.ImageHelper()
-          .withDescription(res.pickRandomOption(event, attributes, 'LAUNCH_WELCOME'))
-          .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-          .getImage();
-        response.addRenderTemplateDirective({
-          type: 'BodyTemplate1',
-          backButton: 'HIDDEN',
-          backgroundImage: image,
+        handlerInput.jrm.render(ri('DISPLAY_WELCOME')).then((welcome) => {
+          image = new Alexa.ImageHelper()
+            .withDescription(welcome)
+            .addImageInstance('http://garrettvargas.com/img/slot-background.png')
+            .getImage();
+          response.addRenderTemplateDirective({
+            type: 'BodyTemplate1',
+            backButton: 'HIDDEN',
+            backgroundImage: image,
+          });
+          callback();
         });
       }
+    } else {
+      callback();
     }
-  },
-  getPurchaseDirective: function(attributes, product, name, token, message) {
-    return {
-      'type': 'Connections.SendRequest',
-      'name': name,
-      'payload': {
-        'InSkillProduct': {
-          'productId': attributes.paid[product].productId,
-        },
-        'upsellMessage': message,
-      },
-      'token': ((token) ? token : product),
-    };
   },
   getPurchasedProducts: function(handlerInput, callback) {
     const event = handlerInput.requestEnvelope;
@@ -873,21 +869,29 @@ module.exports = {
       callback(err);
     });
   },
+  mapProduct: function(handlerInput, product) {
+    return new Promise((resolve, reject) => {
+      // Note these come from the language model
+      handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST')).then((productList) => {
+        resolve(getBestMatch(productList, product.toUpperCase()));
+      });
+    });
+  },
 };
 
-function readPayoutInternal(event, game, payout, pause) {
-  const res = require('./resources')(event.request.locale);
+function readPayoutInternal(handlerInput, game, payout, pause) {
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
   const slots = payout.split('|');
   let text = '';
   let i;
 
   for (i = 0; i < slots.length; i++) {
-    text += module.exports.saySymbol(event, slots[i]);
+    text += attributes.temp.symbolList[slots[i]];
     text += pause;
   }
 
   for (i = slots.length; i < game.slots; i++) {
-    text += res.strings.ANY_SLOT;
+    text += attributes.temp.symbolList.any;
     text += pause;
   }
 
@@ -994,4 +998,34 @@ function getUserTimezone(event, callback) {
     // No API token - no user timezone
     callback();
   }
+}
+
+function getBestMatch(mapping, value) {
+  const valueLen = value.length;
+  let map;
+  let ratio;
+  let bestMapping;
+  let bestRatio = 0;
+
+  for (map in mapping) {
+    if (map) {
+      let index;
+      for (index in mapping[map]) {
+        if (index) {
+          const str = mapping[map][index];
+          const lensum = str.length + valueLen;
+          ratio = Math.round(100 * ((lensum - leven(value, str)) / lensum));
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestMapping = map;
+          }
+        }
+      }
+    }
+  }
+
+  if (bestRatio < 90) {
+    console.log('Near match: ' + bestMapping + ', ' + bestRatio);
+  }
+  return bestMapping;
 }

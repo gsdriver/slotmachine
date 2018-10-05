@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -17,68 +18,82 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const res = require('../resources')(event.request.locale);
     const bankroll = utils.getBankroll(attributes);
     const rules = utils.getGame(attributes.currentGame);
-    let speech = '';
+    let speech;
+    let response;
 
-    // If this was fallback intent, let them know we didn't understand first
-    if (event.request.intent.name === 'AMAZON.FallbackIntent') {
-      speech += res.strings.HELP_FALLBACK;
-    }
-    attributes.temp.readingRules = false;
-    if (attributes.choices && (attributes.choices.length > 0)) {
-      // If selecting a game, help string is different
-      const reprompt = res.strings.LAUNCH_REPROMPT
-        .replace('{0}', utils.sayGame(event, attributes.choices[0]));
+    return new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
+        // If this was fallback intent, let them know we didn't understand first
+        if (event.request.intent.name === 'AMAZON.FallbackIntent') {
+          handlerInput.jrm.render(ri('HELP_FALLBACK')).then(resolve);
+        } else {
+          resolve('');
+        }
+      })
+      .then((text) => {
+        attributes.temp.speechParams.FallbackText = text;
+        attributes.temp.readingRules = false;
+        if (attributes.choices && (attributes.choices.length > 0)) {
+          // If selecting a game, help string is different
+          attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
+          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-      speech += res.strings.HELP_SELECT_TEXT;
-      speech += reprompt;
-      return handlerInput.responseBuilder
-        .speak(speech)
-        .reprompt(reprompt)
-        .getResponse();
-    } else {
-      const reprompt = res.strings.HELP_REPROMPT;
+          response = handlerInput.jrb
+            .speak(ri('HELP_SELECT_TEXT', attributes.temp.speechParams))
+            .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+            .getResponse();
+          resolve(response);
+        } else {
+          const cardParams = {PayoutTable: utils.readPayoutTable(handlerInput, rules)};
 
-      if (attributes.currentGame == 'tournament') {
-        // Give some details about the tournament
-        speech += res.strings.HELP_TOURNAMENT
-          .replace('{0}', utils.getRemainingTournamentTime(event))
-          .replace('{1}', utils.TOURNAMENT_PAYOUT);
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
-        speech += res.strings.HELP_COMMANDS;
-      } else {
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(event, bankroll));
-        speech += res.strings.HELP_COMMANDS;
-      }
+          if (attributes.currentGame == 'tournament') {
+            // Give some details about the tournament
+            speech = 'HELP_IN_TOURNAMENT';
+            attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+            attributes.temp.speechParams.Amount = bankroll;
+            utils.getRemainingTournamentTime(handlerInput, (text) => {
+              attributes.temp.speechParams.Time = text;
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('HELP_REPROMPT'))
+                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
+                .getResponse();
+              resolve(response);
+            });
+            return;
+          } else {
+            speech = 'HELP_NO_TOURNAMENT';
+            attributes.temp.speechParams.Amount = bankroll;
+          }
 
-      if (!attributes.temp.tournamentAvailable) {
-        return new Promise((resolve, reject) => {
-          utils.getLocalTournamentTime(event, (tournamentTime) => {
-            if (tournamentTime) {
-              speech += res.strings.HELP_TOURNAMENT
-                .replace('{0}', tournamentTime)
-                .replace('{1}', utils.TOURNAMENT_PAYOUT);
-            }
-            speech += reprompt;
+          if (!attributes.temp.tournamentAvailable) {
+            utils.getLocalTournamentTime(handlerInput, (tournamentTime, timezone) => {
+              if (tournamentTime) {
+                speech = 'HELP_UPCOMING_TOURNAMENT';
+                attributes.temp.speechParams.Time = tournamentTime;
+                attributes.temp.speechParams.Timezone = timezone;
+                attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+              }
 
-            const response = handlerInput.responseBuilder
-              .speak(speech)
-              .reprompt(reprompt)
-              .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
+              response = handlerInput.jrb
+                .speak(ri(speech, attributes.temp.speechParams))
+                .reprompt(ri('HELP_REPROMPT'))
+                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
+                .getResponse();
+              resolve(response);
+            });
+          } else {
+            response = handlerInput.jrb
+              .speak(ri(speech, attributes.temp.speechParams))
+              .reprompt(ri('HELP_REPROMPT'))
+              .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
               .getResponse();
             resolve(response);
-          });
-        });
-      } else {
-        speech += reprompt;
-        return handlerInput.responseBuilder
-          .speak(speech)
-          .reprompt(reprompt)
-          .withSimpleCard(res.strings.HELP_CARD_TITLE, utils.readPayoutTable(event, rules))
-          .getResponse();
-      }
-    }
+          }
+        }
+      });
+    });
   },
 };
