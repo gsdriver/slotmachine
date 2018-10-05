@@ -439,6 +439,17 @@
   "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. ",
   "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. Insert {Coins, plural, =1 {one coin} other {# coins}} to win the progressive jackpot. ",
   "TOURNAMENT_ENDED": "The tournament has ended. Please check again later to hear the results! ",
+  "PRODUCT_MAP_LIST": {
+    "coinreset": {
+      "0": "RESET BANKROLL",
+      "1": "RESET COIN"
+    },
+    "crazydiamond": {
+      "0": "CRAZY DIAMONDS",
+      "1": "DIAMONDS",
+      "2": "CRAZY DIAMONDS MACHINE"
+    }
+  },
   "GAME_LIST": {
     "basic": "the standard fruit game",
     "wild": "wild cherry",

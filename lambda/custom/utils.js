@@ -869,14 +869,13 @@ module.exports = {
       callback(err);
     });
   },
-  mapProduct: function(product) {
-    // Note these come from the language model
-    // If product names get localized we'll deal with this then
-    const productList = {'RESET BANKROLL': 'coinreset', 'RESET COIN': 'reset coin',
-      'CRAZY DIAMONDS': 'crazydiamond', 'DIAMONDS': 'crazydiamond',
-      'CRAZY DIAMONDS MACHINE': 'crazydiamond'};
-
-    return getBestMatch(productList, product.toUpperCase());
+  mapProduct: function(handlerInput, product) {
+    return new Promise((resolve, reject) => {
+      // Note these come from the language model
+      handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST')).then((productList) => {
+        resolve(getBestMatch(productList, product.toUpperCase()));
+      });
+    });
   },
 };
 
@@ -1010,11 +1009,17 @@ function getBestMatch(mapping, value) {
 
   for (map in mapping) {
     if (map) {
-      const lensum = map.length + valueLen;
-      ratio = Math.round(100 * ((lensum - leven(value, map)) / lensum));
-      if (ratio > bestRatio) {
-        bestRatio = ratio;
-        bestMapping = map;
+      let index;
+      for (index in mapping[map]) {
+        if (index) {
+          const str = mapping[map][index];
+          const lensum = str.length + valueLen;
+          ratio = Math.round(100 * ((lensum - leven(value, str)) / lensum));
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestMapping = map;
+          }
+        }
       }
     }
   }
@@ -1022,5 +1027,5 @@ function getBestMatch(mapping, value) {
   if (bestRatio < 90) {
     console.log('Near match: ' + bestMapping + ', ' + bestRatio);
   }
-  return mapping[bestMapping];
+  return bestMapping;
 }

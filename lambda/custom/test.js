@@ -16,6 +16,8 @@ function BuildEvent(argv)
   var bet = {'name': 'BetIntent', 'slots': {'Amount': {'name': 'Amount', 'value': ''}}};
   var spin = {'name': 'SpinIntent', 'slots': {}};
   var select = {'name': 'SelectIntent', 'slots': {}};
+  var purchase = {'name': 'PurchaseIntent', 'slots': {'Product': {'name': 'Product', 'value': ''}}};
+  var refund = {'name': 'RefundIntent', 'slots': {'Product': {'name': 'Product', 'value': ''}}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var game = {'name': 'GameIntent', 'slots': {'Number': {'name': 'Number', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
@@ -275,6 +277,16 @@ function BuildEvent(argv)
     lambda.request.intent = rules;
     if (argv.length > 3) {
       rules.slots.Rules.value = argv[3];
+    }
+  } else if (argv[2] == 'purchase') {
+    lambda.request.intent = purchase;
+    if (argv.length > 3) {
+      purchase.slots.Product.value = argv[3];
+    }
+  } else if (argv[2] == 'refund') {
+    lambda.request.intent = refund;
+    if (argv.length > 3) {
+      refund.slots.Product.value = argv[3];
     }
   } else if (argv[2] == 'game') {
     lambda.request.intent = game;

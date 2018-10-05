@@ -33,25 +33,29 @@ module.exports = {
           .speak(ri('PURCHASE_NO_PURCHASE'))
           .reprompt(ri('PURCHASE_NO_PURCHASE'))
           .getResponse();
+        resolve(response);
       } else {
         if (event.request.intent.slots && event.request.intent.slots.Product
           && event.request.intent.slots.Product.value) {
           // They specified a product so let's go with that one
-          const product = utils.mapProduct(event.request.intent.slots.Product.value);
-          const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
-          response = handlerInput.jrb
-            .addDirective({
-              'type': 'Connections.SendRequest',
-              'name': 'Buy',
-              'payload': {
-                'InSkillProduct': {
-                  'productId': attributes.paid[product].productId,
+          utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
+          .then((product) => {
+            const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+            response = handlerInput.jrb
+              .addDirective({
+                'type': 'Connections.SendRequest',
+                'name': 'Buy',
+                'payload': {
+                  'InSkillProduct': {
+                    'productId': attributes.paid[product].productId,
+                  },
                 },
-              },
-              'token': token,
-            })
-            .withShouldEndSession(true)
-            .getResponse();
+                'token': token,
+              })
+              .withShouldEndSession(true)
+              .getResponse();
+            resolve(response);
+          });
         } else {
           // Prompt them with a list of available products
           attributes.temp.purchasing = true;
@@ -59,9 +63,9 @@ module.exports = {
             .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
             .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
             .getResponse();
+          resolve(response);
         }
       }
-      resolve(response);
     });
   },
 };
