@@ -10,6 +10,7 @@ const SelectYes = require('./SelectYes');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const SNS = new AWS.SNS();
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -35,10 +36,34 @@ module.exports = {
             console.log(err);
           }
           console.log('SNS post took ' + (Date.now() - start) + ' ms');
-          done();
+          next();
         });
       } else {
-        done();
+        next();
+      }
+
+      function next() {
+        // If this was an upsell and we have a variation, save it to S3
+        if (attributes.upsellSelection) {
+          const summary = {
+            selection: attributes.upsellSelection,
+            userId: event.session.user.userId,
+            response: event.request.payload.purchaseResult,
+          };
+          const params = {Body: JSON.stringify(summary),
+            Bucket: 'garrett-alexa-usage',
+            Key: 'slots-upsell/' + Date.now() + '.txt'};
+          s3.putObject(params, (err, data) => {
+            if (err) {
+              console.log('Error writing to S3 ' + err.stack);
+            }
+            done();
+          });
+
+          attributes.upsellSelection = undefined;
+        } else {
+          done();
+        }
       }
 
       function done() {

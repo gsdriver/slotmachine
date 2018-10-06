@@ -44,9 +44,28 @@ module.exports = {
         if (upsellProduct) {
           attributes.prompts[upsellProduct] = now;
           attributes.temp.speechParams.Game = attributes.temp.gameList[upsellProduct];
-          handlerInput.jrm.renderObject(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((directive) => {
-            directive.payload.InSkillProduct.productId = attributes.paid[upsellProduct].productId;
-            directive.token = 'machine.' + upsellProduct + '.select';
+          handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
+            const directive = {
+              'type': 'Connections.SendRequest',
+              'name': 'Upsell',
+              'payload': {
+                'InSkillProduct': {
+                  productId: attributes.paid[upsellProduct].productId,
+                },
+                'upsellMessage': upsellMessage,
+              },
+              'token': 'machine.' + upsellProduct + '.select',
+            };
+
+            // Need a way to get variation selected from Jargon
+            if (upsellMessage.substring(0, 3) === 'We ') {
+              attributes.upsellSelection = 'v1';
+            } else if (upsellMessage.substring(0, 3) === 'We\'') {
+              attributes.upsellSelection = 'v2';
+            } else {
+              attributes.upsellSelection = 'v3';
+            }
+
             response = handlerInput.jrb.addDirective(directive)
               .withShouldEndSession(true)
               .getResponse();

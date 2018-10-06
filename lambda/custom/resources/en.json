@@ -84,13 +84,9 @@
   "SELECT_PICK_GAME_REPROMPT": "Would you like to play {Game}? ",
   "SELECT_REPROMPT": "You can bet up to {Coins} coins or say read high scores to hear the leader board.",
   "SELECT_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "We have {Game} machine available for purchase. Want to learn more?"
-    }
+    "v1": "We have {Game} machine available for purchase. Want to learn more?",
+    "v2": "We're proud to introduce {Game} machine now available for purchase. Would you like to hear more about it?",
+    "v3": "In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?"
   },
   "EXIT_GAME": "{Ad} Goodbye.",
   "HIGHSCORE_RANKING": "Your peak bankroll of {Coins, plural, =1 {one coin} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. What else can I help you with?",
