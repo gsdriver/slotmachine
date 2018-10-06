@@ -22,61 +22,59 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     return new Promise((resolve, reject) => {
-      // Publish to SNS so we know something happened
-      if (process.env.SNSTOPIC) {
-        const start = Date.now();
-        SNS.publish({
-          Message: event.request.name + ' with token ' + event.request.token
-            + ' was ' + event.request.payload.purchaseResult
-            + ' by user ' + event.session.user.userId,
-          TopicArn: process.env.SNSTOPIC,
-          Subject: 'Slot Machine Purchase Response',
-        }, (err, data) => {
-          if (err) {
-            console.log(err);
+      // First write out to S3
+      const summary = {
+        token: event.request.token,
+        action: event.request.name,
+        userId: event.session.user.userId,
+        response: event.request.payload.purchaseResult,
+      };
+      if (attributes.upsellSelection) {
+        summary.selection = attributes.upsellSelection;
+      }
+      const params = {
+        Body: JSON.stringify(summary),
+        Bucket: 'garrett-alexa-usage',
+        Key: 'slots-upsell/' + Date.now() + '.txt',
+      };
+
+      s3.putObject(params).promise().then(() => {
+        // Publish to SNS if the action was accepted so we know something happened
+        if (process.env.SNSTOPIC &&
+          (event.request.payload.purchaseResult === 'ACCEPTED')) {
+          let message;
+
+          // This message is sent internally so no worries about localizing
+          message = 'For token ' + event.request.token + ', ';
+          if (event.request.payload.message) {
+            message = event.request.payload.message;
+          } else {
+            message = event.request.name + ' was accepted';
           }
-          console.log('SNS post took ' + (Date.now() - start) + ' ms');
-          next();
-        });
-      } else {
-        next();
-      }
+          message += ' by user ' + event.session.user.userId;
+          if (attributes.upsellSelection) {
+            message += '\nUpsell variant ' + attributes.upsellSelection + ' was presented. ';
+          }
 
-      function next() {
-        // If this was an upsell and we have a variation, save it to S3
-        if (attributes.upsellSelection) {
-          const summary = {
-            selection: attributes.upsellSelection,
-            userId: event.session.user.userId,
-            response: event.request.payload.purchaseResult,
-          };
-          const params = {Body: JSON.stringify(summary),
-            Bucket: 'garrett-alexa-usage',
-            Key: 'slots-upsell/' + Date.now() + '.txt'};
-          s3.putObject(params, (err, data) => {
-            if (err) {
-              console.log('Error writing to S3 ' + err.stack);
-            }
-            done();
-          });
-
-          attributes.upsellSelection = undefined;
+          return SNS.publish({
+            Message: message,
+            TopicArn: process.env.SNSTOPIC,
+            Subject: 'Slot Machine New Purchase',
+          }).promise();
         } else {
-          done();
+          return;
         }
-      }
-
-      function done() {
+      }).then(() => {
         // Launch processing will handle updating the bankroll as necessary
         // We just need to check if they declined an upsell request
         // to avoid an infinite loop
-        console.log('Response is ' + event.request.name);
         const options = event.request.token.split('.');
         const accepted = (event.request.payload &&
           ((event.request.payload.purchaseResult == 'ACCEPTED') ||
           (event.request.payload.purchaseResult == 'ALREADY_PURCHASED')));
         let nextAction = 'launch';
 
+        attributes.upsellSelection = undefined;
         if ((event.request.name === 'Upsell') && !accepted) {
           // Don't upsell them again
           if (options[1] === 'coinreset') {
@@ -116,22 +114,18 @@ module.exports = {
 
         // And go to the appropriate next step
         if (nextAction === 'select') {
-          resolve(Select.handle(handlerInput));
+          return Select.handle(handlerInput);
         } else if (nextAction === 'autoselect') {
           attributes.choices = [options[1]];
-          SelectYes.handle(handlerInput)
-          .then((response) => {
-            resolve(response);
-          });
+          return SelectYes.handle(handlerInput);
         } else {
           // Just drop them directly into a game
           attributes.temp.resumeGame = true;
-          Launch.handle(handlerInput)
-          .then((response) => {
-            resolve(response);
-          });
+          return Launch.handle(handlerInput);
         }
-      }
+      }).then((response) => {
+        resolve(response);
+      });
     });
   },
 };
