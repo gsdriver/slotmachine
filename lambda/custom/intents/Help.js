@@ -69,11 +69,11 @@ module.exports = {
           }
 
           if (!attributes.temp.tournamentAvailable) {
-            utils.getLocalTournamentTime(handlerInput, (tournamentTime, timezone) => {
-              if (tournamentTime) {
+            utils.getLocalTournamentTime(handlerInput).then((result) => {
+              if (result) {
                 speech = 'HELP_UPCOMING_TOURNAMENT';
-                attributes.temp.speechParams.Time = tournamentTime;
-                attributes.temp.speechParams.Timezone = timezone;
+                attributes.temp.speechParams.Time = result.time;
+                attributes.temp.speechParams.Timezone = result.timezone;
                 attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
               }
 

@@ -10,7 +10,6 @@ const seedrandom = require('seedrandom');
 const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
-const SNS = new AWS.SNS();
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -256,9 +255,6 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
   const attributes = handlerInput.attributesManager.getSessionAttributes();
   let lastbet = bet;
   let speech = partialSpeech;
-  let reprompt = 'SPIN_PLAY_AGAIN';
-  let snsPublication;
-  let noSpeech;
   let response;
 
   // If this is the tournament, force a save
@@ -277,48 +273,43 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     game.busted = true;
     attributes.currentGame = 'basic';
     speech += '_BUSTED_OUTOFMONEY';
-    reprompt = undefined;
+    response = handlerInput.jrb
+      .speak(ri(speech, attributes.temp.speechParams))
+      .withShouldEndSession(true)
+      .getResponse();
+    callback(response);
+    return;
   } else if (attributes.bankroll < 1) {
     // If they subscribed to reset bankroll, then reset for them
     speech += '_BUSTED';
+
     if (attributes.paid && attributes.paid.coinreset && (attributes.paid.coinreset.state == 'PURCHASED')) {
       speech += '_SUBSCRIBED_REPLENISH';
       attributes.temp.speechParams.Coins = utils.STARTING_BANKROLL;
       attributes.bankroll = utils.STARTING_BANKROLL;
     } else {
-      // Publish to SNS so we know someone busted out
-      if (process.env.SNSTOPIC) {
-        snsPublication = {
-          Message: 'User ' + event.session.user.userId + ' busted out',
-          TopicArn: process.env.SNSTOPIC,
-          Subject: 'Slot Machine Busted Bankroll',
-        };
-      }
-
       lastbet = undefined;
       attributes.busted = Date.now();
       if (attributes.paid && attributes.paid.coinreset) {
-        noSpeech = true;
         speech += '_UPSELL';
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
 
         handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
         .then((directive) => {
           directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
-          response = handlerInput.jrb.addDirective(directive).getResponse();
-          if (snsPublication) {
-            SNS.publish(snsPublication, () => {
-              callback(response);
-            });
-          } else {
-            callback(response);
-          }
+          handlerInput.jrb.addDirective(directive).getResponse();
+          response = handlerInput.jrb.withShouldEndSession(true).getResponse();
+          callback(response);
         });
-        return;
       } else {
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+        response = handlerInput.jrb
+          .speak(ri(speech, attributes.temp.speechParams))
+          .withShouldEndSession(true)
+          .getResponse();
+        callback(response);
       }
-      reprompt = undefined;
+      return;
     }
   } else {
     attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
@@ -349,29 +340,15 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome, c
     buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.temp.buttonId]);
   }
 
-  // Set the speech
-  if (!noSpeech) {
-    handlerInput.jrb
-      .speak(ri(speech, attributes.temp.speechParams));
-  }
-  if (reprompt) {
-    handlerInput.jrb.reprompt(ri(reprompt));
-  } else {
-    handlerInput.jrb.withShouldEndSession(true);
-  }
-
   // Update the leader board
   utils.updateLeaderBoard(event, attributes);
   game.lastbet = lastbet;
   game.bet = undefined;
-  response = handlerInput.jrb.getResponse();
-  if (snsPublication) {
-    SNS.publish(snsPublication, () => {
-      callback(response);
-    });
-  } else {
-    callback(response);
-  }
+  response = handlerInput.jrb
+    .speak(ri(speech, attributes.temp.speechParams))
+    .reprompt(ri('SPIN_PLAY_AGAIN'))
+    .getResponse();
+  callback(response);
 }
 
 function getBet(event, attributes) {

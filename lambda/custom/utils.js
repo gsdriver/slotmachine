@@ -12,7 +12,6 @@ const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 const querystring = require('querystring');
-const https = require('https');
 const moment = require('moment-timezone');
 const leven = require('leven');
 const ri = require('@jargon/alexa-skill-sdk').ri;
@@ -315,54 +314,60 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
-  getGreeting: function(handlerInput, callback) {
-    getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
-      if (timezone) {
-        const hour = moment.tz(Date.now(), timezone).format('H');
-        let greeting;
-        if ((hour > 5) && (hour < 12)) {
-          greeting = 'GOOD_MORNING';
-        } else if ((hour >= 12) && (hour < 18)) {
-          greeting = 'GOOD_AFTERNOON';
-        } else {
-          greeting = 'GOOD_EVENING';
-        }
+  getGreeting: function(handlerInput) {
+    return new Promise((resolve, reject) => {
+      getUserTimezone(handlerInput).then((timezone) => {
+        if (timezone) {
+          const hour = moment.tz(Date.now(), timezone).format('H');
+          let greeting;
+          if ((hour > 5) && (hour < 12)) {
+            greeting = 'GOOD_MORNING';
+          } else if ((hour >= 12) && (hour < 18)) {
+            greeting = 'GOOD_AFTERNOON';
+          } else {
+            greeting = 'GOOD_EVENING';
+          }
 
-        handlerInput.jrm.render(ri(greeting)).then(callback);
-      } else {
-        callback('');
-      }
+          resolve(handlerInput.jrm.render(ri(greeting)));
+        } else {
+          resolve('');
+        }
+      });
     });
   },
-  isNextDay: function(event, attributes, callback) {
-    getUserTimezone(event, (timezone) => {
+  isNextDay: function(handlerInput) {
+    return getUserTimezone(handlerInput).then((timezone) => {
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
       const tz = (timezone) ? timezone : 'America/Los_Angeles';
       const busted = moment.tz(attributes.busted, tz).format('YYYY-MM-DD');
       const now = moment.tz(Date.now(), tz).format('YYYY-MM-DD');
 
-      callback(busted !== now);
+      return (busted !== now);
     });
   },
-  getLocalTournamentTime: function(handlerInput, callback) {
+  getLocalTournamentTime: function(handlerInput) {
     const times = getTournamentTimes(true);
-    if (times) {
-      // Get the user timezone
-      getUserTimezone(handlerInput.requestEnvelope, (timezone) => {
-        const useDefaultTimezone = (timezone === undefined);
-        const tz = (timezone) ? timezone : 'America/Los_Angeles';
-        const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
 
-        if (useDefaultTimezone) {
-          handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
-            callback(result, text);
-          });
-        } else {
-          callback(result, '');
-        }
-      });
-    } else {
-      callback();
-    }
+    return new Promise((resolve, reject) => {
+      if (times) {
+        // Get the user timezone
+        getUserTimezone(handlerInput).then((timezone) => {
+          const useDefaultTimezone = (timezone === undefined);
+          const tz = (timezone) ? timezone : 'America/Los_Angeles';
+          const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
+
+          if (useDefaultTimezone) {
+            handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
+              resolve({time: result, timezone: text});
+            });
+          } else {
+            resolve({time: result, timezone: ''});
+          }
+        });
+      } else {
+        resolve();
+      }
+    });
   },
   checkForTournament: function(attributes) {
     // Active on Wednesday PST (Day=3) from 6-7 PM
@@ -818,57 +823,6 @@ module.exports = {
       callback();
     }
   },
-  getPurchasedProducts: function(handlerInput, callback) {
-    const event = handlerInput.requestEnvelope;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    // Invoke the entitlement API to load products
-    const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v1/users/~current/skills/~current/inSkillProducts',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': event.request.locale,
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-    };
-    const req = https.get(options, (res) => {
-      let returnData = '';
-      res.setEncoding('utf8');
-      if (res.statusCode != 200) {
-        console.log('inSkillProducts returned status code ' + res.statusCode);
-        callback(res.statusCode);
-      } else {
-        res.on('data', (chunk) => {
-          returnData += chunk;
-        });
-
-        res.on('end', () => {
-          const inSkillProductInfo = JSON.parse(returnData);
-          if (Array.isArray(inSkillProductInfo.inSkillProducts)) {
-            // Let's see what they paid for
-            if (!attributes.paid) {
-              attributes.paid = {};
-            }
-
-            inSkillProductInfo.inSkillProducts.forEach((product) => {
-              attributes.paid[product.referenceName] = {
-                productId: product.productId,
-                state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
-              };
-            });
-          }
-          callback();
-        });
-      }
-    });
-
-    req.on('error', (err) => {
-      console.log('Error calling inSkillProducts API: ' + err.message);
-      callback(err);
-    });
-  },
   mapProduct: function(handlerInput, product) {
     return new Promise((resolve, reject) => {
       // Note these come from the language model
@@ -956,48 +910,18 @@ function getTournamentTimes(leaveUTC) {
   return retVal;
 }
 
-function getUserTimezone(event, callback) {
-  if (event.context.System.apiAccessToken) {
-    // Invoke the entitlement API to load timezone
-    const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v2/devices/' + event.context.System.device.deviceId + '/settings/System.timeZone',
-      method: 'GET',
-      timeout: 1000,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': event.request.locale,
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-    };
-
-    const req = https.get(options, (res) => {
-      let returnData = '';
-      res.setEncoding('utf8');
-      if (res.statusCode != 200) {
-        console.log('deviceTimezone returned status code ' + res.statusCode);
-        callback();
-      } else {
-        res.on('data', (chunk) => {
-          returnData += chunk;
-        });
-
-        res.on('end', () => {
-          // Strip quotes
-          const timezone = returnData.replace(/['"]+/g, '');
-          callback(moment.tz.zone(timezone) ? timezone : undefined);
-        });
-      }
+function getUserTimezone(handlerInput) {
+  return new Promise((resolve, reject) => {
+    const event = handlerInput.requestEnvelope;
+    const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
+    usc.getSystemTimeZone(event.context.System.device.deviceId)
+    .then((timezone) => {
+      resolve(timezone);
+    })
+    .catch((error) => {
+      resolve();
     });
-
-    req.on('error', (err) => {
-      console.log('Error calling user settings API: ' + err.message);
-      callback();
-    });
-  } else {
-    // No API token - no user timezone
-    callback();
-  }
+  });
 }
 
 function getBestMatch(mapping, value) {

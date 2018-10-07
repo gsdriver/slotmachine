@@ -9,6 +9,7 @@ const fs = require('fs');
 
 const LOCALE='en-US';
 const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
+const APITOKEN = '';
 
 function BuildEvent(argv)
 {
@@ -72,7 +73,7 @@ function BuildEvent(argv)
            }
          },
          "apiEndpoint": "https://api.amazonalexa.com",
-         "apiAccessToken": "",
+         "apiAccessToken": APITOKEN,
        }
      },
   };
@@ -134,7 +135,7 @@ function BuildEvent(argv)
            }
          },
          "apiEndpoint": "https://api.amazonalexa.com",
-         "apiAccessToken": "",
+         "apiAccessToken": APITOKEN,
        }
      },
   };
@@ -196,7 +197,7 @@ function BuildEvent(argv)
            }
          },
          "apiEndpoint": "https://api.amazonalexa.com",
-         "apiAccessToken": "",
+         "apiAccessToken": APITOKEN,
        }
      },
   };
@@ -243,7 +244,7 @@ function BuildEvent(argv)
            }
          },
          "apiEndpoint": "https://api.amazonalexa.com",
-         "apiAccessToken": "",
+         "apiAccessToken": APITOKEN,
        }
      },
   };

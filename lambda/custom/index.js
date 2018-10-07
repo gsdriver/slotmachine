@@ -116,12 +116,9 @@ const requestInterceptor = {
               attributes.high = maxHigh;
             }
 
-            if (result && (result.length > 0)) {
-              attributes.tournamentResult = result;
-            }
-
             // Since there were no session attributes, this is the first
             // round of the session - set the temp attributes
+            attributes.tournamentResult = result;
             attributes.sessions = (attributes.sessions + 1) || 1;
             attributes.platform = sessionAttributes.platform;
             attributesManager.setSessionAttributes(attributes);
@@ -258,6 +255,7 @@ function runGame(event, context, callback) {
     .addRequestInterceptors(requestInterceptor)
     .addResponseInterceptors(saveResponseInterceptor)
     .withPersistenceAdapter(dbAdapter)
+    .withApiClient(new Alexa.DefaultApiClient())
     .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
     .lambda();
   skillFunction(event, context, (err, response) => {
