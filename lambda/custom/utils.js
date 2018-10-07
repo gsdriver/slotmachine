@@ -315,24 +315,23 @@ module.exports = {
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
   getGreeting: function(handlerInput) {
-    return new Promise((resolve, reject) => {
-      getUserTimezone(handlerInput).then((timezone) => {
-        if (timezone) {
-          const hour = moment.tz(Date.now(), timezone).format('H');
-          let greeting;
-          if ((hour > 5) && (hour < 12)) {
-            greeting = 'GOOD_MORNING';
-          } else if ((hour >= 12) && (hour < 18)) {
-            greeting = 'GOOD_AFTERNOON';
-          } else {
-            greeting = 'GOOD_EVENING';
-          }
-
-          resolve(handlerInput.jrm.render(ri(greeting)));
+    return getUserTimezone(handlerInput)
+    .then((timezone) => {
+      if (timezone) {
+        const hour = moment.tz(Date.now(), timezone).format('H');
+        let greeting;
+        if ((hour > 5) && (hour < 12)) {
+          greeting = 'GOOD_MORNING';
+        } else if ((hour >= 12) && (hour < 18)) {
+          greeting = 'GOOD_AFTERNOON';
         } else {
-          resolve('');
+          greeting = 'GOOD_EVENING';
         }
-      });
+
+        return handlerInput.jrm.render(ri(greeting));
+      } else {
+        return '';
+      }
     });
   },
   isNextDay: function(handlerInput) {
@@ -348,26 +347,24 @@ module.exports = {
   getLocalTournamentTime: function(handlerInput) {
     const times = getTournamentTimes(true);
 
-    return new Promise((resolve, reject) => {
-      if (times) {
-        // Get the user timezone
-        getUserTimezone(handlerInput).then((timezone) => {
-          const useDefaultTimezone = (timezone === undefined);
-          const tz = (timezone) ? timezone : 'America/Los_Angeles';
-          const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
+    if (times) {
+      // Get the user timezone
+      return getUserTimezone(handlerInput).then((timezone) => {
+        const useDefaultTimezone = (timezone === undefined);
+        const tz = (timezone) ? timezone : 'America/Los_Angeles';
+        const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
 
-          if (useDefaultTimezone) {
-            handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
-              resolve({time: result, timezone: text});
-            });
-          } else {
-            resolve({time: result, timezone: ''});
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
+        if (useDefaultTimezone) {
+          return handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
+            return {time: result, timezone: text};
+          });
+        } else {
+          return {time: result, timezone: ''};
+        }
+      });
+    } else {
+      return Promise.resolve('');
+    }
   },
   checkForTournament: function(attributes) {
     // Active on Wednesday PST (Day=3) from 6-7 PM
@@ -527,65 +524,63 @@ module.exports = {
     const availableProducts = [];
     const forPurchase = [];
 
-    return new Promise((resolve, reject) => {
-      if (attributes.temp.tournamentAvailable) {
-        // If they already busted out, don't offer it
-        if (!attributes.tournament || !attributes.tournament.busted) {
-          // Offer the tournament
-          offerTournament = true;
-          if (currentFirst) {
-            gameToAdd = 'tournament';
-          }
-        }
-      }
-
-      if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
-        && attributes.paid[games[gameToAdd].product]
-        && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
-        // Pick a different game to add
-        attributes[attributes.currentGame] = undefined;
-        attributes.currentGame = 'standard';
-        gameToAdd = 'standard';
-      }
-
-      for (game in games) {
-        if (game && (game !== gameToAdd)) {
-          if (games[game].product) {
-            // We only offer this game if it is purchased
-            if (attributes.paid && attributes.paid[games[game].product]) {
-              if (attributes.paid[games[game].product].state === 'PURCHASED') {
-                choices.push(game);
-                choiceText.push(attributes.temp.gameList[game]);
-              } else {
-                availableProducts.push(game);
-                forPurchase.push(attributes.temp.gameList[game]);
-              }
-            }
-          } else if ((game != 'tournament') || offerTournament) {
-            choices.push(game);
-            choiceText.push(attributes.temp.gameList[game]);
-          }
-        }
-      }
-
-      if (gameToAdd && games[gameToAdd]) {
+    if (attributes.temp.tournamentAvailable) {
+      // If they already busted out, don't offer it
+      if (!attributes.tournament || !attributes.tournament.busted) {
+        // Offer the tournament
+        offerTournament = true;
         if (currentFirst) {
-          choices.unshift(gameToAdd);
-          choiceText.unshift(attributes.temp.gameList[gameToAdd]);
-        } else {
-          choices.push(gameToAdd);
-          choiceText.push(attributes.temp.gameList[gameToAdd]);
+          gameToAdd = 'tournament';
         }
       }
+    }
 
-      const speechParams = {};
-      speechParams.GameChoices = speechUtils.and(choiceText, {locale: event.request.locale});
-      speechParams.Number = choices.length;
-      handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams))
-      .then((speech) => {
-        resolve({speech: speech, choices: choices, forPurchase: forPurchase,
-          availableProducts: availableProducts});
-      });
+    if (games[gameToAdd] && games[gameToAdd].product && attributes.paid
+      && attributes.paid[games[gameToAdd].product]
+      && (attributes.paid[games[gameToAdd].product].state !== 'PURCHASED')) {
+      // Pick a different game to add
+      attributes[attributes.currentGame] = undefined;
+      attributes.currentGame = 'standard';
+      gameToAdd = 'standard';
+    }
+
+    for (game in games) {
+      if (game && (game !== gameToAdd)) {
+        if (games[game].product) {
+          // We only offer this game if it is purchased
+          if (attributes.paid && attributes.paid[games[game].product]) {
+            if (attributes.paid[games[game].product].state === 'PURCHASED') {
+              choices.push(game);
+              choiceText.push(attributes.temp.gameList[game]);
+            } else {
+              availableProducts.push(game);
+              forPurchase.push(attributes.temp.gameList[game]);
+            }
+          }
+        } else if ((game != 'tournament') || offerTournament) {
+          choices.push(game);
+          choiceText.push(attributes.temp.gameList[game]);
+        }
+      }
+    }
+
+    if (gameToAdd && games[gameToAdd]) {
+      if (currentFirst) {
+        choices.unshift(gameToAdd);
+        choiceText.unshift(attributes.temp.gameList[gameToAdd]);
+      } else {
+        choices.push(gameToAdd);
+        choiceText.push(attributes.temp.gameList[gameToAdd]);
+      }
+    }
+
+    const speechParams = {};
+    speechParams.GameChoices = speechUtils.and(choiceText, {locale: event.request.locale});
+    speechParams.Number = choices.length;
+    return handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams))
+    .then((speech) => {
+      return {speech: speech, choices: choices, forPurchase: forPurchase,
+        availableProducts: availableProducts};
     });
   },
   readPayout: function(handlerInput, game, payout) {
@@ -824,11 +819,9 @@ module.exports = {
     }
   },
   mapProduct: function(handlerInput, product) {
-    return new Promise((resolve, reject) => {
-      // Note these come from the language model
-      handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST')).then((productList) => {
-        resolve(getBestMatch(productList, product.toUpperCase()));
-      });
+    return handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST'))
+    .then((productList) => {
+      return getBestMatch(productList, product.toUpperCase());
     });
   },
 };
@@ -911,16 +904,16 @@ function getTournamentTimes(leaveUTC) {
 }
 
 function getUserTimezone(handlerInput) {
-  return new Promise((resolve, reject) => {
-    const event = handlerInput.requestEnvelope;
-    const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
-    usc.getSystemTimeZone(event.context.System.device.deviceId)
-    .then((timezone) => {
-      resolve(timezone);
-    })
-    .catch((error) => {
-      resolve();
-    });
+  const event = handlerInput.requestEnvelope;
+  const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
+
+  return usc.getSystemTimeZone(event.context.System.device.deviceId)
+  .then((timezone) => {
+    return timezone;
+  })
+  .catch((error) => {
+    // OK if the call fails, return gracefully
+    return;
   });
 }
 

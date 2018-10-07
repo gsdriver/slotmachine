@@ -60,7 +60,7 @@ module.exports = {
           // Prompt them with a list of available products
           attributes.temp.purchasing = true;
           response = handlerInput.jrb
-            .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
+            .speak(ri('PURCHASE_PRODUCTS'))
             .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
             .getResponse();
           resolve(response);

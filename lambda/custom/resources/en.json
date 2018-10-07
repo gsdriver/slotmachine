@@ -68,6 +68,11 @@
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
   "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",
+  "REFUND_CONFIRM_COINRESET": "Are you sure you want to refund your purchase of {Product}? As a reminder, your bankroll will no longer immediately reset when you run out of coins.",
+  "REFUND_CONFIRM_MACHINE": "Are you sure you want to refund your purchase of {Product}? As a reminder, you will no longer be able to access this machine.",
+  "REFUND_CONFIRM_REPROMPT": "Say yes to confirm your refund, or no to continue playing.",
+  "REFUND_NO_CANCEL": "OK, I won't cancel your purchase. What else can I help you with?",
+  "REFUND_NO_CANCEL_REPROMPT": "What else can I help you with?",
   "SELECT_WELCOME": {
     "v1": "Welcome to {Game}. {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}}. <break time=\"300ms\"/> You can bet up to {Coins} coins or say read high scores to hear the leader board.",
     "v2": "Starting {Game}. {GameWelcome} With {Amount, plural, =1 {one coin} other {# coins}} you can bet up to {Coins} coins. <break time=\"300ms\"/> Say spin to start the game.",
