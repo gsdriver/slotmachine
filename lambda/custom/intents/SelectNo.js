@@ -21,6 +21,8 @@ module.exports = {
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speech;
+    let game;
+    let rules;
 
     // OK, pop this choice and go to the next one - if no other choices, we'll go with the last one
     attributes.choices.shift();
@@ -35,11 +37,10 @@ module.exports = {
           .getResponse();
       }
 
-      const game = attributes[attributes.currentGame];
-      const rules = utils.getGame(attributes.currentGame);
       return utils.selectGame(handlerInput, 0).then(() => {
+        game = attributes[attributes.currentGame];
+        rules = utils.getGame(attributes.currentGame);
         attributes.temp.repromptParams.Coins = rules.maxCoins;
-
         speech = 'SELECT_WELCOME';
         attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
         return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));

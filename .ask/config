@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7"
               }
             }
           }
@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "b511c95048a4f251139ed95fd1bad74a"
+          "eTag": "faf401e58e347340aa5436b717b3bd94"
         },
         "interactionModel": {
           "en-AU": {
@@ -37,13 +37,13 @@
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
             "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "8e5c2f34-1630-4145-a240-4379953bbc1b"
+            "revisionId": "54a9b8b4-4606-4554-b085-01020439de5d"
           }
         ]
       },

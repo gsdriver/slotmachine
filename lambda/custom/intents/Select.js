@@ -45,7 +45,7 @@ module.exports = {
       if (upsellProduct) {
         attributes.prompts[upsellProduct] = now;
         attributes.temp.speechParams.Game = gameName;
-        handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
+        return handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
           const directive = {
             'type': 'Connections.SendRequest',
             'name': 'Upsell',

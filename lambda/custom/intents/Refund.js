@@ -35,58 +35,53 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    let response;
 
-    return new Promise((resolve, reject) => {
-      if (attributes.temp.confirmRefund) {
-        if (event.request.intent.name === 'AMAZON.YesIntent') {
-          const token = (attributes.temp.confirmRefund === 'coinreset')
-            ? 'subscribe.coinreset.launch'
-            : ('machine.' + attributes.temp.confirmRefund + '.launch');
-          response = handlerInput.jrb
-            .addDirective({
-              'type': 'Connections.SendRequest',
-              'name': 'Cancel',
-              'payload': {
-                'InSkillProduct': {
-                  'productId': attributes.paid[attributes.temp.confirmRefund].productId,
-                },
-              },
-              'token': token,
-            })
-            .withShouldEndSession(true)
-            .getResponse();
-        } else {
-          response = handlerInput.jrb
-            .speak(ri('REFUND_NO_CANCEL'))
-            .reprompt(ri('REFUND_NO_CANCEL_REPROMPT'))
-            .getResponse();
-        }
+    if (attributes.temp.confirmRefund) {
+      if (event.request.intent.name === 'AMAZON.YesIntent') {
+        const productId = attributes.paid[attributes.temp.confirmRefund].productId;
         attributes.temp.confirmRefund = undefined;
-        resolve(response);
-      } else if (event.request.intent.slots && event.request.intent.slots.Product
-        && event.request.intent.slots.Product.value) {
-        utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
-        .then((product) => {
-          // Make sure they really want to refund
-          const speech = (product === 'coinreset') ? 'REFUND_CONFIRM_COINRESET' : 'REFUND_CONFIRM_MACHINE';
-          attributes.temp.speechParams.Product = event.request.intent.slots.Product.value;
-          attributes.temp.repromptParams.Product = event.request.intent.slots.Product.value;
-          attributes.temp.confirmRefund = product;
-          response = handlerInput.jrb
-            .speak(ri(speech, attributes.temp.speechParams))
-            .reprompt(ri('REFUND_CONFIRM_REPROMPT', attributes.temp.repromptParams))
-            .getResponse();
-          resolve(response);
-        });
-      } else {
-        const speech = ri('REFUND_SAY_PRODUCT');
-        response = handlerInput.jrb
-          .speak(speech)
-          .reprompt(speech)
+        const token = (attributes.temp.confirmRefund === 'coinreset')
+          ? 'subscribe.coinreset.launch'
+          : ('machine.' + attributes.temp.confirmRefund + '.launch');
+        return handlerInput.jrb
+          .addDirective({
+            'type': 'Connections.SendRequest',
+            'name': 'Cancel',
+            'payload': {
+              'InSkillProduct': {
+                'productId': productId,
+              },
+            },
+            'token': token,
+          })
+          .withShouldEndSession(true)
           .getResponse();
-        resolve(response);
+      } else {
+        return handlerInput.jrb
+          .speak(ri('REFUND_NO_CANCEL'))
+          .reprompt(ri('REFUND_NO_CANCEL_REPROMPT'))
+          .getResponse();
       }
-    });
+    } else if (event.request.intent.slots && event.request.intent.slots.Product
+      && event.request.intent.slots.Product.value) {
+      return utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
+      .then((product) => {
+        // Make sure they really want to refund
+        const speech = (product === 'coinreset') ? 'REFUND_CONFIRM_COINRESET' : 'REFUND_CONFIRM_MACHINE';
+        attributes.temp.speechParams.Product = event.request.intent.slots.Product.value;
+        attributes.temp.repromptParams.Product = event.request.intent.slots.Product.value;
+        attributes.temp.confirmRefund = product;
+        return handlerInput.jrb
+          .speak(ri(speech, attributes.temp.speechParams))
+          .reprompt(ri('REFUND_CONFIRM_REPROMPT', attributes.temp.repromptParams))
+          .getResponse();
+      });
+    } else {
+      const speech = ri('REFUND_SAY_PRODUCT');
+      return handlerInput.jrb
+        .speak(speech)
+        .reprompt(speech)
+        .getResponse();
+    }
   },
 };
