@@ -33,13 +33,15 @@ module.exports = {
     }
 
     // First let's see if they selected an element via touch
+    const game = attributes[attributes.currentGame];
+    const rules = utils.getGame(attributes.currentGame);
     return utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
-      const game = attributes[attributes.currentGame];
-      const rules = utils.getGame(attributes.currentGame);
       attributes.temp.repromptParams.Coins = rules.maxCoins;
 
       speech = 'SELECT_WELCOME';
-      attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
+      return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));
+    }).then((gameName) => {
+      attributes.temp.speechParams.Game = gameName;
       attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
 
       if (game.progressiveJackpot) {

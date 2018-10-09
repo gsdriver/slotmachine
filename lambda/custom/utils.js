@@ -14,7 +14,7 @@ const request = require('request');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
 const leven = require('leven');
-const {renderBatch, ri} = require('@jargon/alexa-skill-sdk');
+const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
   // Has 99.8% payout
@@ -545,15 +545,15 @@ module.exports = {
           if (attributes.paid && attributes.paid[games[game].product]) {
             if (attributes.paid[games[game].product].state === 'PURCHASED') {
               choices.push(game);
-              choiceText.push(attributes.temp.gameList[game]);
+              choiceText.push(ri('GAME_LIST_' + game.toUpperCase()));
             } else {
               availableProducts.push(game);
-              forPurchase.push(attributes.temp.gameList[game]);
+              forPurchase.push(ri('GAME_LIST_' + game.toUpperCase()));
             }
           }
         } else if ((game != 'tournament') || offerTournament) {
           choices.push(game);
-          choiceText.push(attributes.temp.gameList[game]);
+          choiceText.push(ri('GAME_LIST_' + game.toUpperCase()));
         }
       }
     }
@@ -561,18 +561,20 @@ module.exports = {
     if (gameToAdd && games[gameToAdd]) {
       if (currentFirst) {
         choices.unshift(gameToAdd);
-        choiceText.unshift(attributes.temp.gameList[gameToAdd]);
+        choiceText.unshift(ri('GAME_LIST_' + gameToAdd.toUpperCase()));
       } else {
         choices.push(gameToAdd);
-        choiceText.push(attributes.temp.gameList[gameToAdd]);
+        choiceText.push(ri('GAME_LIST_' + gameToAdd.toUpperCase()));
       }
     }
 
-    const speechParams = {};
-    speechParams.GameChoices = speechUtils.and(choiceText, {locale: event.request.locale});
-    speechParams.Number = choices.length;
-    return handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams))
-    .then((speech) => {
+    return handlerInput.jrm.renderBatch(choiceText)
+    .then((gameList) => {
+      const speechParams = {};
+      speechParams.GameChoices = speechUtils.and(gameList, {locale: event.request.locale});
+      speechParams.Number = choices.length;
+      return handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams));
+    }).then((speech) => {
       return {speech: speech, choices: choices, forPurchase: forPurchase,
         availableProducts: availableProducts};
     });
@@ -746,7 +748,7 @@ module.exports = {
         for (i = 0; i < attributes.originalChoices.length; i++) {
           gameList.push(ri('GAME_LIST_' + attributes.originalChoices[i].toUpperCase()));
         }
-        return renderBatch(gameList)
+        return handlerInput.jrm.renderBatch(gameList)
         .then((renderItems) => {
           for (i = 0; i < attributes.originalChoices.length; i++) {
             listItems.push({

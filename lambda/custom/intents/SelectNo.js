@@ -35,14 +35,16 @@ module.exports = {
           .getResponse();
       }
 
+      const game = attributes[attributes.currentGame];
+      const rules = utils.getGame(attributes.currentGame);
       return utils.selectGame(handlerInput, 0).then(() => {
-        const game = attributes[attributes.currentGame];
-        const rules = utils.getGame(attributes.currentGame);
         attributes.temp.repromptParams.Coins = rules.maxCoins;
 
         speech = 'SELECT_WELCOME';
-        attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
         attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
+        return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));
+      }).then((gameName) => {
+        attributes.temp.speechParams.Game = gameName;
 
         if (game.progressiveJackpot) {
           // For progressive, just tell them the jackpot and to bet max coins
@@ -66,13 +68,16 @@ module.exports = {
           .getResponse();
       });
     } else {
-      attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
-      Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+      return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.choices[0].toUpperCase()))
+      .then((gameName) => {
+        attributes.temp.repromptParams.Game = gameName;
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-      return handlerInput.jrb
-        .speak(ri('LAUNCH_REPROMPT', attributes.temp.speechParams))
-        .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
-        .getResponse();
+        return handlerInput.jrb
+          .speak(ri('LAUNCH_REPROMPT', attributes.temp.speechParams))
+          .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+          .getResponse();
+      });
     }
   },
 };

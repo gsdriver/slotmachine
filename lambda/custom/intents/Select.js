@@ -39,9 +39,12 @@ module.exports = {
         });
       }
 
+      const game = (upsellProduct) ? upsellProduct : attributes.choices[0];
+      return handlerInput.jrm.render(ri('GAME_LIST_' + game.toUpperCase()));
+    }).then((gameName) => {
       if (upsellProduct) {
         attributes.prompts[upsellProduct] = now;
-        attributes.temp.speechParams.Game = attributes.temp.gameList[upsellProduct];
+        attributes.temp.speechParams.Game = gameName;
         handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
           const directive = {
             'type': 'Connections.SendRequest',
@@ -70,7 +73,7 @@ module.exports = {
         });
       } else {
         // Ask for the first one
-        attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
+        attributes.temp.repromptParams.Game = gameName;
         Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
         return handlerInput.jrb

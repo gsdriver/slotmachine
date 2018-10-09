@@ -24,7 +24,7 @@ const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
 const request = require('request');
-const Jargon = require('@jargon/alexa-skill-sdk');
+const {ri, JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
 
 const requestInterceptor = {
   process(handlerInput) {
@@ -123,13 +123,10 @@ const requestInterceptor = {
           attributesManager.setSessionAttributes(attributes);
           return;
         }).then(() => {
-          return handlerInput.jrm.renderObject(Jargon.ri('GAME_LIST'));
-        }).then((gameList) => {
-          attributes.temp.gameList = gameList;
-          return handlerInput.jrm.renderObject(Jargon.ri('SYMBOL_LIST'));
+          return handlerInput.jrm.renderObject(ri('SYMBOL_LIST'));
         }).then((symbolList) => {
           attributes.temp.symbolList = symbolList;
-          return handlerInput.jrm.renderObject(Jargon.ri('PAYOUT_RATES'));
+          return handlerInput.jrm.renderObject(ri('PAYOUT_RATES'));
         }).then((payoutRates) => {
           attributes.temp.payoutRates = payoutRates;
           return Promise.resolve();
@@ -194,7 +191,7 @@ const ErrorHandler = {
   },
   handle(handlerInput, error) {
     return handlerInput.jrb
-      .speak(Jargon.ri('SKILL_ERROR'))
+      .speak(ri('SKILL_ERROR'))
       .getResponse();
   },
 };
@@ -207,7 +204,7 @@ if (process.env.DASHBOTKEY) {
 }
 
 function runGame(event, context, callback) {
-  const skillBuilder = new Jargon.JargonSkillBuilder().wrap(Alexa.SkillBuilders.custom());
+  const skillBuilder = new JargonSkillBuilder().wrap(Alexa.SkillBuilders.custom());
 
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));

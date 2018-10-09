@@ -35,13 +35,16 @@ module.exports = {
       attributes.temp.readingRules = false;
       if (attributes.choices && (attributes.choices.length > 0)) {
         // If selecting a game, help string is different
-        attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
-        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+        return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.choices[0].toUpperCase()))
+        .then((game) => {
+          attributes.temp.repromptParams.Game = game;
+          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-        return handlerInput.jrb
-          .speak(ri('HELP_SELECT_TEXT', attributes.temp.speechParams))
-          .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
-          .getResponse();
+          return handlerInput.jrb
+            .speak(ri('HELP_SELECT_TEXT', attributes.temp.speechParams))
+            .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+            .getResponse();
+        });
       } else {
         const cardParams = {PayoutTable: utils.readPayoutTable(handlerInput, rules)};
 

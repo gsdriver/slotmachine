@@ -292,7 +292,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
         .then((directive) => {
           directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
           handlerInput.jrb.addDirective(directive).getResponse();
-          response = handlerInput.jrb.withShouldEndSession(true).getResponse();
+          return handlerInput.jrb.withShouldEndSession(true).getResponse();
         });
       } else {
         attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
@@ -382,7 +382,9 @@ function selectGame(handlerInput) {
   if (attributes.choices && (attributes.choices.length > 0)) {
     return utils.selectGame(handlerInput, 0).then(() => {
       speech = 'SPIN_JOINGAME';
-      attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
+      return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));
+    }).then((gameName) => {
+      attributes.temp.speechParams.Game = gameName;
       const rules = utils.getGame(attributes.currentGame);
 
       if (rules.welcome) {
