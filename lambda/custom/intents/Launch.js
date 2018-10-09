@@ -141,9 +141,8 @@ module.exports = {
         if ((typeof availableGames !== 'string')
           && (availableGames.choices.indexOf('tournament') > -1)) {
           speech += '_TOURNAMENT';
-          utils.getRemainingTournamentTime(handlerInput, (text) => {
+          return utils.getRemainingTournamentTime(handlerInput).then((text) => {
             attributes.temp.speechParams.Time = text;
-            return availableGames;
           });
         } else {
           return availableGames;

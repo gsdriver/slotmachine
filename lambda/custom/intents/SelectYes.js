@@ -32,39 +32,36 @@ module.exports = {
         .getResponse();
     }
 
-    return new Promise((resolve, reject) => {
-      // First let's see if they selected an element via touch
-      utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
-        const game = attributes[attributes.currentGame];
-        const rules = utils.getGame(attributes.currentGame);
-        attributes.temp.repromptParams.Coins = rules.maxCoins;
+    // First let's see if they selected an element via touch
+    return utils.selectGame(handlerInput, getSelectedIndex(event, attributes)).then(() => {
+      const game = attributes[attributes.currentGame];
+      const rules = utils.getGame(attributes.currentGame);
+      attributes.temp.repromptParams.Coins = rules.maxCoins;
 
-        speech = 'SELECT_WELCOME';
-        attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
-        attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
+      speech = 'SELECT_WELCOME';
+      attributes.temp.speechParams.Game = attributes.temp.gameList[attributes.currentGame];
+      attributes.temp.speechParams.Amount = utils.getBankroll(attributes);
 
-        if (game.progressiveJackpot) {
-          // For progressive, just tell them the jackpot and to bet max coins
-          speech += '_PROGRESSIVE';
-          attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
-          attributes.temp.speechParams.Coins = rules.maxCoins;
-        } else {
-          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
-        }
+      if (game.progressiveJackpot) {
+        // For progressive, just tell them the jackpot and to bet max coins
+        speech += '_PROGRESSIVE';
+        attributes.temp.speechParams.Jackpot = game.progressiveJackpot;
+        attributes.temp.speechParams.Coins = rules.maxCoins;
+      } else {
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+      }
 
-        if (rules.welcome) {
-          return handlerInput.jrm.render(ri(rules.welcome));
-        } else {
-          return '';
-        }
-      }).then((welcome) => {
-        attributes.temp.speechParams.GameWelcome = welcome;
-        const response = handlerInput.jrb
-          .speak(ri(speech, attributes.temp.speechParams))
-          .reprompt(ri('SELECT_REPROMPT', attributes.temp.repromptParams))
-          .getResponse();
-        resolve(response);
-      });
+      if (rules.welcome) {
+        return handlerInput.jrm.render(ri(rules.welcome));
+      } else {
+        return '';
+      }
+    }).then((welcome) => {
+      attributes.temp.speechParams.GameWelcome = welcome;
+      return handlerInput.jrb
+        .speak(ri(speech, attributes.temp.speechParams))
+        .reprompt(ri('SELECT_REPROMPT', attributes.temp.repromptParams))
+        .getResponse();
     });
   },
 };

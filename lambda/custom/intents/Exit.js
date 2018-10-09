@@ -31,15 +31,13 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return new Promise((resolve, reject) => {
-      ads.getAd(attributes, 'slots', event.request.locale, (adText) => {
-        attributes.temp.speechParams.Ad = adText;
-        const response = handlerInput.jrb
-          .speak(ri('EXIT_GAME', attributes.temp.speechParams))
-          .withShouldEndSession(true)
-          .getResponse();
-        resolve(response);
-      });
+    return ads.getAd(attributes, 'slots', event.request.locale)
+    .then((adText) => {
+      attributes.temp.speechParams.Ad = adText;
+      return handlerInput.jrb
+        .speak(ri('EXIT_GAME', attributes.temp.speechParams))
+        .withShouldEndSession(true)
+        .getResponse();
     });
   },
 };

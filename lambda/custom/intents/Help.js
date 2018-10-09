@@ -21,79 +21,71 @@ module.exports = {
     const bankroll = utils.getBankroll(attributes);
     const rules = utils.getGame(attributes.currentGame);
     let speech;
-    let response;
+    let promise;
 
-    return new Promise((resolve, reject) => {
-      new Promise((resolve, reject) => {
-        // If this was fallback intent, let them know we didn't understand first
-        if (event.request.intent.name === 'AMAZON.FallbackIntent') {
-          handlerInput.jrm.render(ri('HELP_FALLBACK')).then(resolve);
-        } else {
-          resolve('');
-        }
-      })
-      .then((text) => {
-        attributes.temp.speechParams.FallbackText = text;
-        attributes.temp.readingRules = false;
-        if (attributes.choices && (attributes.choices.length > 0)) {
-          // If selecting a game, help string is different
-          attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
-          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+    // If this was fallback intent, let them know we didn't understand first
+    if (event.request.intent.name === 'AMAZON.FallbackIntent') {
+      promise = handlerInput.jrm.render(ri('HELP_FALLBACK'));
+    } else {
+      promise = Promise.resolve('');
+    }
 
-          response = handlerInput.jrb
-            .speak(ri('HELP_SELECT_TEXT', attributes.temp.speechParams))
-            .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
-            .getResponse();
-          resolve(response);
-        } else {
-          const cardParams = {PayoutTable: utils.readPayoutTable(handlerInput, rules)};
+    return promise.then((text) => {
+      attributes.temp.speechParams.FallbackText = text;
+      attributes.temp.readingRules = false;
+      if (attributes.choices && (attributes.choices.length > 0)) {
+        // If selecting a game, help string is different
+        attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
 
-          if (attributes.currentGame == 'tournament') {
-            // Give some details about the tournament
-            speech = 'HELP_IN_TOURNAMENT';
-            attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
-            attributes.temp.speechParams.Amount = bankroll;
-            utils.getRemainingTournamentTime(handlerInput, (text) => {
-              attributes.temp.speechParams.Time = text;
-              response = handlerInput.jrb
-                .speak(ri(speech, attributes.temp.speechParams))
-                .reprompt(ri('HELP_REPROMPT'))
-                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
-                .getResponse();
-              resolve(response);
-            });
-            return;
-          } else {
-            speech = 'HELP_NO_TOURNAMENT';
-            attributes.temp.speechParams.Amount = bankroll;
-          }
+        return handlerInput.jrb
+          .speak(ri('HELP_SELECT_TEXT', attributes.temp.speechParams))
+          .reprompt(ri('LAUNCH_REPROMPT', attributes.temp.repromptParams))
+          .getResponse();
+      } else {
+        const cardParams = {PayoutTable: utils.readPayoutTable(handlerInput, rules)};
 
-          if (!attributes.temp.tournamentAvailable) {
-            utils.getLocalTournamentTime(handlerInput).then((result) => {
-              if (result) {
-                speech = 'HELP_UPCOMING_TOURNAMENT';
-                attributes.temp.speechParams.Time = result.time;
-                attributes.temp.speechParams.Timezone = result.timezone;
-                attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
-              }
-
-              response = handlerInput.jrb
-                .speak(ri(speech, attributes.temp.speechParams))
-                .reprompt(ri('HELP_REPROMPT'))
-                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
-                .getResponse();
-              resolve(response);
-            });
-          } else {
-            response = handlerInput.jrb
+        if (attributes.currentGame === 'tournament') {
+          // Give some details about the tournament
+          speech = 'HELP_IN_TOURNAMENT';
+          attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+          attributes.temp.speechParams.Amount = bankroll;
+          return utils.getRemainingTournamentTime(handlerInput).then((text) => {
+            attributes.temp.speechParams.Time = text;
+            return handlerInput.jrb
               .speak(ri(speech, attributes.temp.speechParams))
               .reprompt(ri('HELP_REPROMPT'))
               .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
               .getResponse();
-            resolve(response);
-          }
+          });
+        } else {
+          speech = 'HELP_NO_TOURNAMENT';
+          attributes.temp.speechParams.Amount = bankroll;
         }
-      });
+
+        if (!attributes.temp.tournamentAvailable) {
+          return utils.getLocalTournamentTime(handlerInput).then((result) => {
+            if (result) {
+              speech = 'HELP_UPCOMING_TOURNAMENT';
+              attributes.temp.speechParams.Time = result.time;
+              attributes.temp.speechParams.Timezone = result.timezone;
+              attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+            }
+
+            return handlerInput.jrb
+              .speak(ri(speech, attributes.temp.speechParams))
+              .reprompt(ri('HELP_REPROMPT'))
+              .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
+              .getResponse();
+          });
+        } else {
+          return handlerInput.jrb
+            .speak(ri(speech, attributes.temp.speechParams))
+            .reprompt(ri('HELP_REPROMPT'))
+            .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
+            .getResponse();
+        }
+      }
     });
   },
 };

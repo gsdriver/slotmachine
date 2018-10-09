@@ -19,70 +19,65 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const now = Date.now();
     let upsellProduct;
-    let response;
 
-    return new Promise((resolve, reject) => {
-      // Read the available games then prompt for each one
-      attributes.temp.readingRules = false;
-      utils.readAvailableGames(handlerInput, false)
-      .then((availableGames) => {
-        attributes.temp.speechParams.AvailableGames = availableGames.speech;
-        attributes.choices = availableGames.choices;
-        attributes.originalChoices = availableGames.choices;
-        if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
-          // Go through and see if there is a machine we can offer as upsell
-          // We only offer each machine once every two days
-          // So as not to annoy our customers too much
-          availableGames.availableProducts.forEach((product) => {
-            if (!attributes.prompts[product] ||
-              ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
-                upsellProduct = product;
-            }
-          });
-        }
+    // Read the available games then prompt for each one
+    attributes.temp.readingRules = false;
+    return utils.readAvailableGames(handlerInput, false)
+    .then((availableGames) => {
+      attributes.temp.speechParams.AvailableGames = availableGames.speech;
+      attributes.choices = availableGames.choices;
+      attributes.originalChoices = availableGames.choices;
+      if (availableGames.availableProducts.length && !attributes.temp.noUpsellGame) {
+        // Go through and see if there is a machine we can offer as upsell
+        // We only offer each machine once every two days
+        // So as not to annoy our customers too much
+        availableGames.availableProducts.forEach((product) => {
+          if (!attributes.prompts[product] ||
+            ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
+              upsellProduct = product;
+          }
+        });
+      }
 
-        if (upsellProduct) {
-          attributes.prompts[upsellProduct] = now;
-          attributes.temp.speechParams.Game = attributes.temp.gameList[upsellProduct];
-          handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
-            const directive = {
-              'type': 'Connections.SendRequest',
-              'name': 'Upsell',
-              'payload': {
-                'InSkillProduct': {
-                  productId: attributes.paid[upsellProduct].productId,
-                },
-                'upsellMessage': upsellMessage,
+      if (upsellProduct) {
+        attributes.prompts[upsellProduct] = now;
+        attributes.temp.speechParams.Game = attributes.temp.gameList[upsellProduct];
+        handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
+          const directive = {
+            'type': 'Connections.SendRequest',
+            'name': 'Upsell',
+            'payload': {
+              'InSkillProduct': {
+                productId: attributes.paid[upsellProduct].productId,
               },
-              'token': 'machine.' + upsellProduct + '.select',
-            };
+              'upsellMessage': upsellMessage,
+            },
+            'token': 'machine.' + upsellProduct + '.select',
+          };
 
-            // Need a way to get variation selected from Jargon
-            if (upsellMessage.substring(0, 3) === 'We ') {
-              attributes.upsellSelection = 'v1';
-            } else if (upsellMessage.substring(0, 3) === 'We\'') {
-              attributes.upsellSelection = 'v2';
-            } else {
-              attributes.upsellSelection = 'v3';
-            }
+          // Need a way to get variation selected from Jargon
+          if (upsellMessage.substring(0, 3) === 'We ') {
+            attributes.upsellSelection = 'v1';
+          } else if (upsellMessage.substring(0, 3) === 'We\'') {
+            attributes.upsellSelection = 'v2';
+          } else {
+            attributes.upsellSelection = 'v3';
+          }
 
-            response = handlerInput.jrb.addDirective(directive)
-              .withShouldEndSession(true)
-              .getResponse();
-            resolve(response);
-          });
-        } else {
-          // Ask for the first one
-          attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
-          Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
-
-          response = handlerInput.jrb
-            .speak(ri('SELECT_PICK_GAME', attributes.temp.speechParams))
-            .reprompt(ri('SELECT_PICK_GAME_REPROMPT', attributes.temp.repromptParams))
+          return handlerInput.jrb.addDirective(directive)
+            .withShouldEndSession(true)
             .getResponse();
-          resolve(response);
-        }
-      });
+        });
+      } else {
+        // Ask for the first one
+        attributes.temp.repromptParams.Game = attributes.temp.gameList[attributes.choices[0]];
+        Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
+
+        return handlerInput.jrb
+          .speak(ri('SELECT_PICK_GAME', attributes.temp.speechParams))
+          .reprompt(ri('SELECT_PICK_GAME_REPROMPT', attributes.temp.repromptParams))
+          .getResponse();
+      }
     });
   },
 };

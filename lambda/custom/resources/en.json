@@ -63,7 +63,6 @@
     },
     "token": "subscribe.coinreset.launch"
   },
-  "LAUNCH_SUBSCRIBED_": "Thanks to your Reset Bankroll subscription, your bankroll is reset to {Coins} coins. ",
   "PURCHASE_PRODUCTS": "We have a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins and a Crazy Diamond machine with wild diamond symbols available for purchase. Say the product you would like to buy or no to continue your game. ",
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
@@ -460,6 +459,13 @@
     "steak": "the meat game",
     "crazydiamond": "crazy diamonds"
   },
+  "GAME_LIST_BASIC": "the standard fruit game",
+  "GAME_LIST_WILD": "wild cherry",
+  "GAME_LIST_LOOSE": "the 105% payout game",
+  "GAME_LIST_PROGRESSIVE": "progressive jackpot",
+  "GAME_LIST_TOURNAMENT": "the tournament round",
+  "GAME_LIST_STEAK": "the meat game",
+  "GAME_LIST_CRAZYDIAMOND": "crazy diamonds",
   "SYMBOL_LIST": {
     "any": "any",
     "cherry": "cherry",

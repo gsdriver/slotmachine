@@ -28,170 +28,162 @@ const Jargon = require('@jargon/alexa-skill-sdk');
 
 const requestInterceptor = {
   process(handlerInput) {
-    return new Promise((resolve, reject) => {
-      const attributesManager = handlerInput.attributesManager;
-      const sessionAttributes = attributesManager.getSessionAttributes();
-      const event = handlerInput.requestEnvelope;
-      let attributes;
+    const attributesManager = handlerInput.attributesManager;
+    const sessionAttributes = attributesManager.getSessionAttributes();
+    const event = handlerInput.requestEnvelope;
+    let attributes;
 
-      if ((Object.keys(sessionAttributes).length === 0) ||
-        ((Object.keys(sessionAttributes).length === 1)
-          && sessionAttributes.platform)) {
-        // No session attributes - so get the persistent ones
-        attributesManager.getPersistentAttributes()
-          .then((attr) => {
-            // If they were playing loose, then please nuke it
-            attributes = attr;
-            if (attributes.loose) {
-              attributes.loose = undefined;
-            }
-            if (attributes.currentGame === 'loose') {
-              attributes.currentGame = 'standard';
-            }
-            if (!attributes.prompts) {
-              attributes.prompts = {};
-            }
-            attributes.temp = {};
-            attributes.temp.speechParams = {};
-            attributes.temp.repromptParams = {};
-            utils.checkForTournament(attributes);
-            return utils.getTournamentComplete(handlerInput, attributes);
-          })
-          .then((result) => {
-            if (!attributes.currentGame) {
-              attributes.currentGame = 'basic';
-              attributes.newUser = true;
-              request.post({url: process.env.SERVICEURL + 'slots/newUser'}, (err, res, body) => {
-              });
-            }
+    if ((Object.keys(sessionAttributes).length === 0) ||
+      ((Object.keys(sessionAttributes).length === 1)
+        && sessionAttributes.platform)) {
+      // No session attributes - so get the persistent ones
+      return attributesManager.getPersistentAttributes()
+        .then((attr) => {
+          // If they were playing loose, then please nuke it
+          attributes = attr;
+          if (attributes.loose) {
+            attributes.loose = undefined;
+          }
+          if (attributes.currentGame === 'loose') {
+            attributes.currentGame = 'standard';
+          }
+          if (!attributes.prompts) {
+            attributes.prompts = {};
+          }
+          attributes.temp = {};
+          attributes.temp.speechParams = {};
+          attributes.temp.repromptParams = {};
+          utils.checkForTournament(attributes);
+          return utils.getTournamentComplete(handlerInput, attributes);
+        })
+        .then((result) => {
+          if (!attributes.currentGame) {
+            attributes.currentGame = 'basic';
+            attributes.newUser = true;
+            request.post({url: process.env.SERVICEURL + 'slots/newUser'}, (err, res, body) => {
+            });
+          }
 
-            attributes.playerLocale = event.request.locale;
-            if (!attributes[attributes.currentGame]) {
-              attributes[attributes.currentGame] = {};
-              attributes.bankroll = utils.STARTING_BANKROLL;
-              attributes.high = utils.STARTING_BANKROLL;
-            }
+          attributes.playerLocale = event.request.locale;
+          if (!attributes[attributes.currentGame]) {
+            attributes[attributes.currentGame] = {};
+            attributes.bankroll = utils.STARTING_BANKROLL;
+            attributes.high = utils.STARTING_BANKROLL;
+          }
 
-            // Migrate to a common bankroll - if a legacy player,
-            // we will set the bankroll to the highest (non-tournament)
-            // game bankroll
-            if (attributes.bankroll === undefined) {
-              let maxGameBankroll;
-              let maxHigh;
-              let game;
-              let totalSpins = 0;
-              let lastPlay;
-              for (game in attributes) {
-                if (attributes[game] && attributes[game].bankroll &&
-                  (game !== 'tournament')) {
-                  totalSpins += attributes[game].spins;
-                  if ((maxGameBankroll === undefined) ||
-                    (attributes[game].bankroll > maxGameBankroll)) {
-                    maxGameBankroll = attributes[game].bankroll;
-                  }
-                  if ((maxHigh === undefined) ||
-                    (attributes[game].high > maxHigh)) {
-                    maxHigh = attributes[game].high;
-                  }
-                  if ((lastPlay == undefined) ||
-                    (attributes[game].timestamp > lastPlay)) {
-                    lastPlay = attributes[game].timestamp;
-                  }
-
-                  attributes[game].bankroll = undefined;
-                  attributes[game].high = undefined;
+          // Migrate to a common bankroll - if a legacy player,
+          // we will set the bankroll to the highest (non-tournament)
+          // game bankroll
+          if (attributes.bankroll === undefined) {
+            let maxGameBankroll;
+            let maxHigh;
+            let game;
+            let totalSpins = 0;
+            let lastPlay;
+            for (game in attributes) {
+              if (attributes[game] && attributes[game].bankroll &&
+                (game !== 'tournament')) {
+                totalSpins += attributes[game].spins;
+                if ((maxGameBankroll === undefined) ||
+                  (attributes[game].bankroll > maxGameBankroll)) {
+                  maxGameBankroll = attributes[game].bankroll;
                 }
-              }
+                if ((maxHigh === undefined) ||
+                  (attributes[game].high > maxHigh)) {
+                  maxHigh = attributes[game].high;
+                }
+                if ((lastPlay == undefined) ||
+                  (attributes[game].timestamp > lastPlay)) {
+                  lastPlay = attributes[game].timestamp;
+                }
 
-              // OK, if they haven't done more than 10 total spins, or
-              // they haven't played for more than 30 days and have less than 100 spins
-              // we will reset them to the starting bankroll
-              if ((totalSpins < 10) ||
-                ((totalSpins < 100) && (Date.now() - lastPlay > 30*24*60*60*1000))) {
-                maxGameBankroll = utils.STARTING_BANKROLL;
-                maxHigh = utils.STARTING_BANKROLL;
+                attributes[game].bankroll = undefined;
+                attributes[game].high = undefined;
               }
-
-              attributes.bankroll = maxGameBankroll;
-              attributes.high = maxHigh;
             }
 
-            // Since there were no session attributes, this is the first
-            // round of the session - set the temp attributes
-            attributes.tournamentResult = result;
-            attributes.sessions = (attributes.sessions + 1) || 1;
-            attributes.platform = sessionAttributes.platform;
-            attributesManager.setSessionAttributes(attributes);
-            return;
-          }).then(() => {
-            return handlerInput.jrm.renderObject(Jargon.ri('GAME_LIST'));
-          }).then((gameList) => {
-            attributes.temp.gameList = gameList;
-            return handlerInput.jrm.renderObject(Jargon.ri('SYMBOL_LIST'));
-          }).then((symbolList) => {
-            attributes.temp.symbolList = symbolList;
-            return handlerInput.jrm.renderObject(Jargon.ri('PAYOUT_RATES'));
-          }).then((payoutRates) => {
-            attributes.temp.payoutRates = payoutRates;
-            resolve();
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      } else {
-        attributes = handlerInput.attributesManager.getSessionAttributes();
-        attributes.temp.speechParams = {};
-        attributes.temp.repromptParams = {};
-        utils.checkForTournament(attributes);
-        resolve();
-      }
-    });
+            // OK, if they haven't done more than 10 total spins, or
+            // they haven't played for more than 30 days and have less than 100 spins
+            // we will reset them to the starting bankroll
+            if ((totalSpins < 10) ||
+              ((totalSpins < 100) && (Date.now() - lastPlay > 30*24*60*60*1000))) {
+              maxGameBankroll = utils.STARTING_BANKROLL;
+              maxHigh = utils.STARTING_BANKROLL;
+            }
+
+            attributes.bankroll = maxGameBankroll;
+            attributes.high = maxHigh;
+          }
+
+          // Since there were no session attributes, this is the first
+          // round of the session - set the temp attributes
+          attributes.tournamentResult = result;
+          attributes.sessions = (attributes.sessions + 1) || 1;
+          attributes.platform = sessionAttributes.platform;
+          attributesManager.setSessionAttributes(attributes);
+          return;
+        }).then(() => {
+          return handlerInput.jrm.renderObject(Jargon.ri('GAME_LIST'));
+        }).then((gameList) => {
+          attributes.temp.gameList = gameList;
+          return handlerInput.jrm.renderObject(Jargon.ri('SYMBOL_LIST'));
+        }).then((symbolList) => {
+          attributes.temp.symbolList = symbolList;
+          return handlerInput.jrm.renderObject(Jargon.ri('PAYOUT_RATES'));
+        }).then((payoutRates) => {
+          attributes.temp.payoutRates = payoutRates;
+          return Promise.resolve();
+        });
+    } else {
+      attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.temp.speechParams = {};
+      attributes.temp.repromptParams = {};
+      utils.checkForTournament(attributes);
+      return Promise.resolve();
+    }
   },
 };
 
 const saveResponseInterceptor = {
   process(handlerInput) {
-    return new Promise((resolve, reject) => {
-      const response = handlerInput.responseBuilder.getResponse();
+    const response = handlerInput.responseBuilder.getResponse();
 
-      if (response) {
-        utils.drawTable(handlerInput, () => {
-          if (response.shouldEndSession) {
-            // We are meant to end the session
-            SessionEnd.handle(handlerInput);
-          } else {
-            // Save the response and reprompt for repeat
-            const attributes = handlerInput.attributesManager.getSessionAttributes();
-            if (response.outputSpeech && response.outputSpeech.ssml) {
-              attributes.temp.lastResponse = response.outputSpeech.ssml;
-            }
-            if (response.reprompt && response.reprompt.outputSpeech
-              && response.reprompt.outputSpeech.ssml) {
-              attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
-            }
+    if (response) {
+      return utils.drawTable(handlerInput).then(() => {
+        if (response.shouldEndSession) {
+          // We are meant to end the session
+          SessionEnd.handle(handlerInput);
+        } else {
+          // Save the response and reprompt for repeat
+          const attributes = handlerInput.attributesManager.getSessionAttributes();
+          if (response.outputSpeech && response.outputSpeech.ssml) {
+            attributes.temp.lastResponse = response.outputSpeech.ssml;
+          }
+          if (response.reprompt && response.reprompt.outputSpeech
+            && response.reprompt.outputSpeech.ssml) {
+            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+          }
 
-            // Save state if we need to (but just for certain platforms)
-            if (attributes.temp && attributes.temp.forceSave) {
-              attributes.temp.forceSave = undefined;
-              if (attributes.platform === 'google') {
-                // Save state each round in case the user unexpectedly exits
-                const temp = attributes.temp;
-                attributes.temp = undefined;
-                handlerInput.attributesManager.setPersistentAttributes(attributes);
-                handlerInput.attributesManager.savePersistentAttributes();
-                attributes.temp = temp;
-              }
+          // Save state if we need to (but just for certain platforms)
+          if (attributes.temp && attributes.temp.forceSave) {
+            attributes.temp.forceSave = undefined;
+            if (attributes.platform === 'google') {
+              // Save state each round in case the user unexpectedly exits
+              const temp = attributes.temp;
+              attributes.temp = undefined;
+              handlerInput.attributesManager.setPersistentAttributes(attributes);
+              handlerInput.attributesManager.savePersistentAttributes();
+              attributes.temp = temp;
             }
           }
-          if (!process.env.NOLOG) {
-            console.log(JSON.stringify(response));
-          }
-          resolve();
-        });
-      } else {
-        resolve();
-      }
-    });
+        }
+        if (!process.env.NOLOG) {
+          console.log(JSON.stringify(response));
+        }
+      });
+    } else {
+      return Promise.resolve();
+    }
   },
 };
 

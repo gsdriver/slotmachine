@@ -14,7 +14,7 @@ const request = require('request');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
 const leven = require('leven');
-const ri = require('@jargon/alexa-skill-sdk').ri;
+const {renderBatch, ri} = require('@jargon/alexa-skill-sdk');
 
 const games = {
   // Has 99.8% payout
@@ -407,7 +407,7 @@ module.exports = {
 
     return undefined;
   },
-  getRemainingTournamentTime: function(handlerInput, callback) {
+  getRemainingTournamentTime: function(handlerInput) {
     const times = getTournamentTimes();
 
     if (times) {
@@ -428,87 +428,81 @@ module.exports = {
       }
 
       const speechParams = {Minutes: minutesLeft, Seconds: secondsLeft};
-      handlerInput.jrm.render(ri(format, speechParams)).then(callback);
+      return handlerInput.jrm.render(ri(format, speechParams));
     } else {
-      callback('');
+      return Promise.resolve('');
     }
   },
   getTournamentComplete: function(handlerInput, attributes) {
     // If the user is in a tournament, we check to see if that tournament
     // is complete.  If so, we set certain attributes and return a result
-    // string via the callback for the user
+    // string for the user
     const game = attributes.tournament;
 
-    return new Promise((resolve, reject) => {
-      if (game) {
-        // You are in a tournament - let's see if it's completed
-        s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}, (err, data) => {
-          if (err) {
-            console.log(err, err.stack);
-            resolve('');
+    if (game) {
+      // You are in a tournament - let's see if it's completed
+      return s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotTournamentResults.txt'}).promise()
+      .then((data) => {
+        // Yeah, I can do a binary search (this is sorted), but straight search for now
+        const results = JSON.parse(data.Body.toString('ascii'));
+        let i;
+        let result;
+        let speech;
+        const speechParams = {};
+
+        // Go through the results and find one that closed AFTER our last play
+        for (i = 0; i < (results ? results.length : 0); i++) {
+          if (results[i].timestamp > game.timestamp) {
+            // This is the one
+            result = results[i];
+            break;
+          }
+        }
+
+        if (result) {
+          if (game.bankroll >= result.highScore) {
+            // Congratulations, you won!
+            if (!attributes.achievements) {
+              attributes.achievements = {trophy: 1};
+            } else {
+              attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
+            }
+            attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
+            speech = 'TOURNAMENT_WINNER';
+            speechParams.TournamentResult = game.bankroll;
+            speechParams.Coins = module.exports.TOURNAMENT_PAYOUT;
           } else {
-            // Yeah, I can do a binary search (this is sorted), but straight search for now
-            const results = JSON.parse(data.Body.toString('ascii'));
-            let i;
-            let result;
-            let speech;
-            const speechParams = {};
+            speech = 'TOURNAMENT_LOSER';
+            speechParams.TournamentWinner = result.highScore;
+            speechParams.TournamentResult = game.bankroll;
+          }
 
-            // Go through the results and find one that closed AFTER our last play
-            for (i = 0; i < (results ? results.length : 0); i++) {
-              if (results[i].timestamp > game.timestamp) {
-                // This is the one
-                result = results[i];
-                break;
-              }
-            }
-
-            if (result) {
-              if (game.bankroll >= result.highScore) {
-                // Congratulations, you won!
-                if (!attributes.achievements) {
-                  attributes.achievements = {trophy: 1};
-                } else {
-                  attributes.achievements.trophy = (attributes.achievements.trophy + 1) || 1;
-                }
-                attributes.bankroll += module.exports.TOURNAMENT_PAYOUT;
-                speech = 'TOURNAMENT_WINNER';
-                speechParams.TournamentResult = game.bankroll;
-                speechParams.Coins = module.exports.TOURNAMENT_PAYOUT;
-              } else {
-                speech = 'TOURNAMENT_LOSER';
-                speechParams.TournamentWinner = result.highScore;
-                speechParams.TournamentResult = game.bankroll;
-              }
-
-              if (attributes.currentGame == 'tournament') {
-                attributes.currentGame = 'basic';
-              }
-              attributes['tournament'] = undefined;
-              attributes.temp.forceSave = true;
-            } else {
-              // Tournament hasn't closed yet - is it active?  If not, flip to basic and
-              // let them know the tournament is over
-              if (!attributes.temp.tournamentAvailable) {
-                speech = 'TOURNAMENT_ENDED';
-                if (attributes.currentGame == 'tournament') {
-                  attributes.currentGame = 'basic';
-                }
-              }
-            }
-
-            if (speech) {
-              handlerInput.jrm.render(ri(speech, speechParams)).then(resolve);
-            } else {
-              resolve('');
+          if (attributes.currentGame == 'tournament') {
+            attributes.currentGame = 'basic';
+          }
+          attributes['tournament'] = undefined;
+          attributes.temp.forceSave = true;
+        } else {
+          // Tournament hasn't closed yet - is it active?  If not, flip to basic and
+          // let them know the tournament is over
+          if (!attributes.temp.tournamentAvailable) {
+            speech = 'TOURNAMENT_ENDED';
+            if (attributes.currentGame == 'tournament') {
+              attributes.currentGame = 'basic';
             }
           }
-        });
-      } else {
-        // No-op, you weren't playing
-        resolve('');
-      }
-    });
+        }
+
+        if (speech) {
+          return handlerInput.jrm.render(ri(speech, speechParams));
+        } else {
+          return '';
+        }
+      });
+    } else {
+      // No-op, you weren't playing
+      return Promise.resolve('');
+    }
   },
   getGame: function(name) {
     return games[name];
@@ -613,40 +607,42 @@ module.exports = {
 
     return text;
   },
-  readLeaderBoard: function(userId, game, attributes, callback) {
+  readLeaderBoard: function(userId, game, attributes) {
     let leaderURL = process.env.SERVICEURL + 'slots/leaders';
     let myScore;
     const params = {};
 
-    if (attributes[game] && (attributes[game].bankroll !== undefined)) {
-      params.game = game;
-      myScore = attributes[game].bankroll;
-    } else {
-      params.game = 'high';
-      myScore = attributes.high;
-    }
-    params.userId = userId;
-    params.score = myScore;
+    return new Promise((resolve, reject) => {
+      if (attributes[game] && (attributes[game].bankroll !== undefined)) {
+        params.game = game;
+        myScore = attributes[game].bankroll;
+      } else {
+        params.game = 'high';
+        myScore = attributes.high;
+      }
+      params.userId = userId;
+      params.score = myScore;
 
-    const paramText = querystring.stringify(params);
-    if (paramText.length) {
-      leaderURL += '?' + paramText;
-    }
+      const paramText = querystring.stringify(params);
+      if (paramText.length) {
+        leaderURL += '?' + paramText;
+      }
 
-    request(
-      {
-        uri: leaderURL,
-        method: 'GET',
-        timeout: 1000,
-      }, (err, response, body) => {
-        let leaders;
+      request(
+        {
+          uri: leaderURL,
+          method: 'GET',
+          timeout: 1000,
+        }, (err, response, body) => {
+          let leaders;
 
-        if (!err) {
-          leaders = JSON.parse(body);
-          leaders.score = myScore;
-        }
+          if (!err) {
+            leaders = JSON.parse(body);
+            leaders.score = myScore;
+          }
 
-        callback(err, leaders);
+          resolve(leaders);
+      });
     });
   },
   updateLeaderBoard: function(event, attributes) {
@@ -665,33 +661,25 @@ module.exports = {
       }
     });
   },
-  getProgressivePayout: function(attributes, callback) {
+  getProgressivePayout: function(attributes) {
     const rules = games[attributes.currentGame];
 
     // If there is no progressive for this game, just return undefined
     if (rules && rules.progressive) {
       // Read from Dynamodb
-      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + attributes.currentGame}}},
-              (err, data) => {
-        if (err || (data.Item === undefined)) {
-          console.log(err);
-          callback((attributes[attributes.currentGame].progressiveJackpot)
-                ? attributes[attributes.currentGame].progressiveJackpot
-                : rules.progressive.start);
-        } else {
-          let coins;
+      const item = {TableName: 'Slots', Key: {userId: {S: 'game-' + attributes.currentGame}}};
+      return dynamodb.getItem(item).promise().then((data) => {
+        const coins = (data.Item.coins && data.Item.coins.N)
+          ? parseInt(data.Item.coins.N) : rules.progressive.start;
 
-          if (data.Item.coins && data.Item.coins.N) {
-            coins = parseInt(data.Item.coins.N);
-          } else {
-            coins = rules.progressive.start;
-          }
-
-          callback(Math.floor(rules.progressive.start + (coins * rules.progressive.rate)));
-        }
+        return Math.floor(rules.progressive.start + (coins * rules.progressive.rate));
+      }).catch((err) => {
+        return Promise.resolve((attributes[attributes.currentGame].progressiveJackpot)
+          ? attributes[attributes.currentGame].progressiveJackpot
+          : rules.progressive.start);
       });
     } else {
-      callback(undefined);
+      return Promise.resolve();
     }
   },
   incrementProgressive: function(attributes, coinsToAdd) {
@@ -730,17 +718,13 @@ module.exports = {
     }
 
     const game = attributes[attributes.currentGame];
-    return new Promise((resolve, reject) => {
-      // Check if there is a progressive jackpot and save it
-      module.exports.getProgressivePayout(attributes, (jackpot) => {
-        if (jackpot) {
-          game.progressiveJackpot = jackpot;
-        }
-        resolve();
-      });
+    return module.exports.getProgressivePayout(attributes).then((jackpot) => {
+      if (jackpot) {
+        game.progressiveJackpot = jackpot;
+      }
     });
   },
-  drawTable: function(handlerInput, callback) {
+  drawTable: function(handlerInput) {
     const response = handlerInput.jrb;
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -755,30 +739,36 @@ module.exports = {
       attributes.display = true;
 
       if (attributes.originalChoices) {
-        let i = 0;
+        let i;
         const listItems = [];
+        const gameList = [];
 
-        attributes.originalChoices.forEach((choice) => {
-          listItems.push({
-            'token': 'game.' + i++,
-            'textContent': {
-              'primaryText': {
-                'type': 'RichText',
-                'text': '<font size=\"7\">' + attributes.temp.gameList[choice] + '</font>',
+        for (i = 0; i < attributes.originalChoices.length; i++) {
+          gameList.push(ri('GAME_LIST_' + attributes.originalChoices[i].toUpperCase()));
+        }
+        return renderBatch(gameList)
+        .then((renderItems) => {
+          for (i = 0; i < attributes.originalChoices.length; i++) {
+            listItems.push({
+              'token': 'game.' + i,
+              'textContent': {
+                'primaryText': {
+                  'type': 'RichText',
+                  'text': '<font size=\"7\">' + renderItems[i] + '</font>',
+                },
               },
-            },
+            });
+          }
+
+          image = new Alexa.ImageHelper()
+            .addImageInstance('http://garrettvargas.com/img/slot-background.png')
+            .getImage();
+
+          return handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
+            directive.backgroundImage = image;
+            directive.listItems = listItems;
+            response.addRenderTemplateDirective(directive);
           });
-        });
-
-        image = new Alexa.ImageHelper()
-          .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-          .getImage();
-
-        handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
-          directive.backgroundImage = image;
-          directive.listItems = listItems;
-          response.addRenderTemplateDirective(directive);
-          callback();
         });
       } else if (game && game.result && game.result.spin) {
         let name = '';
@@ -794,14 +784,13 @@ module.exports = {
         image = new Alexa.ImageHelper()
           .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
           .getImage();
-        handlerInput.jrm.renderObject(ri(title, displayParams)).then((directive) => {
+        return handlerInput.jrm.renderObject(ri(title, displayParams)).then((directive) => {
           directive.backgroundImage = image;
           response.addRenderTemplateDirective(directive);
-          callback();
         });
       } else {
         // Just show the background image
-        handlerInput.jrm.render(ri('DISPLAY_WELCOME')).then((welcome) => {
+        return handlerInput.jrm.render(ri('DISPLAY_WELCOME')).then((welcome) => {
           image = new Alexa.ImageHelper()
             .withDescription(welcome)
             .addImageInstance('http://garrettvargas.com/img/slot-background.png')
@@ -811,11 +800,10 @@ module.exports = {
             backButton: 'HIDDEN',
             backgroundImage: image,
           });
-          callback();
         });
       }
     } else {
-      callback();
+      return Promise.resolve();
     }
   },
   mapProduct: function(handlerInput, product) {
