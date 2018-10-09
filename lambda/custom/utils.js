@@ -585,29 +585,33 @@ module.exports = {
   readPayoutTable: function(handlerInput, game) {
     let text = '';
     let payout;
+    let i;
+    const renderItems = [];
 
     for (payout in game.payouts) {
       if (payout) {
-        // Special case if it's the progressive
-        text += readPayoutInternal(handlerInput, game, payout, ' ');
-        text += module.exports.readPayoutAmount(handlerInput, game, payout);
-        text += '\n';
+        if (game.progressive && (game.progressive.match === payout)) {
+          renderItems.push(ri('PAYOUT_RATES_PROGRESSIVE'));
+        } else {
+          renderItems.push(ri('PAYOUT_RATES_COINS', {Coins: game.payouts[payout]}));
+        }
       }
     }
 
-    return text;
-  },
-  readPayoutAmount: function(handlerInput, game, payout) {
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    let text;
+    return handlerInput.jrm.renderBatch(renderItems)
+    .then((payoutAmounts) => {
+      let i = 0;
+      for (payout in game.payouts) {
+        if (payout) {
+          // Special case if it's the progressive
+          text += readPayoutInternal(handlerInput, game, payout, ' ');
+          text += payoutAmounts[i++];
+          text += '\n';
+        }
+      }
 
-    if (game.progressive && (game.progressive.match === payout)) {
-      text = attributes.temp.payoutRates.progressive;
-    } else {
-      text = attributes.temp.payoutRates.coins.replace('[Coins]', game.payouts[payout]);
-    }
-
-    return text;
+      return text;
+    });
   },
   readLeaderBoard: function(userId, game, attributes) {
     let leaderURL = process.env.SERVICEURL + 'slots/leaders';

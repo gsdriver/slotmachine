@@ -277,10 +277,8 @@
   "TEST_BARNKUPT_NOT_SET_REPROMPT": "Say spin to pull the handle.",
   "ERROR_REPROMPT": "What else can I help with?",
   "SKILL_ERROR": "An error was encountered while handling your request. Try again later",
-  "PAYOUT_RATES": {
-    "progressive": "pays the progressive jackpot.",
-    "coins": "pays [Coins] coins."
-  },
+  "PAYOUT_RATES_PROGRESSIVE": "pays the progressive jackpot.",
+  "PAYOUT_RATES_COINS": "pays {Coins} coins.",
   "AVAILABLE_GAMES": "We have {Number} different games <break time=\"200ms\"/> {GameChoices}.",
   "WILD_SPECIAL": "Cherries are wild. ",
   "DIAMOND_SPECIAL": "Diamonds are wild. ",

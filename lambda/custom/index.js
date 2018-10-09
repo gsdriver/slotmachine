@@ -126,9 +126,6 @@ const requestInterceptor = {
           return handlerInput.jrm.renderObject(ri('SYMBOL_LIST'));
         }).then((symbolList) => {
           attributes.temp.symbolList = symbolList;
-          return handlerInput.jrm.renderObject(ri('PAYOUT_RATES'));
-        }).then((payoutRates) => {
-          attributes.temp.payoutRates = payoutRates;
           return Promise.resolve();
         });
     } else {
