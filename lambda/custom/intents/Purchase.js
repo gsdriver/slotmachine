@@ -24,7 +24,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    let response;
 
     if (attributes.temp.purchasing && (event.request.intent.name === 'AMAZON.NoIntent')) {
       attributes.temp.purchasing = undefined;

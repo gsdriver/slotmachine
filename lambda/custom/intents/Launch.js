@@ -58,7 +58,7 @@ module.exports = {
           speech += '_BUSTED';
           attributes.bankroll += 5;
           attributes.busted = undefined;
-          return 'continue';
+          return 'nobust';
         } else {
           // Is it the next day or not?
           return utils.isNextDay(handlerInput);
@@ -142,6 +142,7 @@ module.exports = {
         speech += '_TOURNAMENT';
         return utils.getRemainingTournamentTime(handlerInput).then((text) => {
           attributes.temp.speechParams.Time = text;
+          return availableGames;
         });
       } else {
         return availableGames;

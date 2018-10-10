@@ -585,7 +585,6 @@ module.exports = {
   readPayoutTable: function(handlerInput, game) {
     let text = '';
     let payout;
-    let i;
     const renderItems = [];
 
     for (payout in game.payouts) {

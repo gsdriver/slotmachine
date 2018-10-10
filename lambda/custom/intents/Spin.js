@@ -60,12 +60,10 @@ module.exports = {
       attributes.temp.readingRules = false;
       if (!attributes.temp.tournamentAvailable && (attributes.currentGame == 'tournament')) {
         attributes.currentGame = 'basic';
-        const response = handlerInput.jrb
+        return handlerInput.jrb
           .speak(ri('TOURNAMENT_ENDED'))
           .withShouldEndSession(true)
           .getResponse();
-        resolve(response);
-        return;
       }
 
       const bet = getBet(event, attributes);
@@ -388,7 +386,7 @@ function selectGame(handlerInput) {
       const rules = utils.getGame(attributes.currentGame);
 
       if (rules.welcome) {
-        return handlerInput.jrm.render(ri(rules.welcome)).then(resolve);
+        return handlerInput.jrm.render(ri(rules.welcome));
       } else {
         return '';
       }
