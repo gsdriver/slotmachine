@@ -373,7 +373,6 @@ function getBet(event, attributes) {
 
 function selectGame(handlerInput) {
   const attributes = handlerInput.attributesManager.getSessionAttributes();
-  const game = attributes[attributes.currentGame];
   let speech;
 
   // If they were in the midst of selecting a game, make that selection
@@ -392,6 +391,7 @@ function selectGame(handlerInput) {
       }
     }).then((text) => {
       attributes.temp.speechParams.GameWelcome = text;
+      const game = attributes[attributes.currentGame];
       if (game.progressiveJackpot) {
         speech += '_PROGRESSIVE';
         attributes.temp.speechParams.Jackpot = game.progressiveJackpot;

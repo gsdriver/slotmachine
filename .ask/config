@@ -34,18 +34,7 @@
           "en-IN": {
             "eTag": "0aab556c4cb795c8d7417abb02a37b13"
           }
-        },
-        "lambda": [
-          {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
-            "awsRegion": "us-east-1",
-            "alexaUsage": [
-              "custom/default"
-            ],
-            "revisionId": "1380b616-24d3-4ff2-a5a1-7696478f6e70"
-          }
-        ]
+        }
       },
       "in_skill_products": [
         {
