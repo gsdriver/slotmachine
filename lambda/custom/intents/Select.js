@@ -45,8 +45,10 @@ module.exports = {
       if (upsellProduct) {
         attributes.prompts[upsellProduct] = now;
         attributes.temp.speechParams.Game = gameName;
-        return handlerInput.jrm.render(ri('SELECT_UPSELL', attributes.temp.speechParams)).then((upsellMessage) => {
-          const directive = {
+        const renderItem = ri('SELECT_UPSELL', attributes.temp.speechParams);
+        let directive;
+        return handlerInput.jrm.render(renderItem).then((upsellMessage) => {
+          directive = {
             'type': 'Connections.SendRequest',
             'name': 'Upsell',
             'payload': {
@@ -58,14 +60,11 @@ module.exports = {
             'token': 'machine.' + upsellProduct + '.select',
           };
 
-          // Need a way to get variation selected from Jargon
-          if (upsellMessage.substring(0, 3) === 'We ') {
-            attributes.upsellSelection = 'v1';
-          } else if (upsellMessage.substring(0, 3) === 'We\'') {
-            attributes.upsellSelection = 'v2';
-          } else {
-            attributes.upsellSelection = 'v3';
-          }
+          // Get the variant that was returned
+          return handlerInput.jrm.selectedVariation(renderItem);
+        }).then((variation) => {
+          const options = variation.key.split('.');
+          attributes.upsellSelection = options[1];
 
           return handlerInput.jrb.addDirective(directive)
             .withShouldEndSession(true)
