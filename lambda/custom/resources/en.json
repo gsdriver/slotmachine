@@ -266,7 +266,7 @@
   "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
   "SPIN_PLAY_AGAIN": {
     "v1": "Want to spin again?",
-    "v2": "What to play again?",
+    "v2": "Want to play again?",
     "v3": "One more time?"
   },
   "TEST_CONFIRM_BANKRUPT": "Do you want to test going bankrupt?  Say yes to set your bankroll to 1 coin or no to continue play.",
