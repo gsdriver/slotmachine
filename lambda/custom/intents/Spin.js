@@ -8,8 +8,6 @@ const utils = require('../utils');
 const request = require('request');
 const seedrandom = require('seedrandom');
 const buttons = require('../buttons');
-const AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-1'});
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -21,8 +19,8 @@ module.exports = {
     // or one that's been pressed before
     if (request.type === 'GameEngine.InputHandlerEvent') {
       const buttonId = buttons.getPressedButton(request, attributes);
-      if (!attributes.temp.buttonId || (buttonId == attributes.temp.buttonId)) {
-        attributes.temp.buttonId = buttonId;
+      if (!attributes.buttonId || (buttonId == attributes.buttonId)) {
+        attributes.buttonId = buttonId;
         return true;
       }
     }
@@ -320,13 +318,17 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
   }
 
   // Update the color of the echo button (if present)
-  if (attributes.temp.buttonId) {
+  if (attributes.buttonId) {
     // Look for the first wheel sound to see if there is starting text
     // That tells us whether to have a longer or shorter length of time on the buttons
     const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
-    buttons.colorButton(handlerInput, attributes.temp.buttonId,
+    buttons.colorButton(handlerInput, attributes.buttonId,
       (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
-    buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.temp.buttonId]);
+    buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
+    buttons.startInputHandler(handlerInput);
+  } else {
+    // No button id?  Then turn off the input handler
+    buttons.stopInputHandler(handlerInput);
   }
 
   // Update the leader board

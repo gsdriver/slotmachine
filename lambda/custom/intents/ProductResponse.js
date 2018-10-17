@@ -7,6 +7,7 @@
 const Launch = require('./Launch');
 const Select = require('./Select');
 const SelectYes = require('./SelectYes');
+const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const SNS = new AWS.SNS();
@@ -113,8 +114,10 @@ module.exports = {
 
       // And go to the appropriate next step
       if (nextAction === 'select') {
+        buttons.startInputHandler(handlerInput);
         return Select.handle(handlerInput);
       } else if (nextAction === 'autoselect') {
+        buttons.startInputHandler(handlerInput);
         attributes.choices = [options[1]];
         return SelectYes.handle(handlerInput);
       } else {

@@ -33,10 +33,22 @@ module.exports = {
 
     return buttonId;
   },
+  stopInputHandler: function(handlerInput) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    if (attributes.temp.inputHandlerRequestId) {
+      handlerInput.responseBuilder.addDirective({
+        'type': 'GameEngine.StopInputHandler',
+        'originatingRequestId': attributes.temp.inputHandlerRequestId,
+      });
+    }
+  },
   startInputHandler: function(handlerInput) {
     if (module.exports.supportButtons(handlerInput)) {
       // We'll allow them to press the button again
-      handlerInput.jrb.addDirective({
+      const request = handlerInput.requestEnvelope.request;
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      const directive = {
         'type': 'GameEngine.StartInputHandler',
         'timeout': 60000,
         'recognizers': {
@@ -53,10 +65,16 @@ module.exports = {
           'button_down_event': {
             'meets': ['button_down_recognizer'],
             'reports': 'matches',
-            'shouldEndInputHandler': false,
+            'shouldEndInputHandler': true,
           },
         },
-      });
+      };
+
+      if (attributes.buttonId) {
+        directive.recognizers.button_down_recognizer.gadgetIds = [attributes.buttonId];
+      }
+      attributes.temp.inputHandlerRequestId = request.requestId;
+      handlerInput.jrb.addDirective(directive);
     }
   },
   buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {

@@ -105,6 +105,7 @@ module.exports = {
     }).then((action) => {
       if (action === 'continue') {
         // Set up the buttons to all flash, welcoming the user to press a button
+        attributes.buttonId = undefined;
         buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
         buttons.startInputHandler(handlerInput);

@@ -34,7 +34,18 @@
           "en-IN": {
             "eTag": "0aab556c4cb795c8d7417abb02a37b13"
           }
-        }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v7",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "daa0605e-17ea-4763-87fd-88486a93be21"
+          }
+        ]
       },
       "in_skill_products": [
         {
