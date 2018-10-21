@@ -6,6 +6,7 @@
 
 const Alexa = require('ask-sdk');
 const CanFulfill = require('./intents/CanFulfill');
+const OldTimeOut = require('./intents/OldTimeOut');
 const Spin = require('./intents/Spin');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
@@ -20,6 +21,7 @@ const Testing = require('./intents/Testing');
 const Purchase = require('./intents/Purchase');
 const Refund = require('./intents/Refund');
 const ProductResponse = require('./intents/ProductResponse');
+const Reprompt = require('./intents/Reprompt');
 const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
@@ -151,11 +153,34 @@ const saveResponseInterceptor = {
           // Save the response and reprompt for repeat
           const attributes = handlerInput.attributesManager.getSessionAttributes();
           if (response.outputSpeech && response.outputSpeech.ssml) {
-            attributes.temp.lastResponse = response.outputSpeech.ssml;
+            // Strip <speak> tags
+            let lastResponse = response.outputSpeech.ssml;
+            lastResponse = lastResponse.replace('<speak>', '');
+            lastResponse = lastResponse.replace('</speak>', '');
+            attributes.temp.lastResponse = lastResponse;
           }
           if (response.reprompt && response.reprompt.outputSpeech
             && response.reprompt.outputSpeech.ssml) {
-            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+            let lastReprompt = response.reprompt.outputSpeech.ssml;
+            lastReprompt = lastReprompt.replace('<speak>', '');
+            lastReprompt = lastReprompt.replace('</speak>', '');
+            attributes.temp.lastReprompt = lastReprompt;
+          }
+
+          if (attributes.temp) {
+            if (attributes.temp.deferReprompt === true) {
+              // Oh, actually we don't want to reprompt but will
+              // rely on the button timeout to handle a reprompt
+              response.reprompt = undefined;
+              handlerInput.responseBuilder.withShouldEndSession(false);
+              // Setting to false signals that we just deferred a reprompt
+              // so if we get a timeout, we will play the reprompt
+              attributes.temp.deferReprompt = false;
+            } else {
+              // Setting to undefined tells the timeout handler
+              // to exit silently
+              attributes.temp.deferReprompt = undefined;
+            }
           }
 
           // Save state if we need to (but just for certain platforms)
@@ -220,8 +245,10 @@ function runGame(event, context, callback) {
     attributesName: 'mapAttr',
   });
   const skillFunction = skillBuilder.addRequestHandlers(
+      OldTimeOut,
       ProductResponse,
       Launch,
+      Reprompt,
       Testing,
       Purchase,
       Refund,

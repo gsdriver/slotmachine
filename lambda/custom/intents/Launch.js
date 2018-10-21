@@ -108,7 +108,8 @@ module.exports = {
         attributes.buttonId = undefined;
         buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
-        buttons.startInputHandler(handlerInput);
+        buttons.startInputHandler(handlerInput, 20000);
+        attributes.temp.deferReprompt = (buttons.supportButtons(handlerInput));
 
         // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {

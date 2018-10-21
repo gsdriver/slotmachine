@@ -115,10 +115,12 @@ module.exports = {
       // And go to the appropriate next step
       if (nextAction === 'select') {
         buttons.startInputHandler(handlerInput);
+        attributes.temp.deferReprompt = (attributes.buttonId !== undefined);
         return Select.handle(handlerInput);
       } else if (nextAction === 'autoselect') {
         buttons.startInputHandler(handlerInput);
         attributes.choices = [options[1]];
+        attributes.temp.deferReprompt = (attributes.buttonId !== undefined);
         return SelectYes.handle(handlerInput);
       } else {
         // Just drop them directly into a game

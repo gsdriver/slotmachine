@@ -17,7 +17,8 @@ module.exports = {
 
     // Button press counts as spin if it's a new button
     // or one that's been pressed before
-    if (request.type === 'GameEngine.InputHandlerEvent') {
+    if ((request.type === 'GameEngine.InputHandlerEvent') &&
+      !buttons.timedOut(handlerInput)) {
       const buttonId = buttons.getPressedButton(request, attributes);
       if (!attributes.buttonId || (buttonId == attributes.buttonId)) {
         attributes.buttonId = buttonId;
@@ -317,28 +318,37 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     speech += '_NEWUSER';
   }
 
-  // Update the color of the echo button (if present)
-  if (attributes.buttonId) {
-    // Look for the first wheel sound to see if there is starting text
-    // That tells us whether to have a longer or shorter length of time on the buttons
-    const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
-    buttons.colorButton(handlerInput, attributes.buttonId,
-      (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
-    buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
-    buttons.startInputHandler(handlerInput);
-  } else {
-    // No button id?  Then turn off the input handler
-    buttons.stopInputHandler(handlerInput);
-  }
+  return handlerInput.jrm.renderBatch([
+    ri(speech, attributes.temp.speechParams),
+    ri('SPIN_PLAY_AGAIN'),
+  ])
+  .then((resolvedSpeech) => {
+    // If this locale supports Echo buttons and the customer is using a button
+    // or has a display screen, we will use the GameEngine
+    // to control display and reprompting
+    if (buttons.supportButtons(handlerInput) && (attributes.buttonId || attributes.display)) {
+      // Update the color of the echo button (if present)
+      // Look for the first wheel sound to see if there is starting text
+      // That tells us whether to have a longer or shorter length of time on the buttons
+      const wheelMessage = resolvedSpeech[0].indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
+      attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
+      buttons.colorDuringSpin(handlerInput, attributes.buttonId);
+      buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
+      buttons.startInputHandler(handlerInput, 8000 + (60 * wheelMessage));
+      console.log('Setting timeout of ' + (8000 + (60 * wheelMessage)) + 'ms');
+      attributes.temp.deferReprompt = true;
+      handlerInput.jrb.withShouldEndSession(false);
+    }
 
-  // Update the leader board
-  utils.updateLeaderBoard(event, attributes);
-  game.lastbet = lastbet;
-  game.bet = undefined;
-  return handlerInput.jrb
-    .speak(ri(speech, attributes.temp.speechParams))
-    .reprompt(ri('SPIN_PLAY_AGAIN'))
-    .getResponse();
+    // Update the leader board
+    utils.updateLeaderBoard(event, attributes);
+    game.lastbet = lastbet;
+    game.bet = undefined;
+    return handlerInput.responseBuilder
+      .speak(resolvedSpeech[0])
+      .reprompt(resolvedSpeech[1])
+      .getResponse();
+  });
 }
 
 function getBet(event, attributes) {

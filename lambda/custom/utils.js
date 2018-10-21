@@ -775,7 +775,7 @@ module.exports = {
             response.addRenderTemplateDirective(directive);
           });
         });
-      } else if (game && game.result && game.result.spin) {
+      } else if (!attributes.temp.spinColor && game && game.result && game.result.spin) {
         let name = '';
         game.result.spin.forEach((spin) => {
           if (name.length > 0) {

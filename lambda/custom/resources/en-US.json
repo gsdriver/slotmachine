@@ -5,7 +5,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins, plural, =1 {one more coin} other {# more coins}}. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust? "
+      "upsellMessage": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins, plural, =1 {one more coin} other {# more coins}}. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -24,7 +24,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "{SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "{SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -34,7 +34,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -44,7 +44,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "{SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "{SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -54,7 +54,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -64,7 +64,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -75,7 +75,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -85,7 +85,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -95,7 +95,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -105,7 +105,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -115,7 +115,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   },
@@ -125,7 +125,7 @@
     "payload": {
       "InSkillProduct": {
       },
-      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. Are you interested in learning about buying a subscription to automatically reset your bankroll whenever you go bust?"
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
     },
     "token": "subscribe.coinreset.launch"
   }
