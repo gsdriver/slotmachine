@@ -34,6 +34,22 @@
           "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 100 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us every Wednesday between 6 and 7 PM Pacific Time for an exciting tournament round!  Come back each week to try your luck.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
           "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5091/269216a7198e4cd1bb8e54f8b6b88cf8/APP_ICON_LARGE?versionId=St5XTqZ18sz8tzzcmhWu8qk4vNIoGvkd&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1532484308&Signature=mHot8a42eAZ51SC8o9E6R3WjWu4%3D"
         },
+        "de-DE": {
+          "description": "Spiel eines von mehreren Slot-Spielen und nutze die Möglichkeit des Echo-Knopfs mit der spannenden Chance auf einen progressiven Jackpot der immer großer wird durch zusätzliche Play-und-Premium-Maschinen, die über In-Skill-Käufe erhältlich sind. Sie starten mit 100 Münzen und können pro Runde eine bis fünf Münzen einsetzen. Du hast alle deine Münzen verloren? Wenn du am nächsten Tag wiederkommst, erhältst du weitere Münzen und kannst dich für ein Abonnement registrieren, dass deine Bankroll sofort zurücksetzt   Wirst du es sein, der den Jackpot knackt? Verfolge den HighScore und vergleiche deine Leistungen mit denen anderer Spieler, indem zu sagst: „HighScore vorlesen“, um die Bestenliste abzufragen. Wenn du weiterspielst, kannst du auch zur Spitze aufsteigen!  Du kannst dir auch jederzeit mit „Auszahlungstabelle vorlesen“ die unterschiedlichen Auszahlungen des Spiels ansagen lassen oder den Befehl „eine neue Maschine wählen“ verwenden, wenn du ein anderes Spiel ausprobieren möchtest.  Viel Glück!\n\nWir laden dich jeden Mittwoch zwischen 6 und 7 Uhr nachmittags pazifischer Zeit ein, an einer spannenden Turnierrunde teilzunehmen!  Komm jede Woche wieder und versuch dein Glück erneut.  Du erhältst unbegrenzte Spins während dieses zeitlich begrenzten Spiels, und jede Woche bieten wir eine andere Maschine an.",
+          "examplePhrases": [
+            "Alexa, starte den Spielautomaten",
+            "Lies mir die Highscores vor",
+            "Gib mir einen anderen Automaten"
+          ],
+          "keywords": [
+            "Einarmiger Bandit",
+            "Spielautomaten",
+            "Slotmaschine",
+            "Casino"
+          ],
+          "name": "Slotmaschine",
+          "summary": "Spiel ein Slot-Spiel mit der optionalen Unterstützung des Echo-Knopfs. Versuch den großen Jackpot zu knacken!"
+        },
         "en-IN": {
           "summary": "Play a game of slots with multiple machine options. Try your luck for the big jackpot!",
           "examplePhrases": [

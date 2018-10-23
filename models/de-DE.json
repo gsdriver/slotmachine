@@ -1,0 +1,225 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "slotmaschine",
+      "intents": [
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
+        },
+        {
+          "name": "HighScoreIntent",
+          "samples": [
+            "lies die Highscores vor",
+            "lies mir die Highscores vor",
+            "nenn mir die Highscores",
+            "was sind die Highscores",
+            "was ist die Bestenliste",
+            "lies mir die Bestenliste vor",
+            "lies die Bestenliste vor",
+            "sag Highscores",
+            "sag Bestenliste"
+          ]
+        },
+        {
+          "name": "AMAZON.NextIntent"
+        },
+        {
+          "name": "GameIntent",
+          "slots": [
+            {
+              "name": "Number",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "wähle {Number}",
+            "{Number} aussuchen",
+            "wähle {Number}",
+            "{Number}",
+            "wähle {Number}",
+            "wähle Nummer {Number}"
+          ]
+        },
+        {
+          "name": "BetIntent",
+          "slots": [
+            {
+              "name": "Amount",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "wetten",
+            "einsetzen",
+            "Einsatz",
+            "Wette platzieren",
+            "{Amount} Münzen einsetzen",
+            "mit {Amount} Münzen spielen",
+            "{Amount} Münzen einsetzen",
+            "{Amount} Münzen einwerfen",
+            "{Amount} Euros einzahlen",
+            "{Amount} Euros einwerfen",
+            "{Amount} Einheiten einsetzen",
+            "{Amount} Einheiten einwerfen"
+          ]
+        },
+        {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.MoreIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.NavigateSettingsIntent"
+        },
+        {
+          "name": "AMAZON.PageUpIntent"
+        },
+        {
+          "name": "AMAZON.PreviousIntent"
+        },
+        {
+          "name": "AMAZON.ScrollRightIntent"
+        },
+        {
+          "name": "RulesIntent",
+          "samples": [
+            "lies die Regeln vor",
+            "lies die Regeln vor",
+            "wie sind die Regeln",
+            "was sind die Regeln",
+            "wie sind die Regeln",
+            "erkläre mir die Regeln",
+            "erklär mir die Regeln",
+            "lies die Auszahlung vor",
+            "lies mir die Auszahlungstabelle vor",
+            "lies die Auszahlungstabelle vor",
+            "erklär mir die Auszahlungstabelle",
+            "lies mir die Auszahlungstabelle vor",
+            "erkläre mir die Auszahlungstabelle",
+            "wie sind die Auszahlungen",
+            "was sind die Auszahlungen",
+            "nenn mir die Auszahlungen",
+            "nenne mir die Auszahlungen",
+            "lies mir die Regeln des Spiels vor",
+            "lies die Regeln des Spiels vor",
+            "lies die Spielregeln vor",
+            "lies die Regeln des Spiels vor",
+            "wie sind die Regeln des Spiels",
+            "was sind die Regeln des Spiels",
+            "wie lauten die Spielregeln",
+            "erklär mir die Regeln des Spiels",
+            "erklär mir die Spielregeln",
+            "Nenn mir die Regeln des Spiels",
+            "Nenn mir die Spielregeln",
+            "die Spielregeln",
+            "die Regeln des Spiels",
+            "Spielregeln",
+            "Regeln des Spiels"
+          ]
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        },
+        {
+          "name": "AMAZON.ScrollDownIntent"
+        },
+        {
+          "name": "AMAZON.PageDownIntent"
+        },
+        {
+          "name": "AMAZON.ScrollLeftIntent"
+        },
+        {
+          "name": "AMAZON.ScrollUpIntent"
+        },
+        {
+          "name": "SpinIntent",
+          "samples": [
+            "dreh das Rad",
+            "drehe das Rad",
+            "dreh",
+            "drehe",
+            "zieh am Hebel",
+            "zieh den Griff",
+            "ziehe am Griff",
+            "drücke den Schalter",
+            "drücke den Knopf",
+            "drück den Knopf",
+            "spiel",
+            "spiele"
+          ]
+        },
+        {
+          "name": "SelectIntent",
+          "samples": [
+            "probier ein anderes Spiel",
+            "Such dir eine andere Maschine aus",
+            "wähle eine andere Maschine",
+            "nimm eine andere Maschine",
+            "wähle ein anderes Spiel aus",
+            "wähle ein neues Spiel aus",
+            "wähle eine andere Maschine",
+            "wähle einen anderen Automaten",
+            "wähle einen anderen Automaten aus",
+            "wähle eine andere Maschine aus",
+            "Nimm eine andere Maschine",
+            "wähle ein anderes Spiel aus",
+            "wechsle zu einem anderen Spiel ",
+            "wechsle zu einer anderen Maschine",
+            "wechsle zu einem anderen Automaten",
+            "wechsle zu einem neuen Spiel",
+            "wechsle zu einer neuen Maschine",
+            "wechsle zu einer anderen Maschine",
+            "wechsle zu einem anderen Spiel",
+            "Maschine wechseln\n",
+            "probier ein anderes Spiel",
+            "wähle ein anderes Spiel aus",
+            "wähle ein anderes Spiel",
+            "wähle eine andere Maschine aus",
+            "wähle ein neues Spiel",
+            "wähle eine andere Maschine aus",
+            "wähle einen anderen Automaten",
+            "wähle eine andere Maschine",
+            "gib mir einen anderen Automaten",
+            "wähle einen anderen Automaten aus",
+            "wähle einen anderen Automaten aus",
+            "wähle eine andere Maschine aus",
+            "wähle ein anderes Spiel",
+            "wähle ein anderes Spiel",
+            "probier ein anderes Spiel",
+            "wähle ein anderes Spiel aus",
+            "wähle eine andere Maschine",
+            "wähle ein neues Spiel",
+            "wähle einen anderen Automaten",
+            "wähle eine andere Maschine",
+            "wähle einen anderen Automaten aus",
+            "wähle eine andere Maschine aus",
+            "wähle eine andere Maschine",
+            "wähle ein anderes Spiel",
+            "wähle ein anderes Spiel aus",
+            "wechlse zu einem anderen Spiel",
+            "wechsle zu einer anderen Maschine",
+            "schalte um zu einem neuen Spiel",
+            "wechsle zu einem neuen Spiel",
+            "wechsle zu einem anderen Automaten",
+            "wechsle zu einer anderen Maschine",
+            "wechlse zu einer anderen Maschine",
+            "schalte um zu einem anderen Spiel",
+            "wechsle zu einem anderen Spiel",
+            "Geh zu einem anderen Spiel"
+          ]
+        },
+        {
+          "name": "AMAZON.CancelIntent"
+        }
+      ]
+    }
+  }
+}

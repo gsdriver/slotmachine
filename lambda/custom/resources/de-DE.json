@@ -1,0 +1,375 @@
+{
+  "AVAILABLE_GAMES": "Wir haben {Number} verschiedene Spiele <break time=\"200ms\"/> {GameChoices}.",
+  "BATMAN_GAME": "Die Turniermaschine des Tages ist <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
+  "DIAMOND_SPECIAL": "Diamanten sind unberechenbar.",
+  "DISPLAY_DIRECTIVE_CHOICES": {
+    "backButton": "HIDDEN",
+    "title": "Wähle ein Spiel aus",
+    "token": "listToken",
+    "type": "ListTemplate1"
+  },
+  "DISPLAY_PAYOUT_LOSER": {
+    "backButton": "HIDDEN",
+    "title": "Schade, du hast leider verloren",
+    "type": "BodyTemplate1"
+  },
+  "DISPLAY_PAYOUT_WINNER": {
+    "backButton": "HIDDEN",
+    "title": "Du hast {Coins, plural, =1 {eine Münze} other {# Münzen}} gewonnen!",
+    "type": "BodyTemplate1"
+  },
+  "DISPLAY_WELCOME": "Willkommen bei der Slotmaschine.",
+  "ERROR_REPROMPT": "Kann ich sonst noch weiterhelfen?",
+  "EVERYONE_WINS": "Bei der heutigen Turniermaschine gewinnt jedes Spiel mit einem Einsatz von 5 Münzen.",
+  "EXIT_GAME": "{Ad} Bis bald.",
+  "GAME_LIST_BASIC": "das normale Obstspiel",
+  "GAME_LIST_CRAZYDIAMOND": "verrückte Diamanten",
+  "GAME_LIST_LOOSE": "das Spiel mit der 105 % Auszahlungs-Chance",
+  "GAME_LIST_PROGRESSIVE": "Progressiver Jackpot",
+  "GAME_LIST_STEAK": "das Fleischspiel",
+  "GAME_LIST_TOURNAMENT": "die Turnierrunde",
+  "GAME_LIST_WILD": "wilde Kirsche",
+  "GOOD_AFTERNOON": "Hallo <break time=\"200ms\"/> ",
+  "GOOD_EVENING": "Guten Abend! <break time=\"200ms\"/>",
+  "GOOD_MORNING": "Guten Morgen! <break time=\"200ms\"/> ",
+  "HELP_CARD_PAYOUT_TABLE": "{PayoutTable}",
+  "HELP_CARD_TITLE": "Auszahlungstabelle",
+  "HELP_FALLBACK": "Es tut mir leid, aber ich habe dich nicht verstanden. <break time=\"200ms\"/> ",
+  "HELP_IN_TOURNAMENT": "{FallbackText} Das Turnier endet in {Time}. Am Ende des Turniers gewinnt der Spieler mit der höchsten Bankroll {Coins} Münzen. Du hast jetzt noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Sag \"Dreh dich!\", um am Hebel zu ziehen. <break time=\"200ms\"/> Oder sag \"Maschine wechseln\", um zu einer anderen Maschine zu wechseln. In unserer Alexa-App  kannst du die Auszahlungstabelle ansehen. Kann ich dir sonst noch behilflich sein?",
+  "HELP_NO_TOURNAMENT": "{FallbackText} Du besitzt nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Sag \"Dreh dich!\", um am Hebel zu ziehen. <break time=\"200ms\"/> Oder sag \"Maschine wechseln\", um eine andere Maschine auszuwählen. In unserer Alexa-App kannst du die Auszahlungstabelle ansehen. Kann ich dir sonst noch behilflich sein?",
+  "HELP_SELECT_TEXT": "{FallbackText} Sag \"Ja\", um die angebotene Maschine zu wählen. Sag \"Nein\" für eine andere Maschine. Möchtest du eine Runde {Game} spielen?",
+  "HELP_UPCOMING_TOURNAMENT": "{FallbackText} Du hast {Amount, plural, =1 {eine Münze} other {# Münzen}}. Sag einfach \"Dreh dich!\", um am Hebel zu ziehen. <break time=\"200ms\"/> Oder sag \"Maschine wechseln\", um zu einer anderen Maschine zu wechseln. Nehm jeden Tag um {Time} {Timezone} an der Turnierrunde teil für die Chance auf einen zusätzlichen Gewinn von {Coins} Münzen! In unserer Alexa-App kannst du die Auszahlungstabelle ansehen. Kann ich dir sonst noch behilflich sein?",
+  "HIGHSCORE_GAME_RANKING": "Mit deiner aktuellen Bankroll von {Coins, plural, =1 {eine Münze} other {# Münzen}} bei {CurrentGame} stehst du an Stelle <say-as interpret-as=\"ordinal\">{Rank}</say-as> von {Players} Spielern. Die höchsten {NumberOfLeaders} Bankrolls sind {HighScore1, plural, =0 {} other {# Münzen <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# Münzen <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# Münzen <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# Münzen <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Kann ich sonst noch weiterhelfen?",
+  "HIGHSCORE_GAME_RANKING_SELECT": "Mit deiner aktuellen Bankroll von {Coins, plural, =1 {eine Münze} other {# Münzen}} bei {CurrentGame} stehst du an Stelle <say-as interpret-as=\"ordinal\">{Rank}</say-as> von {Players} Spielern. Die besten {NumberOfLeaders} Bankrolls sind {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Möchtest Du {Game} spielen? ",
+  "HIGHSCORE_NO_SCORES": "Tut mir leid, ich kann dir derzeit leider nicht die aktuelle Bestenliste vorlesen. Was kann ich sonst noch für dich tun?",
+  "HIGHSCORE_NO_SCORES_SELECT": "Entschuldigung, ich kann dir derzeit leider nicht die aktuelle Bestenliste vorlesen. Möchtest du gern eine Runde {Game} spielen?",
+  "HIGHSCORE_RANKING": "Mit deiner höchsten Bankroll von {Coins, plural, =1 {eine Münze} other {# Münzen}} bist du die Nummer <say-as interpret-as=\"ordinal\">{Rank}</say-as> der besten {Players} Spieler. Die {NumberOfLeaders} höchsten Bankrolls sind {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Willst du noch etwas anderes wissen?",
+  "HIGHSCORE_RANKING_SELECT": "Mit deiner höchsten Bankroll von {Coins, plural, =1 {eine Münze} other {# Münzen}} bist du die Nummer <say-as interpret-as=\"ordinal\">{Rank}</say-as> der {Players} besten Spieler. Die {NumberOfLeaders} höchsten Bankrolls sind {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Möchtest du gern eine Runde {Game} spielen?",
+  "HIGHSCORE_REPROMPT": "Willst du noch etwas anderes wissen?",
+  "HIGH_JACKPOT": "Beim heutigen Turnier hast du eine Auszahlungschance von 1.000 zu 1!",
+  "HIGH_PAYOUT": "Beim heutigen Turnier zahlt die Maschine 110 % aus.",
+  "LAUNCH": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Willkommen zurück bei Spielautomat! Sag \"Dreh dich!\", um {Game} zu starten.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Lass uns Slotmaschine spielen! Was hältst du von einer Runde {Game}? "
+  },
+  "LAUNCH_BUSTED": "{TournamentResult} Du hast leider keine Münzen mehr. Besuch morgen wieder den Spielautomat und erhalte {Coins} neue Münzen.",
+  "LAUNCH_BUSTED_REPLENISH": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Schön, dass du wieder dabei bist! {TournamentResult} Zum Einstieg geben wir dir {Coins} Münzen, damit du mit {Game} loslegen kannst. Sag einfach \"Dreh dich!\", um das Spiel zu starten.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Zeit für eine neue Runde an der Slotmaschine! {TournamentResult} Hier hast du {Coins} Münzen für deinen nächsten Einsatz. Sollen wir eine Runde {Game} wagen?",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Lass uns Spielautomat spielen! {TournamentResult} Hier sind {Coins} Münzen für deinen nächsten Einsatz bei {Game}. Sag \"Dreh dich!\", um das Spiel zu starten."
+  },
+  "LAUNCH_BUSTED_REPLENISH_BUTTON": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Schön, dich wiederzusehen! {TournamentResult} Fangen wir mit {Coins} Münzen an, um dich wieder bei {Game} ins Spiel zu bringen. Sag einfach „Dreh Dich!“ oder drück einen Echo Button, um anzufangen.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Es ist Zeit für eine Runde Slotmaschine! {TournamentResult} Hier hast du {Coins} Münzen für die nächste Runde. Möchtest du gern {Game} spielen?",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Komm, wir spielen Slotmaschine! {TournamentResult} Fangen wir mit {Coins} Münzen an, um dich wieder bei {Game} ins Spiel zu bringen.Sag einfach „Dreh Dich!“ oder drück einen Echo Button, um anzufangen."
+  },
+  "LAUNCH_BUSTED_REPLENISH_TOURNAMENT": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Schön, dass du wieder dabei bist! {TournamentResult} Wir schenken dir heute {Coins} Münzen für dein nächstes Spiel. <break time=\"300ms\"/> Du kommst zum perfekten Zeitpunkt zurück, den in {Time} beginnt ein neues Turnier. Sag \"Dreh dich!\", um das Spiel zu starten.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Zeit für eine Runde Slotmaschine! {TournamentResult} Hier hast du {Coins} Münzen zum Weiterspielen. <break time=\"300ms\"/> Für die nächsten {Time} gibt es übrigens eine spezielle Turniermaschine. Willst du sie ausprobieren?",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Lass uns Slotmaschine spielen! {TournamentResult} Hier sind {Coins} Münzen für dich, um wieder in Fahrt zu kommen. <break time=\"500ms\"/> Warte, wir haben für {Time} eine Turniermaschine. Willst du sie ausprobieren?"
+  },
+  "LAUNCH_BUSTED_REPLENISH_TOURNAMENT_BUTTON": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Super, dass du wieder reinschaust! {TournamentResult} Zum Einstieg geben wir dir {Coins} Münzen, damit du loslegen kannst <break time=\"300ms\"/> Du hast den perfekten Zeitpunkt erwischt, denn für die nächsten {Time} findet ein Turnier statt. Sag \"Dreh dich!\" oder drück eine Echo Button, um mit dem Spiel zu beginnen. ",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Die beste Zeit für ein Spiel mit der Slotmaschine! {TournamentResult} Hier sind {Coins} Münzen, um weiter zu spielen. <break time=\"300ms\"/> Wir haben die nächsten {Time} übrigens eine spezielle Turniermaschine. Willst du sie ausprobieren? Sag „Ja“ oder drücke einen Echo Button, um mitzuspielen.",
+    "v3": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} Lass uns Slotmaschine spielen! {TournamentResult} Hier sind {Coins} Münzen für dein nächstes Spiel. <break time=\"500ms\"/> Warte, wir haben für {Time} eine Turniermaschine. Willst du sie ausprobieren? Sag \"Ja\" oder drück einen Echo Button, um zu spielen"
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Dank deinem Bankroll-Abo wurde deine Bankroll automatisch auf {Coins} Münzen aufgefüllt. Möchtest du eine Runde {Game} spielen? ",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Zum Glück hast du ein Abo für deine Bankroll. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Sag \"Dreh dich!\", um eine Runde {Game} zu spielen."
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED_BUTTON": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Dank deinem Abo für die Bankroll wurde deine Bankroll automatisch auf {Coins} Münzen aufgefüllt. Um eine Runde {Game} zu spielen, sag einfach \"Dreh dich!\" oder drück einen Echo Button.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Zum Glück hast du ein Abo für deine Bankroll. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Um eine Runde {Game} zu spielen, sag einfach \"Dreh dich!\" oder drück einen Echo Button."
+  },
+  "LAUNCH_BUSTED_SUBSCRIBED_TOURNAMENT": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Dank deinem Bankroll-Abo wird deine Bankroll automatisch auf {Coins} Münzen aufgefüllt. Hast du Lust am Turnier teilzunehmen, das für die nächsten {Time} stattfinden wird?",
+  "LAUNCH_BUSTED_SUBSCRIBED_TOURNAMENT_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Dank deines Bankroll-Abos wird deine Bankroll automatisch auf {Coins} Münzen aufgefüllt. Sag einfach \"Dreh dich!\" oder drück einen Echo Button, um am Turnier teilzunehmen. Dieses findet noch die nächsten {Time} statt.",
+  "LAUNCH_BUSTED_TOURNAMENT": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult}  <amazon:effect name=\"whispered\"> Weißt du was? <break time=\"500ms\"/> Eigentlich ist dies verboten, <break time=\"400ms\"/> aber da für die nächsten {Time} ein Turnier stattfindet, schenke ich dir 5 Münzen, damit du teilnehmen kannst. </amazon:effect> Sag einfach \"Dreh dich!\", um das Spiel zu starten.",
+  "LAUNCH_BUSTED_TOURNAMENT_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult}  <amazon:effect name=\"whispered\"> Du weißt, <break time=\"500ms\"/> dass ich das eigentlich nicht tun dürfte, <break time=\"400ms\"/> aber, da das Turnier für die nächsten {Time} ansteht, sind hier nochmal 5 Münzen, damit du daran teilnehmen kannst. </amazon:effect> Sag einfach „Dreh Dich!“ oder drück einen Echo Button, um anzufangen.",
+  "LAUNCH_BUTTON": {
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Willkommen zurück beim Spielautomat. Wenn dein Echo Button einen Knopf hat, drücke ihn, um mit dem Spiel zu beginnen. {Game1} <break time=\"200ms\"/> Du kannst auch \"Dreh dich!\" sagen für eine Runde {Game2} oder \"Nein\", um eine andere Maschine auszuwählen.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Hast du Lust auf eine Runde am Spielautomaten? Wenn dein Echo Button einen Knopf hat, drücke ihn, um {Game1} zu spielen. <break time=\"200ms\"/> Du kannst auch \"Dreh dich!\" sagen für eine Runde {Game2} oder \"Nein\", um eine andere Maschine auszuwählen."
+  },
+  "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen beim Spielautomat. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen beim Spielautomat. Wenn dein Echo Button einen Knopf hat, drücke ihn. Sag andernfalls \"Dreh dich!\", um den Hebel zu ziehen.",
+  "LAUNCH_NEWUSER_REPROMPT": "Sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "LAUNCH_REPROMPT": "Möchtest du {Game} spielen?",
+  "LAUNCH_RESUME_GAME": "{TournamentResult} Sag einfach \"Dreh dich!\", um am Hebel zu ziehen.",
+  "LAUNCH_RESUME_GAME_BUTTON": "{TournamentResult} Wenn dein Echo Button einen Knopf hat, drücke ihn, oder sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "LAUNCH_RESUME_GAME_REPROMPT": "Sag „Dreh dich!“, um am Hebel zu ziehen.",
+  "LAUNCH_TOURNAMENT": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Willkommen zurück beim Spielautomat! Ein perfektes Timing <break time=\"300ms\"/>, denn in den nächsten {Time} findet ein Turnier statt. Willst du teilnehmen?",
+  "LAUNCH_TOURNAMENT_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Komm, lass uns Slotmaschine spielen! <break time=\"300ms\"/> In den nächsten {Time} findet ein Turnier statt. Sag einfach „Dreh Dich“ oder drück einen Echo Button, wenn Du mitmachen willst!",
+  "PAYOUT_RATES_COINS": "zahlt {Coins} Münzen aus.",
+  "PAYOUT_RATES_PROGRESSIVE": "zahlt den progressiven Jackpot aus.",
+  "PITY_PAYOUT": "Jede nicht genannte Runde gewinnt 1 Münze, wenn mit 5 Münzen gespielt wird.",
+  "PRODUCT_MAP_LIST": {
+    "coinreset": {
+      "0": "BANKROLL AUFFÜLLEN",
+      "1": "MÜNZEN AUFFÜLLEN"
+    },
+    "crazydiamond": {
+      "0": "VERRÜCKTE DIAMANTEN",
+      "1": "DIAMANTEN",
+      "2": "CRAZY DIAMANTEN-MASCHINE"
+    }
+  },
+  "PROGRESSIVE_JACKPOT": "Der progressive Jackpot liegt derzeit bei {Jackpot, plural, =1 {eine Münze} other {# Münzen}}. Wirf {Coins, plural, =1 {eine Münze} other {# Münzen}} ein, um ihn zu knacken.",
+  "PROGRESSIVE_JACKPOT_ONLY": "Der progressive Jackpot hat derzeit {Jackpot, plural, =1 {eine Münze} other {# Münzen}}.",
+  "PROGRESSIVE_SPECIAL": "Diamant-Diamant-Diamant gewinnt den progressiven Jackpot, wenn mit dem höchsten Einsatz gespielt wird.",
+  "RULES_CARD_TITLE": "Auszahlungstabelle",
+  "RULES_REPROMPT": "Sag \"Setzen\", um Münzen einzustecken, oder \"Dreh dich!\", um den Hebel zu ziehen.",
+  "RULES_RULES": "{SpecialText} {PayoutTable} Sag \"Setzen\", um Münzen einzuwerfen, oder \"Dreh dich!\", um den Hebel zu ziehen.",
+  "RULES_SELECT_REPROMPT": "Sag einfach \"Ja\", um dieses Spiel zu spielen, oder \"Nein\", um die nächste Option anzuhören.",
+  "RULES_SELECT_RULES": "{SpecialText} {PayoutTable} Sag \"Ja\", wenn du dieses Spiel spielen willst. Sag \"Nein\", um die nächste Option zu hören.",
+  "SELECT_PICK_GAME": "{AvailableGames} Wie wäre es mit einer Runde {Game}?",
+  "SELECT_PICK_GAME_REPROMPT": "Möchtest du eine Runde {Game} spielen?",
+  "SELECT_REPROMPT": "Du kannst bis zu {Coins} Münzen setzen. Oder sag \"Highscore vorlesen\", um die Bestenliste anzuhören.",
+  "SELECT_WELCOME": {
+    "v1": "Willkommen bei {Game}. {GameWelcome} Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. <break time=\"300ms\"/> Du kannst bis zu {Coins} Münzen setzen oder \"Highscore vorlesen\" sagen, um die Bestenliste anzuhören.",
+    "v2": "{Game} geht los. {GameWelcome} Mit {Amount, plural, =1 {eine Münze} other {# Münzen}} kannst du bis zu {Coins} Münzen einsetzen. <break time=\"300ms\"/> Sag einfach \"Dreh dich!\", um das Spiel zu starten.",
+    "v3": "Spiel eine Runde {Game}. {GameWelcome} Du hast {Amount, plural, =1 {eine Münze} other {# Münzen}} Münzen und kannst bis zu {Coins} Münzen einsetzen. <break time=\"300ms\"/> Sag einfach \"Dreh dich!\", um mit dem Spiel zu beginnen.",
+    "v4": "Zeit für eine Runde {Game}! {GameWelcome} Du besitzt {Amount, plural, =1 {eine Münze} other {# Münzen}}. <break time=\"300ms\"/> Sag einfach \"Wirf {Coins} Münzen ein\"."
+  },
+  "SELECT_WELCOME_PROGRESSIVE": {
+    "v1": "Willkommen zu {Game}. {GameWelcome} Du besitzt {Amount, plural, =1 {eine Münze} other {# Münzen}} für die Chance auf den progressiven Jackpot von {Jackpot} Münzen. <break time=\"300ms\"/> Sag einfach \"Dreh dich!\", um das Spiel zu starten.",
+    "v2": "{Game} beginnt. {GameWelcome} Mit deinem Guthaben von {Amount, plural, =1 {eine Münze} other {# Münzen}} kannst du bis zu {Coins} Münzen einsetzen, um den progressiven Jackpot mit {Jackpot} Münzen zu knacken. <break time=\"300ms\"/> Sag \"Dreh dich!\", um zu beginnen.",
+    "v3": "Probier es mit einer Runde {Game}. {GameWelcome} Im progressiven Jackpot haben sich {Jackpot} Münzen angesammelt. <break time=\"300ms\"/> Du hast {Amount, plural, ={eine Münze} other {# Münzen}}. Sag einfach \"Wirf {Coins} Münzen ein\".",
+    "v4": "Zeit für eine Runde {Game}! {GameWelcome} Du hast {Amount, plural, =1 {eine Münze} other {# Münzen}} und im progressiven Jackpot sind {Jackpot} Münzen. Probier es mit einem Einsatz von {Coins} Münzen."
+  },
+  "SIMPSON_GAME": "Die Turniermaschine des Tages ist <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3\"/> ",
+  "SKILL_ERROR": "Bei der Verarbeitung deiner Anfrage ist ein Fehler aufgetreten. Versuch es später noch einmal.",
+  "SPIN_BET_LOSER": {
+    "v1": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Pech gehabt! Du hast verloren und noch {Amount, plural, =1 {eine Münze} other {# Münzen}} übrig. Willst du es noch mal probieren?",
+    "v2": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast leider verloren und damit nur noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren? ",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast keine Münzen gewonnen. Du hast jetzt noch insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+    "v4": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Leider Pech gehabt! Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}} übrig. Willst du es noch einmal wagen?"
+  },
+  "SPIN_BET_LOSER_BIG": {
+    "v1": "Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult}. So ein Pech! Du hast verloren. Du besitzt noch {Amount, plural, =1{eine Münze} other {# Münzen}}. Willst du es noch mal versuchen?",
+    "v2": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Was für ein Pech! Du hast schon wieder verloren! Vielleicht solltest du deine {Amount, plural, =1 {eine Münze} other {# Münzen}} nehmen und eine andere Maschine ausprobieren. Willst du noch eine Runde spielen?",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schon wieder <break time=\"200ms\"/> verloren. Du hast damit nur noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es trotzdem erneut versuchen?",
+    "v4": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <amazon:effect name=\"whispered\"> Bleib dran, du wirst bald gewinnen! </amazon:effect> Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}} übrig. Willst du noch eine Runde spielen?"
+  },
+  "SPIN_BET_LOSER_BIG_BUSTED": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch einmal mit {Coins} frischen Münzen.",
+    "v2": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast alles verloren! Komm morgen wieder zurück und erhalte {Coins} Münzen.",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. So ein Pech! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} Münzen."
+  },
+  "SPIN_BET_LOSER_BIG_BUSTED_OUTOFMONEY": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast verloren. Ohne Münzen kannst du nicht mehr am Turnier teilnehmen. Versuch dein Glück wieder nächste Woche!",
+    "v2": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr und kannst nicht länger am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Was für ein Pech! Du hast keine Münzen mehr und bist aus dem Turnier raus. Hoffentlich hast du nächste Woche mehr Glück!"
+  },
+  "SPIN_BET_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry, Pech gehabt. Du hast keine Münzen mehr. <break time=\"300ms\"/> Doch dank deines Abos wird deine Bankroll wieder automatisch auf {Coins} Münzen aufgefüllt. Nochmal spielen?",
+    "v2": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr. <break time=\"300ms\"/> Gut, dass du die \"Konto automatisch auffüllen\"-Option gewählt hast. Dadurch musst du nicht darauf warten, dass dein Guthaben wieder auf {Coins} aufgefüllt wird. Nochmal spielen?"
+  },
+  "SPIN_BET_LOSER_BUSTED": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Leider hast du verloren! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} neue Münzen.",
+    "v2": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr, aber wenn du morgen zurückkommst, erhältst du {Coins} neue Münzen.",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, verloren! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} Münzen. "
+  },
+  "SPIN_BET_LOSER_BUSTED_OUTOFMONEY": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast verloren. Ohne Münzen kannst du nicht mehr am Turnier teilnehmen. Versuch dein Glück wieder nächste Woche!",
+    "v2": "Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v3": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. So ein Pech! Du hast keine Münzen mehr und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!"
+  },
+  "SPIN_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, du hast verloren. Du hast auch keine Münzen mehr. Weil du aber die Option \"Konto automatisch auffüllen\" gewählt hast, wird dein Konto wieder mit {Coins} Münzen aufgefüllt. Willst du es noch mal probieren?",
+    "v2": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr. <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?"
+  },
+  "SPIN_BET_LOSER_NEWUSER": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Pech gehabt! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_BET_WIN": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast jetzt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+    "v2": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen und damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal versuchen?",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen und besitzt damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde wagen?",
+    "v4": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <break time=\"200ms\"/> Gewonnen, du Glückspilz! Du bekommst {AmountWon, plural, =1 {Eine Münze} other {# Münzen}} und hast damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst Du noch einmal spielen? "
+  },
+  "SPIN_BET_WIN_JACKPOT": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Insgesamt hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+    "v2": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen und damit nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+    "v3": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Damit gewinnst du {AmountWon, plural, =1 {eine Münze} other {# Münzen}} und hast nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch einmal versuchen?",
+    "v4": "Bei dieser Runde setzt du {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Gewonnen, du Glückspilz! Du erhältst {AmountWon, plural, =1 {eine Münze} other {# Münzen}} und hast damit nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?"
+  },
+  "SPIN_BET_WIN_JACKPOT_NEWUSER": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_BET_WIN_NEWUSER": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_BET_WIN_PROGRESSIVE": {
+    "v1": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast den progressiven Jackpot mit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} geknackt. Damit besitzt du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+    "v2": "Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Wow! Du hast den progressiven Jackpot mit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} geknackt! Damit hast du nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du dein Glück noch ein weiteres Mal herausfordern?",
+    "v3": "Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Herzlichen Glückwunsch! Du hast den progressiven Jackpot mit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun insgesamt {Amount, plural, =1{eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?"
+  },
+  "SPIN_BET_WIN_PROGRESSIVE_NEWUSER": "Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_BET_LOSER": "Komm, lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Noch eine Runde?",
+  "SPIN_JOINGAME_BET_LOSER_BUSTED": "Lass uns {Game} spielen. {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Wie Schade! Du hast alle Münzen verloren. Aber komm morgen wieder für {Coins} neue Münzen zurück.",
+  "SPIN_JOINGAME_BET_LOSER_BUSTED_OUTOFMONEY": "Komm, wir spielen {Game}! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast alle deine Münzen verloren und bist aus dem Rennen! Viel Glück beim nächsten Mal!",
+  "SPIN_JOINGAME_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Komm, lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_BET_LOSER_NEWUSER": "Sollen wir eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, leider verloren! Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_BET_WIN": "Lust auf eine Runde {Game}? {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# coins}}. {SpinResult}. Du hast {Match} Richtige und damit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Jetzt hast du insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal wagen?",
+  "SPIN_JOINGAME_BET_WIN_JACKPOT": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du dein Glück noch mal wagen?",
+  "SPIN_JOINGAME_BET_WIN_JACKPOT_NEWUSER": "Sollen wir eine Runde {Game} spielen? {GameWelcome} <break time=\"300ms\"/> Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Insgesamt besitzt du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_BET_WIN_NEWUSER": "Komm, wir spielen {Game}! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast jetzt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag „Maschine wechseln“, ansonsten sag einfach „Dreh dich!“, um weiterzuspielen. ",
+  "SPIN_JOINGAME_BET_WIN_PROGRESSIVE": "Lust auf eine Runde {Game}? {GameWelcome} <break time=\"300ms\"/> Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Dein Gesamtguthaben ist nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du Fortuna noch einmal herausfordern?",
+  "SPIN_JOINGAME_BET_WIN_PROGRESSIVE_NEWUSER": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}} in der Tasche. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_LOSER": "Lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Schade, du hast verloren! Du besitzt noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du erneut dein Glück versuchen?",
+  "SPIN_JOINGAME_LOSER_BIG": "Lass uns eine Runde {Game} spielen {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Wieder verloren? Vielleicht solltest du es mit deinen {Amount, plural, =1 {eine Münze} other {# Münzen}} an einem anderen Automaten versuchen. Nochmal drehen?",
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED": "Sollen wir eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Du hast leider all deine Münzen verloren. <break time=\"300ms\"/> Komm morgen wieder zurück für {Coins} neue Münzen.",
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED_OUTOFMONEY": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Schon wieder verloren? Leider hast du nun keine Münzen mehr und bist aus dem Turnier ausgeschieden. Hoffentlich klappt's beim nächsten Mal!",
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"300ms\"/> Gut, dass du die \"Konto automatisch auffüllen\"-Option gewählt hast. Dadurch musst du nicht darauf warten, dass dein Guthaben wieder auf {Coins} Münzen gesetzt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_LOSER_BUSTED": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Pech gehabt! Du hast all deine Münzen verloren. <break time=\"300ms\"/> Komm morgen wieder zurück und erhalte {Coins} neue Münzen.",
+  "SPIN_JOINGAME_LOSER_BUSTED_OUTOFMONEY": "Lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry! Du hast alle Münzen verloren und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächstes Mal mehr Glück!",
+  "SPIN_JOINGAME_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Lass uns eine Runde {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"300ms\"/> Super, dass du ein Abo für deine Bankroll hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_LOSER_NEWUSER": "Spiel eine Runde {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag „Maschine wechseln“, ansonsten sag einfach „Dreh dich!“, um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER": "Willst du dein Glück bei einer Runde {Game} herausfordern? Dort haben sich {Jackpot} Münzen im progressiven Jackpot angesammelt. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Noch eine Runde?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG": "Komm, wir spielen {Game}, denn jetzt sind {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <amazon:effect name=\"whispered\"> Bleib dran, du wirst bald gewinnen! </amazon:effect> Du hast {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED": "Lass uns {Game} mit einem progressiven Jackpot von {Jackpot} Münzen spielen. Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult}. Was für ein Pech! Du hast alle Münzen verloren. <break time=\"300ms\"/> Aber komm doch morgen wieder zurück, um {Coins} Münzen einzusammeln.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_OUTOFMONEY": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast keine Münzen mehr und kannst nicht länger am Turnier teilnehmen. Aber spiel doch nächste Woche wieder mit.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Komm, wir spielen {Game}, denn jetzt sind {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo abgeschlossen hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED": "Komm, wir spielen {Game}, denn jetzt sind {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, du hast alle Münzen verloren. <break time=\"300ms\"/> Aber komm morgen wieder zurück und erhalte {Coins} Münzen.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_OUTOFMONEY": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, du hast alle Münzen verloren und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_NEWUSER": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Sorry! Du hast verloren. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\". Wenn du noch eine Runde spielen willst, sag \"Dreh dich!\"",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Insgesamt hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen? ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Dein Gesamtguthaben beträgt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal wagen?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT_NEWUSER": "Lass uns {Game} mit einem progressiven Jackpot von {Jackpot} Münzen spielen. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_NEWUSER": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE": "Lust auf eine Runde {Game}, wo sich im progressiven Jackpot {Jackpot} Münzen angehäuft haben? Dein Einsatz: {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Klasse! Du hast den progressiven Jackpot mit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} geknackt. Du hast nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du dein Glück noch mal wagen?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE_NEWUSER": "Lass uns eine Runde {Game} spielen, wo sich im progressiven Jackpot {Jackpot} Münzen angesammelt haben. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit besitzt du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot.  {SpinResult}. <amazon:effect name=\"whispered\"> Bleib dran, du wirst bald gewinnen! </amazon:effect> Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult}. Pech gehabt. Du hast deinen Einsatz verloren <break time=\"300ms\"/> Aber schau morgen wieder vorbei für {Coins} neue Münzen.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_OUTOFMONEY": "Probier dein Glück mit einer Runde {Game}, wo sich ein progressiver Jackpot von {Jackpot} Münzen angesammelt hat. {SpinResult}. Du hast keine Münzen mehr und kannst nicht länger am Turnier teilnehmen. Bis nächste Woche!",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult} <break time=\"300ms\"/> Wie praktisch, dass du ein Bankroll-Abo abgeschlossen hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED": "Lass uns {Game} mit dem progressiven Jackpot von {Jackpot} Münzen spielen. {SpinResult}. Sorry, du hast alle Münzen eingebüßt. <break time=\"300ms\"/> Komm morgen wieder zurück und sichere dir {Coins} neue Münzen.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_OUTOFMONEY": "Willst du dein Glück bei einer Runde {Game} wagen, wo der progressive Jackpot auf {Jackpot} Münzen angewachsen ist? {SpinResult}. Pech! Du hast verloren. Damit hast du keine Münzen mehr und bist aus dem Turnier raus. Vielleicht hast du nächstes Mal mehr Glück.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult} <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_NEWUSER": "Lass uns {Game} spielen, denn im progressiven Jackpot sind jetzt {Jackpot} Münzen. {SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\". Wenn du noch eine Runde spielen willst, sag \"Dreh dich!\"",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN": "Lass uns eine Runde {Game} spielen! Der progressive Jackpot hat {Jackpot} Münzen. {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du besitzt nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du dein Glück noch einmal herausfordern?",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT": "Lass uns {Game} mit dem progressiven Jackpot von {Jackpot} Münzen spielen. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1{eine Münze} other {# Münzen}} gewonnen. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT_NEWUSER": "Probier dein Glück bei einer Runde {Game}, dessen progressiver Jackpot auf {Jackpot} Münzen angewachsen ist. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du besitzt damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_NEWUSER": "Lass uns eine Runde {Game} spielen, denn dort haben sich im progressiven Jackpot {Jackpot} Münzen angehäuft. {SpinResult}. Du hast {Match} Richtige und damit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast jetzt insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE": "Versuch dein Glück bei einer Runde {Game}, wo sich ein progressiver Jackpot von {Jackpot} Münzen angehäuft hat. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Glückwunsch! Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du Fortuna noch einmal herausfordern?",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE_NEWUSER": "Spiel eine Runde {Game}! Im progressiven Jackpot sind {Jackpot} Münzen. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen! Damit besitzt du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_WIN": "Lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du jetzt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_WIN_JACKPOT": "Lass uns {Game} spielen. {GameWelcome} <break time=\"300ms\"/> {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1{eine Münze} other {# Münzen}} gewonnen. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+  "SPIN_JOINGAME_WIN_JACKPOT_NEWUSER": "Lass uns {Game} spielen! {GameWelcome} <break time=\"300ms\"/> {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit besitzt du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_JOINGAME_WIN_NEWUSER": "Lass uns eine Runde {Game} spielen. {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_LOSER": {
+    "v1": "{SpinResult}. Du hast leider verloren und jetzt noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch einmal probieren?",
+    "v2": "{SpinResult}. Du hast leider verloren und besitzt damit nur noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch einmal probieren?",
+    "v3": "{SpinResult}. Schade, du hast keine Münzen gewonnen. Du hast jetzt noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+    "v4": "{SpinResult}. Aua! Das hat weh getan! Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}} übrig. Nochmal spielen? "
+  },
+  "SPIN_LOSER_BIG": {
+    "v1": "{SpinResult}. Schade, du hast leider verloren. Du hast jetzt noch insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?",
+    "v2": "{SpinResult}. Was für ein Pech! Du hast schon wieder verloren! Vielleicht solltest du deine {Amount, plural, =1 {eine Münze} other {# Münzen}} nehmen und eine andere Maschine ausprobieren. Willst du noch eine Runde spielen?",
+    "v3": "{SpinResult}. Schon wieder <break time=\"200ms\"/> verloren. Du hast damit nur noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+    "v4": "{SpinResult}. <amazon:effect name=\"whispered\"> Bleib dran, ein Gewinn steht vor der Tür! </amazon:effect> Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}} übrig. Nochmal drehen?"
+  },
+  "SPIN_LOSER_BIG_BUSTED": {
+    "v1": "{SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch mal mit {Coins} frischen Münzen.",
+    "v2": "{SpinResult}. Du hast alles verloren! Komm morgen wieder für {Coins} neue Münzen.",
+    "v3": "  {SpinResult}. Was für ein Pech! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} neue Münzen."
+  },
+  "SPIN_LOSER_BIG_BUSTED_OUTOFMONEY": {
+    "v1": "{SpinResult}. So ein Pech! Du hast leider verloren. Du hast keine Münzen mehr und bist aus dem Turnier ausgeschieden. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v2": "{SpinResult}. Du hast keine Münzen mehr und kannst nicht länger am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v3": " {SpinResult}. Schade! Du hast keine Münzen mehr und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück! "
+  },
+  "SPIN_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": {
+    "v1": "{SpinResult}. Schade, du hast verloren und keine Münzen mehr. <break time=\"300ms\"/> Aber dank deines Abos für die Bankroll wurde deine Bankroll automatisch auf {Coins} Münzen aufgefüllt. Willst du es noch mal probieren?",
+    "v2": "{SpinResult}. Du hast keine Münzen mehr. <break time=\"300ms\"/> Super, dass du ein Bankroll-Abo hast. So brauchst du nicht zu warten, bis deine Bankroll wieder auf {Coins} Münzen aufgefüllt wird. Nochmal spielen?"
+  },
+  "SPIN_LOSER_BUSTED": {
+    "v1": "{SpinResult}. Schade, du hast verloren. Deine Münzen sind alle. Komm morgen wieder vorbei und erhalte {Coins} neue Münzen.",
+    "v2": "{SpinResult}. Du hast keine Münzen mehr. Aber du kannst morgen wieder für {Coins} neue Münzen zurückkommen.",
+    "v3": " {SpinResult}. Schade! Verloren! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} Münzen."
+  },
+  "SPIN_LOSER_BUSTED_OUTOFMONEY": {
+    "v1": "{SpinResult}. Sorry! Du hast verloren. Du hast keine Münzen mehr und bist aus dem Rennen. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v2": "{SpinResult}. Du hast keine Münzen mehr und bist aus dem Rennen. Hoffentlich hast du nächste Woche mehr Glück!",
+    "v3": "{SpinResult}. Leider daneben! Du hast keine Münzen mehr und kannst nicht mehr am Turnier teilnehmen. Hoffentlich hast du nächste Woche mehr Glück!"
+  },
+  "SPIN_LOSER_BUSTED_SUBSCRIBED_REPLENISH": {
+    "v1": "{SpinResult}. Wie schade, du hast verloren und keine Münzen mehr. <break time=\"300ms\"/> Doch dank deines Abos wurde deine Bankroll wieder automatisch auf {Coins} Münzen aufgefüllt. Willst du es noch einmal probieren?",
+    "v2": "{SpinResult}. Du hast keine Münzen mehr <break time=\"300ms\"/> Gut, dass du die \"Konto automatisch auffüllen\"-Option gewählt hast. So musst du nicht darauf warten, dass dein Guthaben wieder auf {Coins} Münzen gesetzt wird. Nochmal spielen?"
+  },
+  "SPIN_LOSER_NEWUSER": "{SpinResult}. Sorry! Du hast verloren. Du hast noch {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_PLAY_AGAIN": {
+    "v1": "Willst du noch eine Runde spielen?",
+    "v2": "Willst du noch eine Runde spielen?",
+    "v3": "Noch einmal?"
+  },
+  "SPIN_WIN": {
+    "v1": "{SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit besitzt du insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde wagen?",
+    "v2": "{SpinResult}. Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du {Amount, plural, =1 {eine Münze} other {# Münzen}} insgesamt. Nochmal spielen?",
+    "v3": "{SpinResult}. Damit erhältst du {AmountWon, plural, =1 {eine Münze} other {# Münzen}} und hast insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+    "v4": "{SpinResult} <break time=\"200ms\"/> Gewonnen, du Glückspilz! Du erhältst {AmountWon, plural, =1{eine Münze} other {# Münzen}} und hast damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde spielen?"
+  },
+  "SPIN_WIN_JACKPOT": {
+    "v1": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}}. Damit besitzt du {Amount, plural, =1 {eine Münze} other {# Münzen}}. Möchtest du noch eine Runde spielen?",
+    "v2": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen und damit nun insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde wagen?",
+    "v3": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen und jetzt insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du es noch mal probieren?",
+    "v4": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Gewonnen, du Glückspilz! Du erhältst {AmountWon, plural, =1 {eine Münze} other {# Münzen}} und hast damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du noch eine Runde wagen?"
+  },
+  "SPIN_WIN_JACKPOT_NEWUSER": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du hast nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_WIN_NEWUSER": "{SpinResult}. Du hast {Match} Richtige und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "SPIN_WIN_PROGRESSIVE": {
+    "v1": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Damit hast du nun {Amount, plural, =1 {eine Münze} other {# Münzen}}. Möchtest du noch eine Runde spielen?",
+    "v2": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Wow, du hast den progressiven Jackpot erwischt und {AmountWon, plural, =1  {eine Münze} other {# Münzen}} gewonnen. Damit hast du insgesamt {Amount, plural, =1  {eine Münze} other {# Münzen}}. Willst du es noch einmal wagen?",
+    "v3": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Herzlichen Glückwunsch! Du hast den progressiven Jackpot mit {AmountWon, plural, =1 {eine Münze} other {# Münzen}} geknackt und damit ein Gesamtguthaben von {Amount, plural, =1 {eine Münze} other {# Münzen}}. Willst du Fortuna noch einmal herausfordern?"
+  },
+  "SPIN_WIN_PROGRESSIVE_NEWUSER": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> Du hast den progressiven Jackpot geknackt und {AmountWon, plural, =1 {eine Münze} other {# Münzen}} gewonnen. Du besitzt damit insgesamt {Amount, plural, =1 {eine Münze} other {# Münzen}}. Wenn du eine andere Maschine ausprobieren willst, sag \"Maschine wechseln\", ansonsten sag einfach \"Dreh dich!\", um weiterzuspielen.",
+  "STANDARD_MEAT": "Das Turnierspiel des Tages ist das normale Fleischspiel.",
+  "SYMBOL_LIST": {
+    "2face": "Two-Face",
+    "any": "jeder",
+    "any bar": "jeder Strich",
+    "any gold bar": "jeder Goldbarren",
+    "bar": "Strich",
+    "bart": "Bart",
+    "batman": "Batman",
+    "bell": "Glocke",
+    "blank": "leer",
+    "cherry": "Kirsche",
+    "chicken": "Hähnchen",
+    "diamond": "Diamant",
+    "double bar": "Doppelstrich",
+    "gold bar": "Goldbarren",
+    "heart": "Herz",
+    "homer": "Homer",
+    "horseshoe": "Hufeisen",
+    "joker": "Der Joker",
+    "lemon": "Zitrone",
+    "lisa": "Lisa",
+    "maggie": "Maggie",
+    "marge": "Marge",
+    "orange": "Orange",
+    "penguin": "Pinguin",
+    "plum": "Pflaume",
+    "pork": "Schwein",
+    "riddler": "The Riddler",
+    "seven": "sieben",
+    "star": "Stern",
+    "steak": "Steak",
+    "turkey": "Truthahn",
+    "veal": "Kalb",
+    "watermelon": "Wassermelone"
+  },
+  "TEST_BANKRUPT_NOT_SET": "Der Testmodus ist deaktiviert. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "TEST_BANKRUPT_REPROMPT": "Sag \"Dreh dich!\" für eine Testrunde.",
+  "TEST_BANKRUPT_SET": "Deine Bankroll wurde auf 1 Münze aufgefüllt und du wirst die nächste Runde verlieren. Sag \"Dreh dich!\" für ein Testspiel.",
+  "TEST_BARNKUPT_NOT_SET_REPROMPT": "Sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "TEST_CONFIRM_BANKRUPT": "Willst du den Bankrott wagen? Sag \"Ja\", um deine Bankroll auf 1 Münze zu setzen, oder \"Nein\", um mit dem Spiel aufzuhören.",
+  "TEST_CONFIRM_BANKRUPT_REPROMPT": "Sag \"Ja\", um in den Testmodus zu wechseln, oder \"Nein\", um das Spiel fortzusetzen.",
+  "TOURNAMENT_DEFAULT_TIMEZONE": "Pazifische Zeitzone",
+  "TOURNAMENT_ENDED": "Das Turnier ist vorbei. Schau bitte später nochmal vorbei, um die Ergebnisse zu erfahren!",
+  "TOURNAMENT_LOSER": "Schade, du hast das Turnier nicht gewonnen. Der Highscore war {TournamentWinner, plural, =1 {eine Münze} other {# Münzen}} und du hattest {TournamentResult, plural, =1 {eine Münze} other {# Münzen}}. ",
+  "TOURNAMENT_TIMELEFT_MINUTES": "{Minutes} Minuten",
+  "TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS": "{Minutes} Minuten und {Seconds} Sekunden",
+  "TOURNAMENT_TIMELEFT_SECONDS": "{Seconds} Sekunden",
+  "TOURNAMENT_WINNER": "Herzlichen Glückwunsch! Du hast das Turnier mit {TournamentResult, plural, =1 {eine Münze} other {# Münzen}} gewonnen!  Für deinen Sieg erhältst du {Coins, plural, =1 {eine Münze} other {# Münzen}}!",
+  "UNKNOWN_INTENT": "Ich habe dich leider nicht verstanden. Sag erneut \"Dreh dich!\"",
+  "UNKNOWN_INTENT_REPROMPT": "Sag einfach \"Dreh dich!\"",
+  "UNKNOWN_SELECT_INTENT": "Ich habe dich leider nicht verstanden. Sag erneut \"Ja\".",
+  "UNKNOWN_SELECT_INTENT_REPROMPT": "Sag einfach \"Ja\".",
+  "WILD_SPECIAL": "Kirschen sind heiß."
+}
