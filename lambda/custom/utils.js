@@ -844,53 +844,60 @@ function getTournamentTimes(leaveUTC) {
   if (process.env.TOURNEYTIME) {
     const times = JSON.parse(process.env.TOURNEYTIME);
     const tzOffset = moment.tz.zone('America/Los_Angeles').utcOffset(Date.now());
-    if ((times.day !== undefined) && (times.hour !== undefined)) {
-      retVal = {};
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - tzOffset);
+    retVal = {};
 
-      // First build off today's date
-      const d = new Date();
-      d.setMinutes(d.getMinutes() - tzOffset);
+    // Find the next (or current!) tournament - to do that, we'll see
+    // which ending time is closest to now
+    times.forEach((time) => {
+      if ((time.day !== undefined) && (time.hour !== undefined)) {
+        // First build off today's date
+        const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        start.setHours(time.hour);
+        if (time.minute !== undefined) {
+          start.setMinutes(time.minute);
+        } else {
+          start.setMinutes(0);
+        }
 
-      const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      start.setHours(times.hour);
-      if (times.minute !== undefined) {
-        start.setMinutes(times.minute);
-      } else {
-        start.setMinutes(0);
+        // Now set the day of week
+        let offset = time.day - d.getDay();
+        if (offset < 0) {
+          offset += 7;
+        }
+        start.setDate(start.getDate() + offset);
+
+        // End is minutes after
+        const end = new Date(start.getTime());
+        if (time.length) {
+          end.setMinutes(end.getMinutes() + time.length);
+        } else {
+          end.setMinutes(end.getMinutes() + 60);
+        }
+
+        // Final check - if end comes before now, then add 7 days to
+        // both start and end
+        if (end.getTime() < d.getTime()) {
+          start.setDate(start.getDate() + 7);
+          end.setDate(end.getDate() + 7);
+        }
+
+        if (leaveUTC) {
+          start.setMinutes(start.getMinutes() + tzOffset);
+          end.setMinutes(end.getMinutes() + tzOffset);
+          d.setMinutes(d.getMinutes() + tzOffset);
+        }
+
+        // OK, if the end is closer to d than the previous candidate
+        // we'll use that as the tournament time
+        if (!retVal.end || ((end - d) < (retVal.end - retVal.now))) {
+          retVal.start = start;
+          retVal.end = end;
+          retVal.now = d;
+        }
       }
-
-      // Now set the day of week
-      let offset = times.day - d.getDay();
-      if (offset < 0) {
-        offset += 7;
-      }
-      start.setDate(start.getDate() + offset);
-
-      // End is minutes after
-      const end = new Date(start.getTime());
-      if (times.length) {
-        end.setMinutes(end.getMinutes() + times.length);
-      } else {
-        end.setMinutes(end.getMinutes() + 60);
-      }
-
-      // Final check - if end comes before now, then add 7 days to
-      // both start and end
-      if (end.getTime() < d.getTime()) {
-        start.setDate(start.getDate() + 7);
-        end.setDate(end.getDate() + 7);
-      }
-
-      if (leaveUTC) {
-        start.setMinutes(start.getMinutes() + tzOffset);
-        end.setMinutes(end.getMinutes() + tzOffset);
-        d.setMinutes(d.getMinutes() + tzOffset);
-      }
-
-      retVal.start = start;
-      retVal.end = end;
-      retVal.now = d;
-    }
+    });
   }
 
   return retVal;
