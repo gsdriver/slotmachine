@@ -99,6 +99,37 @@ module.exports = {
       handlerInput.jrb.addDirective(directive);
     }
   },
+  firstSpinInputHandler: function(handlerInput, timeout) {
+    if (module.exports.supportButtons(handlerInput)) {
+      // We'll allow them to press the button again
+      const request = handlerInput.requestEnvelope.request;
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      const directive = {
+        'type': 'GameEngine.StartInputHandler',
+        'timeout': timeout,
+        'recognizers': {
+          'button_down_recognizer': {
+            'type': 'match',
+            'fuzzy': false,
+            'anchor': 'start',
+            'gadgetIds': [attributes.buttonId],
+            'pattern': [{
+              'action': 'down',
+            }],
+          },
+        },
+        'events': {
+          'timeout_event': {
+            'meets': ['timed out'],
+            'reports': 'history',
+            'shouldEndInputHandler': true,
+          },
+        },
+      };
+      attributes.temp.inputHandlerRequestId = request.requestId;
+      handlerInput.jrb.addDirective(directive);
+    }
+  },
   buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {
     if (module.exports.supportButtons(handlerInput)) {
       const buttonDownDirective = {

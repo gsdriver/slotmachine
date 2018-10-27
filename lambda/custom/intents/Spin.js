@@ -334,10 +334,10 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
       attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
       buttons.colorDuringSpin(handlerInput, attributes.buttonId);
       buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
-      buttons.startInputHandler(handlerInput, 8000 + (60 * wheelMessage));
+      buttons.firstSpinHandler(handlerInput, 8000 + (60 * wheelMessage));
       console.log('Setting timeout of ' + (8000 + (60 * wheelMessage)) + 'ms');
       attributes.temp.deferReprompt = true;
-      handlerInput.jrb.withShouldEndSession(false);
+      handlerInput.jrb.withShouldEndSession(undefined);
     }
 
     // Update the leader board
