@@ -222,7 +222,7 @@ function BuildEvent(argv)
         "originatingRequestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
         "events": [
             {
-                "name": "timeout_event",
+                "name": "reprompt_timeout",
                 "inputEvents": []
             }
         ]
@@ -358,6 +358,9 @@ function BuildEvent(argv)
   } else if (argv[2] == 'button') {
     return buttonEvent;
   } else if (argv[2] == 'timeout') {
+    if (argv.length > 3) {
+      buttonTimeout.request.events[0].name = argv[3];
+    }
     return buttonTimeout;
   } else if (argv[2] == 'highscore') {
     lambda.request.intent = highScore;

@@ -20,7 +20,7 @@ module.exports = {
     if ((request.type === 'GameEngine.InputHandlerEvent') &&
       !buttons.timedOut(handlerInput)) {
       const buttonId = buttons.getPressedButton(request, attributes);
-      if (!attributes.buttonId || (buttonId == attributes.buttonId)) {
+      if (buttonId && (!attributes.buttonId || (buttonId == attributes.buttonId))) {
         attributes.buttonId = buttonId;
         return true;
       }
@@ -334,10 +334,9 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
       attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
       buttons.colorDuringSpin(handlerInput, attributes.buttonId);
       buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
-      buttons.firstSpinHandler(handlerInput, 8000 + (60 * wheelMessage));
+      buttons.setInputHandlerAfterSpin(handlerInput, 8000 + (60 * wheelMessage));
       console.log('Setting timeout of ' + (8000 + (60 * wheelMessage)) + 'ms');
-      attributes.temp.deferReprompt = true;
-      handlerInput.jrb.withShouldEndSession(undefined);
+      handlerInput.jrb.withShouldEndSession(false);
     }
 
     // Update the leader board

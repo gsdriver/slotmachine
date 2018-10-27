@@ -37,97 +37,34 @@ module.exports = {
     let timedOut;
 
     gameEngineEvents.forEach((engineEvent) => {
-      // in this request type, we'll see one or more incoming events
-      // corresponding to the StartInputHandler we sent above
-      if (engineEvent.name === 'timeout_event') {
-        timedOut = true;
+      // If we see a timeout, parse the string to see
+      // which specific timeout we are getting
+      if (engineEvent.name.indexOf('timeout') > -1) {
+        const values = engineEvent.name.split('_');
+        timedOut = values[0];
       }
     });
 
     return timedOut;
   },
-  stopInputHandler: function(handlerInput) {
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    if (attributes.temp.inputHandlerRequestId) {
-      handlerInput.responseBuilder.addDirective({
-        'type': 'GameEngine.StopInputHandler',
-        'originatingRequestId': attributes.temp.inputHandlerRequestId,
-      });
+  startInputHandler: function(handlerInput, timeout) {
+    if (module.exports.supportButtons(handlerInput)) {
+      manageInputHandler(handlerInput, timeout, ['button_down_event', 'reprompt_timeout']);
     }
   },
-  startInputHandler: function(handlerInput, forceTimeout) {
+  setRepromptHandler: function(handlerInput, timeout) {
     if (module.exports.supportButtons(handlerInput)) {
-      // We'll allow them to press the button again
-      const request = handlerInput.requestEnvelope.request;
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      const directive = {
-        'type': 'GameEngine.StartInputHandler',
-        'timeout': (forceTimeout) ? forceTimeout : 20000,
-        'recognizers': {
-          'button_down_recognizer': {
-            'type': 'match',
-            'fuzzy': false,
-            'anchor': 'start',
-            'pattern': [{
-              'action': 'down',
-            }],
-          },
-        },
-        'events': {
-          'button_down_event': {
-            'meets': ['button_down_recognizer'],
-            'reports': 'matches',
-            'shouldEndInputHandler': true,
-            'maximumInvocations': 1,
-          },
-        },
-      };
-
-      if (attributes.buttonId) {
-        directive.recognizers.button_down_recognizer.gadgetIds = [attributes.buttonId];
-      }
-
-      if (attributes.buttonId || forceTimeout) {
-        directive.events['timeout_event'] = {
-          'meets': ['timed out'],
-          'reports': 'history',
-          'shouldEndInputHandler': true,
-        };
-      }
-      attributes.temp.inputHandlerRequestId = request.requestId;
-      handlerInput.jrb.addDirective(directive);
+      manageInputHandler(handlerInput, timeout, ['button_down_event', 'reprompt_timeout'], true);
     }
   },
-  firstSpinInputHandler: function(handlerInput, timeout) {
+  setSessionEndHandler: function(handlerInput, timeout) {
     if (module.exports.supportButtons(handlerInput)) {
-      // We'll allow them to press the button again
-      const request = handlerInput.requestEnvelope.request;
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      const directive = {
-        'type': 'GameEngine.StartInputHandler',
-        'timeout': timeout,
-        'recognizers': {
-          'button_down_recognizer': {
-            'type': 'match',
-            'fuzzy': false,
-            'anchor': 'start',
-            'gadgetIds': [attributes.buttonId],
-            'pattern': [{
-              'action': 'down',
-            }],
-          },
-        },
-        'events': {
-          'timeout_event': {
-            'meets': ['timed out'],
-            'reports': 'history',
-            'shouldEndInputHandler': true,
-          },
-        },
-      };
-      attributes.temp.inputHandlerRequestId = request.requestId;
-      handlerInput.jrb.addDirective(directive);
+      manageInputHandler(handlerInput, timeout, ['button_down_event', 'sessionend_timeout'], true);
+    }
+  },
+  setInputHandlerAfterSpin: function(handlerInput, timeout) {
+    if (module.exports.supportButtons(handlerInput)) {
+      manageInputHandler(handlerInput, timeout, ['spin_timeout']);
     }
   },
   buildButtonDownAnimationDirective: function(handlerInput, targetGadgets) {
@@ -266,3 +203,54 @@ module.exports = {
     }
   },
 };
+
+function manageInputHandler(handlerInput, timeout, events, registeredButton) {
+  // We'll allow them to press the button again
+  const request = handlerInput.requestEnvelope.request;
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  const directive = {
+    'type': 'GameEngine.StartInputHandler',
+    'timeout': timeout,
+    'recognizers': {},
+    'events': {},
+  };
+
+  // Set the appropriate events and recognizers
+  events.forEach((event) => {
+    if (event === 'button_down_event') {
+      // Need a recognizer
+      directive.recognizers.button_down_recognizer = {
+        'type': 'match',
+        'fuzzy': false,
+        'anchor': 'start',
+        'pattern': [{
+          'action': 'down',
+        }],
+      };
+      if (registeredButton) {
+        directive.recognizers.button_down_recognizer.gadgetIds = [attributes.buttonId];
+      }
+
+      // And the event
+      directive.events[event] = {
+        'meets': ['button_down_recognizer'],
+        'reports': 'matches',
+        'shouldEndInputHandler': true,
+        'maximumInvocations': 1,
+      };
+    } else if (event.indexOf('timeout') > -1) {
+      // Time out recognizer is built-in
+      directive.events[event] = {
+        'meets': ['timed out'],
+        'reports': 'history',
+        'shouldEndInputHandler': true,
+      };
+      if (event === 'reprompt_timeout') {
+        attributes.temp.deferReprompt = true;
+      }
+    }
+  });
+
+  attributes.temp.inputHandlerRequestId = request.requestId;
+  handlerInput.jrb.addDirective(directive);
+}

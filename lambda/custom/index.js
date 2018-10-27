@@ -168,18 +168,16 @@ const saveResponseInterceptor = {
           }
 
           if (attributes.temp) {
-            if (attributes.temp.deferReprompt === true) {
+            if (attributes.temp.deferReprompt) {
               // Oh, actually we don't want to reprompt but will
               // rely on the button timeout to handle a reprompt
               response.reprompt = undefined;
-              handlerInput.responseBuilder.withShouldEndSession(false);
-              // Setting to false signals that we just deferred a reprompt
-              // so if we get a timeout, we will play the reprompt
-              attributes.temp.deferReprompt = false;
-            } else {
-              // Setting to undefined tells the timeout handler
-              // to exit silently
               attributes.temp.deferReprompt = undefined;
+
+              // If should end session is true, set it to false
+              if (response.shouldEndSession) {
+                handlerInput.responseBuilder.withShouldEndSession(false);
+              }
             }
           }
 
@@ -269,7 +267,7 @@ function runGame(event, context, callback) {
     .addResponseInterceptors(saveResponseInterceptor)
     .withPersistenceAdapter(dbAdapter)
     .withApiClient(new Alexa.DefaultApiClient())
-    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
+//    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
     .lambda();
   skillFunction(event, context, (err, response) => {
     callback(err, response);

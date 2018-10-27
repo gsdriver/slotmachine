@@ -9,30 +9,34 @@ const buttons = require('../buttons');
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    // If deferReprompt is false, it means that we had deferred a
-    // reprompt last time, so we should handle it now
-    return ((request.type === 'GameEngine.InputHandlerEvent') &&
-      (attributes.temp.deferReprompt === false) && buttons.timedOut(handlerInput));
+    // We handle timeouts from spin and reprompt
+    // We don't handle a close session timeout (let that close the session)
+    if (request.type === 'GameEngine.InputHandlerEvent') {
+      const timeout = buttons.timedOut(handlerInput);
+      return ((timeout === 'spin') || (timeout === 'reprompt'));
+    }
+
+    return false;
   },
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const timeout = buttons.timedOut(handlerInput);
 
     // If they were spinning, it means we should flash to the new color
-    // no output speech otherwise, but reset deferReprompt so we will
-    // handle the timeout event when it happens again
-    if (attributes.temp.spinColor) {
-      buttons.startInputHandler(handlerInput, 10000);
+    // and display the results of the spin, but no output speech
+    if (timeout === 'spin') {
+      buttons.setRepromptHandler(handlerInput, 10000);
       buttons.colorSpinResult(handlerInput, attributes.buttonId, attributes.temp.spinColor);
       attributes.temp.spinColor = undefined;
-      attributes.temp.deferReprompt = true;
-      return handlerInput.responseBuilder.getResponse();
+      return handlerInput.responseBuilder
+        .withShouldEndSession(undefined)
+        .getResponse();
     }
 
     // If there was a timeout, then reprompt
     // Note that this string has already been rendered so don't use Jargon
-    buttons.startInputHandler(handlerInput, 10000);
+    buttons.setSessionEndHandler(handlerInput, 10000);
     return handlerInput.responseBuilder
       .speak(attributes.temp.lastReprompt)
       .withShouldEndSession(false)
