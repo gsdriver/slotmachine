@@ -171,34 +171,23 @@ module.exports = {
         'targetGadgets': [],
         'parameters': {
           'animations': [{
-            'repeat': 1,
+            'repeat': 30,
             'targetLights': ['1'],
-            'sequence': [],
+            'sequence': [{
+              'durationMs': 400,
+              'color': 'FFFFFF',
+              'blend': true,
+            },
+            {
+              'durationMs': 300,
+              'color': '000000',
+              'blend': true,
+            }],
           }],
           'triggerEvent': 'none',
           'triggerEventTimeMs': 0,
         },
       };
-
-      // Add to the animations array
-      let i;
-      for (i = 0; i < 4; i++) {
-        buttonIdleDirective.parameters.animations[0].sequence.push({
-          'durationMs': 400,
-          'color': 'FFFFFF',
-          'blend': true,
-        });
-        buttonIdleDirective.parameters.animations[0].sequence.push({
-          'durationMs': 300,
-          'color': '000000',
-          'blend': true,
-        });
-      }
-      buttonIdleDirective.parameters.animations[0].sequence.push({
-        'durationMs': 60000,
-        'color': 'FFFFFF',
-        'blend': false,
-      });
       handlerInput.jrb.addDirective(buttonIdleDirective);
     }
   },

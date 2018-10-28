@@ -81,6 +81,7 @@
   "HELP_IN_TOURNAMENT": "{FallbackText} There are {Time} left in tournament play. At the end of the tournament the highest bankroll will win {Coins} coins. You have {Amount, plural, =1 {one coin} other {# coins}}. Say spin to pull the handle <break time=\"200ms\"/> or select a new machine to change to a different machine. Check the Alexa companion app for the payout table. What else can I help you with?",
   "HELP_CARD_TITLE": "Payout Table",
   "HELP_CARD_PAYOUT_TABLE": "{PayoutTable}",
+  "HELP_REPROMPT": "What else can I help you with?",
   "HELP_SELECT_TEXT": "{FallbackText} Say yes to select the offered machine, or no for a different machine. Would you like to play {Game}?",
   "HELP_FALLBACK": "Sorry, I didn't get that. <break time=\"200ms\"/> ",
   "RULES_RULES": "{SpecialText} {PayoutTable} Say bet to insert coins or spin to pull the handle.",

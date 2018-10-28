@@ -179,6 +179,9 @@ const saveResponseInterceptor = {
                 handlerInput.responseBuilder.withShouldEndSession(false);
               }
             }
+            // If there is a reprompt - set a flag so any errant
+            // input handler reprompt timeout events are ignored
+            attributes.temp.ignoreTimeouts = response.reprompt;
           }
 
           // Save state if we need to (but just for certain platforms)
@@ -267,7 +270,7 @@ function runGame(event, context, callback) {
     .addResponseInterceptors(saveResponseInterceptor)
     .withPersistenceAdapter(dbAdapter)
     .withApiClient(new Alexa.DefaultApiClient())
-//    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
+    .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
     .lambda();
   skillFunction(event, context, (err, response) => {
     callback(err, response);

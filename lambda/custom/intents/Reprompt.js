@@ -9,12 +9,14 @@ const buttons = require('../buttons');
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     // We handle timeouts from spin and reprompt
     // We don't handle a close session timeout (let that close the session)
     if (request.type === 'GameEngine.InputHandlerEvent') {
       const timeout = buttons.timedOut(handlerInput);
-      return ((timeout === 'spin') || (timeout === 'reprompt'));
+      return ((timeout === 'spin')
+        || ((timeout === 'reprompt') && !attributes.temp.ignoreTimeouts));
     }
 
     return false;
