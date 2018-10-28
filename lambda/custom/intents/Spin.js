@@ -330,11 +330,12 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
       // Update the color of the echo button (if present)
       // Look for the first wheel sound to see if there is starting text
       // That tells us whether to have a longer or shorter length of time on the buttons
+      const timeoutLength = utils.estimateDuration(resolvedSpeech[0]) - 2000;
       attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
       buttons.colorDuringSpin(handlerInput, attributes.buttonId);
       buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
-      buttons.setInputHandlerAfterSpin(handlerInput, utils.estimateDuration(resolvedSpeech[0]));
-      console.log('Setting timeout of ' + utils.estimateDuration(resolvedSpeech[0]) + 'ms');
+      buttons.setInputHandlerAfterSpin(handlerInput, timeoutLength);
+      console.log('Setting timeout of ' + timeoutLength + 'ms');
       handlerInput.jrb.withShouldEndSession(false);
     }
 
