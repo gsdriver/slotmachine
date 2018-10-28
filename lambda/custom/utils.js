@@ -817,6 +817,60 @@ module.exports = {
       return getBestMatch(productList, product.toUpperCase());
     });
   },
+  estimateDuration: function(speech) {
+    let duration = 0;
+    let text = speech;
+    let index;
+    let end;
+    const soundList = [
+      {file: 'soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01', length: 1000},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3', length: 2750},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/dice.mp3', length: 650},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/doh.mp3', length: 680},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/woohoo.mp3', length: 950},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3', length: 3850},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3', length: 325},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3', length: 6400},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3', length: 5100},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
+    ];
+
+    // Look for and remove all audio clips
+    while (text.indexOf('<audio') > -1) {
+      index = text.indexOf('<audio');
+      end = text.indexOf('>', index);
+      const str = text.substring(index, end);
+
+      soundList.forEach((sound) => {
+        if (str.indexOf(sound.file) > -1) {
+          duration += sound.length;
+        }
+      });
+
+      text = text.substring(0, index) + text.substring(end + 1);
+    }
+
+    // Find and strip out all breaks
+    while (text.indexOf('<break') > -1) {
+      // Extract the number
+      index = text.indexOf('<break');
+      end = text.indexOf('>', index);
+
+      // We're assuming the break time is in ms
+      const str = text.substring(index, end);
+      const time = parseInt(str.match(/\d/g).join(''));
+      if (!isNaN(time)) {
+        duration += time;
+      }
+
+      // And skip this one
+      text = text.substring(0, index) + text.substring(end + 1);
+    }
+
+    // 60 ms for each remaining character
+    duration += 60 * text.length;
+    return duration;
+  },
 };
 
 function readPayoutInternal(handlerInput, game, payout, pause) {
