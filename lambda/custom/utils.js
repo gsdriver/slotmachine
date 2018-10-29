@@ -389,23 +389,41 @@ module.exports = {
 
     attributes.temp.tournamentAvailable = tournamentAvailable;
   },
-  timeUntilTournament: function() {
+  timeUntilTournament: function(handlerInput) {
+    let speech;
+    const speechParams = {};
+
     // How long until the next tournament?
+    // This will return a result if there is a tournament in the next 12 hours
     const times = getTournamentTimes();
     if (times) {
       let timeLeft = times.start.getTime() - times.now.getTime();
-      if (timeLeft < 0) {
-        // Tournament is probably active
-        timeLeft += 7 * 24 * 60 * 60 * 1000;
-      }
+      if ((timeLeft > 0) && (timeLeft < 12 * 60 * 60 * 1000)) {
+        speechParams.Hours = Math.floor(timeLeft / (60 * 60 * 1000));
+        speechParams.Minutes = Math.ceil((timeLeft - (speechParams.Hours * 60 * 60 * 1000)) / (60 * 1000));
 
-      const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-      const hoursLeft = Math.floor((timeLeft - (daysLeft * 1000 * 60 * 60 * 24))
-            / (1000 * 60 * 60));
-      return {days: daysLeft, hours: hoursLeft};
+        // Convert to hours if more than 4 hours
+        // Hours and minutes if less than 4 hours
+        // Minutes only if less than an hour!
+        if (timeLeft > 4 * 60 * 60 * 1000) {
+          // Increase hour count by 1 if minutes more than 30
+          if (speechParams.Minutes > 30) {
+            speechParams.Hours++;
+          }
+          speech = 'NEXT_TOURNAMENT_HOURS';
+        } else if (timeLeft > 60 * 60 * 1000) {
+          speech = 'NEXT_TOURNAMENT_HOURS_AND__MINUTES';
+        } else {
+          speech = 'NEXT_TOURNAMENT_MINUTES';
+        }
+      }
     }
 
-    return undefined;
+    if (speech) {
+      return handlerInput.jrm.render(ri(speech, speechParams));
+    } else {
+      return Promise.resolve();
+    }
   },
   getRemainingTournamentTime: function(handlerInput) {
     const times = getTournamentTimes();

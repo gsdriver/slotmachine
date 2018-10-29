@@ -330,7 +330,8 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
       // Update the color of the echo button (if present)
       // Look for the first wheel sound to see if there is starting text
       // That tells us whether to have a longer or shorter length of time on the buttons
-      const timeoutLength = utils.estimateDuration(resolvedSpeech[0]) - 2000;
+      const timeoutLength = utils.estimateDuration(resolvedSpeech[0])
+        - utils.estimateDuration(resolvedSpeech[0].substring(resolvedSpeech[0].lastIndexOf('>') + 1));
       attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
       buttons.colorDuringSpin(handlerInput, attributes.buttonId);
       buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
