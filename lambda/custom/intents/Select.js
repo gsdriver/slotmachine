@@ -61,7 +61,14 @@ module.exports = {
           };
 
           // Get the variant that was returned
-          return handlerInput.jrm.selectedVariation(renderItem);
+          return handlerInput.jrm.selectedVariation(renderItem)
+          .then((variation) => {
+            return variation;
+          })
+          .catch(() => {
+            // It's OK - probably someone who changed locale
+            return {key: 'SELECT_UPSELL.v8'};
+          });
         }).then((variation) => {
           const options = variation.key.split('.');
           attributes.upsellSelection = options[1];

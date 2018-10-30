@@ -9,7 +9,13 @@
     },
     "token": "subscribe.coinreset.launch"
   },
-  "PURCHASE_PRODUCTS": "We have a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins <break time=\"300ms\"/> a Crazy Diamond machine with wild diamond symbols <break time=\"300ms\"/> and a Holiday machine with yuletide sounds and symbols available for purchase. Say the product you would like to buy or no to continue your game. ",
+  "PURCHASE_PRODUCT_LIST": {
+    "coinreset": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins",
+    "crazydiamond": "a Crazy Diamond machine with wild diamond symbols",
+    "holiday": "a Holiday machine with yuletide sounds and symbols"
+  },
+  "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",
+  "PURCHASE_NO_PRODUCTS": "Sorry. We don't have any new products available to purchase.",
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
   "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",

@@ -16,7 +16,7 @@ module.exports = {
     if (request.type === 'GameEngine.InputHandlerEvent') {
       const timeout = buttons.timedOut(handlerInput);
       return ((timeout === 'spin')
-        || ((timeout === 'reprompt') && !attributes.temp.ignoreTimeouts));
+        || ((timeout === 'reprompt') && attributes.temp && !attributes.temp.ignoreTimeouts));
     }
 
     return false;

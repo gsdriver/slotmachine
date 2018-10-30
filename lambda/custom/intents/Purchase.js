@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const ri = require('@jargon/alexa-skill-sdk').ri;
+const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -55,10 +56,31 @@ module.exports = {
       } else {
         // Prompt them with a list of available products
         attributes.temp.purchasing = true;
-        return handlerInput.jrb
-          .speak(ri('PURCHASE_PRODUCTS'))
-          .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
-          .getResponse();
+        return handlerInput.jrm.renderObject(ri('PURCHASE_PRODUCT_LIST'))
+        .then((productMap) => {
+          const availableProducts = [];
+          let product;
+
+          for (product in attributes.paid) {
+            if (product && productMap[product] && (attributes.paid[product].state === 'AVAILABLE')) {
+              availableProducts.push(productMap[product]);
+            }
+          }
+
+          if (availableProducts.length) {
+            attributes.temp.speechParams.Products =
+              speechUtils.and(availableProducts, {pause: '300ms', locale: event.request.locale});
+            return handlerInput.jrb
+              .speak(ri('PURCHASE_PRODUCTS', attributes.temp.speechParams))
+              .reprompt(ri('PURCHASE_CONFIRM_REPROMPT'))
+              .getResponse();
+          } else {
+            return handlerInput.jrb
+              .speak(ri('PURCHASE_NO_PRODUCTS'))
+              .reprompt(ri('PURCHASE_NO_PURCHASE'))
+              .getResponse();
+          }
+        });
       }
     }
   },
