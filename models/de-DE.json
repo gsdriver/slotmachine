@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "slot maschine",
+      "invocationName": "slotmaschine",
       "intents": [
         {
           "name": "AMAZON.StopIntent"

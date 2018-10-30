@@ -36,7 +36,7 @@ module.exports = {
     return utils.timeUntilTournament(handlerInput)
     .then((timeLeft) => {
       if (!timeLeft) {
-        return ads.getAd(attributes, 'slots', event.request.locale)
+        return ads.getAd(attributes, 'slots', event.request.locale);
       } else {
         return timeLeft;
       }

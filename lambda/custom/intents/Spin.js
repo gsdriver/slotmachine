@@ -323,6 +323,12 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     ri('SPIN_PLAY_AGAIN'),
   ])
   .then((resolvedSpeech) => {
+    // If this machine replaces the slotstop sound, do the replacement now
+    const rules = utils.getGame(attributes.currentGame);
+    if (rules.stopreplace) {
+      resolvedSpeech[0] = resolvedSpeech[0].replace(/slotstop/g, rules.stopreplace);
+    }
+
     // If this locale supports Echo buttons and the customer is using a button
     // or has a display screen, we will use the GameEngine
     // to control display and reprompting

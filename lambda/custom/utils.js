@@ -116,6 +116,31 @@ const games = {
       'diamond|diamond|diamond': 200,
     },
   },
+  // Same as basic but with different symbols Has 99.8% payout
+  'holiday': {
+    'product': 'holiday',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['tree', 'candycane', 'snowman', 'star', 'santa'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 6, 4]},
+      {'symbols': [24, 10, 6, 2, 1]},
+    ],
+    'welcome': 'HOLIDAY_GAME',
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hohoho.mp3\"/> ',
+    'stopreplace': 'sleighstop',
+    'payouts': {
+      'tree': 2,
+      'tree|tree': 4,
+      'candycane|candycane|candycane': 8,
+      'snowman|snowman|snowman': 10,
+      'star|star|star': 15,
+      'santa': 5,
+      'santa|santa': 10,
+      'santa|santa|santa': 100,
+    },
+  },
 };
 
 const tournaments = [
@@ -397,10 +422,11 @@ module.exports = {
     // This will return a result if there is a tournament in the next 12 hours
     const times = getTournamentTimes();
     if (times) {
-      let timeLeft = times.start.getTime() - times.now.getTime();
+      const timeLeft = times.start.getTime() - times.now.getTime();
       if ((timeLeft > 0) && (timeLeft < 12 * 60 * 60 * 1000)) {
         speechParams.Hours = Math.floor(timeLeft / (60 * 60 * 1000));
-        speechParams.Minutes = Math.ceil((timeLeft - (speechParams.Hours * 60 * 60 * 1000)) / (60 * 1000));
+        speechParams.Minutes = Math.ceil((timeLeft - (speechParams.Hours * 60 * 60 * 1000))
+          / (60 * 1000));
 
         // Convert to hours if more than 4 hours
         // Hours and minutes if less than 4 hours
@@ -848,9 +874,11 @@ module.exports = {
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/woohoo.mp3', length: 950},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3', length: 3850},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3', length: 325},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighstop.mp3', length: 450},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3', length: 6400},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3', length: 5100},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3300},
     ];
 
     // Look for and remove all audio clips

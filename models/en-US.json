@@ -266,6 +266,31 @@
               "name": {
                 "value": "crazy diamonds machine"
               }
+            },
+            {
+              "name": {
+                "value": "holiday machine"
+              }
+            },
+            {
+              "name": {
+                "value": "holiday game"
+              }
+            },
+            {
+              "name": {
+                "value": "the holiday game"
+              }
+            },
+            {
+              "name": {
+                "value": "holiday"
+              }
+            },
+            {
+              "name": {
+                "value": "the holiday machine"
+              }
             }
           ],
           "name": "LIST_OF_PRODUCTS"
