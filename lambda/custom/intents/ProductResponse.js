@@ -47,9 +47,9 @@ module.exports = {
         // This message is sent internally so no worries about localizing
         message = 'For token ' + event.request.token + ', ';
         if (event.request.payload.message) {
-          message = event.request.payload.message;
+          message += event.request.payload.message;
         } else {
-          message = event.request.name + ' was accepted';
+          message += event.request.name + ' was accepted';
         }
         message += ' by user ' + event.session.user.userId;
         if (attributes.upsellSelection) {
