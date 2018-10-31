@@ -754,6 +754,7 @@ module.exports = {
     attributes.choices = undefined;
     attributes.originalChoices = undefined;
 
+    attributes.temp.sameGameSpins = 0;
     if (!attributes[attributes.currentGame]) {
       attributes[attributes.currentGame] = {};
 

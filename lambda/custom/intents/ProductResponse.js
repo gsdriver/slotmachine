@@ -7,6 +7,7 @@
 const Launch = require('./Launch');
 const Select = require('./Select');
 const SelectYes = require('./SelectYes');
+const Spin = require('./Spin');
 const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
@@ -107,8 +108,8 @@ module.exports = {
             nextAction = 'autoselect';
           }
         } else {
-          // OK, either launch or go to select based on last step
-          nextAction = (options[2] === 'select') ? 'select' : 'launch';
+          // OK, either launch, spin, or go to select based on last step
+          nextAction = options[2];
         }
       }
 
@@ -120,6 +121,8 @@ module.exports = {
         buttons.setRepromptHandler(handlerInput, 20000);
         attributes.choices = [options[1]];
         return SelectYes.handle(handlerInput);
+      } else if (nextAction === 'spin') {
+        return Spin.handle(handlerInput);
       } else {
         // Just drop them directly into a game
         attributes.temp.resumeGame = true;

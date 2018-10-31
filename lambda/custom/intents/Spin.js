@@ -50,6 +50,70 @@ module.exports = {
       const event = handlerInput.requestEnvelope;
       const attributes = handlerInput.attributesManager.getSessionAttributes();
 
+      // First off, let's see if we should do an upsell
+      // We will do this if they have played this game 10 times in a row
+      // during this session and we haven't done an upsell already
+      attributes.temp.sameGameSpins = (attributes.temp.sameGameSpins + 1) || 1;
+      if (attributes.paid && !attributes.temp.noUpsellGame
+        && (attributes.temp.sameGameSpins > 10)) {
+        const now = Date.now();
+        let product;
+        let upsellProduct;
+
+        for (product in attributes.paid) {
+          if (product && (attributes.paid[product].state === 'AVAILABLE')) {
+            if (!attributes.prompts[product] ||
+              ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
+                upsellProduct = product;
+            }
+          }
+        }
+
+        if (upsellProduct) {
+          return handlerInput.jrm.renderBatch([
+            ri('GAME_LIST_' + attributes.currentGame.toUpperCase()),
+            ri('GAME_LIST_' + upsellProduct.toUpperCase()),
+          ])
+          .then((gameNames) => {
+            attributes.prompts[upsellProduct] = now;
+            attributes.temp.speechParams.CurrentGame = gameNames[0];
+            attributes.temp.speechParams.Game = gameNames[1];
+            const renderItem = ri('SPIN_UPSELL', attributes.temp.speechParams);
+            let directive;
+            return handlerInput.jrm.render(renderItem).then((upsellMessage) => {
+              directive = {
+                'type': 'Connections.SendRequest',
+                'name': 'Upsell',
+                'payload': {
+                  'InSkillProduct': {
+                    productId: attributes.paid[upsellProduct].productId,
+                  },
+                  'upsellMessage': upsellMessage,
+                },
+                'token': 'machine.' + upsellProduct + '.spin',
+              };
+
+              // Get the variant that was returned
+              return handlerInput.jrm.selectedVariation(renderItem)
+              .then((variation) => {
+                return variation;
+              })
+              .catch(() => {
+                // It's OK - probably someone who changed locale
+                return {key: 'SELECT_UPSELL.v8'};
+              });
+            }).then((variation) => {
+              const options = variation.key.split('.');
+              attributes.upsellSelection = options[1];
+
+              return handlerInput.jrb.addDirective(directive)
+                .withShouldEndSession(true)
+                .getResponse();
+            });
+          });
+        }
+      }
+
       // When you spin, you either have to have bets or prior bets
       let speech = welcome;
       const game = attributes[attributes.currentGame];
