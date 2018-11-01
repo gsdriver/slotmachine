@@ -32,14 +32,21 @@ module.exports = {
       });
     }).then(() => {
       if (attributes.temp.inSkillProductInfo) {
-        if (!attributes.paid) {
-          attributes.paid = {};
-        }
+        let state;
+        attributes.paid = {};
         attributes.temp.inSkillProductInfo.inSkillProducts.forEach((product) => {
-          attributes.paid[product.referenceName] = {
-            productId: product.productId,
-            state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
-          };
+          if (product.entitled === 'ENTITLED') {
+            state = 'PURCHASED';
+          } else if (product.purchasable == 'PURCHASABLE') {
+            state = 'AVAILABLE';
+          }
+
+          if (state) {
+            attributes.paid[product.referenceName] = {
+              productId: product.productId,
+              state: state,
+            };
+          }
         });
         attributes.temp.inSkillProductInfo = undefined;
       }

@@ -25,9 +25,9 @@
     "v3": "In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?"
   },
   "SPIN_UPSELL": {
-    "v1": "I see you've played {CurrentGame} a lot today. We also have {Game} available for purchase. Want to learn more?",
+    "v1": "I see you've played {CurrentGame} a lot today. We now have {Game} available for purchase. Want to learn more?",
     "v2": "We're glad to see you've been enjoying {CurrentGame}. We're proud to introduce {Game} now available for purchase. Would you like to hear more about it?",
-    "v3": "In addition to our built in machines like {CurrentGame}, we also have {Game} available for purchase. Are you interested in hearing more about it?"
+    "v3": "In addition to machines like {CurrentGame}, we're proud to introduce {Game} now available for purchase. Are you interested in hearing more about it?"
   },
   "SPIN_LOSER_BUSTED_UPSELL": {
     "type": "Connections.SendRequest",
