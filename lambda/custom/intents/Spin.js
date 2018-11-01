@@ -54,7 +54,8 @@ module.exports = {
       // We will do this if they have played this game 10 times in a row
       // during this session and we haven't done an upsell already
       attributes.temp.sameGameSpins = (attributes.temp.sameGameSpins + 1) || 1;
-      if (attributes.paid && !attributes.temp.noUpsellGame
+      if ((attributes.currentGame !== 'tournament')
+        && attributes.paid && !attributes.temp.noUpsellGame
         && (attributes.temp.sameGameSpins > 10)) {
         const now = Date.now();
         let product;
