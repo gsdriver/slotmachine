@@ -62,7 +62,8 @@ module.exports = {
         let upsellProduct;
 
         for (product in attributes.paid) {
-          if (product && (attributes.paid[product].state === 'AVAILABLE')) {
+          if (product && (product !== 'coinreset')
+            && (attributes.paid[product].state === 'AVAILABLE')) {
             if (!attributes.prompts[product] ||
               ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
                 upsellProduct = product;
