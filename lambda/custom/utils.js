@@ -438,7 +438,7 @@ module.exports = {
           }
           speech = 'NEXT_TOURNAMENT_HOURS';
         } else if (timeLeft > 60 * 60 * 1000) {
-          speech = 'NEXT_TOURNAMENT_HOURS_AND__MINUTES';
+          speech = 'NEXT_TOURNAMENT_HOURS_AND_MINUTES';
         } else {
           speech = 'NEXT_TOURNAMENT_MINUTES';
         }
