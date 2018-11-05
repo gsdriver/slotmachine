@@ -17,9 +17,10 @@ module.exports = {
 
     // Button press counts as spin if it's a new button
     // or one that's been pressed before
-    if (request.type === 'GameEngine.InputHandlerEvent') {
+    if ((request.type === 'GameEngine.InputHandlerEvent') &&
+      !buttons.timedOut(handlerInput)) {
       const buttonId = buttons.getPressedButton(request, attributes);
-      if (!attributes.buttonId || (buttonId == attributes.buttonId)) {
+      if (buttonId && (!attributes.buttonId || (buttonId == attributes.buttonId))) {
         attributes.buttonId = buttonId;
         return true;
       }
@@ -48,6 +49,72 @@ module.exports = {
     return selectGame(handlerInput).then((welcome) => {
       const event = handlerInput.requestEnvelope;
       const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+      // First off, let's see if we should do an upsell
+      // We will do this if they have played this game 10 times in a row
+      // during this session and we haven't done an upsell already
+      attributes.temp.sameGameSpins = (attributes.temp.sameGameSpins + 1) || 1;
+      if ((attributes.currentGame !== 'tournament')
+        && attributes.paid && !attributes.temp.noUpsellGame
+        && (attributes.temp.sameGameSpins > 10)) {
+        const now = Date.now();
+        let product;
+        let upsellProduct;
+
+        for (product in attributes.paid) {
+          if (product && (product !== 'coinreset')
+            && (attributes.paid[product].state === 'AVAILABLE')) {
+            if (!attributes.prompts[product] ||
+              ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
+                upsellProduct = product;
+            }
+          }
+        }
+
+        if (upsellProduct) {
+          return handlerInput.jrm.renderBatch([
+            ri('GAME_LIST_' + attributes.currentGame.toUpperCase()),
+            ri('GAME_LIST_' + upsellProduct.toUpperCase()),
+          ])
+          .then((gameNames) => {
+            attributes.prompts[upsellProduct] = now;
+            attributes.temp.speechParams.CurrentGame = gameNames[0];
+            attributes.temp.speechParams.Game = gameNames[1];
+            const renderItem = ri('SPIN_UPSELL', attributes.temp.speechParams);
+            let directive;
+            return handlerInput.jrm.render(renderItem).then((upsellMessage) => {
+              directive = {
+                'type': 'Connections.SendRequest',
+                'name': 'Upsell',
+                'payload': {
+                  'InSkillProduct': {
+                    productId: attributes.paid[upsellProduct].productId,
+                  },
+                  'upsellMessage': upsellMessage,
+                },
+                'token': 'machine.' + upsellProduct + '.spin',
+              };
+
+              // Get the variant that was returned
+              return handlerInput.jrm.selectedVariation(renderItem)
+              .then((variation) => {
+                return variation;
+              })
+              .catch(() => {
+                // It's OK - probably someone who changed locale
+                return {key: 'SELECT_UPSELL.v8'};
+              });
+            }).then((variation) => {
+              const options = variation.key.split('.');
+              attributes.upsellSelection = options[1];
+
+              return handlerInput.jrb.addDirective(directive)
+                .withShouldEndSession(true)
+                .getResponse();
+            });
+          });
+        }
+      }
 
       // When you spin, you either have to have bets or prior bets
       let speech = welcome;
@@ -317,28 +384,43 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     speech += '_NEWUSER';
   }
 
-  // Update the color of the echo button (if present)
-  if (attributes.buttonId) {
-    // Look for the first wheel sound to see if there is starting text
-    // That tells us whether to have a longer or shorter length of time on the buttons
-    const wheelMessage = speech.indexOf('<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3"/>');
-    buttons.colorButton(handlerInput, attributes.buttonId,
-      (game.result.payout > 0) ? '00FE10' : 'FF0000', (wheelMessage > 1));
-    buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
-    buttons.startInputHandler(handlerInput);
-  } else {
-    // No button id?  Then turn off the input handler
-    buttons.stopInputHandler(handlerInput);
-  }
+  return handlerInput.jrm.renderBatch([
+    ri(speech, attributes.temp.speechParams),
+    ri('SPIN_PLAY_AGAIN'),
+  ])
+  .then((resolvedSpeech) => {
+    // If this machine replaces the slotstop sound, do the replacement now
+    const rules = utils.getGame(attributes.currentGame);
+    if (rules.stopreplace) {
+      resolvedSpeech[0] = resolvedSpeech[0].replace(/slotstop/g, rules.stopreplace);
+    }
 
-  // Update the leader board
-  utils.updateLeaderBoard(event, attributes);
-  game.lastbet = lastbet;
-  game.bet = undefined;
-  return handlerInput.jrb
-    .speak(ri(speech, attributes.temp.speechParams))
-    .reprompt(ri('SPIN_PLAY_AGAIN'))
-    .getResponse();
+    // If this locale supports Echo buttons and the customer is using a button
+    // or has a display screen, we will use the GameEngine
+    // to control display and reprompting
+    if (buttons.supportButtons(handlerInput) && (attributes.buttonId || attributes.display)) {
+      // Update the color of the echo button (if present)
+      // Look for the first wheel sound to see if there is starting text
+      // That tells us whether to have a longer or shorter length of time on the buttons
+      const timeoutLength = utils.estimateDuration(resolvedSpeech[0])
+        - utils.estimateDuration(resolvedSpeech[0].substring(resolvedSpeech[0].lastIndexOf('>') + 1));
+      attributes.temp.spinColor = (game.result.payout > 0) ? '00FE10' : 'FF0000';
+      buttons.colorDuringSpin(handlerInput, attributes.buttonId);
+      buttons.buildButtonDownAnimationDirective(handlerInput, [attributes.buttonId]);
+      buttons.setInputHandlerAfterSpin(handlerInput, timeoutLength);
+      console.log('Setting timeout of ' + timeoutLength + 'ms');
+      handlerInput.jrb.withShouldEndSession(false);
+    }
+
+    // Update the leader board
+    utils.updateLeaderBoard(event, attributes);
+    game.lastbet = lastbet;
+    game.bet = undefined;
+    return handlerInput.responseBuilder
+      .speak(resolvedSpeech[0])
+      .reprompt(resolvedSpeech[1])
+      .getResponse();
+  });
 }
 
 function getBet(event, attributes) {

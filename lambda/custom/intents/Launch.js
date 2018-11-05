@@ -32,14 +32,21 @@ module.exports = {
       });
     }).then(() => {
       if (attributes.temp.inSkillProductInfo) {
-        if (!attributes.paid) {
-          attributes.paid = {};
-        }
+        let state;
+        attributes.paid = {};
         attributes.temp.inSkillProductInfo.inSkillProducts.forEach((product) => {
-          attributes.paid[product.referenceName] = {
-            productId: product.productId,
-            state: (product.entitled == 'ENTITLED') ? 'PURCHASED' : 'AVAILABLE',
-          };
+          if (product.entitled === 'ENTITLED') {
+            state = 'PURCHASED';
+          } else if (product.purchasable == 'PURCHASABLE') {
+            state = 'AVAILABLE';
+          }
+
+          if (state) {
+            attributes.paid[product.referenceName] = {
+              productId: product.productId,
+              state: state,
+            };
+          }
         });
         attributes.temp.inSkillProductInfo = undefined;
       }
@@ -108,7 +115,7 @@ module.exports = {
         attributes.buttonId = undefined;
         buttons.addLaunchAnimation(handlerInput);
         buttons.buildButtonDownAnimationDirective(handlerInput, []);
-        buttons.startInputHandler(handlerInput);
+        buttons.startInputHandler(handlerInput, 20000);
 
         // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {

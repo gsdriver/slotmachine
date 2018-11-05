@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "type": "ENTITLEMENT",
+  "referenceName": "holiday",
+  "publishingInformation": {
+    "locales": {
+      "en-US": {
+        "name": "Holiday Machine",
+        "summary": "Adds a yuletide themed machine to the list of games you can play",
+        "description": "This adds a yuletide machine featuring different sound effects and holiday symbols to the list of games you can play",
+        "smallIconUri": "http://garrettvargas.com/img/holiday108.png",
+        "largeIconUri": "http://garrettvargas.com/img/holiday512.png",
+        "examplePhrases": [
+          "Alexa, buy the holiday machine",
+          "Alexa, give me the holiday machine",
+          "Alexa, buy the holiday game"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "holiday machine"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add the Holiday Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Holiday Machine by saying select a new machine."
+        }
+      }
+    },
+    "distributionCountries": [
+      "US"
+    ],
+    "pricing": {
+      "amazon.com": {
+        "releaseDate": "2018-10-30T00:00Z",
+        "defaultPriceListing": {
+          "price": 0.99,
+          "currency": "USD"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "en-US": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      }
+    }
+  },
+  "testingInstructions": "After purchasing, the Holiday Machine will show up in the list of games you can play when you say Select a new machine",
+  "purchasableState": "PURCHASABLE"
+}

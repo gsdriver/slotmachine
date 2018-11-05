@@ -60,10 +60,10 @@
     "v4": "Time for {Game}! {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}}. <break time=\"300ms\"/> Try saying insert {Coins} coins."
   },
   "SELECT_WELCOME_PROGRESSIVE": {
-    "v1": "Welcome to {Game}. {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}} to try to win the progressive jackpot of {Jackpot} coins. <break time=\"300ms\"/> Say spin to start the game.",
-    "v2": "Starting {Game}. {GameWelcome} With {Amount, plural, =1 {one coin} other {# coins}} you can bet up to {Coins} coins to win a progressive jackpot of {Jackpot} coins. <break time=\"300ms\"/> Say spin to get started.",
-    "v3": "Let's give {Game} a spin. {GameWelcome} The progressive jackpot is {Jackpot} coins. <break time=\"300ms\"/> You have {Amount, plural, =1 {one coin} other {# coins}}. Try aaying insert {Coins} coins.",
-    "v4": "Time for {Game}! {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}} and the progressive jackpot is {Jackpot} coins. Try betting {Coins} coins."
+    "v1": "Welcome to {Game}. {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}} to try to win the progressive jackpot of <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. <break time=\"300ms\"/> Say spin to start the game.",
+    "v2": "Starting {Game}. {GameWelcome} With {Amount, plural, =1 {one coin} other {# coins}} you can bet up to {Coins} coins to win a progressive jackpot of <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. <break time=\"300ms\"/> Say spin to get started.",
+    "v3": "Let's give {Game} a spin. {GameWelcome} The progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. <break time=\"300ms\"/> You have {Amount, plural, =1 {one coin} other {# coins}}. Try saying insert {Coins} coins.",
+    "v4": "Time for {Game}! {GameWelcome} You have {Amount, plural, =1 {one coin} other {# coins}} and the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. Try betting {Coins} coins."
   },
   "SELECT_PICK_GAME": "{AvailableGames} Would you like to play {Game}?",
   "SELECT_PICK_GAME_REPROMPT": "Would you like to play {Game}? ",
@@ -81,6 +81,7 @@
   "HELP_IN_TOURNAMENT": "{FallbackText} There are {Time} left in tournament play. At the end of the tournament the highest bankroll will win {Coins} coins. You have {Amount, plural, =1 {one coin} other {# coins}}. Say spin to pull the handle <break time=\"200ms\"/> or select a new machine to change to a different machine. Check the Alexa companion app for the payout table. What else can I help you with?",
   "HELP_CARD_TITLE": "Payout Table",
   "HELP_CARD_PAYOUT_TABLE": "{PayoutTable}",
+  "HELP_REPROMPT": "What else can I help you with?",
   "HELP_SELECT_TEXT": "{FallbackText} Say yes to select the offered machine, or no for a different machine. Would you like to play {Game}?",
   "HELP_FALLBACK": "Sorry, I didn't get that. <break time=\"200ms\"/> ",
   "RULES_RULES": "{SpecialText} {PayoutTable} Say bet to insert coins or spin to pull the handle.",
@@ -89,15 +90,15 @@
   "RULES_SELECT_REPROMPT": "Say yes to play this game or no to hear the next option.",
   "RULES_CARD_TITLE": "Payout Table",
   "SPIN_WIN": {
-    "v1": "{SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "{SpinResult}. you won {AmountWon, plural, =1 {one coin} other {# coins}} giving you {Amount, plural, =1 {one coin} other {# coins}} in total. Play again?",
-    "v3": "{SpinResult}. that gives you {AmountWon, plural, =1 {one coin} other {# coins}} for a total of {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v1": "{SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "{SpinResult} <break time=\"200ms\"/> you won {AmountWon, plural, =1 {one coin} other {# coins}} giving you {Amount, plural, =1 {one coin} other {# coins}} in total. Play again?",
+    "v3": "{SpinResult} <break time=\"200ms\"/> that gives you {AmountWon, plural, =1 {one coin} other {# coins}} for a total of {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
     "v4": "{SpinResult} <break time=\"200ms\"/> winner winner chicken dinner! You're getting {AmountWon, plural, =1 {one coin} other {# coins}} putting your total at {Amount, plural, =1 {one coin} other {# coins}}. One more spin? "
   },
   "SPIN_BET_WIN": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. you won {AmountWon, plural, =1 {one coin} other {# coins}} giving you {Amount, plural, =1 {one coin} other {# coins}} in total. Play again?",
-    "v3": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. that gives you {AmountWon, plural, =1 {one coin} other {# coins}} for a total of {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> you won {AmountWon, plural, =1 {one coin} other {# coins}} giving you {Amount, plural, =1 {one coin} other {# coins}} in total. Play again?",
+    "v3": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> that gives you {AmountWon, plural, =1 {one coin} other {# coins}} for a total of {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
     "v4": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> winner winner chicken dinner! You're getting {AmountWon, plural, =1 {one coin} other {# coins}} putting your total at {Amount, plural, =1 {one coin} other {# coins}}. One more spin? "
   },
   "SPIN_WIN_PROGRESSIVE": {
@@ -123,147 +124,147 @@
     "v4": "Here we go for {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> winner winner chicken dinner! You're getting {AmountWon, plural, =1 {one coin} other {# coins}} putting your total at {Amount, plural, =1 {one coin} other {# coins}}. One more spin? "
   },
   "SPIN_LOSER": {
-    "v1": "{SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "{SpinResult}. You lose bringing you down to {Amount, plural, =1 {one coin} other {# coins}}. Play again?",
-    "v3": "{SpinResult}. Sorry, no coins for you. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
-    "v4": "{SpinResult}. That hurt. You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You lose bringing you down to {Amount, plural, =1 {one coin} other {# coins}}. Play again?",
+    "v3": "{SpinResult} <break time=\"200ms\"/> Sorry, no coins for you. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v4": "{SpinResult} <break time=\"200ms\"/> That hurt. You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
   },
   "SPIN_BET_LOSER": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You lose bringing you down to {Amount, plural, =1 {one coin} other {# coins}}. Play again?",
-    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, no coins for you. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
-    "v4": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. That hurt. You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You lose bringing you down to {Amount, plural, =1 {one coin} other {# coins}}. Play again?",
+    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, no coins for you. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v4": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> That hurt. You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
   },
   "SPIN_LOSER_BIG": {
-    "v1": "{SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "{SpinResult}. Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Play again?",
-    "v3": "{SpinResult}. You're probably getting used to hearing this <break time=\"200ms\"/> you lost. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
-    "v4": "{SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "{SpinResult} <break time=\"200ms\"/> Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Play again?",
+    "v3": "{SpinResult} <break time=\"200ms\"/> You're probably getting used to hearing this <break time=\"200ms\"/> you lost. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v4": "{SpinResult} <break time=\"200ms\"/> <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
   },
   "SPIN_BET_LOSER_BIG": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
-    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Play again?",
-    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You're probably getting used to hearing this <break time=\"200ms\"/> you lost. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
-    "v4": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Would you like to spin again?",
+    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Play again?",
+    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You're probably getting used to hearing this <break time=\"200ms\"/> you lost. Your total is now {Amount, plural, =1 {one coin} other {# coins}}. Try again?",
+    "v4": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}} left. One more spin? "
   },
-  "SPIN_JOINGAME_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_BET_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_BET_WIN": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
   "SPIN_JOINGAME_BET_WIN_PROGRESSIVE": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
   "SPIN_JOINGAME_WIN_JACKPOT": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
   "SPIN_JOINGAME_BET_WIN_JACKPOT": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_LOSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_BET_LOSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again?",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_LOSER_BIG": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Spin again?",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
-  "SPIN_WIN_NEWUSER": "{SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_BET_WIN_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_LOSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_BET_LOSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_LOSER_BIG": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Lost again? Maybe you should take your {Amount, plural, =1 {one coin} other {# coins}} and try a different machine. Spin again?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> <amazon:effect name=\"whispered\"> Hang in there, you're due for a win! </amazon:effect> You have {Amount, plural, =1 {one coin} other {# coins}}. Spin again? ",
+  "SPIN_WIN_NEWUSER": "{SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_BET_WIN_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_WIN_PROGRESSIVE_NEWUSER": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again.",
   "SPIN_BET_WIN_PROGRESSIVE_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_WIN_JACKPOT_NEWUSER": "{SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_BET_WIN_JACKPOT_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_LOSER_NEWUSER": "{SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_BET_LOSER_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_WIN_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_BET_WIN_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_LOSER_NEWUSER": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_BET_LOSER_NEWUSER": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_WIN_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_BET_WIN_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_JOINGAME_BET_WIN_PROGRESSIVE_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_JOINGAME_WIN_JACKPOT_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_JOINGAME_BET_WIN_JACKPOT_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_LOSER_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_BET_LOSER_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again.",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_NEWUSER": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_LOSER_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_BET_LOSER_NEWUSER": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_PROGRESSIVE_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_PROGRESSIVE_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You hit the progressive and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_WIN_JACKPOT_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_WIN_JACKPOT_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> You matched {Match} and won {AmountWon, plural, =1 {one coin} other {# coins}}. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_NEWUSER": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You have {Amount, plural, =1 {one coin} other {# coins}}. If you would like to try a different machine, say change machine or say spin to spin again. ",
   "SPIN_LOSER_BUSTED_OUTOFMONEY": {
-    "v1": "{SpinResult}. Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
-    "v2": "{SpinResult}. You are out of coins and out of the tournament. Better luck next week! ",
-    "v3": "{SpinResult}. That hurt. You are out of coins and out of the tournament. Better luck next week! "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You are out of coins and out of the tournament. Better luck next week! ",
+    "v3": "{SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins and out of the tournament. Better luck next week! "
   },
   "SPIN_BET_LOSER_BUSTED_OUTOFMONEY": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
-    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You are out of coins and out of the tournament. Better luck next week! ",
-    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. That hurt. You are out of coins and out of the tournament. Better luck next week! "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
+    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You are out of coins and out of the tournament. Better luck next week! ",
+    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins and out of the tournament. Better luck next week! "
   },
   "SPIN_LOSER_BIG_BUSTED_OUTOFMONEY": {
-    "v1": "{SpinResult}. Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
-    "v2": "{SpinResult}. You are out of coins and out of the tournament. Better luck next week! ",
-    "v3": "{SpinResult}. That hurt. You are out of coins and out of the tournament. Better luck next week! "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You are out of coins and out of the tournament. Better luck next week! ",
+    "v3": "{SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins and out of the tournament. Better luck next week! "
   },
   "SPIN_BET_LOSER_BIG_BUSTED_OUTOFMONEY": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
-    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You are out of coins and out of the tournament. Better luck next week! ",
-    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. That hurt. You are out of coins and out of the tournament. Better luck next week! "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins and out of the tournament. Better luck next week! ",
+    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You are out of coins and out of the tournament. Better luck next week! ",
+    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins and out of the tournament. Better luck next week! "
   },
-  "SPIN_JOINGAME_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins and are out of the tournmanent. Better luck next time!",
-  "SPIN_JOINGAME_BET_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins and are out of the tournament. Better luck next time!",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost. That puts you out of coins and out of the tournament. Better luck next time!",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins and are out of the tournament. Try again next week!",
-  "SPIN_JOINGAME_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Lost again? Sorry, you're out of coins and out of the tournament. Better luck next time!",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. You're out of coins and out of the tournament. See you again next week!",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You're out of coins and out of the tournament. See you again next week!",
+  "SPIN_JOINGAME_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins and are out of the tournmanent. Better luck next time!",
+  "SPIN_JOINGAME_BET_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins and are out of the tournament. Better luck next time!",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. That puts you out of coins and out of the tournament. Better luck next time!",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins and are out of the tournament. Try again next week!",
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Lost again? Sorry, you're out of coins and out of the tournament. Better luck next time!",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> You're out of coins and out of the tournament. See you again next week!",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_OUTOFMONEY": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You're out of coins and out of the tournament. See you again next week!",
   "SPIN_LOSER_BUSTED_SUBSCRIBED_REPLENISH": {
-    "v1": "{SpinResult}. Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
-    "v2": "{SpinResult}. You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
   },
   "SPIN_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
-    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
+    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
   },
   "SPIN_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": {
-    "v1": "{SpinResult}. Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
-    "v2": "{SpinResult}. You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You are out of coins  <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
   },
   "SPIN_BET_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
-    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You are out of coins <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins <break time=\"300ms\"/> but thanks to your Reset Bankroll subscription your bankroll is reset to {Coins} coins. Spin again?",
+    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You are out of coins <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?"
   },
   "SPIN_JOINGAME_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
   "SPIN_JOINGAME_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
   "SPIN_JOINGAME_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_SUBSCRIBED_REPLENISH": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"300ms\"/> Good thing you have a Reset Bankroll subscription, because you don't have to wait to have your bankroll reset to {Coins} coins. Play again?",
   "SPIN_LOSER_BUSTED": {
-    "v1": "{SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins.",
-    "v2": "{SpinResult}. You are out of coins but you can come back tomorrow for {Coins} coins.",
-    "v3": "{SpinResult}. That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins.",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You are out of coins but you can come back tomorrow for {Coins} coins.",
+    "v3": "{SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
   },
   "SPIN_BET_LOSER_BUSTED": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins.",
-    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You are out of coins but you can come back tomorrow for {Coins} coins.",
-    "v3": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins.",
+    "v2": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You are out of coins but you can come back tomorrow for {Coins} coins.",
+    "v3": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
   },
   "SPIN_LOSER_BIG_BUSTED": {
-    "v1": "{SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins.",
-    "v2": "{SpinResult}. You lost it all! Come back tomorrow for {Coins} coins.",
-    "v3": "{SpinResult}. That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
+    "v1": "{SpinResult} <break time=\"200ms\"/> Getting used to losing?  Take a break and come back tomorrow for {Coins} coins.",
+    "v2": "{SpinResult} <break time=\"200ms\"/> You lost it all! Come back tomorrow for {Coins} coins.",
+    "v3": "{SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
   },
   "SPIN_BET_LOSER_BIG_BUSTED": {
-    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins.",
-    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. You lost it all! Come back tomorrow for {Coins} coins.",
-    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
+    "v1": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Getting used to losing?  Take a break and come back tomorrow for {Coins} coins.",
+    "v2": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> You lost it all! Come back tomorrow for {Coins} coins.",
+    "v3": "Betting {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> That hurt. You are out of coins. Come back tomorrow and I'll give you {Coins} coins "
   },
-  "SPIN_JOINGAME_LOSER_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_BET_LOSER_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_LOSER_BIG_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_LOSER_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_BET_LOSER_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED": "Let's play {Game} where the progressive jackpot is <say-as interpret-as=\"number\">{Jackpot}</say-as> coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult} <break time=\"200ms\"/> Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins.",
   "SPIN_PLAY_AGAIN": {
     "v1": "Want to spin again?",
     "v2": "Want to play again?",
@@ -289,18 +290,22 @@
   "EVERYONE_WINS": "On today's tournament machine every spin wins when 5 coins are played. ",
   "SIMPSON_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3\"/> ",
   "BATMAN_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
+  "HOLIDAY_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3\"/> ",
   "PROGRESSIVE_SPECIAL": "Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ",
   "TOURNAMENT_WINNER": "Congratulations, you won the tournament with {TournamentResult, plural, =1 {one coin} other {# coins}}!  You win {Coins, plural, =1 {one coin} other {# coins}} for your tournament win! ",
   "TOURNAMENT_LOSER": "Sorry, you didn't win the tournament. The high score was {TournamentWinner, plural, =1 {one coin} other {# coins}} and you had {TournamentResult, plural, =1 {one coin} other {# coins}}. ",
   "TOURNAMENT_TIMELEFT_MINUTES": "{Minutes} minutes",
   "TOURNAMENT_TIMELEFT_MINUTES_AND_SECONDS": "{Minutes} minutes and {Seconds} seconds",
   "TOURNAMENT_TIMELEFT_SECONDS": "{Seconds} seconds",
+  "NEXT_TOURNAMENT_HOURS": "Come back for our next tournament in {Hours} hours!",
+  "NEXT_TOURNAMENT_HOURS_AND_MINUTES": "Come back for the tournament round in {Hours} hours and {Minutes} minutes!",
+  "NEXT_TOURNAMENT_MINUTES": "Join us for our tournament round in {Minutes} minutes!",
   "TOURNAMENT_DEFAULT_TIMEZONE": " Pacific time",
   "GOOD_MORNING": "Good morning <break time=\"200ms\"/> ",
   "GOOD_AFTERNOON": "Good afternoon <break time=\"200ms\"/> ",
   "GOOD_EVENING": "Good evening <break time=\"200ms\"/> ",
-  "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. ",
-  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently {Jackpot, plural, =1 {one coin} other {# coins}}. Insert {Coins, plural, =1 {one coin} other {# coins}} to win the progressive jackpot. ",
+  "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently <say-as interpret-as=\"number\">{Jackpot, plural, =1 {one coin} other {# coins}}</say-as>. ",
+  "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently <say-as interpret-as=\"number\">{Jackpot, plural, =1 {one coin} other {# coins}}. Insert {Coins, plural, =1 {one coin} other {# coins}}</say-as> to win the progressive jackpot. ",
   "TOURNAMENT_ENDED": "The tournament has ended. Please check again later to hear the results! ",
   "PRODUCT_MAP_LIST": {
     "coinreset": {
@@ -311,6 +316,13 @@
       "0": "CRAZY DIAMONDS",
       "1": "DIAMONDS",
       "2": "CRAZY DIAMONDS MACHINE"
+    },
+    "holiday": {
+      "0": "HOLIDAY",
+      "1": "HOLIDAY MACHINE",
+      "2": "THE HOLIDAY MACHINE",
+      "3": "HOLIDAY GAME",
+      "4": "THE HOLIDAY GAME"
     }
   },
   "GAME_LIST_BASIC": "the standard fruit game",
@@ -320,6 +332,7 @@
   "GAME_LIST_TOURNAMENT": "the tournament round",
   "GAME_LIST_STEAK": "the meat game",
   "GAME_LIST_CRAZYDIAMOND": "crazy diamonds",
+  "GAME_LIST_HOLIDAY": "the holiday game",
   "SYMBOL_LIST": {
     "any": "any",
     "cherry": "cherry",
@@ -353,7 +366,11 @@
     "joker": "The Joker",
     "batman": "Batman",
     "star": "star",
-    "watermelon": "watermelon"
+    "watermelon": "watermelon",
+    "tree": "tree",
+    "candycane": "candy cane",
+    "snowman": "snowman",
+    "santa": "santa"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
   "DISPLAY_DIRECTIVE_CHOICES": {

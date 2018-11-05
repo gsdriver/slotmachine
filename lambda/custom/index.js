@@ -6,6 +6,7 @@
 
 const Alexa = require('ask-sdk');
 const CanFulfill = require('./intents/CanFulfill');
+const OldTimeOut = require('./intents/OldTimeOut');
 const Spin = require('./intents/Spin');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
@@ -20,6 +21,7 @@ const Testing = require('./intents/Testing');
 const Purchase = require('./intents/Purchase');
 const Refund = require('./intents/Refund');
 const ProductResponse = require('./intents/ProductResponse');
+const Reprompt = require('./intents/Reprompt');
 const Unhandled = require('./intents/Unhandled');
 const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
@@ -151,11 +153,49 @@ const saveResponseInterceptor = {
           // Save the response and reprompt for repeat
           const attributes = handlerInput.attributesManager.getSessionAttributes();
           if (response.outputSpeech && response.outputSpeech.ssml) {
-            attributes.temp.lastResponse = response.outputSpeech.ssml;
+            // First off - count the audio tags.  If more than 5, remove the last one
+            let audioTags = (response.outputSpeech.ssml.match(/<audio/g) || []).length;
+            let index;
+            let end;
+
+            while (audioTags > 5) {
+              audioTags--;
+              index = response.outputSpeech.ssml.lastIndexOf('<audio');
+              end = response.outputSpeech.ssml.indexOf('>', index);
+              response.outputSpeech.ssml =
+                response.outputSpeech.ssml.substring(0, index)
+                + response.outputSpeech.ssml.substring(end + 1);
+            }
+
+            // Strip <speak> tags
+            let lastResponse = response.outputSpeech.ssml;
+            lastResponse = lastResponse.replace('<speak>', '');
+            lastResponse = lastResponse.replace('</speak>', '');
+            attributes.temp.lastResponse = lastResponse;
           }
           if (response.reprompt && response.reprompt.outputSpeech
             && response.reprompt.outputSpeech.ssml) {
-            attributes.temp.lastReprompt = response.reprompt.outputSpeech.ssml;
+            let lastReprompt = response.reprompt.outputSpeech.ssml;
+            lastReprompt = lastReprompt.replace('<speak>', '');
+            lastReprompt = lastReprompt.replace('</speak>', '');
+            attributes.temp.lastReprompt = lastReprompt;
+          }
+
+          if (attributes.temp) {
+            if (attributes.temp.deferReprompt) {
+              // Oh, actually we don't want to reprompt but will
+              // rely on the button timeout to handle a reprompt
+              response.reprompt = undefined;
+              attributes.temp.deferReprompt = undefined;
+
+              // If should end session is true, set it to false
+              if (response.shouldEndSession) {
+                handlerInput.responseBuilder.withShouldEndSession(false);
+              }
+            }
+            // If there is a reprompt - set a flag so any errant
+            // input handler reprompt timeout events are ignored
+            attributes.temp.ignoreTimeouts = response.reprompt;
           }
 
           // Save state if we need to (but just for certain platforms)
@@ -220,8 +260,10 @@ function runGame(event, context, callback) {
     attributesName: 'mapAttr',
   });
   const skillFunction = skillBuilder.addRequestHandlers(
+      OldTimeOut,
       ProductResponse,
       Launch,
+      Reprompt,
       Testing,
       Purchase,
       Refund,

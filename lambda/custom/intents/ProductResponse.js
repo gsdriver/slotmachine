@@ -7,6 +7,7 @@
 const Launch = require('./Launch');
 const Select = require('./Select');
 const SelectYes = require('./SelectYes');
+const Spin = require('./Spin');
 const buttons = require('../buttons');
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
@@ -47,9 +48,9 @@ module.exports = {
         // This message is sent internally so no worries about localizing
         message = 'For token ' + event.request.token + ', ';
         if (event.request.payload.message) {
-          message = event.request.payload.message;
+          message += event.request.payload.message;
         } else {
-          message = event.request.name + ' was accepted';
+          message += event.request.name + ' was accepted';
         }
         message += ' by user ' + event.session.user.userId;
         if (attributes.upsellSelection) {
@@ -107,19 +108,21 @@ module.exports = {
             nextAction = 'autoselect';
           }
         } else {
-          // OK, either launch or go to select based on last step
-          nextAction = (options[2] === 'select') ? 'select' : 'launch';
+          // OK, either launch, spin, or go to select based on last step
+          nextAction = options[2];
         }
       }
 
       // And go to the appropriate next step
       if (nextAction === 'select') {
-        buttons.startInputHandler(handlerInput);
+        buttons.setRepromptHandler(handlerInput, 20000);
         return Select.handle(handlerInput);
       } else if (nextAction === 'autoselect') {
-        buttons.startInputHandler(handlerInput);
+        buttons.setRepromptHandler(handlerInput, 20000);
         attributes.choices = [options[1]];
         return SelectYes.handle(handlerInput);
+      } else if (nextAction === 'spin') {
+        return Spin.handle(handlerInput);
       } else {
         // Just drop them directly into a game
         attributes.temp.resumeGame = true;

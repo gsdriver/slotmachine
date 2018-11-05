@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "b4ac55de308b6fdeb361c1d925364c37"
+          "eTag": "6bc691ff010b93cb9c2aa7531abee4e7"
         },
         "interactionModel": {
           "en-AU": {
@@ -29,13 +29,13 @@
             "eTag": "fb75abab96f9ae7c5971dca3cfbb5e03"
           },
           "en-US": {
-            "eTag": "2dfa9cb7213f9fe6471c7656c866a7cc"
+            "eTag": "22074c0813707f85ed5b70a7e58fc212"
           },
           "en-IN": {
             "eTag": "fb75abab96f9ae7c5971dca3cfbb5e03"
           },
           "de-DE": {
-            "eTag": "4c00e5d429fca2b090bc4bd25cf8873f"
+            "eTag": "90b196e50b7d055cf03766c88df52583"
           }
         },
         "lambda": [
@@ -46,7 +46,7 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "3fa3063c-2284-4001-b777-38cb3a0bc16e"
+            "revisionId": "8263344c-fabe-47ae-8890-32bcb37fc05e"
           }
         ]
       },
@@ -62,6 +62,12 @@
           "filePath": "isps\\entitlement\\crazydiamond.json",
           "productId": "amzn1.adg.product.0f960bb3-f86c-4ff7-a2c0-06a14b558e91",
           "eTag": "b2be4d43217776e8d1df9e3c3be3ab63"
+        },
+        {
+          "deploy_status": "Update",
+          "filePath": "isps\\entitlement\\holiday.json",
+          "productId": "amzn1.adg.product.c29c1be0-cc93-487c-97b6-fea7bd47e3d9",
+          "eTag": "511bf23d3e89214dfd099f0aa077bf05"
         }
       ]
     }

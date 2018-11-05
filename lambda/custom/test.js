@@ -92,10 +92,10 @@ function BuildEvent(argv)
     },
     "request": {
       "type": "GameEngine.InputHandlerEvent",
-      "requestId": "amzn1.echo-api.request.f25e7902-62bc-4661-90d9-aaac30c1a937",
+      "requestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
       "timestamp": "2018-08-02T01:05:33Z",
       "locale": LOCALE,
-      "originatingRequestId": "amzn1.echo-api.request.0b7a4f65-115d-427c-9aa0-5c78c57c740f",
+      "originatingRequestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
       "events": [
         {
           "name": "button_down_event",
@@ -154,10 +154,10 @@ function BuildEvent(argv)
     },
     "request": {
       "type": "GameEngine.InputHandlerEvent",
-      "requestId": "amzn1.echo-api.request.f25e7902-62bc-4661-90d9-aaac30c1a937",
+      "requestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
       "timestamp": "2018-08-02T01:05:33Z",
       "locale": "en-US",
-      "originatingRequestId": "amzn1.echo-api.request.0b7a4f65-115d-427c-9aa0-5c78c57c740f",
+      "originatingRequestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
       "events": [
         {
           "name": "button_down_event",
@@ -172,6 +172,60 @@ function BuildEvent(argv)
           ]
         }
       ]
+    },
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": APITOKEN,
+       }
+     },
+  };
+
+ var buttonTimeout = {
+    "session": {
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
+      "application": {
+        "applicationId": APPID
+      },
+      "attributes": {},
+      "user": {
+        "userId": "not-amazon",
+      },
+      "new": false
+    },
+    "request": {
+        "type": "GameEngine.InputHandlerEvent",
+        "requestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
+        "timestamp": "2018-10-20T13:50:06Z",
+        "locale": LOCALE,
+        "originatingRequestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
+        "events": [
+            {
+                "name": "reprompt_timeout",
+                "inputEvents": []
+            }
+        ]
     },
     "version": "1.0",
      "context": {
@@ -255,6 +309,7 @@ function BuildEvent(argv)
     if (data) {
       lambda.session.attributes = JSON.parse(data);
       buttonEvent.session.attributes = JSON.parse(data);
+      buttonTimeout.session.attributes = JSON.parse(data);
     }
   }
 
@@ -302,6 +357,11 @@ function BuildEvent(argv)
     return openEvent;
   } else if (argv[2] == 'button') {
     return buttonEvent;
+  } else if (argv[2] == 'timeout') {
+    if (argv.length > 3) {
+      buttonTimeout.request.events[0].name = argv[3];
+    }
+    return buttonTimeout;
   } else if (argv[2] == 'highscore') {
     lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
@@ -356,30 +416,32 @@ function myResponse(err, result) {
   fs.writeFile('lastResponse.txt', JSON.stringify(result), (err) => {
     if (err) {
       console.log('ERROR; ' + err.stack);
-    } else if (!result.response || !result.response.outputSpeech) {
-      console.log('RETURNED ' + JSON.stringify(result));
     } else {
-      if (result.response.outputSpeech.ssml) {
-        console.log('AS SSML: ' + result.response.outputSpeech.ssml);
-        console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
-      } else {
-        console.log(result.response.outputSpeech.text);
-      }
-      if (result.response.card && result.response.card.content) {
-        console.log('Card Content: ' + result.response.card.content);
-      }
-      console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
-      if (result.sessionAttributes && !process.env.NOLOG) {
-        console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
-      }
       if (result.sessionAttributes) {
-        // Output the attributes too
+        // Output the attributes
         const fs = require('fs');
         fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
           if (err) {
             console.log(err);
           }
         });
+        if (!process.env.NOLOG) {
+          console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
+        }
+      }
+      if (!result.response || !result.response.outputSpeech) {
+        console.log('RETURNED ' + JSON.stringify(result));
+      } else {
+        if (result.response.outputSpeech.ssml) {
+          console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+          console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
+        } else {
+          console.log(result.response.outputSpeech.text);
+        }
+        if (result.response.card && result.response.card.content) {
+          console.log('Card Content: ' + result.response.card.content);
+        }
+        console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
       }
     }
   });

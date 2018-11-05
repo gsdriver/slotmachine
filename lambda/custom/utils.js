@@ -116,6 +116,31 @@ const games = {
       'diamond|diamond|diamond': 200,
     },
   },
+  // Same as basic but with different symbols Has 99.8% payout
+  'holiday': {
+    'product': 'holiday',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['tree', 'candycane', 'snowman', 'star', 'santa'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 6, 4]},
+      {'symbols': [24, 10, 6, 2, 1]},
+    ],
+    'welcome': 'HOLIDAY_GAME',
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/hohoho.mp3\"/> ',
+    'stopreplace': 'sleighstop',
+    'payouts': {
+      'tree': 2,
+      'tree|tree': 4,
+      'candycane|candycane|candycane': 8,
+      'snowman|snowman|snowman': 10,
+      'star|star|star': 15,
+      'santa': 5,
+      'santa|santa': 10,
+      'santa|santa|santa': 100,
+    },
+  },
 };
 
 const tournaments = [
@@ -389,23 +414,42 @@ module.exports = {
 
     attributes.temp.tournamentAvailable = tournamentAvailable;
   },
-  timeUntilTournament: function() {
+  timeUntilTournament: function(handlerInput) {
+    let speech;
+    const speechParams = {};
+
     // How long until the next tournament?
+    // This will return a result if there is a tournament in the next 12 hours
     const times = getTournamentTimes();
     if (times) {
-      let timeLeft = times.start.getTime() - times.now.getTime();
-      if (timeLeft < 0) {
-        // Tournament is probably active
-        timeLeft += 7 * 24 * 60 * 60 * 1000;
-      }
+      const timeLeft = times.start.getTime() - times.now.getTime();
+      if ((timeLeft > 0) && (timeLeft < 12 * 60 * 60 * 1000)) {
+        speechParams.Hours = Math.floor(timeLeft / (60 * 60 * 1000));
+        speechParams.Minutes = Math.ceil((timeLeft - (speechParams.Hours * 60 * 60 * 1000))
+          / (60 * 1000));
 
-      const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-      const hoursLeft = Math.floor((timeLeft - (daysLeft * 1000 * 60 * 60 * 24))
-            / (1000 * 60 * 60));
-      return {days: daysLeft, hours: hoursLeft};
+        // Convert to hours if more than 4 hours
+        // Hours and minutes if less than 4 hours
+        // Minutes only if less than an hour!
+        if (timeLeft > 4 * 60 * 60 * 1000) {
+          // Increase hour count by 1 if minutes more than 30
+          if (speechParams.Minutes > 30) {
+            speechParams.Hours++;
+          }
+          speech = 'NEXT_TOURNAMENT_HOURS';
+        } else if (timeLeft > 60 * 60 * 1000) {
+          speech = 'NEXT_TOURNAMENT_HOURS_AND_MINUTES';
+        } else {
+          speech = 'NEXT_TOURNAMENT_MINUTES';
+        }
+      }
     }
 
-    return undefined;
+    if (speech) {
+      return handlerInput.jrm.render(ri(speech, speechParams));
+    } else {
+      return Promise.resolve();
+    }
   },
   getRemainingTournamentTime: function(handlerInput) {
     const times = getTournamentTimes();
@@ -710,6 +754,7 @@ module.exports = {
     attributes.choices = undefined;
     attributes.originalChoices = undefined;
 
+    attributes.temp.sameGameSpins = 0;
     if (!attributes[attributes.currentGame]) {
       attributes[attributes.currentGame] = {};
 
@@ -775,7 +820,7 @@ module.exports = {
             response.addRenderTemplateDirective(directive);
           });
         });
-      } else if (game && game.result && game.result.spin) {
+      } else if (!attributes.temp.spinColor && game && game.result && game.result.spin) {
         let name = '';
         game.result.spin.forEach((spin) => {
           if (name.length > 0) {
@@ -816,6 +861,62 @@ module.exports = {
     .then((productList) => {
       return getBestMatch(productList, product.toUpperCase());
     });
+  },
+  estimateDuration: function(speech) {
+    let duration = 0;
+    let text = speech;
+    let index;
+    let end;
+    const soundList = [
+      {file: 'soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_positive_response_01', length: 1000},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3', length: 2750},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/dice.mp3', length: 650},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/doh.mp3', length: 680},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/woohoo.mp3', length: 950},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3', length: 3850},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3', length: 325},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighstop.mp3', length: 450},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3', length: 6400},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3', length: 5100},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3300},
+    ];
+
+    // Look for and remove all audio clips
+    while (text.indexOf('<audio') > -1) {
+      index = text.indexOf('<audio');
+      end = text.indexOf('>', index);
+      const str = text.substring(index, end);
+
+      soundList.forEach((sound) => {
+        if (str.indexOf(sound.file) > -1) {
+          duration += sound.length;
+        }
+      });
+
+      text = text.substring(0, index) + text.substring(end + 1);
+    }
+
+    // Find and strip out all breaks
+    while (text.indexOf('<break') > -1) {
+      // Extract the number
+      index = text.indexOf('<break');
+      end = text.indexOf('>', index);
+
+      // We're assuming the break time is in ms
+      const str = text.substring(index, end);
+      const time = parseInt(str.match(/\d/g).join(''));
+      if (!isNaN(time)) {
+        duration += time;
+      }
+
+      // And skip this one
+      text = text.substring(0, index) + text.substring(end + 1);
+    }
+
+    // 60 ms for each remaining character
+    duration += 60 * text.length;
+    return duration;
   },
 };
 
