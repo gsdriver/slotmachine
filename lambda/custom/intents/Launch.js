@@ -19,10 +19,8 @@ module.exports = {
     let response;
     let speech = 'LAUNCH';
 
-    return utils.setTournamentReminder(handlerInput)
-    .then(() => {
-      return utils.getGreeting(handlerInput);
-    }).then((greeting) => {
+    return utils.getGreeting(handlerInput)
+    .then((greeting) => {
       attributes.temp.speechParams.Greeting = greeting;
       const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
       return ms.getInSkillProducts(event.request.locale)

@@ -34,6 +34,18 @@ module.exports = {
       return true;
     }
 
+    // Game 99 is a special case that we don't handle
+    if ((request.type === 'IntentRequest') && (request.intent.name === 'GameIntent')) {
+      // It has to be game 99 that you are selecting
+      if (request.intent.slots && request.intent.slots.Number
+        && request.intent.slots.Number.value) {
+        const game = parseInt(request.intent.slots.Number.value);
+        if (game === 99) {
+          return false;
+        }
+      }
+    }
+
     // You have several ways you can kick off a spin if you are not
     // in the middle of selecting a game
     return ((request.type === 'IntentRequest')

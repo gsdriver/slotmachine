@@ -15,7 +15,6 @@ const rp = require('request-promise');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
 const leven = require('leven');
-const https = require('https');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
@@ -440,7 +439,7 @@ module.exports = {
           }
           speech = 'NEXT_TOURNAMENT_HOURS';
         } else if (timeLeft > 60 * 60 * 1000) {
-          speech = 'NEXT_TOURNAMENT_HOURS_AND__MINUTES';
+          speech = 'NEXT_TOURNAMENT_HOURS_AND_MINUTES';
         } else {
           speech = 'NEXT_TOURNAMENT_MINUTES';
         }
@@ -865,56 +864,73 @@ module.exports = {
     });
   },
   setTournamentReminder: function(handlerInput) {
-    const times = getTournamentTimes(true);
+    const times = getTournamentTimes();
     const alert = {};
     const event = handlerInput.requestEnvelope;
+    let start = JSON.stringify(times.start);
+    let timezone;
 
-    alert.requestTime = times.start;
-    alert.trigger = {
-      type: 'SCHEDULED_ABSOLUTE',
-      scheduledTime: times.start,
-      timeZoneId: 'Etc/UTC',
-      recurrence: {
-        freq: 'WEEKLY',
-        byDay: [moment.tz(times.start.getTime(), 'Etc/UTC').format('dd').toUpperCase()],
-      },
-    };
-    alert.alertInfo = {
-      spokenInfo: {
-        content: [{
-          locale: 'en-US',
-          text: 'walk the dog'
-        }],
-      },
-    };
-    alert.pushNotification = {
-      status: 'ENABLED',
-    };
-    const params = {
-      url: 'https://api.amazonalexa.com/v1/alerts/reminders',
-      method: 'POST',
-      headers: {
-        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
-      },
-      json: alert,
-    };
+    // Lop off trailing Z from string
+    start = start.substring(1, start.length - 1);
+    if (start.substring(start.length - 1) === 'Z') {
+      start = start.substring(0, start.length - 1);
+    }
 
-    // Post the reminder
-console.log(JSON.stringify(params));
-    return rp(params)
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      timezone = (tz) ? tz : 'America/Los_Angeles';
+      return handlerInput.jrm.render(ri('REMINDER_TEXT'));
+    }).then((reminderText) => {
+      alert.requestTime = start;
+      alert.trigger = {
+        type: 'SCHEDULED_ABSOLUTE',
+        scheduledTime: start,
+        timeZoneId: timezone,
+        recurrence: {
+          freq: 'WEEKLY',
+          byDay: [moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase()],
+        },
+      };
+      alert.alertInfo = {
+        spokenInfo: {
+          content: [{
+            locale: event.request.locale,
+            text: reminderText,
+          }],
+        },
+      };
+      alert.pushNotification = {
+        status: 'ENABLED',
+      };
+      const params = {
+        url: 'https://api.amazonalexa.com/v1/alerts/reminders',
+        method: 'POST',
+        headers: {
+          'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+        },
+        json: alert,
+      };
+
+      // Post the reminder
+      return rp(params);
+    })
     .then((body) => {
-      console.log(body);
+      // Return the local tournament time
+      return module.exports.getLocalTournamentTime(handlerInput);
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('SetReminder error ' + err.error.code);
+      return err.error.code;
     });
   },
-  getReminders: function(handlerInput) {
-    // Invoke the reminders API to load products
+  isReminderActive: function(handlerInput) {
+    const times = getTournamentTimes();
+    let reminderDay;
+
+    // Invoke the reminders API to load active reminders
     const event = handlerInput.requestEnvelope;
     const options = {
-      host: 'api.amazonalexa.com',
-      path: '/v1/alerts/reminders',
+      uri: 'https://api.amazonalexa.com/v1/alerts/reminders',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -923,30 +939,30 @@ console.log(JSON.stringify(params));
       },
     };
 
-    return new Promise((resolve, reject) => {
-      // Call the API
-      const req = https.get(options, (res) => {
-        let returnData = '';
-        res.setEncoding('utf8');
-        if (res.statusCode != 200) {
-          console.log('reminders returned status code ' + res.statusCode);
-          resolve(res.statusCode);
-        } else {
-          res.on('data', (chunk) => {
-            returnData += chunk;
-          });
-
-          res.on('end', () => {
-            console.log(returnData);
-            resolve();
-          });
-        }
-      });
-
-      req.on('error', (err) => {
-        console.log('Error calling reminder API: ' + err.message);
-        resolve(err);
-      });
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      const timezone = (tz) ? tz : 'America/Los_Angeles';
+      reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
+      return rp(options);
+    }).then((body) => {
+      // Return the local tournament time
+      console.log('isReminderActive ' + body);
+      const alerts = JSON.parse(body);
+      let isActive = false;
+      if (alerts && alerts.alerts) {
+        alerts.alerts.forEach((alert) => {
+          if ((alert.status === 'ON') && alert.trigger && alert.trigger.recurrence
+            && alert.trigger.recurrence.byDay
+            && (alert.trigger.recurrence.byDay[0] === reminderDay)) {
+            isActive = true;
+          }
+        });
+      }
+      return isActive;
+    })
+    .catch((err) => {
+      console.log('isReminderActive error ' + err.error);
+      return false;
     });
   },
   estimateDuration: function(speech) {
