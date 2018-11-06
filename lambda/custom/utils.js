@@ -11,9 +11,11 @@ const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
+const rp = require('request-promise');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
 const leven = require('leven');
+const https = require('https');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
@@ -438,7 +440,7 @@ module.exports = {
           }
           speech = 'NEXT_TOURNAMENT_HOURS';
         } else if (timeLeft > 60 * 60 * 1000) {
-          speech = 'NEXT_TOURNAMENT_HOURS_AND_MINUTES';
+          speech = 'NEXT_TOURNAMENT_HOURS_AND__MINUTES';
         } else {
           speech = 'NEXT_TOURNAMENT_MINUTES';
         }
@@ -860,6 +862,91 @@ module.exports = {
     return handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST'))
     .then((productList) => {
       return getBestMatch(productList, product.toUpperCase());
+    });
+  },
+  setTournamentReminder: function(handlerInput) {
+    const times = getTournamentTimes(true);
+    const alert = {};
+    const event = handlerInput.requestEnvelope;
+
+    alert.requestTime = times.start;
+    alert.trigger = {
+      type: 'SCHEDULED_ABSOLUTE',
+      scheduledTime: times.start,
+      timeZoneId: 'Etc/UTC',
+      recurrence: {
+        freq: 'WEEKLY',
+        byDay: [moment.tz(times.start.getTime(), 'Etc/UTC').format('dd').toUpperCase()],
+      },
+    };
+    alert.alertInfo = {
+      spokenInfo: {
+        content: [{
+          locale: 'en-US',
+          text: 'walk the dog'
+        }],
+      },
+    };
+    alert.pushNotification = {
+      status: 'ENABLED',
+    };
+    const params = {
+      url: 'https://api.amazonalexa.com/v1/alerts/reminders',
+      method: 'POST',
+      headers: {
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+      json: alert,
+    };
+
+    // Post the reminder
+console.log(JSON.stringify(params));
+    return rp(params)
+    .then((body) => {
+      console.log(body);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  },
+  getReminders: function(handlerInput) {
+    // Invoke the reminders API to load products
+    const event = handlerInput.requestEnvelope;
+    const options = {
+      host: 'api.amazonalexa.com',
+      path: '/v1/alerts/reminders',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+
+    return new Promise((resolve, reject) => {
+      // Call the API
+      const req = https.get(options, (res) => {
+        let returnData = '';
+        res.setEncoding('utf8');
+        if (res.statusCode != 200) {
+          console.log('reminders returned status code ' + res.statusCode);
+          resolve(res.statusCode);
+        } else {
+          res.on('data', (chunk) => {
+            returnData += chunk;
+          });
+
+          res.on('end', () => {
+            console.log(returnData);
+            resolve();
+          });
+        }
+      });
+
+      req.on('error', (err) => {
+        console.log('Error calling reminder API: ' + err.message);
+        resolve(err);
+      });
     });
   },
   estimateDuration: function(speech) {
