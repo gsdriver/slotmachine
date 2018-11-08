@@ -372,9 +372,11 @@ module.exports = {
   },
   getLocalTournamentTime: function(handlerInput) {
     const times = getTournamentTimes(true);
+    const event = handlerInput.requestEnvelope;
 
     if (times) {
       // Get the user timezone
+      moment.locale(event.request.locale);
       return getUserTimezone(handlerInput).then((timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
@@ -881,6 +883,7 @@ module.exports = {
       timezone = (tz) ? tz : 'America/Los_Angeles';
       return handlerInput.jrm.render(ri('REMINDER_TEXT'));
     }).then((reminderText) => {
+      moment.locale('en');
       alert.requestTime = start;
       alert.trigger = {
         type: 'SCHEDULED_ABSOLUTE',
@@ -942,6 +945,7 @@ module.exports = {
     return getUserTimezone(handlerInput)
     .then((tz) => {
       const timezone = (tz) ? tz : 'America/Los_Angeles';
+      moment.locale('en');
       reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
       return rp(options);
     }).then((body) => {

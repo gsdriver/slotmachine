@@ -22,6 +22,8 @@
   "ERROR_REPROMPT": "Kann ich sonst noch weiterhelfen?",
   "EVERYONE_WINS": "Bei der heutigen Turniermaschine gewinnt jedes Spiel mit einem Einsatz von 5 Münzen.",
   "EXIT_GAME": "{Ad} Bis bald.",
+  "EXIT_REMINDER": "{RemainingTime} <break time=\"200ms\"/> Möchten Sie eine wöchentliche alarm für die Turnierrunde?",
+  "EXIT_REMINDER_REPROMPT": "Möchten Sie eine wöchentliche alarm für die Turnierrunde?",
   "GAME_LIST_BASIC": "das normale Obstspiel",
   "GAME_LIST_CRAZYDIAMOND": "verrückte Diamanten",
   "GAME_LIST_HOLIDAY": "das Ferienspiel",
