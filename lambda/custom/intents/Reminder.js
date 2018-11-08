@@ -35,6 +35,7 @@ module.exports = {
       return utils.setTournamentReminder(handlerInput)
       .then((result) => {
         if (typeof result !== 'string') {
+          attributes.setReminder = true;
           attributes.temp.speechParams.Time = result.time;
           attributes.temp.speechParams.Timezone = result.timezone;
           return handlerInput.jrb

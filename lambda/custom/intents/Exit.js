@@ -41,24 +41,36 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const forceReminder = (event.request.intent.name === 'GameIntent');
+    let noReminder;
+    const now = Date.now();
 
-    // An upcoming tournament takes precedence
+    // Have we recently asked about setting a reminder?
+    if (attributes.prompts.reminder
+      && (now - attributes.prompts.reminder < 24*60*60*1000)) {
+      // No reminder will be shown - UNLESS they used GameIntent
+      noReminder = (event.request.intent.name !== 'GameIntent');
+    } else {
+      noReminder = false;
+    }
+
+    // An upcoming tournament takes precedence over an ad
     return utils.timeUntilTournament(handlerInput)
     .then((time) => {
       let timeLeft = time;
-      if (!timeLeft && forceReminder) {
+      if (!timeLeft && (event.request.intent.name === 'GameIntent')) {
         timeLeft = ' ';
       }
-
       if (!timeLeft) {
         return ads.getAd(attributes, 'slots', event.request.locale);
+      } else if (noReminder) {
+        return timeLeft;
       } else {
         // Do they have an active reminder set for this weekly tournament?
         return utils.isReminderActive(handlerInput)
         .then((isActive) => {
           if (!isActive) {
             // We are going to go into reminder mode!
+            attributes.prompts.reminder = now;
             attributes.temp.addingReminder = true;
           }
           return timeLeft;
