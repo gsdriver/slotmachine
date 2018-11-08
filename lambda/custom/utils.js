@@ -389,7 +389,7 @@ module.exports = {
         }
       });
     } else {
-      return Promise.resolve('');
+      return Promise.resolve();
     }
   },
   checkForTournament: function(attributes) {
