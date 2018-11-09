@@ -69,7 +69,7 @@
   "SELECT_PICK_GAME_REPROMPT": "Would you like to play {Game}? ",
   "SELECT_REPROMPT": "You can bet up to {Coins} coins or say read high scores to hear the leader board.",
   "EXIT_GAME": "{Ad} Goodbye.",
-  "EXIT_REMINDER": "{RemainingTime} <break time=\"200ms\"/> Would you like me to set a weekly reminder for the tournament?",
+  "EXIT_REMINDER": "{RemainingTime} <break time=\"200ms\"/> Would you like me to set a weekly reminder for the tournament every {Time} {Timezone}?",
   "EXIT_REMINDER_REPROMPT": "Would you like me to set a weekly reminder for the tournament?",
   "HIGHSCORE_RANKING": "Your peak bankroll of {Coins, plural, =1 {one coin} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. What else can I help you with?",
   "HIGHSCORE_RANKING_SELECT": "Your peak bankroll of {Coins, plural, =1 {one coin} other {# coins}} ranks you as <say-as interpret-as=\"ordinal\">{Rank}</say-as> of {Players} players. The top {NumberOfLeaders} bankrolls are {HighScore1, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore2, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore3, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore4, plural, =0 {} other {# coins <break time=\"200ms\"/>}} {HighScore5, plural, =0 {} other {# coins <break time=\"200ms\"/>}}. Would you like to play {Game}? ",

@@ -22,6 +22,7 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    let promise;
 
     // First write out to S3
     const summary = {
@@ -39,33 +40,38 @@ module.exports = {
       Key: 'slots-upsell/' + Date.now() + '.txt',
     };
 
-    return s3.putObject(params).promise().then(() => {
-      // Publish to SNS if the action was accepted so we know something happened
-      if (process.env.SNSTOPIC &&
-        (event.request.payload.purchaseResult === 'ACCEPTED')) {
-        let message;
+    if (process.env.SNSTOPIC) {
+      promise = s3.putObject(params).promise().then(() => {
+        // Publish to SNS if the action was accepted so we know something happened
+        if (event.request.payload.purchaseResult === 'ACCEPTED') {
+          let message;
 
-        // This message is sent internally so no worries about localizing
-        message = 'For token ' + event.request.token + ', ';
-        if (event.request.payload.message) {
-          message += event.request.payload.message;
+          // This message is sent internally so no worries about localizing
+          message = 'For token ' + event.request.token + ', ';
+          if (event.request.payload.message) {
+            message += event.request.payload.message;
+          } else {
+            message += event.request.name + ' was accepted';
+          }
+          message += ' by user ' + event.session.user.userId;
+          if (attributes.upsellSelection) {
+            message += '\nUpsell variant ' + attributes.upsellSelection + ' was presented. ';
+          }
+
+          return SNS.publish({
+            Message: message,
+            TopicArn: process.env.SNSTOPIC,
+            Subject: 'Slot Machine New Purchase',
+          }).promise();
         } else {
-          message += event.request.name + ' was accepted';
+          return;
         }
-        message += ' by user ' + event.session.user.userId;
-        if (attributes.upsellSelection) {
-          message += '\nUpsell variant ' + attributes.upsellSelection + ' was presented. ';
-        }
+      });
+    } else {
+      promise = Promise.resolve();
+    }
 
-        return SNS.publish({
-          Message: message,
-          TopicArn: process.env.SNSTOPIC,
-          Subject: 'Slot Machine New Purchase',
-        }).promise();
-      } else {
-        return;
-      }
-    }).then(() => {
+    return promise.then(() => {
       // Launch processing will handle updating the bankroll as necessary
       // We just need to check if they declined an upsell request
       // to avoid an infinite loop

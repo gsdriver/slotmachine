@@ -79,10 +79,14 @@ module.exports = {
     }).then((adText) => {
       if (attributes.temp.addingReminder) {
         attributes.temp.speechParams.RemainingTime = adText;
-        return handlerInput.jrb
-          .speak(ri('EXIT_REMINDER', attributes.temp.speechParams))
-          .reprompt(ri('EXIT_REMINDER_REPROMPT'))
-          .getResponse();
+        return utils.getLocalTournamentTime(handlerInput).then((result) => {
+          attributes.temp.speechParams.Time = result.time;
+          attributes.temp.speechParams.Timezone = result.timezone;
+          return handlerInput.jrb
+            .speak(ri('EXIT_REMINDER', attributes.temp.speechParams))
+            .reprompt(ri('EXIT_REMINDER_REPROMPT'))
+            .getResponse();
+        });
       } else {
         attributes.temp.speechParams.Ad = adText;
         return handlerInput.jrb

@@ -906,7 +906,7 @@ module.exports = {
         status: 'ENABLED',
       };
       const params = {
-        url: 'https://api.amazonalexa.com/v1/alerts/reminders',
+        url: event.context.System.apiEndpoint + '/v1/alerts/reminders',
         method: 'POST',
         headers: {
           'Authorization': 'bearer ' + event.context.System.apiAccessToken,
@@ -923,6 +923,7 @@ module.exports = {
     })
     .catch((err) => {
       console.log('SetReminder error ' + err.error.code);
+      console.log('SetReminder alert: ' + JSON.stringify(alert));
       return err.error.code;
     });
   },
@@ -933,7 +934,7 @@ module.exports = {
     // Invoke the reminders API to load active reminders
     const event = handlerInput.requestEnvelope;
     const options = {
-      uri: 'https://api.amazonalexa.com/v1/alerts/reminders',
+      uri: event.context.System.apiEndpoint + '/v1/alerts/reminders',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -966,6 +967,7 @@ module.exports = {
     })
     .catch((err) => {
       console.log('isReminderActive error ' + err.error);
+      console.log('isReminderActive request: ' + JSON.stringify(options));
       return false;
     });
   },
@@ -1091,12 +1093,6 @@ function getTournamentTimes(leaveUTC) {
           end.setDate(end.getDate() + 7);
         }
 
-        if (leaveUTC) {
-          start.setMinutes(start.getMinutes() + tzOffset);
-          end.setMinutes(end.getMinutes() + tzOffset);
-          d.setMinutes(d.getMinutes() + tzOffset);
-        }
-
         // OK, if the end is closer to d than the previous candidate
         // we'll use that as the tournament time
         if (!retVal.end || ((end - d) < (retVal.end - retVal.now))) {
@@ -1106,6 +1102,12 @@ function getTournamentTimes(leaveUTC) {
         }
       }
     });
+
+    if (leaveUTC && retVal.start) {
+      retVal.start.setMinutes(retVal.start.getMinutes() + tzOffset);
+      retVal.end.setMinutes(retVal.end.getMinutes() + tzOffset);
+      retVal.now.setMinutes(retVal.now.getMinutes() + tzOffset);
+    }
   }
 
   return retVal;
