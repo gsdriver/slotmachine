@@ -44,6 +44,8 @@ module.exports = {
             .getResponse();
         } else if (result === 'UNAUTHORIZED') {
           // Get their permission to show a reminder
+          // OK to prompt again next time
+          attributes.prompts.reminder = undefined;
           return handlerInput.jrb
             .speak(ri('REMINDER_GRANT_PERMISSION'))
             .withAskForPermissionsConsentCard(['alexa::alerts:reminders:skill:readwrite'])
