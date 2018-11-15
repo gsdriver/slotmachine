@@ -33,8 +33,27 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     attributes.temp.addingReminder = undefined;
-    if ((event.request.intent.name === 'AMAZON.YesIntent') ||
-      (event.request.intent.name === 'ReminderIntent')) {
+    if (event.request.intent.name === 'ReminderIntent') {
+      return utils.isReminderActive(handlerInput)
+      .then((isActive) => {
+        if (!isActive) {
+          attributes.temp.addingReminder = true;
+          return utils.getLocalTournamentTime(handlerInput).then((result) => {
+            attributes.temp.speechParams.Time = result.time;
+            attributes.temp.speechParams.Timezone = result.timezone;
+            return handlerInput.jrb
+              .speak(ri('REMINDER_SET_REMINDER', attributes.temp.speechParams))
+              .reprompt(ri('REMINDER_SET_REPROMPT'))
+              .getResponse();
+          });
+        } else {
+          return handlerInput.jrb
+            .speak(ri('REMINDER_ALREADY_SET'))
+            .reprompt(ri('REMINDER_ALREADY_SET_REPROMPT'))
+            .getResponse();
+        }
+      });
+    } else if (event.request.intent.name === 'AMAZON.YesIntent') {
       // Let's see if we can add a reminder
       return utils.setTournamentReminder(handlerInput)
       .then((result) => {

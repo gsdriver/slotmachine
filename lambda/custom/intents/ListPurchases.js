@@ -26,6 +26,7 @@ module.exports = {
       const availableProducts = [];
       const purchasedProducts = [];
       let product;
+      let speech;
 
       for (product in attributes.paid) {
         if (product && productMap[product]) {
