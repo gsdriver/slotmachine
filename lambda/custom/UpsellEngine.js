@@ -20,19 +20,7 @@ module.exports = {
   getUpsell: function(attributes, trigger) {
     let directive;
     const now = Date.now();
-    const availableProducts = [];
-
-    // Get a list of available products - if none, return
-    if (attributes.paid) {
-      let product;
-      for (product in attributes.paid) {
-        // Note we only upsell machines - not coinreset
-        if (product && (product !== 'coinreset')
-          && (attributes.paid[product].state === 'AVAILABLE')) {
-          availableProducts.push(product);
-        }
-      }
-    }
+    const availableProducts = getAvailableProducts(attributes);
 
     if (availableProducts.length === 0) {
       // There is nothing to upsell
@@ -89,10 +77,10 @@ module.exports = {
     const now = Date.now();
     let upsell = false;
     let promise;
+    const availableProducts = getAvailableProducts(attributes);
 
-    // Save if they can but haven't purchased Spanish 21
-    if ((attributes.paid && attributes.paid.spanish
-      && (attributes.paid.spanish.state === 'AVAILABLE'))
+    // Save if there are available products OR if we ended on upsell
+    if (availableProducts.length
       || (attributes.upsell && attributes.upsell.endOnUpsell)) {
       if (response.directives) {
         response.directives.forEach((directive) => {
@@ -199,8 +187,15 @@ function shouldUpsell(attributes, availableProducts, trigger, now) {
       break;
 
     case 'listpurchases':
-      // Always upsell the first available game
-      upsellProduct = availableProducts[0];
+      // Always upsell whatever was least recently upsold
+      availableProducts.forEach((product) => {
+        if (!upsellProduct ||
+          (attributes.upsell.prompts[upsellProduct]
+            && (!attributes.upsell.prompts[product]
+            || (attributes.upsell.prompts[product] < attributes.upsell.prompts[upsellProduct])))) {
+          upsellProduct = product;
+        }
+      });
       break;
 
     default:
@@ -209,4 +204,22 @@ function shouldUpsell(attributes, availableProducts, trigger, now) {
   }
 
   return upsellProduct;
+}
+
+function getAvailableProducts(attributes) {
+  const availableProducts = [];
+
+  // Get a list of available products - if none, return
+  if (attributes.paid) {
+    let product;
+    for (product in attributes.paid) {
+      // Note we only upsell machines - not coinreset
+      if (product && (product !== 'coinreset')
+        && (attributes.paid[product].state === 'AVAILABLE')) {
+        availableProducts.push(product);
+      }
+    }
+  }
+
+  return availableProducts;
 }

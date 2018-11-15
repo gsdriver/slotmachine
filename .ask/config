@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v9"
               }
             }
           }
@@ -37,18 +37,7 @@
           "de-DE": {
             "eTag": "90b196e50b7d055cf03766c88df52583"
           }
-        },
-        "lambda": [
-          {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test",
-            "awsRegion": "us-east-1",
-            "alexaUsage": [
-              "custom/default"
-            ],
-            "revisionId": "a915b85b-04c5-43e0-afef-a31862a9ed89"
-          }
-        ]
+        }
       },
       "in_skill_products": [
         {

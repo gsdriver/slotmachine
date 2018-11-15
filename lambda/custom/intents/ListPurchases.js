@@ -44,15 +44,13 @@ module.exports = {
         speech = 'LISTPURCHASES_PURCHASED';
       } else if (availableProducts.length > 0) {
         // Let's upsell them!
-        directive = upsell.getUpsell(attributes, 'listpurchases');
+        const directive = upsell.getUpsell(attributes, 'listpurchases');
         if (directive) {
-          if (directive) {
-            directive.token = 'machine.' + directive.token + '.launch';
-            return handlerInput.responseBuilder
-              .addDirective(directive)
-              .withShouldEndSession(true)
-              .getResponse();
-          }
+          directive.token = 'machine.' + directive.token + '.launch';
+          return handlerInput.responseBuilder
+            .addDirective(directive)
+            .withShouldEndSession(true)
+            .getResponse();
         } else {
           speech = 'LISTPURCHASES_NONE';
         }
