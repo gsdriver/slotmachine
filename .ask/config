@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v8"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v9"
               }
             }
           }
@@ -16,39 +16,28 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "6bc691ff010b93cb9c2aa7531abee4e7"
+          "eTag": "f3a4af66d04c3ceb1795d461a789a8ba"
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "fb75abab96f9ae7c5971dca3cfbb5e03"
+            "eTag": "7cf87c019162a02330b3c869a34a20b8"
           },
           "en-GB": {
-            "eTag": "9ad29350ec426e3269b307404abbe8a8"
+            "eTag": "be5d58bd2fee41d7d98066b5e71fc36e"
           },
           "en-CA": {
-            "eTag": "fb75abab96f9ae7c5971dca3cfbb5e03"
+            "eTag": "7cf87c019162a02330b3c869a34a20b8"
           },
           "en-US": {
-            "eTag": "22074c0813707f85ed5b70a7e58fc212"
+            "eTag": "9aaf222624a5a563d290567efec5bf6a"
           },
           "en-IN": {
-            "eTag": "fb75abab96f9ae7c5971dca3cfbb5e03"
+            "eTag": "7cf87c019162a02330b3c869a34a20b8"
           },
           "de-DE": {
             "eTag": "90b196e50b7d055cf03766c88df52583"
           }
-        },
-        "lambda": [
-          {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v8",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v8",
-            "awsRegion": "us-east-1",
-            "alexaUsage": [
-              "custom/default"
-            ],
-            "revisionId": "5138d032-d283-4711-8bf1-a3c7566f3fd0"
-          }
-        ]
+        }
       },
       "in_skill_products": [
         {

@@ -131,6 +131,18 @@
           ]
         },
         {
+          "name": "ListPurchasesIntent",
+          "slots": [],
+          "samples": [
+            "what did I buy",
+            "what have I bought",
+            "what have I purchased",
+            "tell me what I bought",
+            "tell me what I purchased",
+            "list the products I bought"
+          ]
+        },
+        {
           "name": "RefundIntent",
           "slots": [
             {
@@ -142,6 +154,17 @@
             "return {Product}",
             "refund {Product}",
             "cancel {Product}"
+          ]
+        },
+        {
+          "name": "ReminderIntent",
+          "slots": [],
+          "samples": [
+            "set a reminder for the tournament",
+            "set a reminder",
+            "remind me for the tournament",
+            "notify me for the tournament",
+            "alert me for the tournament"
           ]
         },
         {

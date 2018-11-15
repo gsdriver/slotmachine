@@ -58,11 +58,6 @@ module.exports = {
             attributes.temp.speechParams.Amount = bankroll;
             return utils.getRemainingTournamentTime(handlerInput).then((text) => {
               attributes.temp.speechParams.Time = text;
-              return handlerInput.jrb
-                .speak(ri(speech, attributes.temp.speechParams))
-                .reprompt(ri('HELP_REPROMPT'))
-                .withSimpleCard(ri('HELP_CARD_TITLE'), ri('HELP_CARD_PAYOUT_TABLE', cardParams))
-                .getResponse();
             });
           } else {
             speech = 'HELP_NO_TOURNAMENT';
@@ -70,18 +65,16 @@ module.exports = {
           }
 
           if (!attributes.temp.tournamentAvailable) {
-            return utils.getLocalTournamentTime(handlerInput);
-          } else {
-            return;
+            return utils.getLocalTournamentTime(handlerInput).then((result) => {
+              if (result) {
+                speech = 'HELP_UPCOMING_TOURNAMENT';
+                attributes.temp.speechParams.Time = result.time;
+                attributes.temp.speechParams.Timezone = result.timezone;
+                attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
+              }
+            });
           }
-        }).then((result) => {
-          if (result) {
-            speech = 'HELP_UPCOMING_TOURNAMENT';
-            attributes.temp.speechParams.Time = result.time;
-            attributes.temp.speechParams.Timezone = result.timezone;
-            attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
-          }
-
+        }).then(() => {
           return handlerInput.jrb
             .speak(ri(speech, attributes.temp.speechParams))
             .reprompt(ri('HELP_REPROMPT'))

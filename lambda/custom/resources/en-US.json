@@ -9,6 +9,9 @@
     },
     "token": "subscribe.coinreset.launch"
   },
+  "LISTPURCHASES_PURCHASED": "You have purchased {Products}.  What else can I help you with?",
+  "LISTPURCHASES_NONE": "You haven't purchased any products for Slot Machine. What else can I help you with?",
+  "LISTPURCHASES_REPROMPT": "What else can I help you with?",
   "PURCHASE_PRODUCT_LIST": {
     "coinreset": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins",
     "crazydiamond": "a Crazy Diamond machine with wild diamond symbols",
@@ -19,16 +22,6 @@
   "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
   "PURCHASE_NO_PURCHASE": "What else can I help you with?",
   "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",
-  "SELECT_UPSELL": {
-    "v1": "We have {Game} machine available for purchase. Want to learn more?",
-    "v2": "We're proud to introduce {Game} machine now available for purchase. Would you like to hear more about it?",
-    "v3": "In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?"
-  },
-  "SPIN_UPSELL": {
-    "v1": "I see you've played {CurrentGame} a lot today. We now have {Game} available for purchase. Want to learn more?",
-    "v2": "We're glad to see you've been enjoying {CurrentGame}. We're proud to introduce {Game} now available for purchase. Would you like to hear more about it?",
-    "v3": "In addition to machines like {CurrentGame}, we're proud to introduce {Game} now available for purchase. Are you interested in hearing more about it?"
-  },
   "SPIN_LOSER_BUSTED_UPSELL": {
     "type": "Connections.SendRequest",
     "name": "Upsell",

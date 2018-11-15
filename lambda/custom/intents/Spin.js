@@ -8,6 +8,7 @@ const utils = require('../utils');
 const request = require('request');
 const seedrandom = require('seedrandom');
 const buttons = require('../buttons');
+const upsell = require('../UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -34,6 +35,18 @@ module.exports = {
       return true;
     }
 
+    // Game 99 is a special case that we don't handle
+    if ((request.type === 'IntentRequest') && (request.intent.name === 'GameIntent')) {
+      // It has to be game 99 that you are selecting
+      if (request.intent.slots && request.intent.slots.Number
+        && request.intent.slots.Number.value) {
+        const game = parseInt(request.intent.slots.Number.value);
+        if (game === 99) {
+          return false;
+        }
+      }
+    }
+
     // You have several ways you can kick off a spin if you are not
     // in the middle of selecting a game
     return ((request.type === 'IntentRequest')
@@ -53,66 +66,15 @@ module.exports = {
       // First off, let's see if we should do an upsell
       // We will do this if they have played this game 10 times in a row
       // during this session and we haven't done an upsell already
-      attributes.temp.sameGameSpins = (attributes.temp.sameGameSpins + 1) || 1;
       if ((attributes.currentGame !== 'tournament')
-        && attributes.paid && !attributes.temp.noUpsellGame
-        && (attributes.temp.sameGameSpins > 10)) {
-        const now = Date.now();
-        let product;
-        let upsellProduct;
-
-        for (product in attributes.paid) {
-          if (product && (product !== 'coinreset')
-            && (attributes.paid[product].state === 'AVAILABLE')) {
-            if (!attributes.prompts[product] ||
-              ((now - attributes.prompts[product]) > 2*24*60*60*1000)) {
-                upsellProduct = product;
-            }
-          }
-        }
-
-        if (upsellProduct) {
-          return handlerInput.jrm.renderBatch([
-            ri('GAME_LIST_' + attributes.currentGame.toUpperCase()),
-            ri('GAME_LIST_' + upsellProduct.toUpperCase()),
-          ])
-          .then((gameNames) => {
-            attributes.prompts[upsellProduct] = now;
-            attributes.temp.speechParams.CurrentGame = gameNames[0];
-            attributes.temp.speechParams.Game = gameNames[1];
-            const renderItem = ri('SPIN_UPSELL', attributes.temp.speechParams);
-            let directive;
-            return handlerInput.jrm.render(renderItem).then((upsellMessage) => {
-              directive = {
-                'type': 'Connections.SendRequest',
-                'name': 'Upsell',
-                'payload': {
-                  'InSkillProduct': {
-                    productId: attributes.paid[upsellProduct].productId,
-                  },
-                  'upsellMessage': upsellMessage,
-                },
-                'token': 'machine.' + upsellProduct + '.spin',
-              };
-
-              // Get the variant that was returned
-              return handlerInput.jrm.selectedVariation(renderItem)
-              .then((variation) => {
-                return variation;
-              })
-              .catch(() => {
-                // It's OK - probably someone who changed locale
-                return {key: 'SELECT_UPSELL.v8'};
-              });
-            }).then((variation) => {
-              const options = variation.key.split('.');
-              attributes.upsellSelection = options[1];
-
-              return handlerInput.jrb.addDirective(directive)
-                .withShouldEndSession(true)
-                .getResponse();
-            });
-          });
+        && !attributes.temp.noUpsellGame) {
+        const directive = upsell.getUpsell(attributes, 'spin');
+        if (directive) {
+          directive.token = 'machine.' + directive.token + '.spin';
+          return handlerInput.responseBuilder
+            .addDirective(directive)
+            .withShouldEndSession(true)
+            .getResponse();
         }
       }
 

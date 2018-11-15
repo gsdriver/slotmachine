@@ -11,6 +11,7 @@ const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
+const rp = require('request-promise');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
 const leven = require('leven');
@@ -371,9 +372,11 @@ module.exports = {
   },
   getLocalTournamentTime: function(handlerInput) {
     const times = getTournamentTimes(true);
+    const event = handlerInput.requestEnvelope;
 
     if (times) {
       // Get the user timezone
+      moment.locale(event.request.locale);
       return getUserTimezone(handlerInput).then((timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
@@ -388,7 +391,7 @@ module.exports = {
         }
       });
     } else {
-      return Promise.resolve('');
+      return Promise.resolve();
     }
   },
   checkForTournament: function(attributes) {
@@ -862,6 +865,112 @@ module.exports = {
       return getBestMatch(productList, product.toUpperCase());
     });
   },
+  setTournamentReminder: function(handlerInput) {
+    const times = getTournamentTimes();
+    const alert = {};
+    const event = handlerInput.requestEnvelope;
+    let start = JSON.stringify(times.start);
+    let timezone;
+
+    // Lop off trailing Z from string
+    start = start.substring(1, start.length - 1);
+    if (start.substring(start.length - 1) === 'Z') {
+      start = start.substring(0, start.length - 1);
+    }
+
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      timezone = (tz) ? tz : 'America/Los_Angeles';
+      return handlerInput.jrm.render(ri('REMINDER_TEXT'));
+    }).then((reminderText) => {
+      moment.locale('en');
+      alert.requestTime = start;
+      alert.trigger = {
+        type: 'SCHEDULED_ABSOLUTE',
+        scheduledTime: start,
+        timeZoneId: timezone,
+        recurrence: {
+          freq: 'WEEKLY',
+          byDay: [moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase()],
+        },
+      };
+      alert.alertInfo = {
+        spokenInfo: {
+          content: [{
+            locale: event.request.locale,
+            text: reminderText,
+          }],
+        },
+      };
+      alert.pushNotification = {
+        status: 'ENABLED',
+      };
+      const params = {
+        url: event.context.System.apiEndpoint + '/v1/alerts/reminders',
+        method: 'POST',
+        headers: {
+          'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+        },
+        json: alert,
+      };
+
+      // Post the reminder
+      return rp(params);
+    })
+    .then((body) => {
+      // Return the local tournament time
+      return module.exports.getLocalTournamentTime(handlerInput);
+    })
+    .catch((err) => {
+      console.log('SetReminder error ' + err.error.code);
+      console.log('SetReminder alert: ' + JSON.stringify(alert));
+      return err.error.code;
+    });
+  },
+  isReminderActive: function(handlerInput) {
+    const times = getTournamentTimes();
+    let reminderDay;
+
+    // Invoke the reminders API to load active reminders
+    const event = handlerInput.requestEnvelope;
+    const options = {
+      uri: event.context.System.apiEndpoint + '/v1/alerts/reminders',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': event.request.locale,
+        'Authorization': 'bearer ' + event.context.System.apiAccessToken,
+      },
+    };
+
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      const timezone = (tz) ? tz : 'America/Los_Angeles';
+      moment.locale('en');
+      reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
+      return rp(options);
+    }).then((body) => {
+      // Return the local tournament time
+      console.log('isReminderActive ' + body);
+      const alerts = JSON.parse(body);
+      let isActive = false;
+      if (alerts && alerts.alerts) {
+        alerts.alerts.forEach((alert) => {
+          if ((alert.status === 'ON') && alert.trigger && alert.trigger.recurrence
+            && alert.trigger.recurrence.byDay
+            && (alert.trigger.recurrence.byDay[0] === reminderDay)) {
+            isActive = true;
+          }
+        });
+      }
+      return isActive;
+    })
+    .catch((err) => {
+      console.log('isReminderActive error ' + err.error);
+      console.log('isReminderActive request: ' + JSON.stringify(options));
+      return false;
+    });
+  },
   estimateDuration: function(speech) {
     let duration = 0;
     let text = speech;
@@ -984,12 +1093,6 @@ function getTournamentTimes(leaveUTC) {
           end.setDate(end.getDate() + 7);
         }
 
-        if (leaveUTC) {
-          start.setMinutes(start.getMinutes() + tzOffset);
-          end.setMinutes(end.getMinutes() + tzOffset);
-          d.setMinutes(d.getMinutes() + tzOffset);
-        }
-
         // OK, if the end is closer to d than the previous candidate
         // we'll use that as the tournament time
         if (!retVal.end || ((end - d) < (retVal.end - retVal.now))) {
@@ -999,6 +1102,12 @@ function getTournamentTimes(leaveUTC) {
         }
       }
     });
+
+    if (leaveUTC && retVal.start) {
+      retVal.start.setMinutes(retVal.start.getMinutes() + tzOffset);
+      retVal.end.setMinutes(retVal.end.getMinutes() + tzOffset);
+      retVal.now.setMinutes(retVal.now.getMinutes() + tzOffset);
+    }
   }
 
   return retVal;

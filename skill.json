@@ -134,6 +134,11 @@
         ]
       }
     },
+    "permissions": [
+      {
+        "name": "alexa::alerts:reminders:skill:readwrite"
+      }
+    ],
     "manifestVersion": "1.0",
     "privacyAndCompliance": {
       "allowsPurchases": false,
