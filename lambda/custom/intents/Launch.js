@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const buttons = require('../buttons');
+const upsell = require('../UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -18,6 +19,18 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let response;
     let speech = 'LAUNCH';
+
+    // Check first for an upsell
+    if (!attributes.temp.resumeGame) {
+      const directive = upsell.getUpsell(attributes, 'launch');
+      if (directive) {
+        directive.token = 'machine.' + directive.token + '.launch';
+        return handlerInput.responseBuilder
+          .addDirective(directive)
+          .withShouldEndSession(true)
+          .getResponse();
+      }
+    }
 
     return utils.getGreeting(handlerInput)
     .then((greeting) => {

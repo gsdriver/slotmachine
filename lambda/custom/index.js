@@ -18,6 +18,7 @@ const Select = require('./intents/Select');
 const SelectYes = require('./intents/SelectYes');
 const SelectNo = require('./intents/SelectNo');
 const Purchase = require('./intents/Purchase');
+const ListPurchases = require('./intents/ListPurchases');
 const Refund = require('./intents/Refund');
 const Reminder = require('./intents/Reminder');
 const ProductResponse = require('./intents/ProductResponse');
@@ -266,6 +267,7 @@ function runGame(event, context, callback) {
       Reprompt,
       Reminder,
       Purchase,
+      ListPurchases,
       Refund,
       HighScore,
       Rules,

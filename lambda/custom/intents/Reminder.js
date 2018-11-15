@@ -20,6 +20,9 @@ module.exports = {
         || (request.intent.name === 'AMAZON.NoIntent'))) {
       return true;
     }
+    if ((request.type === 'IntentRequest') && (request.intent.name === 'ReminderIntent')) {
+      return true;
+    }
 
     // Never mind, cancel the request for a reminder
     attributes.temp.addingReminder = undefined;
@@ -30,7 +33,8 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     attributes.temp.addingReminder = undefined;
-    if (event.request.intent.name === 'AMAZON.YesIntent') {
+    if ((event.request.intent.name === 'AMAZON.YesIntent') ||
+      (event.request.intent.name === 'ReminderIntent')) {
       // Let's see if we can add a reminder
       return utils.setTournamentReminder(handlerInput)
       .then((result) => {
