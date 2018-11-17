@@ -132,7 +132,7 @@ module.exports = {
 
         // For a new user, just tell them to bet or say spin (which places a bet)
         if (attributes.newUser) {
-          speech = (buttons.supportButtons(handlerInput))
+          speech = mentionButton(handlerInput)
             ? 'LAUNCH_NEWUSER_BUTTON'
             : 'LAUNCH_NEWUSER';
           response = handlerInput.jrb
@@ -141,7 +141,7 @@ module.exports = {
             .getResponse();
           return 'continue';
         } else if (attributes.temp.resumeGame) {
-          speech = (buttons.supportButtons(handlerInput))
+          speech = (mentionButton(handlerInput))
             ? 'LAUNCH_RESUME_GAME_BUTTON'
             : 'LAUNCH_RESUME_GAME';
           attributes.temp.resumeGame = undefined;
@@ -178,7 +178,7 @@ module.exports = {
         .then((game) => {
           attributes.temp.repromptParams.Game = game;
           Object.assign(attributes.temp.speechParams, attributes.temp.repromptParams);
-          if (buttons.supportButtons(handlerInput)) {
+          if (mentionButton(handlerInput)) {
             speech += '_BUTTON';
             attributes.temp.speechParams.Game1 = game;
             attributes.temp.speechParams.Game2 = game;
@@ -193,3 +193,19 @@ module.exports = {
     });
   },
 };
+
+function mentionButton(handlerInput) {
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  const now = Date.now();
+  let retVal = false;
+
+  if (buttons.supportButtons(handlerInput)) {
+    if (!attributes.prompts.useButton ||
+      ((now - attributes.prompts.useButton) > 4*24*60*60*1000)) {
+      retVal = true;
+      attributes.prompts.useButton = now;
+    }
+  }
+
+  return retVal;
+}

@@ -9,8 +9,8 @@
     "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Let's play Slot Machine! Want to play {Game}? "
   },
   "LAUNCH_BUTTON": {
-    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Welcome back to Slot Machine. If you have an Echo Button, press it to play {Game1} <break time=\"200ms\"/> You can also say spin to play {Game2} or no to pick a different machine.",
-    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Let's play Slot Machine! If you have an Echo Button, press it to play {Game1} <break time=\"200ms\"/> You can also say spin to play {Game2} or no to pick a different machine."
+    "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Welcome back to Slot Machine. Say spin or press an Echo Button to play {Game} <break time=\"200ms\"/> or no to pick a different machine.",
+    "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Let's play Slot Machine! Say spin or press an Echo Button to play {Game} <break time=\"200ms\"/> or no to pick a different machine."
   },
   "LAUNCH_TOURNAMENT": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Welcome back to Slot Machine. You came at a good time <break time=\"300ms\"/> we've got a tournament for the next {Time}. Would you like to join?",
   "LAUNCH_TOURNAMENT_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Let's play Slot Machine! <break time=\"300ms\"/> We've got a tournament for the next {Time}. Say spin or press an Echo Button to join in.",

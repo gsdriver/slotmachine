@@ -380,7 +380,7 @@ module.exports = {
       return getUserTimezone(handlerInput).then((timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
-        const result = moment.tz(times.start.getTime(), tz).format('dddd h a');
+        const result = moment.tz(times.start.getTime(), tz).format('dddd h:mm a');
 
         if (useDefaultTimezone) {
           return handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
@@ -869,20 +869,17 @@ module.exports = {
     const times = getTournamentTimes();
     const alert = {};
     const event = handlerInput.requestEnvelope;
-    let start = JSON.stringify(times.start);
-    let timezone;
+    const timezone = 'America/Los_Angeles';
 
-    // Lop off trailing Z from string
-    start = start.substring(1, start.length - 1);
+    // Snap back a week and lop off trailing Z from string
+    times.start.setDate(times.start.getDate() - 7);
+    let start = times.start.toISOString();
     if (start.substring(start.length - 1) === 'Z') {
       start = start.substring(0, start.length - 1);
     }
 
-    return getUserTimezone(handlerInput)
-    .then((tz) => {
-      timezone = (tz) ? tz : 'America/Los_Angeles';
-      return handlerInput.jrm.render(ri('REMINDER_TEXT'));
-    }).then((reminderText) => {
+    return handlerInput.jrm.render(ri('REMINDER_TEXT'))
+    .then((reminderText) => {
       moment.locale('en');
       alert.requestTime = start;
       alert.trigger = {
@@ -929,7 +926,6 @@ module.exports = {
   },
   isReminderActive: function(handlerInput) {
     const times = getTournamentTimes();
-    let reminderDay;
 
     // Invoke the reminders API to load active reminders
     const event = handlerInput.requestEnvelope;
@@ -943,13 +939,10 @@ module.exports = {
       },
     };
 
-    return getUserTimezone(handlerInput)
-    .then((tz) => {
-      const timezone = (tz) ? tz : 'America/Los_Angeles';
-      moment.locale('en');
-      reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
-      return rp(options);
-    }).then((body) => {
+    const timezone = 'America/Los_Angeles';
+    moment.locale('en');
+    const reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
+    return rp(options).then((body) => {
       // Return the local tournament time
       console.log('isReminderActive ' + body);
       const alerts = JSON.parse(body);
