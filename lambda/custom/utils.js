@@ -865,11 +865,11 @@ module.exports = {
       return getBestMatch(productList, product.toUpperCase());
     });
   },
-  setTournamentReminder: function(handlerInput) {
+  setTournamentReminder: function(handlerInput, endSession) {
     const times = getTournamentTimes();
     const alert = {};
     const event = handlerInput.requestEnvelope;
-    const timezone = 'America/Los_Angeles';
+    let timezone;
 
     // Snap back a week and lop off trailing Z from string
     times.start.setDate(times.start.getDate() - 7);
@@ -878,8 +878,11 @@ module.exports = {
       start = start.substring(0, start.length - 1);
     }
 
-    return handlerInput.jrm.render(ri('REMINDER_TEXT'))
-    .then((reminderText) => {
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      timezone = (tz) ? tz : 'America/Los_Angeles';
+      return handlerInput.jrm.render(ri('REMINDER_TEXT'));
+    }).then((reminderText) => {
       moment.locale('en');
       alert.requestTime = start;
       alert.trigger = {
@@ -926,6 +929,7 @@ module.exports = {
   },
   isReminderActive: function(handlerInput) {
     const times = getTournamentTimes();
+    let reminderDay;
 
     // Invoke the reminders API to load active reminders
     const event = handlerInput.requestEnvelope;
@@ -939,10 +943,13 @@ module.exports = {
       },
     };
 
-    const timezone = 'America/Los_Angeles';
-    moment.locale('en');
-    const reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
-    return rp(options).then((body) => {
+    return getUserTimezone(handlerInput)
+    .then((tz) => {
+      const timezone = (tz) ? tz : 'America/Los_Angeles';
+      moment.locale('en');
+      reminderDay = moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase();
+      return rp(options);
+    }).then((body) => {
       // Return the local tournament time
       console.log('isReminderActive ' + body);
       const alerts = JSON.parse(body);

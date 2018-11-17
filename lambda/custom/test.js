@@ -22,6 +22,7 @@ function BuildEvent(argv)
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var game = {'name': 'GameIntent', 'slots': {'Number': {'name': 'Number', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
+  var reminder = {'name': 'ReminderIntent', 'slots': {}};
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
   var no = {'name': 'AMAZON.NoIntent', 'slots': {}};
   var help = {'name': 'AMAZON.HelpIntent', 'slots': {}};
@@ -351,6 +352,8 @@ function BuildEvent(argv)
     }
   } else if (argv[2] == 'spin') {
     lambda.request.intent = spin;
+  } else if (argv[2] == 'reminder') {
+    lambda.request.intent = reminder;
   } else if (argv[2] == 'select') {
     lambda.request.intent = select;
   } else if (argv[2] == 'launch') {

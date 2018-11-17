@@ -31,13 +31,15 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const endSession = (attributes.temp.addingReminder === 'onexit');
+    let response;
 
     attributes.temp.addingReminder = undefined;
     if (event.request.intent.name === 'ReminderIntent') {
       return utils.isReminderActive(handlerInput)
       .then((isActive) => {
         if (!isActive) {
-          attributes.temp.addingReminder = true;
+          attributes.temp.addingReminder = 'explicit';
           return utils.getLocalTournamentTime(handlerInput).then((result) => {
             attributes.temp.speechParams.Time = result.time;
             attributes.temp.speechParams.Timezone = result.timezone;
@@ -55,33 +57,54 @@ module.exports = {
       });
     } else if (event.request.intent.name === 'AMAZON.YesIntent') {
       // Let's see if we can add a reminder
-      return utils.setTournamentReminder(handlerInput)
+      return utils.setTournamentReminder(handlerInput, endSession)
       .then((result) => {
         if (typeof result !== 'string') {
           attributes.setReminder = true;
           attributes.temp.speechParams.Time = result.time;
           attributes.temp.speechParams.Timezone = result.timezone;
-          return handlerInput.jrb
-            .speak(ri('REMINDER_SET', attributes.temp.speechParams))
-            .withShouldEndSession(true)
-            .getResponse();
+          if (endSession) {
+            response = handlerInput.jrb
+              .speak(ri('REMINDER_SET', attributes.temp.speechParams))
+              .withShouldEndSession(true)
+              .getResponse();
+          } else {
+            response = handlerInput.jrb
+              .speak(ri('REMINDER_SET_EXPLICIT', attributes.temp.speechParams))
+              .reprompt(ri('REMINDER_REPROMPT'))
+              .getResponse();
+          }
         } else if (result === 'UNAUTHORIZED') {
           // Get their permission to show a reminder
-          // OK to prompt again next time
+          // We will end the session and prompt again
           attributes.prompts.reminder = undefined;
-          return handlerInput.jrb
+          response = handlerInput.jrb
             .speak(ri('REMINDER_GRANT_PERMISSION'))
             .withAskForPermissionsConsentCard(['alexa::alerts:reminders:skill:readwrite'])
             .withShouldEndSession(true)
             .getResponse();
         } else {
           // Some other problem not auth-related
-          return handlerInput.jrb
-            .speak(ri('REMINDER_ERROR'))
-            .withShouldEndSession(true)
-            .getResponse();
+          if (endSession) {
+            response = handlerInput.jrb
+              .speak(ri('REMINDER_ERROR_EXPLICIT'))
+              .withShouldEndSession(true)
+              .getResponse();
+          } else {
+            response = handlerInput.jrb
+              .speak(ri('REMINDER_ERROR'))
+              .reprompt(ri('REMINDER_REPROMPT'))
+              .getResponse();
+          }
         }
+
+        return response;
       });
+    } else if (!endSession) {
+      return handlerInput.jrb
+        .speak(ri('REMINDER_REPROMPT'))
+        .reprompt(ri('REMINDER_REPROMPT'))
+        .getResponse();
     } else {
       // They were exiting anyway - let's leave
       return ads.getAd(attributes, 'slots', event.request.locale)

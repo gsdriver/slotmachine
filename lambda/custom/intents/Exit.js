@@ -71,7 +71,7 @@ module.exports = {
           if (!isActive) {
             // We are going to go into reminder mode!
             attributes.prompts.reminder = now;
-            attributes.temp.addingReminder = true;
+            attributes.temp.addingReminder = 'onexit';
           }
           return timeLeft;
         });
