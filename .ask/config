@@ -20,35 +20,24 @@
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "7cf87c019162a02330b3c869a34a20b8"
+            "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "en-GB": {
-            "eTag": "be5d58bd2fee41d7d98066b5e71fc36e"
+            "eTag": "375d1cd852e58995c8cbecc3b8331a7c"
           },
           "en-CA": {
-            "eTag": "7cf87c019162a02330b3c869a34a20b8"
+            "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "en-US": {
-            "eTag": "9aaf222624a5a563d290567efec5bf6a"
+            "eTag": "9887a4b27781d279cd72074d8ebcc087"
           },
           "en-IN": {
-            "eTag": "7cf87c019162a02330b3c869a34a20b8"
+            "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "de-DE": {
-            "eTag": "90b196e50b7d055cf03766c88df52583"
+            "eTag": "0c31558d0d8572b06e30874dc8d77a7e"
           }
-        },
-        "lambda": [
-          {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v9",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v9",
-            "awsRegion": "us-east-1",
-            "alexaUsage": [
-              "custom/default"
-            ],
-            "revisionId": "04714354-4e2b-4f85-9152-c35809554678"
-          }
-        ]
+        }
       },
       "in_skill_products": [
         {

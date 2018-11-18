@@ -9,6 +9,11 @@
 //  3. When asking to select a new game
 //  4. When listing a set of purchased products with none purchased
 //
+// Versions for analysis:
+//  v1.0 (not set) - no upsell on launch, upsell on select every 2 days, spin after 10 spins
+//  v1.1 - upsell on launch every three days, upsell on select every day, not on spin
+//         Also adds version and number of sessions instead of newUser
+//
 
 'use strict';
 
@@ -31,8 +36,9 @@ module.exports = {
     if (!attributes.upsell) {
       attributes.upsell = {};
       attributes.upsell.prompts = {};
-      attributes.upsell.newUser = true;
+      attributes.upsell.sessions = 0;
     }
+    attributes.upsell.version = '1.1';
     if (!attributes.upsell[trigger]) {
       attributes.upsell[trigger] = {};
     }
@@ -47,6 +53,7 @@ module.exports = {
     // will help us see the full session length
     if (!attributes.upsell.start) {
       attributes.upsell.start = now;
+      attributes.upsell.sessions = (attributes.upsell.sessions + 1) || 1;
     }
 
     attributes.upsell[trigger].trigger = now;
@@ -111,10 +118,12 @@ module.exports = {
           promise = s3.putObject(params).promise();
         }
 
-        // Clear everything except the prompts data
+        // Clear everything except the prompts and sessions data
         const prompts = JSON.parse(JSON.stringify(attributes.upsell.prompts));
+        const sessions = attributes.upsell.sessions;
         attributes.upsell = {};
         attributes.upsell.prompts = prompts;
+        attributes.upsell.sessions = sessions;
         attributes.upsell.lastSession = now;
       }
     }
@@ -133,7 +142,7 @@ function selectUpsellMessage(attributes, game, message) {
   // Store upsell messages locally
   // These aren't localized outside of en-US anyway
   const upsellMessages = {
-    'LAUNCH_UPSELL': 'Hello, welcome to Slot Machine. We now have {Game} available for purchase. Want to learn more?|Hi, welcome to Slot Machine. We\'re proud to introduce a new machine with {Game}! Want to hear more about it?|Welcome back to Slot Machine. We have {Game} available for purchase. Want to learn more?',
+    'LAUNCH_UPSELL': 'Hello, welcome to Slot Machine. We now have {Game} available for purchase. Want to learn more?|Hi, welcome to Slot Machine. We\'re proud to introduce {Game} now available for purchase! Want to hear more about it?|Welcome back to Slot Machine. In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
     'SELECT_UPSELL': 'We have {Game} machine available for purchase. Want to learn more?|We\'re proud to introduce {Game} machine now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
     'SPIN_UPSELL': 'Thanks for playing. We now have {Game} available for purchase. Want to learn more?|We\'re glad to see you\'ve been enjoying Slot Machine. We\'re proud to introduce {Game} now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we\'re proud to introduce {Game} now available for purchase. Are you interested in hearing more about it?',
     'LISTPURCHASES_UPSELL': 'You don\'t have any products purchased, but we have {Game} available. Want to learn more?|You haven\'t purchased any products, but we have {Game} available for purchase. Would you like to hear more?|You haven\'t bought any products yet, but we have {Game} available for purchase. Want to hear more?',
@@ -157,33 +166,31 @@ function shouldUpsell(attributes, availableProducts, trigger, now) {
 
   switch (trigger) {
     case 'launch':
-      // Currently never upsell
+      // Upsell once every three days, after their third time playing
+      if (attributes.upsell.sessions > 2) {
+        availableProducts.forEach((product) => {
+          if (!attributes.upsell.prompts[product] ||
+            ((now - attributes.upsell.prompts[product]) > 3*24*60*60*1000)) {
+              upsellProduct = product;
+          }
+        });
+      }
       break;
 
     case 'select':
       // Go through and see if there is a machine we can offer as upsell
-      // We only offer each machine once every two days
+      // We only offer each machine once per day
       // So as not to annoy our customers too much
       availableProducts.forEach((product) => {
         if (!attributes.upsell.prompts[product] ||
-          ((now - attributes.upsell.prompts[product]) > 2*24*60*60*1000)) {
+          ((now - attributes.upsell.prompts[product]) > 24*60*60*1000)) {
             upsellProduct = product;
         }
       });
       break;
 
     case 'spin':
-      // We upsell a machine after 10 spins
-      // And only once every two days for a specific machine
-      if (attributes.upsell.spin.count === 10) {
-        // OK, let's check if any products are available to upsell
-        availableProducts.forEach((product) => {
-          if (!attributes.upsell.prompts[product] ||
-            ((now - attributes.upsell.prompts[product]) > 2*24*60*60*1000)) {
-              upsellProduct = product;
-          }
-        });
-      }
+      // We no longer upsell on spin (it's on launch instead)
       break;
 
     case 'listpurchases':
