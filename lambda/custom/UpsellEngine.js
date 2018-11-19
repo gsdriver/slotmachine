@@ -13,6 +13,7 @@
 //  v1.0 (not set) - no upsell on launch, upsell on select every 2 days, spin after 10 spins
 //  v1.1 - upsell on launch every three days, upsell on select every day, not on spin
 //         Also adds version and number of sessions instead of newUser
+//  v1.2 - adds sold field
 //
 
 'use strict';
@@ -38,7 +39,7 @@ module.exports = {
       attributes.upsell.prompts = {};
       attributes.upsell.sessions = 0;
     }
-    attributes.upsell.version = '1.1';
+    attributes.upsell.version = '1.2';
     if (!attributes.upsell[trigger]) {
       attributes.upsell[trigger] = {};
     }
@@ -54,6 +55,7 @@ module.exports = {
     if (!attributes.upsell.start) {
       attributes.upsell.start = now;
       attributes.upsell.sessions = (attributes.upsell.sessions + 1) || 1;
+      attributes.upsell.availableProducts = availableProducts;
     }
 
     attributes.upsell[trigger].trigger = now;
@@ -91,7 +93,8 @@ module.exports = {
       || (attributes.upsell && attributes.upsell.endOnUpsell)) {
       if (response.directives) {
         response.directives.forEach((directive) => {
-          if ((directive.type === 'Connections.SendRequest') && (directive.name === 'Upsell')) {
+          if ((directive.type === 'Connections.SendRequest') &&
+            ((directive.name === 'Upsell') || (directive.name === 'Buy'))) {
             upsell = true;
             attributes.upsell.endOnUpsell = true;
           }
@@ -106,6 +109,11 @@ module.exports = {
           attributes.upsell = {};
         }
         attributes.upsell.end = now;
+
+        // If available product list has changed, it means an upsell happened!
+        attributes.upsell.sold = (attributes.upsell.availableProducts &&
+          (availableProducts.length < attributes.upsell.availableProducts.length));
+        attributes.upsell.availableProducts = undefined;
 
         // Save to S3 - if we are saving data
         if (process.env.SNSTOPIC) {
