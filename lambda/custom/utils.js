@@ -872,7 +872,6 @@ module.exports = {
     let timezone;
 
     // Snap back a week and lop off trailing Z from string
-    times.start.setDate(times.start.getDate() - 7);
     let start = times.start.toISOString();
     if (start.substring(start.length - 1) === 'Z') {
       start = start.substring(0, start.length - 1);
@@ -889,10 +888,6 @@ module.exports = {
         type: 'SCHEDULED_ABSOLUTE',
         scheduledTime: start,
         timeZoneId: timezone,
-        recurrence: {
-          freq: 'WEEKLY',
-          byDay: [moment.tz(times.start.getTime(), timezone).format('dd').toUpperCase()],
-        },
       };
       alert.alertInfo = {
         spokenInfo: {

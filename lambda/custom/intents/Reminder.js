@@ -59,6 +59,7 @@ module.exports = {
       // Let's see if we can add a reminder
       return utils.setTournamentReminder(handlerInput, endSession)
       .then((result) => {
+        attributes.prompts.reminder = undefined;
         if (typeof result !== 'string') {
           attributes.setReminder = true;
           attributes.temp.speechParams.Time = result.time;
@@ -77,7 +78,6 @@ module.exports = {
         } else if (result === 'UNAUTHORIZED') {
           // Get their permission to show a reminder
           // We will end the session and prompt again
-          attributes.prompts.reminder = undefined;
           response = handlerInput.jrb
             .speak(ri('REMINDER_GRANT_PERMISSION'))
             .withAskForPermissionsConsentCard(['alexa::alerts:reminders:skill:readwrite'])

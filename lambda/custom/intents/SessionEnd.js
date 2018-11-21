@@ -6,6 +6,9 @@
 
 const buttons = require('../buttons');
 const upsell = require('../UpsellEngine');
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 module.exports = {
   canHandle(handlerInput) {
@@ -27,6 +30,23 @@ module.exports = {
     // Clear and persist attributes
     return upsell.saveSession(handlerInput)
     .then(() => {
+      if (attributes.temp.spinButton || attributes.temp.spinNoButton) {
+        const data = {
+          length: Date.now() - attributes.temp.sessionStart,
+          locale: handlerInput.requestEnvelope.request.locale,
+          spinButton: attributes.temp.spinButton,
+          spinNoButton: attributes.temp.spinNoButton,
+        };
+        const params = {
+          Body: JSON.stringify(data),
+          Bucket: 'garrett-alexa-usage',
+          Key: 'spins/slots/' + Date.now() + '.txt',
+        };
+        return s3.putObject(params).promise();
+      } else {
+        return Promise.resolve();
+      }
+    }).then(() => {
       attributes.temp = undefined;
       handlerInput.attributesManager.setPersistentAttributes(attributes);
       handlerInput.attributesManager.savePersistentAttributes();

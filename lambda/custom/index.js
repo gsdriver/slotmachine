@@ -56,6 +56,7 @@ const requestInterceptor = {
           attributes.temp = {};
           attributes.temp.speechParams = {};
           attributes.temp.repromptParams = {};
+          attributes.temp.sessionStart = Date.now();
           utils.checkForTournament(attributes);
           return utils.getTournamentComplete(handlerInput, attributes);
         })
