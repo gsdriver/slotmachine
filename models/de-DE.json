@@ -70,9 +70,7 @@
           "name": "ReminderIntent",
           "slots": [],
           "samples": [
-            "setze wöchentliche alarm für die Turnierrunde",
             "setzen sie alarm für die Turnierrunde",
-            "setze wöchentliche alarm",
             "setzen sie alarm"
           ]
         },
