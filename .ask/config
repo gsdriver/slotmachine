@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v9"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v10"
               }
             }
           }
@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "f3a4af66d04c3ceb1795d461a789a8ba"
+          "eTag": "d510946ff6e1b86d337e29724841dff9"
         },
         "interactionModel": {
           "en-AU": {
@@ -35,9 +35,20 @@
             "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "de-DE": {
-            "eTag": "0c31558d0d8572b06e30874dc8d77a7e"
+            "eTag": "cc1ed47751ca007092d93d3ddf8c2fd6"
           }
-        }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v10",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v10",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "64547545-f307-469b-a9da-deca25bc3acc"
+          }
+        ]
       },
       "in_skill_products": [
         {

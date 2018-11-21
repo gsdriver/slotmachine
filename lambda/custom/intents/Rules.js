@@ -19,6 +19,7 @@ module.exports = {
     let payout;
     let reprompt;
     let rules;
+    let payoutTable;
 
     if (attributes.choices && (attributes.choices.length > 0)) {
       reprompt = 'RULES_SELECT_REPROMPT';
@@ -68,11 +69,20 @@ module.exports = {
 
       attributes.temp.readingRules = true;
       return utils.readPayoutTable(handlerInput, rules);
-    }).then((payoutTable) => {
-      return handlerInput.jrb
-        .speak(ri(speech, attributes.temp.speechParams))
-        .reprompt(ri(reprompt))
-        .withSimpleCard(ri('RULES_CARD_TITLE'), payoutTable)
+    }).then((table) => {
+      payoutTable = table;
+      const content = [
+        ri(speech, attributes.temp.speechParams),
+        ri(reprompt),
+        ri('RULES_CARD_TITLE'),
+      ];
+
+      return handlerInput.jrm.renderBatch(content);
+    }).then((items) => {
+      return handlerInput.responseBuilder
+        .speak(items[0])
+        .reprompt(items[1])
+        .withSimpleCard(items[2], payoutTable)
         .getResponse();
     });
   },

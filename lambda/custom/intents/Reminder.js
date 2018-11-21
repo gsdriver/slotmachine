@@ -41,6 +41,13 @@ module.exports = {
         if (!isActive) {
           attributes.temp.addingReminder = 'explicit';
           return utils.getLocalTournamentTime(handlerInput).then((result) => {
+            if (!result) {
+              return handlerInput.jrb
+                .speak(ri('REMINDER_ERROR_EXPLICIT'))
+                .reprompt(ri('REMINDER_REPROMPT'))
+                .getResponse();
+            }
+
             attributes.temp.speechParams.Time = result.time;
             attributes.temp.speechParams.Timezone = result.timezone;
             return handlerInput.jrb
@@ -87,12 +94,12 @@ module.exports = {
           // Some other problem not auth-related
           if (endSession) {
             response = handlerInput.jrb
-              .speak(ri('REMINDER_ERROR_EXPLICIT'))
+              .speak(ri('REMINDER_ERROR'))
               .withShouldEndSession(true)
               .getResponse();
           } else {
             response = handlerInput.jrb
-              .speak(ri('REMINDER_ERROR'))
+              .speak(ri('REMINDER_ERROR_EXPLICIT'))
               .reprompt(ri('REMINDER_REPROMPT'))
               .getResponse();
           }

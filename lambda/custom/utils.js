@@ -910,6 +910,7 @@ module.exports = {
       };
 
       // Post the reminder
+      console.log('SetReminder alert: ' + JSON.stringify(alert));
       return rp(params);
     })
     .then((body) => {
@@ -918,7 +919,6 @@ module.exports = {
     })
     .catch((err) => {
       console.log('SetReminder error ' + err.error.code);
-      console.log('SetReminder alert: ' + JSON.stringify(alert));
       return err.error.code;
     });
   },
@@ -1111,13 +1111,21 @@ function getTournamentTimes(leaveUTC) {
 function getUserTimezone(handlerInput) {
   const event = handlerInput.requestEnvelope;
   const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+  if (attributes.temp.timezone) {
+    return Promise.resolve((attributes.temp.timezone !== 'none')
+      ? attributes.temp.timezone : undefined);
+  }
 
   return usc.getSystemTimeZone(event.context.System.device.deviceId)
   .then((timezone) => {
+    attributes.temp.timezone = timezone;
     return timezone;
   })
   .catch((error) => {
     // OK if the call fails, return gracefully
+    attributes.temp.timezone = 'none';
     return;
   });
 }
