@@ -68,12 +68,16 @@ module.exports = {
         // Do they have an active reminder set for this weekly tournament?
         return utils.isReminderActive(handlerInput)
         .then((isActive) => {
-          if (!isActive) {
-            // We are going to go into reminder mode!
-            attributes.prompts.reminder = now;
-            attributes.temp.addingReminder = 'onexit';
-          }
-          return timeLeft;
+          return utils.isTournamentDuringDay(handlerInput)
+          .then((duringDay) => {
+            if (!isActive &&
+              (duringDay || (event.request.intent.name === 'GameIntent'))) {
+              // We are going to go into reminder mode!
+              attributes.prompts.reminder = now;
+              attributes.temp.addingReminder = 'onexit';
+            }
+            return timeLeft;
+          });
         });
       }
     }).then((adText) => {

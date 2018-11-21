@@ -370,6 +370,21 @@ module.exports = {
       return (busted !== now);
     });
   },
+  isTournamentDuringDay: function(handlerInput) {
+    const times = getTournamentTimes(true);
+
+    if (times) {
+      // Get the user timezone
+      return getUserTimezone(handlerInput).then((timezone) => {
+        const tz = (timezone) ? timezone : 'America/Los_Angeles';
+        const hour = moment.tz(times.start.getTime(), tz).toDate().getHours();
+
+        return ((hour >= 7) && (hour <= 22));
+      });
+    } else {
+      return Promise.resolve();
+    }
+  },
   getLocalTournamentTime: function(handlerInput) {
     const times = getTournamentTimes(true);
     const event = handlerInput.requestEnvelope;
