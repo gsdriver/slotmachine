@@ -145,15 +145,17 @@ const requestInterceptor = {
 const saveResponseInterceptor = {
   process(handlerInput) {
     const response = handlerInput.responseBuilder.getResponse();
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     if (response) {
       return utils.drawTable(handlerInput).then(() => {
         if (response.shouldEndSession) {
           // We are meant to end the session
+          // We're ending the session so ignore timeouts
+          attributes.temp.ignoreTimeouts = true;
           SessionEnd.handle(handlerInput);
         } else {
           // Save the response and reprompt for repeat
-          const attributes = handlerInput.attributesManager.getSessionAttributes();
           if (response.outputSpeech && response.outputSpeech.ssml) {
             // First off - count the audio tags.  If more than 5, remove the last one
             let audioTags = (response.outputSpeech.ssml.match(/<audio/g) || []).length;
@@ -197,7 +199,7 @@ const saveResponseInterceptor = {
             }
             // If there is a reprompt - set a flag so any errant
             // input handler reprompt timeout events are ignored
-            attributes.temp.ignoreTimeouts = response.reprompt;
+            attributes.temp.ignoreTimeouts = (response.reprompt) ? true : false;
           }
 
           // Save state if we need to (but just for certain platforms)

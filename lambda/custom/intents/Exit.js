@@ -70,6 +70,7 @@ module.exports = {
         .then((isActive) => {
           return utils.isTournamentDuringDay(handlerInput)
           .then((duringDay) => {
+          console.log('isActive is ' + isActive + ' and during day is ' + duringDay);
             if (!isActive &&
               (duringDay || (event.request.intent.name === 'GameIntent'))) {
               // We are going to go into reminder mode!
