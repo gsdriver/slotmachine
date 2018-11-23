@@ -881,20 +881,16 @@ module.exports = {
     });
   },
   setTournamentReminder: function(handlerInput, endSession) {
-    const times = getTournamentTimes();
+    const times = getTournamentTimes(true);
     const alert = {};
     const event = handlerInput.requestEnvelope;
     let timezone;
-
-    // Snap back a week and lop off trailing Z from string
-    let start = times.start.toISOString();
-    if (start.substring(start.length - 1) === 'Z') {
-      start = start.substring(0, start.length - 1);
-    }
+    let start;
 
     return getUserTimezone(handlerInput)
     .then((tz) => {
       timezone = (tz) ? tz : 'America/Los_Angeles';
+      start = moment.tz(times.start.getTime(), timezone).format('YYYY-MM-DDTHH:mm:00.000');
       return handlerInput.jrm.render(ri('REMINDER_TEXT'));
     }).then((reminderText) => {
       moment.locale('en');
