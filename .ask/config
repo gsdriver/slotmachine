@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "d510946ff6e1b86d337e29724841dff9"
+          "eTag": "bc77a84fe7586609d56a386ca9a90a48"
         },
         "interactionModel": {
           "en-AU": {
@@ -35,7 +35,7 @@
             "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "de-DE": {
-            "eTag": "cc1ed47751ca007092d93d3ddf8c2fd6"
+            "eTag": "9e2cc08c9a2aabe4df71304f0a3d0c2a"
           }
         }
       },

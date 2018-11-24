@@ -54,7 +54,7 @@ module.exports = {
 
       // Check to see if we should upsell
       if (!attributes.temp.resumeGame) {
-        const directive = upsell.getUpsell(attributes, 'launch');
+        const directive = upsell.getUpsell(handlerInput, 'launch');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';
           response = handlerInput.responseBuilder

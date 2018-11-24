@@ -44,7 +44,7 @@ module.exports = {
         speech = 'LISTPURCHASES_PURCHASED';
       } else if (availableProducts.length > 0) {
         // Let's upsell them!
-        const directive = upsell.getUpsell(attributes, 'listpurchases');
+        const directive = upsell.getUpsell(handlerInput, 'listpurchases');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';
           return handlerInput.responseBuilder

@@ -76,8 +76,8 @@ module.exports = {
       // We will do this if they have played this game 10 times in a row
       // during this session and we haven't done an upsell already
       if ((attributes.currentGame !== 'tournament')
-        && !attributes.temp.noUpsellGame) {
-        const directive = upsell.getUpsell(attributes, 'spin');
+        && !attributes.temp.noUpsell) {
+        const directive = upsell.getUpsell(handlerInput, 'spin');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.spin';
           return handlerInput.responseBuilder

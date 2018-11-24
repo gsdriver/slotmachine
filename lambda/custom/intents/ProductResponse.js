@@ -83,13 +83,8 @@ module.exports = {
 
       attributes.upsellSelection = undefined;
       if ((event.request.name === 'Upsell') && !accepted) {
-        // Don't upsell them again
-        if (options[1] === 'coinreset') {
-          attributes.temp.noUpsell = true;
-        }
-        if (options[0] === 'machine') {
-          attributes.temp.noUpsellGame = true;
-        }
+        // Don't upsell them again on the next round
+        attributes.temp.noUpsell = true;
       }
 
       // Figure out next step if this was a machine upsell

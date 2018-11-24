@@ -14,6 +14,7 @@
 //  v1.1 - upsell on launch every three days, upsell on select every day, not on spin
 //         Also adds version and number of sessions instead of newUser
 //  v1.2 - adds sold field
+//  v1.3 - Add A/B variant - v1 upsell after 6 spins, every day; v2 no upsell on spins
 //
 
 'use strict';
@@ -23,7 +24,8 @@ AWS.config.update({region: 'us-east-1'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 module.exports = {
-  getUpsell: function(attributes, trigger) {
+  getUpsell: function(handlerInput, trigger) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     let directive;
     const now = Date.now();
     const availableProducts = getAvailableProducts(attributes);
@@ -39,9 +41,12 @@ module.exports = {
       attributes.upsell.prompts = {};
       attributes.upsell.sessions = 0;
     }
-    attributes.upsell.version = '1.2';
+    attributes.upsell.version = '1.3';
     if (!attributes.upsell[trigger]) {
       attributes.upsell[trigger] = {};
+    }
+    if (!attributes.upsell.bucket) {
+      attributes.upsell.bucket = getTestBucket(handlerInput);
     }
 
     // Clear legacy prompts structure
@@ -198,7 +203,19 @@ function shouldUpsell(attributes, availableProducts, trigger, now) {
       break;
 
     case 'spin':
-      // We no longer upsell on spin (it's on launch instead)
+      // v1: Upsell a machine after 6 spins but only once a day (per machine)
+      // v2: No upsell
+      if (attributes.upsell.bucket === 'v1') {
+        if (attributes.upsell.spin.count === 6) {
+          // OK, let's check if any products are available to upsell
+          availableProducts.forEach((product) => {
+            if (!attributes.upsell.prompts[product] ||
+              ((now - attributes.upsell.prompts[product]) > 24*60*60*1000)) {
+                upsellProduct = product;
+            }
+          });
+        }
+      }
       break;
 
     case 'listpurchases':
@@ -237,4 +254,19 @@ function getAvailableProducts(attributes) {
   }
 
   return availableProducts;
+}
+
+function getTestBucket(handlerInput) {
+  const event = handlerInput.requestEnvelope;
+
+  // Bucketing should change for each version with a test
+  // For v1.3, there are two buckets - derived from adding first
+  // 10 characters of userId and moding by 2
+  let i;
+  let total = 0;
+
+  for (i = 0; i < Math.max(10, event.session.user.userId.length); i++) {
+    total += event.session.user.userId.charCodeAt(i);
+  }
+  return (total % 2 == 0) ? 'v1' : 'v2';
 }

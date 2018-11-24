@@ -78,6 +78,9 @@
           "name": "AMAZON.YesIntent"
         },
         {
+          "name": "AMAZON.FallbackIntent"
+        },
+        {
           "name": "AMAZON.MoreIntent"
         },
         {

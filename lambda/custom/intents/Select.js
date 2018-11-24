@@ -19,13 +19,15 @@ module.exports = {
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    const directive = upsell.getUpsell(attributes, 'select');
-    if (directive) {
-      directive.token = 'machine.' + directive.token + '.select';
-      return handlerInput.responseBuilder
-        .addDirective(directive)
-        .withShouldEndSession(true)
-        .getResponse();
+    if (!attributes.temp.noUpsell) {
+      const directive = upsell.getUpsell(handlerInput, 'select');
+      if (directive) {
+        directive.token = 'machine.' + directive.token + '.select';
+        return handlerInput.responseBuilder
+          .addDirective(directive)
+          .withShouldEndSession(true)
+          .getResponse();
+      }
     }
 
     // Read the available games then prompt for each one

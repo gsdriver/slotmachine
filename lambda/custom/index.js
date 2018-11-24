@@ -200,6 +200,9 @@ const saveResponseInterceptor = {
             // If there is a reprompt - set a flag so any errant
             // input handler reprompt timeout events are ignored
             attributes.temp.ignoreTimeouts = (response.reprompt) ? true : false;
+
+            // OK to upsell again!
+            attributes.temp.noUpsell = undefined;
           }
 
           // Save state if we need to (but just for certain platforms)
