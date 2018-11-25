@@ -63,15 +63,6 @@ module.exports = {
       const event = handlerInput.requestEnvelope;
       const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-      if (handlerInput.requestEnvelope.request.type === 'GameEngine.InputHandlerEvent') {
-        attributes.temp.spinButton = (attributes.temp.spinButton + 1) || 1;
-      } else {
-        attributes.temp.spinNoButton = (attributes.temp.spinNoButton + 1) || 1;
-      }
-
-      attributes.spinButton = undefined;
-      attributes.spinNoButton = undefined;
-
       // First off, let's see if we should do an upsell
       // We will do this if they have played this game 10 times in a row
       // during this session and we haven't done an upsell already

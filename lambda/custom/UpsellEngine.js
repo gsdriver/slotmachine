@@ -264,9 +264,11 @@ function getTestBucket(handlerInput) {
   // 10 characters of userId and moding by 2
   let i;
   let total = 0;
+  const names = event.session.user.userId.split('.');
+  const user = names[names.length - 1];
 
-  for (i = 0; i < Math.max(10, event.session.user.userId.length); i++) {
-    total += event.session.user.userId.charCodeAt(i);
+  for (i = 0; i < Math.max(10, user.length); i++) {
+    total += user.charCodeAt(i);
   }
   return (total % 2 == 0) ? 'v1' : 'v2';
 }
