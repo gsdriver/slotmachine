@@ -395,7 +395,7 @@ module.exports = {
       return getUserTimezone(handlerInput).then((timezone) => {
         const useDefaultTimezone = (timezone === undefined);
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
-        const result = moment.tz(times.start.getTime(), tz).format('dddd h:mm a');
+        const result = moment.tz(times.start.getTime(), tz).format('dddd LT');
 
         if (useDefaultTimezone) {
           return handlerInput.jrm.render(ri('TOURNAMENT_DEFAULT_TIMEZONE')).then((text) => {
@@ -962,10 +962,17 @@ module.exports = {
       let isActive = false;
       if (alerts && alerts.alerts) {
         alerts.alerts.forEach((alert) => {
-          if ((alert.status === 'ON') && alert.trigger && alert.trigger.recurrence
-            && alert.trigger.recurrence.byDay
-            && (alert.trigger.recurrence.byDay[0] === reminderDay)) {
-            isActive = true;
+          if ((alert.status === 'ON') && alert.trigger) {
+            // Either this is weekly or single instance
+            if (alert.trigger.recurrence) {
+              if (alert.trigger.recurrence.byDay
+                && (alert.trigger.recurrence.byDay[0] === reminderDay)) {
+                isActive = true;
+              }
+            } else if (alert.trigger.scheduledTime
+              && (new Date(alert.trigger.scheduledTime).getDay() === times.start.getDay())) {
+              isActive = true;
+            }
           }
         });
       }
