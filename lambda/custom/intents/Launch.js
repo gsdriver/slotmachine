@@ -53,7 +53,7 @@ module.exports = {
       }
 
       // Check to see if we should upsell
-      if (!attributes.temp.resumeGame) {
+      if (!attributes.temp.resumeGame && !attributes.temp.noUpsell) {
         const directive = upsell.getUpsell(handlerInput, 'launch');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';

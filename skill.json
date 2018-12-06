@@ -136,12 +136,35 @@
     },
     "permissions": [
       {
+        "name": "alexa::profile:given_name:read"
+      },
+      {
         "name": "alexa::alerts:reminders:skill:readwrite"
       }
     ],
     "manifestVersion": "1.0",
     "privacyAndCompliance": {
       "allowsPurchases": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+        },
+        "en-AU": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+        },
+        "en-CA": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+        },
+        "en-IN": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+        },
+        "de-DE": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
+        },
+        "en-GB": {
+          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+        }
+      },
       "isExportCompliant": true,
       "containsAds": false,
       "isChildDirected": false,
