@@ -164,6 +164,7 @@ function selectUpsellMessage(attributes, game, message) {
   const gameList = {
     'crazydiamond': 'crazy diamonds',
     'holiday': 'the holiday game',
+    'valentine': 'the valentine\'s day game',
   };
 
   const options = upsellMessages[message].split('|');

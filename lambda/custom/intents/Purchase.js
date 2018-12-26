@@ -34,41 +34,37 @@ module.exports = {
         .reprompt(ri('PURCHASE_NO_PURCHASE'))
         .getResponse();
     } else {
-      if (event.request.intent.slots && event.request.intent.slots.Product
-        && event.request.intent.slots.Product.value) {
-        // They specified a product so let's go with that one
-        return utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
-        .then((product) => {
-          if (!attributes.paid || !attributes.paid[product]) {
-            // That really shouldn't happen
-            return handlerInput.jrb
-              .speak(ri('UNKNOWN_INTENT'))
-              .reprompt(ri('UNKNOWN_INTENT_REPROMPT'))
-              .getResponse();
-          }
-
-          // Do they have this machine already?  If so just select it
-          if ((product !== 'coinreset') && attributes.paid && attributes.paid[product]
-            && (attributes.paid[product].state === 'PURCHASED')) {
-            attributes.choices = [product];
-            return SelectYes.handle(handlerInput);
-          }
-
-          const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+      const product = utils.mapProduct(handlerInput);
+      if (product) {
+        if (!attributes.paid || !attributes.paid[product]) {
+          // That really shouldn't happen
           return handlerInput.jrb
-            .addDirective({
-              'type': 'Connections.SendRequest',
-              'name': 'Buy',
-              'payload': {
-                'InSkillProduct': {
-                  'productId': attributes.paid[product].productId,
-                },
-              },
-              'token': token,
-            })
-            .withShouldEndSession(true)
+            .speak(ri('UNKNOWN_INTENT'))
+            .reprompt(ri('UNKNOWN_INTENT_REPROMPT'))
             .getResponse();
-        });
+        }
+
+        // Do they have this machine already?  If so just select it
+        if ((product !== 'coinreset') && attributes.paid && attributes.paid[product]
+          && (attributes.paid[product].state === 'PURCHASED')) {
+          attributes.choices = [product];
+          return SelectYes.handle(handlerInput);
+        }
+
+        const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+        return handlerInput.jrb
+          .addDirective({
+            'type': 'Connections.SendRequest',
+            'name': 'Buy',
+            'payload': {
+              'InSkillProduct': {
+                'productId': attributes.paid[product].productId,
+              },
+            },
+            'token': token,
+          })
+          .withShouldEndSession(true)
+          .getResponse();
       } else {
         // Prompt them with a list of available products
         attributes.temp.purchasing = true;

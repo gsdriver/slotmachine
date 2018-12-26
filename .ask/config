@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v11"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12"
               }
             }
           }
@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "48f938ced301dffeb14ba421df8e83a2"
+          "eTag": "232483e8359a86d732e9f9c5bba1a8b1"
         },
         "interactionModel": {
           "en-AU": {
@@ -29,7 +29,7 @@
             "eTag": "105d988cb3df9f3102f59defc16d189a"
           },
           "en-US": {
-            "eTag": "9887a4b27781d279cd72074d8ebcc087"
+            "eTag": "542f2480fcf667da04b6a51f5dbadc6b"
           },
           "en-IN": {
             "eTag": "105d988cb3df9f3102f59defc16d189a"
@@ -40,13 +40,13 @@
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v11",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v11",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12",
             "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "e123de05-a73e-4a48-843e-b7d148ffa4fe"
+            "revisionId": "bdd3ccc3-57ce-4e79-a8b1-96494deca7d0"
           }
         ]
       },
@@ -68,6 +68,12 @@
           "filePath": "isps\\entitlement\\holiday.json",
           "productId": "amzn1.adg.product.c29c1be0-cc93-487c-97b6-fea7bd47e3d9",
           "eTag": "511bf23d3e89214dfd099f0aa077bf05"
+        },
+        {
+          "deploy_status": "Update",
+          "filePath": "isps\\entitlement\\valentine.json",
+          "productId": "amzn1.adg.product.9bf2a878-7ded-4af0-83d8-699165b2a3b1",
+          "eTag": "a2d2f1d3cc93643c2ff48350f5dffe98"
         }
       ]
     }

@@ -14,7 +14,6 @@ const request = require('request');
 const rp = require('request-promise');
 const querystring = require('querystring');
 const moment = require('moment-timezone');
-const leven = require('leven');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 const games = {
@@ -140,6 +139,29 @@ const games = {
       'santa': 5,
       'santa|santa': 10,
       'santa|santa|santa': 100,
+    },
+  },
+  // Like basic but slightly different payouts and 99.4% payout
+  'valentine': {
+    'product': 'valentine',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['heart', 'rose', 'chocolate', 'kiss', 'cupid'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 7, 4]},
+      {'symbols': [24, 7, 6, 1, 1]},
+    ],
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/kiss.mp3\"/> ',
+    'payouts': {
+      'heart': 2,
+      'heart|heart': 4,
+      'rose|rose|rose': 6,
+      'chocolate|chocolate|chocolate': 8,
+      'kiss|kiss|kiss': 12,
+      'cupid': 5,
+      'cupid|cupid': 10,
+      'cupid|cupid|cupid': 500,
     },
   },
 };
@@ -382,7 +404,7 @@ module.exports = {
       // Get the user timezone
       return getUserTimezone(handlerInput).then((timezone) => {
         const tz = (timezone) ? timezone : 'America/Los_Angeles';
-        const hour = moment.tz(times.start.getTime(), tz).toDate().getHours();
+        const hour = parseInt(moment.tz(times.start.getTime(), tz).format('HH'));
 
         return ((hour >= 7) && (hour <= 22));
       });
@@ -880,11 +902,22 @@ module.exports = {
       return Promise.resolve();
     }
   },
-  mapProduct: function(handlerInput, product) {
-    return handlerInput.jrm.renderObject(ri('PRODUCT_MAP_LIST'))
-    .then((productList) => {
-      return getBestMatch(productList, product.toUpperCase());
-    });
+  mapProduct: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    let product;
+
+    if (event.request.intent.slots && event.request.intent.slots.Product
+      && event.request.intent.slots.Product.resolutions
+      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority
+      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0].values
+      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0].values[0].value
+      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0]
+        .values[0].value.id) {
+      product = event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0]
+        .values[0].value.id;
+    }
+
+    return product;
   },
   getUserName: function(handlerInput) {
     const usc = handlerInput.serviceClientFactory.getUpsServiceClient();
@@ -1170,34 +1203,4 @@ function getUserTimezone(handlerInput) {
     attributes.temp.timezone = 'none';
     return;
   });
-}
-
-function getBestMatch(mapping, value) {
-  const valueLen = value.length;
-  let map;
-  let ratio;
-  let bestMapping;
-  let bestRatio = 0;
-
-  for (map in mapping) {
-    if (map) {
-      let index;
-      for (index in mapping[map]) {
-        if (index) {
-          const str = mapping[map][index];
-          const lensum = str.length + valueLen;
-          ratio = Math.round(100 * ((lensum - leven(value, str)) / lensum));
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestMapping = map;
-          }
-        }
-      }
-    }
-  }
-
-  if (bestRatio < 90) {
-    console.log('Near match: ' + bestMapping + ', ' + bestRatio);
-  }
-  return bestMapping;
 }

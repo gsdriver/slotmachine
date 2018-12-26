@@ -321,24 +321,6 @@
   "PROGRESSIVE_JACKPOT_ONLY": "The progressive jackpot is currently <say-as interpret-as=\"number\">{Jackpot, plural, =1 {one coin} other {# coins}}</say-as>. ",
   "PROGRESSIVE_JACKPOT": "The progressive jackpot is currently <say-as interpret-as=\"number\">{Jackpot, plural, =1 {one coin} other {# coins}}. Insert {Coins, plural, =1 {one coin} other {# coins}}</say-as> to win the progressive jackpot. ",
   "TOURNAMENT_ENDED": "The tournament has ended. Please check again later to hear the results! ",
-  "PRODUCT_MAP_LIST": {
-    "coinreset": {
-      "0": "RESET BANKROLL",
-      "1": "RESET COIN"
-    },
-    "crazydiamond": {
-      "0": "CRAZY DIAMONDS",
-      "1": "DIAMONDS",
-      "2": "CRAZY DIAMONDS MACHINE"
-    },
-    "holiday": {
-      "0": "HOLIDAY",
-      "1": "HOLIDAY MACHINE",
-      "2": "THE HOLIDAY MACHINE",
-      "3": "HOLIDAY GAME",
-      "4": "THE HOLIDAY GAME"
-    }
-  },
   "GAME_LIST_BASIC": "the standard fruit game",
   "GAME_LIST_WILD": "wild cherry",
   "GAME_LIST_LOOSE": "the 105% payout game",
@@ -347,6 +329,7 @@
   "GAME_LIST_STEAK": "the meat game",
   "GAME_LIST_CRAZYDIAMOND": "crazy diamonds",
   "GAME_LIST_HOLIDAY": "the holiday game",
+  "GAME_LIST_VALENTINE": "the valentine's day game",
   "SYMBOL_LIST": {
     "any": "any",
     "cherry": "cherry",
@@ -384,7 +367,11 @@
     "tree": "tree",
     "candycane": "candy cane",
     "snowman": "snowman",
-    "santa": "santa"
+    "santa": "santa",
+    "rose": "rose",
+    "chocolate": "chocolate",
+    "kiss": "kiss",
+    "cupid": "cupid"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
   "DISPLAY_DIRECTIVE_CHOICES": {

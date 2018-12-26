@@ -95,7 +95,7 @@ module.exports = {
           if (event.request.name === 'Cancel') {
             attributes[options[1]] = undefined;
             if (attributes.currentGame === options[1]) {
-              attributes.currentGame = 'standard';
+              attributes.currentGame = 'basic';
             }
             if (attributes.paid && attributes.paid[options[1]]) {
               attributes.paid[options[1]].state = 'AVAILABLE';

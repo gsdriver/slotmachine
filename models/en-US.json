@@ -256,63 +256,51 @@
         {
           "values": [
             {
+              "id": "coinreset",
               "name": {
-                "value": "reset bankroll"
+                "value": "reset bankroll",
+                "synonyms": [
+                  "reset coins"
+                ]
               }
             },
             {
+              "id": "crazydiamond",
               "name": {
-                "value": "reset coins"
+                "value": "crazy diamond",
+                "synonyms": [
+                  "crazy diamonds machine",
+                  "crazy diamond machine",
+                  "diamonds",
+                  "crazy diamonds"
+                ]
               }
             },
             {
+              "id": "holiday",
               "name": {
-                "value": "crazy diamond"
+                "value": "holiday machine",
+                "synonyms": [
+                  "the holiday machine",
+                  "holiday",
+                  "the holiday game",
+                  "holiday game"
+                ]
               }
             },
             {
+              "id": "valentine",
               "name": {
-                "value": "crazy diamonds"
-              }
-            },
-            {
-              "name": {
-                "value": "diamonds"
-              }
-            },
-            {
-              "name": {
-                "value": "crazy diamond machine"
-              }
-            },
-            {
-              "name": {
-                "value": "crazy diamonds machine"
-              }
-            },
-            {
-              "name": {
-                "value": "holiday machine"
-              }
-            },
-            {
-              "name": {
-                "value": "holiday game"
-              }
-            },
-            {
-              "name": {
-                "value": "the holiday game"
-              }
-            },
-            {
-              "name": {
-                "value": "holiday"
-              }
-            },
-            {
-              "name": {
-                "value": "the holiday machine"
+                "value": "valentine",
+                "synonyms": [
+                  "the valentines day game",
+                  "valentines day game",
+                  "valentine game",
+                  "valentines day machine",
+                  "valentines day",
+                  "the valentine machine",
+                  "valentine machine"
+                ]
               }
             }
           ],

@@ -27,28 +27,24 @@ module.exports = {
     return canRefund;
   },
   handle: function(handlerInput) {
-    const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    if (event.request.intent.slots && event.request.intent.slots.Product
-      && event.request.intent.slots.Product.value) {
-      return utils.mapProduct(handlerInput, event.request.intent.slots.Product.value)
-      .then((product) => {
-        const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
-        return handlerInput.jrb
-          .addDirective({
-            'type': 'Connections.SendRequest',
-            'name': 'Cancel',
-            'payload': {
-              'InSkillProduct': {
-                'productId': attributes.paid[product].productId,
-              },
+    const product = utils.mapProduct(handlerInput);
+    if (product) {
+      const token = (product === 'coinreset') ? 'subscribe.coinreset.launch' : ('machine.' + product + '.launch');
+      return handlerInput.jrb
+        .addDirective({
+          'type': 'Connections.SendRequest',
+          'name': 'Cancel',
+          'payload': {
+            'InSkillProduct': {
+              'productId': attributes.paid[product].productId,
             },
-            'token': token,
-          })
-          .withShouldEndSession(true)
-          .getResponse();
-      });
+          },
+          'token': token,
+        })
+        .withShouldEndSession(true)
+        .getResponse();
     } else {
       const speech = ri('REFUND_SAY_PRODUCT');
       return handlerInput.jrb
