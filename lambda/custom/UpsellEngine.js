@@ -15,6 +15,7 @@
 //         Also adds version and number of sessions instead of newUser
 //  v1.2 - adds sold field
 //  v1.3 - Add A/B variant - v1 upsell after 6 spins, every day; v2 no upsell on spins
+//  v1.4 - Only one product upsold per session
 //
 
 'use strict';
@@ -41,7 +42,7 @@ module.exports = {
       attributes.upsell.prompts = {};
       attributes.upsell.sessions = 0;
     }
-    attributes.upsell.version = '1.3';
+    attributes.upsell.version = '1.4';
     if (!attributes.upsell[trigger]) {
       attributes.upsell[trigger] = {};
     }
@@ -176,6 +177,11 @@ function selectUpsellMessage(attributes, game, message) {
 
 function shouldUpsell(attributes, availableProducts, trigger, now) {
   let upsellProduct;
+
+  // Have we already offered an upsell on this trigger in this session?
+  if (attributes.upsell[trigger].impression) {
+    return;
+  }
 
   switch (trigger) {
     case 'launch':
