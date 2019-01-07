@@ -253,7 +253,9 @@ function getAvailableProducts(attributes) {
     let product;
     for (product in attributes.paid) {
       // Note we only upsell machines - not coinreset
+      // We also aren't upselling the holiday game anymore (seasonal)
       if (product && (product !== 'coinreset')
+        && (product !== 'holiday')
         && (attributes.paid[product].state === 'AVAILABLE')) {
         availableProducts.push(product);
       }
