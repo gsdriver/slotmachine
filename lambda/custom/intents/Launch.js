@@ -53,7 +53,10 @@ module.exports = {
       }
 
       // Check to see if we should upsell
-      if (!attributes.temp.resumeGame && !attributes.temp.noUpsell) {
+      // Don't upsell if the tournament is available or there is a result
+      if (!attributes.temp.resumeGame && !attributes.temp.noUpsell
+        && !attributes.temp.tournamentAvailable
+        && !(attributes.tournamentResult && (attributes.tournamentResult.length > 0))) {
         const directive = upsell.getUpsell(handlerInput, 'launch');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';

@@ -29,9 +29,12 @@ module.exports = {
       } else if (name) {
         attributes.temp.speechParams.Name = name + '<break time="200ms"/>';
       }
-      return;
-    }).then(() => {
+
+      // Get name of game
+      return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));
+    }).then((gameName) => {
       // Get the appropriate leader board for this game
+      attributes.temp.speechParams.CurrentGame = gameName;
       return utils.readLeaderBoard(event.session.user.userId, attributes.currentGame, attributes);
     }).then((highScores) => {
       const game = attributes[attributes.currentGame];
@@ -72,14 +75,10 @@ module.exports = {
             }
           }
 
-          return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.currentGame.toUpperCase()));
+          return;
         }
       }
     }).then((gameName) => {
-      if (gameName) {
-        attributes.temp.speechParams.CurrentGame = gameName;
-      }
-
       if (attributes.choices && (attributes.choices.length > 0)) {
         // Ask for the first one
         return handlerInput.jrm.render(ri('GAME_LIST_' + attributes.choices[0].toUpperCase()))
