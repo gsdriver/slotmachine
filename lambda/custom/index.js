@@ -220,6 +220,8 @@ const saveResponseInterceptor = {
         if (!process.env.NOLOG) {
           console.log(JSON.stringify(response));
         }
+
+        return utils.findQuestionableResponse(handlerInput);
       });
     } else {
       return Promise.resolve();

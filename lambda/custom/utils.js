@@ -362,6 +362,61 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
   },
+  findQuestionableResponse: function(handlerInput) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // If the request is "questionable" then we will log it
+    if (attributes.temp && attributes.temp.lastResponse) {
+      let text = attributes.temp.lastResponse;
+
+      // Check longest stretch without pause or audio
+      let questionable = false;
+      let maxRun = 0;
+      let iAudio;
+      let iBreak;
+      let index = -1;
+      let lastIndex = 0;
+      let end;
+      do {
+        iAudio = text.indexOf('<audio', index + 1);
+        iBreak = text.indexOf('<break', index + 1);
+        index = ((iAudio === -1) || (iAudio > iBreak)) ? iBreak : iAudio;
+        if (index - lastIndex > maxRun) {
+          maxRun = index - lastIndex;
+        }
+        lastIndex = text.indexOf('>', index);
+      } while (index !== -1);
+
+      // Is this more than 6 seconds?
+      if (maxRun * 60 > 6000) {
+        questionable = true;
+      }
+
+      // Now remove audio files - is the response more than 10 seconds?
+      while (text.indexOf('<audio') > -1) {
+        index = text.indexOf('<audio');
+        end = text.indexOf('>', index);
+        text = text.substring(0, index) + text.substring(end + 1);
+      }
+
+      if (module.exports.estimateDuration(text) > 10000) {
+        questionable = true;
+      }
+
+      if (questionable) {
+        const params = {
+          Body: attributes.temp.lastResponse,
+          Bucket: 'garrett-alexa-responses',
+          Key: 'slots/' + Date.now() + '.txt',
+        };
+        return s3.putObject(params).promise();
+      } else {
+        return Promise.resolve();
+      }
+    } else {
+      return Promise.resolve();
+    }
+  },
   getGreeting: function(handlerInput) {
     const speechParams = {};
     return module.exports.getUserName(handlerInput)
