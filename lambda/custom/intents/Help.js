@@ -55,24 +55,11 @@ module.exports = {
             // Give some details about the tournament
             speech = 'HELP_IN_TOURNAMENT';
             attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
-            attributes.temp.speechParams.Amount = bankroll;
             return utils.getRemainingTournamentTime(handlerInput).then((text) => {
               attributes.temp.speechParams.Time = text;
             });
           } else {
             speech = 'HELP_NO_TOURNAMENT';
-            attributes.temp.speechParams.Amount = bankroll;
-          }
-
-          if (!attributes.temp.tournamentAvailable) {
-            return utils.getLocalTournamentTime(handlerInput).then((result) => {
-              if (result) {
-                speech = 'HELP_UPCOMING_TOURNAMENT';
-                attributes.temp.speechParams.Time = result.time;
-                attributes.temp.speechParams.Timezone = result.timezone;
-                attributes.temp.speechParams.Coins = utils.TOURNAMENT_PAYOUT;
-              }
-            });
           }
         }).then(() => {
           return handlerInput.jrb
