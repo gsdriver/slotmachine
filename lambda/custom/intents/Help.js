@@ -18,7 +18,6 @@ module.exports = {
   handle: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const bankroll = utils.getBankroll(attributes);
     const rules = utils.getGame(attributes.currentGame);
     let speech;
     let promise;
