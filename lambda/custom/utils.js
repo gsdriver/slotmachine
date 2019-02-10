@@ -371,6 +371,10 @@ module.exports = {
       const formData = {
         response: attributes.temp.lastResponse,
       };
+      if (attributes.temp.maxDuration) {
+        formData.maxDuration = attributes.temp.maxDuration;
+        attributes.temp.maxDuration = undefined;
+      }
       const params = {
         url: process.env.SERVICEURL + 'slots/checkResponse',
         method: 'POST',

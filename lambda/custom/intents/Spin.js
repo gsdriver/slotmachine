@@ -376,6 +376,7 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
 
     // Update the leader board
     utils.updateLeaderBoard(event, attributes);
+    attributes.temp.maxDuration = 12000;
     game.lastbet = lastbet;
     game.bet = undefined;
     return handlerInput.responseBuilder
