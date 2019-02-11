@@ -366,7 +366,8 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     // If the request is "questionable" then we will log it
-    if (process.env.SERVICEURL && attributes.temp && attributes.temp.lastResponse) {
+    if (process.env.CHECKRESPONSE && process.env.SERVICEURL
+      && attributes.temp && attributes.temp.lastResponse) {
       // Post to check for questionable content
       const formData = {
         response: attributes.temp.lastResponse,
