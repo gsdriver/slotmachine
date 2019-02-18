@@ -370,8 +370,8 @@ module.exports = {
       && attributes.temp && attributes.temp.lastResponse) {
       // Post to check for questionable content
       const formData = {
-        game: 'slots',
-        response: attributes.temp.lastResponse,
+        appKey: 'slots',
+        response: '<speak>' + attributes.temp.lastResponse + '</speak>',
       };
       if (attributes.temp.maxDuration) {
         formData.maxDuration = attributes.temp.maxDuration;
