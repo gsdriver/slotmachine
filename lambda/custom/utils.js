@@ -366,10 +366,11 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     // If the request is "questionable" then we will log it
-    if (process.env.CHECKRESPONSE && process.env.SERVICEURL
+    if (process.env.CHECKRESPONSE
       && attributes.temp && attributes.temp.lastResponse) {
       // Post to check for questionable content
       const formData = {
+        game: 'slots',
         response: attributes.temp.lastResponse,
       };
       if (attributes.temp.maxDuration) {
@@ -377,9 +378,10 @@ module.exports = {
         attributes.temp.maxDuration = undefined;
       }
       const params = {
-        url: process.env.SERVICEURL + 'slots/checkResponse',
+        uri: process.env.CHECKRESPONSE,
+        encoding: 'utf8',
         method: 'POST',
-        formData: formData,
+        body: JSON.stringify(formData),
       };
       return rp(params);
     } else {
@@ -684,7 +686,7 @@ module.exports = {
     return handlerInput.jrm.renderBatch(choiceText)
     .then((gameList) => {
       const speechParams = {};
-      speechParams.GameChoices = speechUtils.and(gameList, {locale: event.request.locale});
+      speechParams.GameChoices = speechUtils.or(gameList, {locale: event.request.locale});
       speechParams.Number = choices.length;
       return handlerInput.jrm.render(ri('AVAILABLE_GAMES', speechParams));
     }).then((speech) => {
