@@ -256,6 +256,7 @@ function getAvailableProducts(attributes) {
       // We also aren't upselling the holiday game anymore (seasonal)
       if (product && (product !== 'coinreset')
         && (product !== 'holiday')
+        && (product !== 'valentine')
         && (attributes.paid[product].state === 'AVAILABLE')) {
         availableProducts.push(product);
       }

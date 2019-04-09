@@ -40,13 +40,16 @@
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12",
-            "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "4b6418a4-855c-4e19-a25f-cab5d47b91c0"
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v12",
+            "awsRegion": "us-east-1",
+            "codeUri": "lambda/custom",
+            "functionName": "SlotMachine_v12",
+            "handler": "index.handler",
+            "revisionId": "c4e906d6-5512-43fa-ac77-e695a1c9488a",
+            "runtime": "nodejs8.10"
           }
         ]
       },

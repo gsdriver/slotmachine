@@ -5,6 +5,9 @@
 'use strict';
 
 const Alexa = require('ask-sdk');
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const CanFulfill = require('./intents/CanFulfill');
 const OldTimeOut = require('./intents/OldTimeOut');
 const Spin = require('./intents/Spin');
@@ -28,6 +31,7 @@ const SessionEnd = require('./intents/SessionEnd');
 const utils = require('./utils');
 const request = require('request');
 const {ri, JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
+const ssmlCheck = require('ssml-check-core');
 
 const requestInterceptor = {
   process(handlerInput) {
@@ -156,20 +160,6 @@ const saveResponseInterceptor = {
         } else {
           // Save the response and reprompt for repeat
           if (response.outputSpeech && response.outputSpeech.ssml) {
-            // First off - count the audio tags.  If more than 5, remove the last one
-            let audioTags = (response.outputSpeech.ssml.match(/<audio/g) || []).length;
-            let index;
-            let end;
-
-            while (audioTags > 5) {
-              audioTags--;
-              index = response.outputSpeech.ssml.lastIndexOf('<audio');
-              end = response.outputSpeech.ssml.indexOf('>', index);
-              response.outputSpeech.ssml =
-                response.outputSpeech.ssml.substring(0, index)
-                + response.outputSpeech.ssml.substring(end + 1);
-            }
-
             // Strip <speak> tags
             let lastResponse = response.outputSpeech.ssml;
             lastResponse = lastResponse.replace('<speak>', '');
@@ -221,7 +211,25 @@ const saveResponseInterceptor = {
           console.log(JSON.stringify(response));
         }
 
-        return utils.findQuestionableResponse(handlerInput);
+        //return utils.findQuestionableResponse(handlerInput);
+        if (response.outputSpeech && response.outputSpeech.ssml) {
+          return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, {platform: 'amazon'});
+        } else {
+          return Promise.resolve({});
+        }
+      }).then((result) => {
+        if (result.fixedSSML) {
+          const oldSSML = response.outputSpeech.ssml;
+          response.outputSpeech.ssml = result.fixedSSML;
+
+          // Write to S3
+          const params = {
+            Body: oldSSML + ' became ' + result.fixedSSML,
+            Bucket: 'garrett-alexa-responses',
+            Key: 'slotcheck' + '/' + Date.now() + '.txt',
+          };
+          return s3.putObject(params).promise();
+        }
       });
     } else {
       return Promise.resolve();

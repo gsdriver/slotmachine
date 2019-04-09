@@ -116,7 +116,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "sourceDir": "lambda\\custom"
+          "sourceDir": "lambda/custom"
         },
         "interfaces": [
           {
