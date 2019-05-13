@@ -8,8 +8,8 @@
         "name": "Valentine's Day Machine",
         "summary": "Adds a valentine's day themed machine to the list of games you can play",
         "description": "This adds a valentine's day machine featuring special symbols to the list of games you can play",
-        "smallIconUri": "http://garrettvargas.com/img/valentine108.png",
-        "largeIconUri": "http://garrettvargas.com/img/valentine512.png",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210428Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=8eaf095af5c72818faca2a0bfc936a283477fcf16cd93cd15a4d40ea8eadbedc",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210428Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e16cd62a623942effaf4758011f4c498c196226068220b9dafe7a4f1bf567c15",
         "examplePhrases": [
           "Alexa, buy the valentine machine",
           "Alexa, give me the valentines day machine",
@@ -33,7 +33,7 @@
       "amazon.com": {
         "releaseDate": "2018-12-26T00:00Z",
         "defaultPriceListing": {
-          "price": 0.99,
+          "price": 1.99,
           "currency": "USD"
         }
       }

@@ -307,6 +307,7 @@
   "SIMPSON_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3\"/> ",
   "BATMAN_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
   "HOLIDAY_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3\"/> ",
+  "INDEPENDENCE_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3\"/> ",
   "PROGRESSIVE_SPECIAL": "Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ",
   "TOURNAMENT_WINNER": "Congratulations, you won the tournament with {TournamentResult, plural, =1 {one coin} other {# coins}}!  You win {Coins, plural, =1 {one coin} other {# coins}} for your tournament win! ",
   "TOURNAMENT_LOSER": "Sorry, you didn't win the tournament. The high score was {TournamentWinner, plural, =1 {one coin} other {# coins}} and you had {TournamentResult, plural, =1 {one coin} other {# coins}}. ",
@@ -332,6 +333,7 @@
   "GAME_LIST_CRAZYDIAMOND": "crazy diamonds",
   "GAME_LIST_HOLIDAY": "the holiday game",
   "GAME_LIST_VALENTINE": "the valentine's day game",
+  "GAME_LIST_INDEPENDENCEDAY": "the independence day game",
   "SYMBOL_LIST": {
     "any": "any",
     "cherry": "cherry",
@@ -373,7 +375,12 @@
     "rose": "rose",
     "chocolate": "chocolate",
     "kiss": "kiss",
-    "cupid": "cupid"
+    "cupid": "cupid",
+    "sparkler": "sparkler",
+    "bbq": "barbecue",
+    "sun": "sun",
+    "flag": "flag",
+    "firework": "firework"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
   "DISPLAY_DIRECTIVE_CHOICES": {

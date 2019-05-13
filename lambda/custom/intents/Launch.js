@@ -32,6 +32,7 @@ module.exports = {
         // Ignore errors
       });
     }).then(() => {
+      console.log(attributes.temp.inSkillProductInfo);
       if (attributes.temp.inSkillProductInfo) {
         let state;
         attributes.paid = {};

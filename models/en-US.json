@@ -289,6 +289,20 @@
               }
             },
             {
+              "id": "independenceday",
+              "name": {
+                "value": "independence day machine",
+                "synonyms": [
+                  "the independence day machine",
+                  "independence day",
+                  "the independence day game",
+                  "the fourth of july machine",
+                  "fourth of july",
+                  "the fourth of july game"
+                ]
+              }
+            },
+            {
               "id": "valentine",
               "name": {
                 "value": "valentine",

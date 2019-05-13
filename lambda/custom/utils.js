@@ -164,6 +164,31 @@ const games = {
       'cupid|cupid|cupid': 500,
     },
   },
+  // Same as basic but with different symbols Has 99.8% payout
+  'independenceday': {
+    'product': 'independenceday',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['sparkler', 'bbq', 'sun', 'flag', 'firework'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 6, 4]},
+      {'symbols': [24, 10, 6, 2, 1]},
+    ],
+    'welcome': 'INDEPENDENCE_GAME',
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/firewin.mp3\"/> ',
+    'stopreplace': 'firestop',
+    'payouts': {
+      'sparkler': 2,
+      'sparkler|sparkler': 4,
+      'bbq|bbq|bbq': 8,
+      'sun|sun|sun': 10,
+      'flag|flag|flag': 15,
+      'firework': 5,
+      'firework|firework': 10,
+      'firework|firework|firework': 100,
+    },
+  },
 };
 
 const tournaments = [
@@ -361,32 +386,6 @@ module.exports = {
   getBankroll: function(attributes) {
     const game = attributes[attributes.currentGame];
     return (game && (game.bankroll !== undefined)) ? game.bankroll : attributes.bankroll;
-  },
-  findQuestionableResponse: function(handlerInput) {
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    // If the request is "questionable" then we will log it
-    if (process.env.CHECKRESPONSE
-      && attributes.temp && attributes.temp.lastResponse) {
-      // Post to check for questionable content
-      const formData = {
-        appKey: 'slots',
-        response: '<speak>' + attributes.temp.lastResponse + '</speak>',
-      };
-      if (attributes.temp.maxDuration) {
-        formData.maxDuration = attributes.temp.maxDuration;
-        attributes.temp.maxDuration = undefined;
-      }
-      const params = {
-        uri: process.env.CHECKRESPONSE,
-        encoding: 'utf8',
-        method: 'POST',
-        body: JSON.stringify(formData),
-      };
-      return rp(params);
-    } else {
-      return Promise.resolve();
-    }
   },
   getGreeting: function(handlerInput) {
     const speechParams = {};
@@ -1080,11 +1079,14 @@ module.exports = {
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/woohoo.mp3', length: 950},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3', length: 3850},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3', length: 325},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/firestop.mp3', length: 550},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighstop.mp3', length: 450},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3', length: 6400},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3', length: 5100},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
-      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3300},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3', length: 3300},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/firewin.mp3', length: 2100},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3700},
     ];
 
     // Look for and remove all audio clips

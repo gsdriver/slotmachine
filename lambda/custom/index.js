@@ -211,7 +211,6 @@ const saveResponseInterceptor = {
           console.log(JSON.stringify(response));
         }
 
-        //return utils.findQuestionableResponse(handlerInput);
         if (response.outputSpeech && response.outputSpeech.ssml) {
           return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, {platform: 'amazon'});
         } else {

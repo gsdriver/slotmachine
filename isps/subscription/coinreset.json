@@ -12,8 +12,8 @@
         "name": "Reset bankroll",
         "summary": "Automatically reset your bankroll when you go bust",
         "description": "This subscription will immediately reset your Slot Machine bankroll when you run out of coins so you don't have to wait until the next day to continue playing.",
-        "smallIconUri": "http://garrettvargas.com/img/coins108.png",
-        "largeIconUri": "http://garrettvargas.com/img/coins512.png",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a1fe/7e59eccb2f0c40f29a327865493c9078/APP_ICON?versionId=E201Clm0UBP7uEPy5pgRGM2JtIcMBqba&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210423Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=3edf849184e9e900965ab08927bcac661bb7f2f889aae80fc548fdd529b9dc37",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/11d6/2cda300b5e804b0f8c5029d945e8bae8/APP_ICON_LARGE?versionId=W_VhPlgJOfZTj9AqUy.5Q5n4cKm6TWqa&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210423Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=798c8b9350f9f75482bc5dd34dbc6530e69395de3e9b70feb488e1f32ed852da",
         "examplePhrases": [
           "Alexa, buy more coins",
           "Alexa, get more coins",
