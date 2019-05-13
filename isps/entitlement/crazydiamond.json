@@ -8,8 +8,8 @@
         "name": "Crazy Diamond Machine",
         "summary": "Adds a crazy diamond machine to the list of games you can play",
         "description": "This adds a crazy diamond machine featuring a wild diamond symbol to the list of games you can play",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5f3d/e2cab133dfd54cebacd1fbd39c1ec1c7/APP_ICON?versionId=c3YizuiKkTRAWDnYKKrmrzkXw9gmZlrR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210425Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=398f08ce56aa42d6d7c36e9085bc0b9830f28a7c29a6c735bab54573d632d96b",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6f5f/14e10354e560457ab0f69c8a782ae8cf/APP_ICON_LARGE?versionId=W6CZLaBfxNMtaJ7QTcTCF77Pxs2fO3xP&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210425Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=d4c6f6c2b85dece4bf2f1755afdb55fea0a858fc94ec8863d851cdb7b5ded276",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5f3d/e2cab133dfd54cebacd1fbd39c1ec1c7/APP_ICON?versionId=c3YizuiKkTRAWDnYKKrmrzkXw9gmZlrR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=26270faa1afb4a8f551ba88f792c51ba2491b35debd879392eab313b2c928eb7",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6f5f/14e10354e560457ab0f69c8a782ae8cf/APP_ICON_LARGE?versionId=W6CZLaBfxNMtaJ7QTcTCF77Pxs2fO3xP&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=766d20c2136e95d0d13d870e90d56ffe391eeacd9781162995d7ba3f82adbd2a",
         "examplePhrases": [
           "Alexa, buy crazy diamond machine",
           "Alexa, give me crazy diamonds",

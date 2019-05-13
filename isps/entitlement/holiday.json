@@ -8,8 +8,8 @@
         "name": "Holiday Machine",
         "summary": "Adds a yuletide themed machine to the list of games you can play",
         "description": "This adds a yuletide machine featuring different sound effects and holiday symbols to the list of games you can play",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/be63/0c5641f73f5845a0a39ddb5c4db295e0/APP_ICON?versionId=aI3bKOKrzGVdgt.xJIFKElwDLTjFqyZR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210427Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=7413d574964893f598a5919b5c5ec4c9f34858ed5327585300b41a4ef4134971",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f8e8/1af1c77ae69847adbbbdda0cd53b8982/APP_ICON_LARGE?versionId=cBn2.Io.wW7pahjrkOMDbKP3lUH0_GnI&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210427Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e90aa2c0685e7d26e1feb326d4bca5082ec14e6f5e9b4b8eb03c0cd05674e9c4",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/be63/0c5641f73f5845a0a39ddb5c4db295e0/APP_ICON?versionId=aI3bKOKrzGVdgt.xJIFKElwDLTjFqyZR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b9029002985089eefc18908e24f2435efae072b4382c96e7702f77ce0d7d4415",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f8e8/1af1c77ae69847adbbbdda0cd53b8982/APP_ICON_LARGE?versionId=cBn2.Io.wW7pahjrkOMDbKP3lUH0_GnI&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2aef914f4e14079f6d0e126db05d31583b30c3684f7285995b8117b422fa4207",
         "examplePhrases": [
           "Alexa, buy the holiday machine",
           "Alexa, give me the holiday machine",

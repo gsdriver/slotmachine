@@ -144,7 +144,7 @@
     ],
     "manifestVersion": "1.0",
     "privacyAndCompliance": {
-      "allowsPurchases": false,
+      "allowsPurchases": true,
       "locales": {
         "en-US": {
           "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"

@@ -8,8 +8,8 @@
         "name": "Independence Day Machine",
         "summary": "Adds an Independence Day themed machine to the list of games you can play",
         "description": "Crack out the fireworks with a special Independence Day machine with special symbols and sound effects!",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/94d6/5eaac6472ba94eafa326f59e6ddd9b70/APP_ICON?versionId=mzi2dsSr5pK8UVhbUr2aBFL1CEFUhMPU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210429Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=df6b729d82a44746a33296f0efe4558962090ccd577d1ce68f6a3223b730755b",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/beea/f7f4ca452eef4b93a869c1bcc92da4b6/APP_ICON_LARGE?versionId=fir9yfm7DohQV0IhMLGQJHjLS6XnA11U&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T210429Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=14a61ebbd34e138b16cec9b060f454f2f95ce988a257768d40a73413b4535ff4",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/94d6/5eaac6472ba94eafa326f59e6ddd9b70/APP_ICON?versionId=mzi2dsSr5pK8UVhbUr2aBFL1CEFUhMPU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211733Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=08d73279a56e1ee51919521dae74d72f841390a63abbe65da70158ec316886ab",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/beea/f7f4ca452eef4b93a869c1bcc92da4b6/APP_ICON_LARGE?versionId=fir9yfm7DohQV0IhMLGQJHjLS6XnA11U&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211733Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=eb4a9ef76b2f3f88a6ff6d656141cfcaa46011af5aeb4f25f57641d52e373866",
         "examplePhrases": [
           "Alexa, buy the independence day machine",
           "Alexa, give me the independence day machine",
