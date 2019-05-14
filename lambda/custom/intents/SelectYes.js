@@ -93,7 +93,7 @@ function getSelectedIndex(event, attributes) {
     }
   }
 
-  if ((index === undefined) || (index < 0) || (index >= attributes.originalChoices.length)) {
+  if ((index === undefined) || (index < 0) || (index >= attributes.choices.length)) {
     index = 0;
   }
 
