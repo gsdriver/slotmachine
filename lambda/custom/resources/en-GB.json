@@ -1,0 +1,138 @@
+{
+  "LAUNCH_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{TournamentResult} You are out of coins and can come back to Slot Machine tomorrow for {Coins, plural, =1 {one more coin} other {# more coins}}. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "LISTPURCHASES_PURCHASED": "You have purchased {Products}.  What else can I help you with?",
+  "LISTPURCHASES_NONE": "You haven't purchased any products for Slot Machine. What else can I help you with?",
+  "LISTPURCHASES_REPROMPT": "What else can I help you with?",
+  "PURCHASE_PRODUCT_LIST": {
+    "coinreset": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins",
+    "crazydiamond": "a Crazy Diamond machine with wild diamond symbols",
+    "holiday": "a Holiday machine with yuletide sounds and symbols",
+    "valentine": "a Valentine's Day game with special valentine symbols"
+    "independenceday": "an Independence Day machine with special symbols and sound effects"
+  },
+  "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",
+  "PURCHASE_NO_PRODUCTS": "Sorry. We don't have any new products available to purchase.",
+  "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
+  "PURCHASE_NO_PURCHASE": "What else can I help you with?",
+  "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",
+  "SPIN_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost. You are out of coins. Come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_BET_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Getting used to losing?  Take a break and come back tomorrow for {Coins} coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+
+  "SPIN_JOINGAME_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} {GameWelcome} <break time=\"300ms\"/> {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Let's play {Game} where the progressive jackpot is {Jackpot} coins. You bet {AmountBet, plural, =1 {one coin} other {# coins}}. {SpinResult}. Sorry, you lost all your coins <break time=\"300ms\"/> but come back tomorrow for {Coins} more coins. You can also buy a subscription to automatically reset your bankroll and keep playing now. Want to hear more?"
+    },
+    "token": "subscribe.coinreset.launch"
+  }
+}

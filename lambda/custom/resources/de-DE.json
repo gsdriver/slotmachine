@@ -394,5 +394,141 @@
   "UNKNOWN_INTENT_REPROMPT": "Sag einfach \"Dreh dich!\"",
   "UNKNOWN_SELECT_INTENT": "Ich habe dich leider nicht verstanden. Sag erneut \"Ja\".",
   "UNKNOWN_SELECT_INTENT_REPROMPT": "Sag einfach \"Ja\".",
-  "WILD_SPECIAL": "Kirschen sind heiß."
+  "WILD_SPECIAL": "Kirschen sind heiß.",
+  "LAUNCH_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{TournamentResult} Du hast leider keine Münzen mehr. Besuch morgen wieder den Slotmaschine und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "LISTPURCHASES_PURCHASED": "Sie haben Mais {Products} gekauft.  Willst du noch etwas anderes wissen?",
+  "LISTPURCHASES_NONE": "Sie haben keine Produkte für die Slotmaschine gekauft. Willst du noch etwas anderes wissen?",
+  "LISTPURCHASES_REPROMPT": "Willst du noch etwas anderes wissen?",
+  "PURCHASE_PRODUCT_LIST": {
+    "coinreset": "ein Reset Bankroll Abonnement, das Ihr Bankroll automatisch zurücksetzt, wenn Ihnen die Münzen ausgehen",
+    "crazydiamond": "eine Crazy Diamond Maschine mit wilden Diamantensymbolen",
+    "holiday": "eine Urlaubsmaschine mit Yuletide-Sounds und Symbolen",
+    "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen",
+    "independenceday": "eine Independence Day Maschine mit speziellen Symbolen und Soundeffekten "
+  },
+  "PURCHASE_PRODUCTS": "Wir haben {Products} zum Kauf zur Verfügung. Sagen Sie das Produkt, das Sie kaufen möchten, oder nein, um Ihr Spiel fortzusetzen. ",
+  "PURCHASE_NO_PRODUCTS": "Tut mir Leid. Wir haben keine neuen Produkte zu kaufen.",
+  "PURCHASE_CONFIRM_REPROMPT": "Sagen Sie das Produkt, das Sie kaufen möchten, oder nein, um Ihr Spiel fortzusetzen.",
+  "PURCHASE_NO_PURCHASE": "Willst du noch etwas anderes wissen?",
+  "REFUND_SAY_PRODUCT": "Sagen Sie den Namen des Produktes, das Sie zurückerstatten möchten, wie zum Beispiel Crazy Diamonds abbrechen oder Bankroll abbrechen.",
+  "SPIN_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{SpinResult} Schade, du hast verloren. Deine Münzen sind alle. Komm morgen wieder vorbei und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} Leider hast du verloren! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "{SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch mal mit {Coins} frischen Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_BET_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch einmal mit {Coins} frischen Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Lass uns eine Runde {Game} spielen! {GameWelcome} {SpinResult} Pech gehabt! Du hast all deine Münzen verloren. Komm morgen wieder zurück und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+
+  "SPIN_JOINGAME_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Lass uns {Game} spielen. {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Wie Schade! Du hast alle Münzen verloren. Aber komm morgen wieder für {Coins} neue Münzen zurück. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Lass uns {Game} mit dem progressiven Jackpot von {Jackpot} Münzen spielen. {SpinResult}. Sorry, du hast alle Münzen eingebüßt. Komm morgen wieder zurück und sichere dir {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Komm, wir spielen {Game}, denn jetzt sind {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, du hast alle Münzen verloren. Aber komm morgen wieder zurück und erhalte {Coins} Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Sollen wir eine Runde {Game} spielen! {GameWelcome} {SpinResult}.  Du hast leider all deine Münzen verloren. Komm morgen wieder zurück für {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult} Pech gehabt. Du hast deinen Einsatz verloren Aber schau morgen wieder vorbei für {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  },
+  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_UPSELL": {
+    "type": "Connections.SendRequest",
+    "name": "Upsell",
+    "payload": {
+      "InSkillProduct": {
+      },
+      "upsellMessage": "Lass uns {Game} mit einem progressiven Jackpot von {Jackpot} Münzen spielen. Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult} Was für ein Pech! Du hast alle Münzen verloren. Aber komm doch morgen wieder zurück, um {Coins} Münzen einzusammeln. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
+    },
+    "token": "subscribe.coinreset.launch"
+  }
 }
