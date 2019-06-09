@@ -67,6 +67,53 @@
           ]
         },
         {
+          "name": "PurchaseIntent",
+          "slots": [
+            {
+              "name": "Product",
+              "type": "LIST_OF_PRODUCTS"
+            }
+          ],
+          "samples": [
+            "Was kann ich kaufen",
+            "Sag mir was ich kaufen kann",
+            "wofür kann ich bezahlen",
+            "Sag mir wofür ich bezahlen kann",
+            "Sag mir wofür ich mich anmelden kann",
+            "Ich möchte {Product} kaufen",
+            "Ich will {Product}",
+            "Ich möchte mich für {Product} anmelden",
+            "gib mir {Product}",
+            "{Product} kaufen",
+            "{Product} bezahlen",
+            "Melden Sie sich für {Product}",
+            "{Product}"
+          ]
+        },
+        {
+          "name": "ListPurchasesIntent",
+          "slots": [],
+          "samples": [
+            "Was habe ich gekauft",
+            "sag mir was habe ich gekauft",
+            "Listen Sie die Produkte auf die ich gekauft habe"
+          ]
+        },
+        {
+          "name": "RefundIntent",
+          "slots": [
+            {
+              "name": "Product",
+              "type": "LIST_OF_PRODUCTS"
+            }
+          ],
+          "samples": [
+            "{Product} zurückgeben",
+            "{Product} zurückerstatten",
+            "{Product} abbrechen"
+          ]
+        },
+        {
           "name": "ReminderIntent",
           "slots": [],
           "samples": [
@@ -229,6 +276,54 @@
         },
         {
           "name": "AMAZON.CancelIntent"
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "id": "coinreset",
+              "name": {
+                "value": "Bankroll Zurücksetzen",
+                "synonyms": [
+                  "münzen zurücksetzen"
+                ]
+              }
+            },
+            {
+              "id": "crazydiamond",
+              "name": {
+                "value": "verrückter diamant",
+                "synonyms": [
+                  "verrückter diamanten maschine",
+                  "verrückter diamant maschine",
+                  "diamenten",
+                  "verrückter diamanten"
+                ]
+              }
+            },
+            {
+              "id": "holiday",
+              "name": {
+                "value": "Weihnachten maschine",
+                "synonyms": [
+                  "Weihnachten",
+                  "Weihnachten spiel"
+                ]
+              }
+            },
+            {
+              "id": "valentine",
+              "name": {
+                "value": "Valentinstag",
+                "synonyms": [
+                  "Valentinstag spiel",
+                  "Valentinstag maschine"
+                ]
+              }
+            }
+          ],
+          "name": "LIST_OF_PRODUCTS"
         }
       ]
     }

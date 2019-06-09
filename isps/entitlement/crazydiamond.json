@@ -24,10 +24,54 @@
           "purchasePromptDescription": "This will add Crazy Diamonds to the list of slot machines you can play.",
           "boughtCardDescription": "Congratulations! You can now access Crazy Diamonds by saying select a new machine."
         }
+      },
+      "en-GB": {
+        "name": "Crazy Diamond Machine",
+        "summary": "Adds a crazy diamond machine to the list of games you can play",
+        "description": "This adds a crazy diamond machine featuring a wild diamond symbol to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5f3d/e2cab133dfd54cebacd1fbd39c1ec1c7/APP_ICON?versionId=c3YizuiKkTRAWDnYKKrmrzkXw9gmZlrR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=26270faa1afb4a8f551ba88f792c51ba2491b35debd879392eab313b2c928eb7",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6f5f/14e10354e560457ab0f69c8a782ae8cf/APP_ICON_LARGE?versionId=W6CZLaBfxNMtaJ7QTcTCF77Pxs2fO3xP&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=766d20c2136e95d0d13d870e90d56ffe391eeacd9781162995d7ba3f82adbd2a",
+        "examplePhrases": [
+          "Alexa, buy crazy diamond machine",
+          "Alexa, give me crazy diamonds",
+          "Alexa, buy crazy diamonds"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "crazy diamond"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add Crazy Diamonds to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access Crazy Diamonds by saying select a new machine."
+        }
+      },
+      "de-DE": {
+        "name": "verrückter diamant maschine",
+        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine verrückte Diamant maschine hinzu",
+        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine verrückte Diamant maschine mit einem Wild Diamond-Symbol hinzu",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5f3d/e2cab133dfd54cebacd1fbd39c1ec1c7/APP_ICON?versionId=c3YizuiKkTRAWDnYKKrmrzkXw9gmZlrR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=26270faa1afb4a8f551ba88f792c51ba2491b35debd879392eab313b2c928eb7",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6f5f/14e10354e560457ab0f69c8a782ae8cf/APP_ICON_LARGE?versionId=W6CZLaBfxNMtaJ7QTcTCF77Pxs2fO3xP&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211729Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=766d20c2136e95d0d13d870e90d56ffe391eeacd9781162995d7ba3f82adbd2a",
+        "examplePhrases": [
+          "Alexa, buy crazy diamond machine",
+          "Alexa, give me crazy diamonds",
+          "Alexa, buy crazy diamonds"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "crazy diamond"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Dies fügt verrückter diamant zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf verrückter diamant zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
+        }
       }
     },
     "distributionCountries": [
-      "US"
+      "US",
+      "UK",
+      "DE"
     ],
     "pricing": {
       "amazon.com": {
@@ -35,6 +79,20 @@
         "defaultPriceListing": {
           "price": 1.99,
           "currency": "USD"
+        }
+      },
+      "amazon.co.uk": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "GBP"
+        }
+      },
+      "amazon.de": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "EUR"
         }
       }
     },
@@ -46,6 +104,12 @@
     "locales": {
       "en-US": {
         "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "en-GB": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "de-DE": {
+        "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
       }
     }
   },

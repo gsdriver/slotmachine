@@ -28,10 +28,54 @@
           "purchasePromptDescription": "This subscription will reset your bankroll every time you run out of coins.",
           "boughtCardDescription": "Congratulations! Slot Machine will now reset your bankroll to 100 coins whenever you run out of coins."
         }
+      },
+      "en-GB": {
+        "name": "Reset bankroll",
+        "summary": "Automatically reset your bankroll when you go bust",
+        "description": "This subscription will immediately reset your Slot Machine bankroll when you run out of coins so you don't have to wait until the next day to continue playing.",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a1fe/7e59eccb2f0c40f29a327865493c9078/APP_ICON?versionId=E201Clm0UBP7uEPy5pgRGM2JtIcMBqba&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211728Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=050b3f78f25268d90edd330216d9cee9832bfa694ecbfb759da2a90ac6a7a6d5",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/11d6/2cda300b5e804b0f8c5029d945e8bae8/APP_ICON_LARGE?versionId=W_VhPlgJOfZTj9AqUy.5Q5n4cKm6TWqa&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211728Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=05e2b2a1405d7b6aa50fe447efa65ebb172123512aaa44ac3c1d76bd10c6b308",
+        "examplePhrases": [
+          "Alexa, buy more coins",
+          "Alexa, get more coins",
+          "Alexa, purchase more coins"
+        ],
+        "keywords": [
+          "slot machine",
+          "slot machine coins",
+          "games"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This subscription will reset your bankroll every time you run out of coins.",
+          "boughtCardDescription": "Congratulations! Slot Machine will now reset your bankroll to 100 coins whenever you run out of coins."
+        }
+      },
+      "de-DE": {
+        "name": "Bankroll Zurücksetzen",
+        "summary": "Setzen Sie Ihre Bankroll automatisch zurück, wenn Sie in Konkurs gehen",
+        "description": "Durch dieses Abonnement wird Ihr Spielautomaten-Guthaben sofort zurückgesetzt, wenn Ihnen die Münzen ausgehen, sodass Sie nicht bis zum nächsten Tag warten müssen, um weiterzuspielen.",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a1fe/7e59eccb2f0c40f29a327865493c9078/APP_ICON?versionId=E201Clm0UBP7uEPy5pgRGM2JtIcMBqba&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211728Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=050b3f78f25268d90edd330216d9cee9832bfa694ecbfb759da2a90ac6a7a6d5",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/11d6/2cda300b5e804b0f8c5029d945e8bae8/APP_ICON_LARGE?versionId=W_VhPlgJOfZTj9AqUy.5Q5n4cKm6TWqa&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211728Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=05e2b2a1405d7b6aa50fe447efa65ebb172123512aaa44ac3c1d76bd10c6b308",
+        "examplePhrases": [
+          "Alexa, Ich will münzen zurücksetzen",
+          "Alexa, Ich will Bankroll Zurücksetzen",
+          "Alexa, kaufen münzen zurücksetzen"
+        ],
+        "keywords": [
+          "Slotmaschine",
+          "Slotmaschine Münzen",
+          "Casino"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Mit diesem Abonnement wird Ihr Guthaben jedes Mal zurückgesetzt, wenn Sie keine Münzen mehr haben.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Slotmaschine setzt jetzt Ihr Guthaben auf 100 Münzen zurück, wenn Sie keine Münzen mehr haben."
+        }
       }
     },
     "distributionCountries": [
-      "US"
+      "US",
+      "DE",
+      "UK"
     ],
     "pricing": {
       "amazon.com": {
@@ -39,6 +83,20 @@
         "defaultPriceListing": {
           "price": 0.99,
           "currency": "USD"
+        }
+      },
+      "amazon.co.uk": {
+        "releaseDate": "2019-06-09T00:00Z",
+        "defaultPriceListing": {
+          "price": 0.99,
+          "currency": "GBP"
+        }
+      },
+      "amazon.de": {
+        "releaseDate": "2019-06-09T00:00Z",
+        "defaultPriceListing": {
+          "price": 0.99,
+          "currency": "EUR"
         }
       }
     },
@@ -50,6 +108,12 @@
     "locales": {
       "en-US": {
         "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "en-GB": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "de-DE": {
+        "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
       }
     }
   },

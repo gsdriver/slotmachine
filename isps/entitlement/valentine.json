@@ -24,22 +24,77 @@
           "purchasePromptDescription": "This will add the Valentine's Day Machine to the list of slot machines you can play.",
           "boughtCardDescription": "Congratulations! You can now access the Valentine's Day Machine by saying select a new machine."
         }
+      },
+      "en-GB": {
+        "name": "Valentine's Day Machine",
+        "summary": "Adds a valentine's day themed machine to the list of games you can play",
+        "description": "This adds a valentine's day machine featuring special symbols to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b5a05f555bdc27f2f7f8c4b7d0e8c298f023bc9f2f34599319e5ea36bf5c01e8",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=839069e4a8d0914b72cc3768ee39559bd89849b316d47ccc8d272ea81dc2c88a",
+        "examplePhrases": [
+          "Alexa, buy the valentine machine",
+          "Alexa, give me the valentines day machine",
+          "Alexa, buy the valetnines day game"
+        ],
+        "keywords": [
+          "slot machine",
+          "casino",
+          "valentines day"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add the Valentine's Day Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Valentine's Day Machine by saying select a new machine."
+        }
+      },
+      "de-DE": {
+        "name": "Valentinstag Maschine",
+        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine hinzu",
+        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine mit einem Wild Diamond-Symbol hinzu",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b5a05f555bdc27f2f7f8c4b7d0e8c298f023bc9f2f34599319e5ea36bf5c01e8",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=839069e4a8d0914b72cc3768ee39559bd89849b316d47ccc8d272ea81dc2c88a",
+        "examplePhrases": [
+          "Alexa, buy the valentine machine",
+          "Alexa, give me the valentines day machine",
+          "Alexa, buy the valetnines day game"
+        ],
+        "keywords": [
+          "slot machine",
+          "casino",
+          "valentines day"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Dies fügt Valentinstag zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf Valentinstag zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
+        }
       }
     },
     "distributionCountries": [
-      "US"
+      "US",
+      "UK",
+      "DE"
     ],
     "pricing": {
       "amazon.com": {
-        "releaseDate": "2018-12-26T00:00Z",
+        "releaseDate": "2018-09-22T00:00Z",
         "defaultPriceListing": {
           "price": 1.99,
           "currency": "USD"
         }
+      },
+      "amazon.co.uk": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "GBP"
+        }
+      },
+      "amazon.de": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "EUR"
+        }
       }
-    },
-    "taxInformation": {
-      "category": "SOFTWARE"
     }
   },
   "privacyAndCompliance": {

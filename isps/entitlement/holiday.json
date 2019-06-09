@@ -24,22 +24,77 @@
           "purchasePromptDescription": "This will add the Holiday Machine to the list of slot machines you can play.",
           "boughtCardDescription": "Congratulations! You can now access the Holiday Machine by saying select a new machine."
         }
+      },
+      "en-GB": {
+        "name": "Holiday Machine",
+        "summary": "Adds a yuletide themed machine to the list of games you can play",
+        "description": "This adds a yuletide machine featuring different sound effects and holiday symbols to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/be63/0c5641f73f5845a0a39ddb5c4db295e0/APP_ICON?versionId=aI3bKOKrzGVdgt.xJIFKElwDLTjFqyZR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b9029002985089eefc18908e24f2435efae072b4382c96e7702f77ce0d7d4415",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f8e8/1af1c77ae69847adbbbdda0cd53b8982/APP_ICON_LARGE?versionId=cBn2.Io.wW7pahjrkOMDbKP3lUH0_GnI&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2aef914f4e14079f6d0e126db05d31583b30c3684f7285995b8117b422fa4207",
+        "examplePhrases": [
+          "Alexa, buy the holiday machine",
+          "Alexa, give me the holiday machine",
+          "Alexa, buy the holiday game"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "holiday machine"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add the Holiday Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Holiday Machine by saying select a new machine."
+        }
+      },
+      "de-DE": {
+        "name": "Weihnachten maschine",
+        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine Weihnachten maschine hinzu",
+        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine Weihnachtsmaschine mit verschiedenen Soundeffekten und Feiertagssymbolen hinzu",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/be63/0c5641f73f5845a0a39ddb5c4db295e0/APP_ICON?versionId=aI3bKOKrzGVdgt.xJIFKElwDLTjFqyZR&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b9029002985089eefc18908e24f2435efae072b4382c96e7702f77ce0d7d4415",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f8e8/1af1c77ae69847adbbbdda0cd53b8982/APP_ICON_LARGE?versionId=cBn2.Io.wW7pahjrkOMDbKP3lUH0_GnI&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211731Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2aef914f4e14079f6d0e126db05d31583b30c3684f7285995b8117b422fa4207",
+        "examplePhrases": [
+          "Alexa, buy the holiday machine",
+          "Alexa, give me the holiday machine",
+          "Alexa, buy the holiday game"
+        ],
+        "keywords": [
+          "slot machine",
+          "games",
+          "holiday machine"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Dies fügt Weihnachten maschine zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf Weihnachten zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
+        }
       }
     },
     "distributionCountries": [
-      "US"
+      "US",
+      "UK",
+      "DE"
     ],
     "pricing": {
       "amazon.com": {
-        "releaseDate": "2018-10-30T00:00Z",
+        "releaseDate": "2018-09-22T00:00Z",
         "defaultPriceListing": {
           "price": 1.99,
           "currency": "USD"
         }
+      },
+      "amazon.co.uk": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "GBP"
+        }
+      },
+      "amazon.de": {
+        "releaseDate": "2018-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "EUR"
+        }
       }
-    },
-    "taxInformation": {
-      "category": "SOFTWARE"
     }
   },
   "privacyAndCompliance": {

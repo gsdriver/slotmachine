@@ -106,6 +106,57 @@
           ]
         },
         {
+          "name": "PurchaseIntent",
+          "slots": [
+            {
+              "name": "Product",
+              "type": "LIST_OF_PRODUCTS"
+            }
+          ],
+          "samples": [
+            "what can I buy",
+            "what can I shop for",
+            "tell me what I can buy",
+            "what can I pay for",
+            "tell what what I can pay for",
+            "tell what what I can sign up for",
+            "I want to buy {Product}",
+            "I want {Product}",
+            "I want to sign up for {Product}",
+            "give me {Product}",
+            "buy {Product}",
+            "pay for {Product}",
+            "sign up for {Product}",
+            "{Product}"
+          ]
+        },
+        {
+          "name": "ListPurchasesIntent",
+          "slots": [],
+          "samples": [
+            "what did I buy",
+            "what have I bought",
+            "what have I purchased",
+            "tell me what I bought",
+            "tell me what I purchased",
+            "list the products I bought"
+          ]
+        },
+        {
+          "name": "RefundIntent",
+          "slots": [
+            {
+              "name": "Product",
+              "type": "LIST_OF_PRODUCTS"
+            }
+          ],
+          "samples": [
+            "return {Product}",
+            "refund {Product}",
+            "cancel {Product}"
+          ]
+        },
+        {
           "name": "ReminderIntent",
           "slots": [],
           "samples": [
@@ -201,7 +252,61 @@
           ]
         }
       ],
-      "types": []
+      "types": [
+        {
+          "values": [
+            {
+              "id": "coinreset",
+              "name": {
+                "value": "reset bankroll",
+                "synonyms": [
+                  "reset coins"
+                ]
+              }
+            },
+            {
+              "id": "crazydiamond",
+              "name": {
+                "value": "crazy diamond",
+                "synonyms": [
+                  "crazy diamonds machine",
+                  "crazy diamond machine",
+                  "diamonds",
+                  "crazy diamonds"
+                ]
+              }
+            },
+            {
+              "id": "holiday",
+              "name": {
+                "value": "holiday machine",
+                "synonyms": [
+                  "the holiday machine",
+                  "holiday",
+                  "the holiday game",
+                  "holiday game"
+                ]
+              }
+            },
+            {
+              "id": "valentine",
+              "name": {
+                "value": "valentine",
+                "synonyms": [
+                  "the valentines day game",
+                  "valentines day game",
+                  "valentine game",
+                  "valentines day machine",
+                  "valentines day",
+                  "the valentine machine",
+                  "valentine machine"
+                ]
+              }
+            }
+          ],
+          "name": "LIST_OF_PRODUCTS"
+        }
+      ]
     }
   }
 }

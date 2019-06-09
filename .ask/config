@@ -20,33 +20,36 @@
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "76aee5d47e1bb597d564f1109d1a1646"
+            "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "en-GB": {
-            "eTag": "d32784bf171215bf23501e5adbf6367d"
+            "eTag": "d6954d665a4b833f650b8369ece07fc4"
           },
           "en-CA": {
-            "eTag": "76aee5d47e1bb597d564f1109d1a1646"
+            "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "en-US": {
-            "eTag": "46d67265bb1de00f8a8326ed6e243205"
+            "eTag": "052833d3567c479e457fa3416ad18ce1"
           },
           "en-IN": {
-            "eTag": "76aee5d47e1bb597d564f1109d1a1646"
+            "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "de-DE": {
-            "eTag": "a75bc53cfb78b955ed128346e07a3ba7"
+            "eTag": "995908ba9d8157f14d512e8ef4231349"
           }
         },
         "lambda": [
           {
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
-            "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "revisionId": "d6ba740c-6289-4364-97f2-8622c58ed627"
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
+            "awsRegion": "us-east-1",
+            "codeUri": "lambda/custom",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
+            "handler": "index.handler",
+            "revisionId": "0560ad2c-0578-4269-af9d-e96698934b19",
+            "runtime": "nodejs8.10"
           }
         ]
       },
