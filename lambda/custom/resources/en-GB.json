@@ -16,7 +16,7 @@
     "coinreset": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins",
     "crazydiamond": "a Crazy Diamond machine with wild diamond symbols",
     "holiday": "a Holiday machine with yuletide sounds and symbols",
-    "valentine": "a Valentine's Day game with special valentine symbols"
+    "valentine": "a Valentine's Day game with special valentine symbols",
     "independenceday": "an Independence Day machine with special symbols and sound effects"
   },
   "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",

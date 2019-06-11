@@ -255,11 +255,19 @@ function getAvailableProducts(attributes) {
     for (product in attributes.paid) {
       // Note we only upsell machines - not coinreset
       // We also aren't upselling the holiday game anymore (seasonal)
-      if (product && (product !== 'coinreset')
-        && (product !== 'holiday')
-        && (product !== 'valentine')
-        && (attributes.paid[product].state === 'AVAILABLE')) {
-        availableProducts.push(product);
+      if (attributes.playerLocale !== 'en-US') {
+        // Cert wants to see these
+        if (product && (product !== 'coinreset')
+          && (attributes.paid[product].state === 'AVAILABLE')) {
+          availableProducts.push(product);
+        }
+      } else {
+        if (product && (product !== 'coinreset')
+          && (product !== 'holiday')
+          && (product !== 'valentine')
+          && (attributes.paid[product].state === 'AVAILABLE')) {
+          availableProducts.push(product);
+        }
       }
     }
   }

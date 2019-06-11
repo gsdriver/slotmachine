@@ -47,7 +47,7 @@ module.exports = {
           let message;
 
           // This message is sent internally so no worries about localizing
-          message = 'For token ' + event.request.token + ', ';
+          message = 'For token ' + event.request.token + ' (' + attributes.playerLocale + '), ';
           if (event.request.payload.message) {
             message += event.request.payload.message;
           } else {
