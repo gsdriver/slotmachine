@@ -16,6 +16,7 @@
 //  v1.2 - adds sold field
 //  v1.3 - Add A/B variant - v1 upsell after 6 spins, every day; v2 no upsell on spins
 //  v1.4 - Only one product upsold per session
+//  v1.5 - upsell after 6 spins for all customers
 //
 
 'use strict';
@@ -42,7 +43,7 @@ module.exports = {
       attributes.upsell.prompts = {};
       attributes.upsell.sessions = 0;
     }
-    attributes.upsell.version = '1.4';
+    attributes.upsell.version = '1.5';
     if (!attributes.upsell[trigger]) {
       attributes.upsell[trigger] = {};
     }
@@ -77,7 +78,7 @@ module.exports = {
           'InSkillProduct': {
             productId: attributes.paid[upsellProduct].productId,
           },
-          'upsellMessage': selectUpsellMessage(attributes, upsellProduct, trigger.toUpperCase() + '_UPSELL'),
+          'upsellMessage': selectUpsellMessage(handlerInput, upsellProduct, trigger.toUpperCase() + '_UPSELL'),
         },
         'token': upsellProduct,
       };
@@ -150,23 +151,40 @@ module.exports = {
 };
 
 // The message is hardcoded
-function selectUpsellMessage(attributes, game, message) {
+function selectUpsellMessage(handlerInput, game, message) {
   let selection;
+  const attributes = handlerInput.attributesManager.getSessionAttributes();
+  let upsellMessages;
+  let gameList;
 
   // Store upsell messages locally
-  // These aren't localized outside of en-US anyway
-  const upsellMessages = {
-    'LAUNCH_UPSELL': 'Hello, welcome to Slot Machine. We now have {Game} available for purchase. Want to learn more?|Hi, welcome to Slot Machine. We\'re proud to introduce {Game} now available for purchase! Want to hear more about it?|Welcome back to Slot Machine. In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
-    'SELECT_UPSELL': 'We have {Game} machine available for purchase. Want to learn more?|We\'re proud to introduce {Game} machine now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
-    'SPIN_UPSELL': 'Thanks for playing. We now have {Game} available for purchase. Want to learn more?|We\'re glad to see you\'ve been enjoying Slot Machine. We\'re proud to introduce {Game} now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we\'re proud to introduce {Game} now available for purchase. Are you interested in hearing more about it?',
-    'LISTPURCHASES_UPSELL': 'You don\'t have any products purchased, but we have {Game} available. Want to learn more?|You haven\'t purchased any products, but we have {Game} available for purchase. Would you like to hear more?|You haven\'t bought any products yet, but we have {Game} available for purchase. Want to hear more?',
-  };
-  const gameList = {
-    'crazydiamond': 'crazy diamonds',
-    'holiday': 'the holiday game',
-    'valentine': 'the valentine\'s day game',
-    'independenceday': 'the independence day game',
-  };
+  if (handlerInput.requestEnvelope.request.locale === 'de-DE') {
+    upsellMessages = {
+      'LAUNCH_UPSELL': 'Willkommen beim Slotmaschine. Wir haben jetzt {Game} zum Kauf verfügbar. Möchten Sie mehr erfahren?',
+      'SELECT_UPSELL': 'Wir haben jetzt {Game} zum Kauf verfügbar. Möchten Sie mehr erfahren?',
+      'SPIN_UPSELL': 'Danke fürs Spielen. Wir haben jetzt {Game} zum Kauf verfügbar. Möchten Sie mehr erfahren?',
+      'LISTPURCHASES_UPSELL': 'Sie haben noch keine Produkte gekauft, aber wir haben {Game} verfügbar. Möchten Sie mehr erfahren?',
+    };
+    gameList = {
+      'crazydiamond': 'verrückte Diamanten',
+      'holiday': 'das Weihnachten spiel',
+      'valentine': 'Valentinstag Spiel',
+      'independenceday': 'Tag der Unabhängigkeit spiel',
+    };
+  } else {
+    upsellMessages = {
+      'LAUNCH_UPSELL': 'Hello, welcome to Slot Machine. We now have {Game} available for purchase. Want to learn more?|Hi, welcome to Slot Machine. We\'re proud to introduce {Game} now available for purchase! Want to hear more about it?|Welcome back to Slot Machine. In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
+      'SELECT_UPSELL': 'We have {Game} machine available for purchase. Want to learn more?|We\'re proud to introduce {Game} machine now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we also have {Game} available for purchase. Are you interested in hearing more about it?',
+      'SPIN_UPSELL': 'Thanks for playing. We now have {Game} available for purchase. Want to learn more?|We\'re glad to see you\'ve been enjoying Slot Machine. We\'re proud to introduce {Game} now available for purchase. Would you like to hear more about it?|In addition to our built in machines, we\'re proud to introduce {Game} now available for purchase. Are you interested in hearing more about it?',
+      'LISTPURCHASES_UPSELL': 'You don\'t have any products purchased, but we have {Game} available. Want to learn more?|You haven\'t purchased any products, but we have {Game} available for purchase. Would you like to hear more?|You haven\'t bought any products yet, but we have {Game} available for purchase. Want to hear more?',
+    };
+    gameList = {
+      'crazydiamond': 'crazy diamonds',
+      'holiday': 'the holiday game',
+      'valentine': 'the valentine\'s day game',
+      'independenceday': 'the independence day game',
+    };
+  }
 
   const options = upsellMessages[message].split('|');
   selection = Math.floor(Math.random() * options.length);
@@ -212,17 +230,16 @@ function shouldUpsell(attributes, availableProducts, trigger, now) {
 
     case 'spin':
       // v1: Upsell a machine after 6 spins but only once a day (per machine)
-      // v2: No upsell
-      if (attributes.upsell.bucket === 'v1') {
-        if (attributes.upsell.spin.count === 6) {
-          // OK, let's check if any products are available to upsell
-          availableProducts.forEach((product) => {
-            if (!attributes.upsell.prompts[product] ||
-              ((now - attributes.upsell.prompts[product]) > 24*60*60*1000)) {
-                upsellProduct = product;
-            }
-          });
-        }
+      // v1.3: Upsell a machine after 6 spins based on A/B bucketing
+      // v1.5: Upsell a machine after 6 spins once a day for all customers
+      if (attributes.upsell.spin.count === 6) {
+        // OK, let's check if any products are available to upsell
+        availableProducts.forEach((product) => {
+          if (!attributes.upsell.prompts[product] ||
+            ((now - attributes.upsell.prompts[product]) > 24*60*60*1000)) {
+              upsellProduct = product;
+          }
+        });
       }
       break;
 

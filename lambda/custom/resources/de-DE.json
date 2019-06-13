@@ -26,6 +26,7 @@
   "EXIT_REMINDER_REPROMPT": "Möchten Sie eine alarm für die Turnierrunde?",
   "GAME_LIST_BASIC": "das normale Obstspiel",
   "GAME_LIST_CRAZYDIAMOND": "verrückte Diamanten",
+  "GAME_LIST_VALENTINE": "Valentinstag Spiel",
   "GAME_LIST_HOLIDAY": "das Weihnachten spiel",
   "GAME_LIST_LOOSE": "das Spiel mit der 105 % Auszahlungs-Chance",
   "GAME_LIST_PROGRESSIVE": "Progressiver Jackpot",
@@ -410,8 +411,7 @@
     "coinreset": "ein Bankroll zurücksetzen Abonnement, das Ihr Bankroll automatisch zurücksetzt, wenn Ihnen die Münzen ausgehen",
     "crazydiamond": "eine Verrückter Diamant Maschine mit wilden Diamantensymbolen",
     "holiday": "eine Weihnachten maschine mit Yuletide-Sounds und Symbolen",
-    "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen",
-    "independenceday": "eine Independence Day Maschine mit speziellen Symbolen und Soundeffekten "
+    "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen"
   },
   "PURCHASE_PRODUCTS": "Wir haben {Products} zum Kauf zur Verfügung. Sagen Sie das Produkt, das Sie kaufen möchten, oder nein, um Ihr Spiel fortzusetzen. ",
   "PURCHASE_NO_PRODUCTS": "Tut mir Leid. Wir haben keine neuen Produkte zu kaufen.",
