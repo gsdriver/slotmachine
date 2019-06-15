@@ -167,6 +167,7 @@ const games = {
   // Same as basic but with different symbols Has 99.8% payout
   'independenceday': {
     'product': 'independenceday',
+    'locales': ['en-US'],
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['sparkler', 'bbq', 'sun', 'flag', 'firework'],
@@ -661,8 +662,13 @@ module.exports = {
               choices.push(game);
               choiceText.push(ri('GAME_LIST_' + game.toUpperCase()));
             } else {
-              availableProducts.push(game);
-              forPurchase.push(ri('GAME_LIST_' + game.toUpperCase()));
+              // FOR CERTIFICATION: If you flip between locales, you may
+              // have a game in your list that should only be for some locales
+              if (!games[game].locales ||
+                (games[game].locales.indexOf(event.request.locale) !== -1)) {
+                availableProducts.push(game);
+                forPurchase.push(ri('GAME_LIST_' + game.toUpperCase()));
+              }
             }
           }
         } else if ((game != 'tournament') || offerTournament) {
