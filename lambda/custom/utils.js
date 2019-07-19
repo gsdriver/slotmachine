@@ -164,6 +164,34 @@ const games = {
       'cupid|cupid|cupid': 500,
     },
   },
+  // Like crazy diamonds but slightly different payouts and 97.7% payout
+  'circus': {
+    'product': 'circus',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['lion', 'firework', 'cotton', 'tiger', 'clown'],
+    'frequency': [
+      {'symbols': [6, 12, 12, 2, 1]},
+      {'symbols': [8, 6, 3, 1, 2]},
+      {'symbols': [14, 3, 3, 3, 4]},
+    ],
+    'substitutes': {
+      'clown': ['lion', 'firework', 'cotton', 'tiger'],
+    },
+    'special': 'CIRCUS_SPECIAL',
+    'welcome': 'CIRCUS_GAME',
+    'win': ' <audio src=\"https://alexasoundclips.s3-us-west-2.amazonaws.com/lion.mp3\"/> ',
+    'payouts': {
+      'lion|lion': 2,
+      'firework|firework|firework': 4,
+      'cotton|cotton|cotton': 5,
+      'tiger|tiger': 10,
+      'tiger|tiger|tiger': 20,
+      'clown': 10,
+      'clown|clown': 25,
+      'clown|clown|clown': 200,
+    },
+  },
   // Same as basic but with different symbols Has 99.8% payout
   'independenceday': {
     'product': 'independenceday',
@@ -1092,6 +1120,8 @@ module.exports = {
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3', length: 3300},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/firewin.mp3', length: 2100},
+      {file: 'https://alexasoundclips.s3-us-west-2.amazonaws.com/lion.mp3', length: 1250},
+      {file: 'https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3', length: 7200},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3700},
     ];
 

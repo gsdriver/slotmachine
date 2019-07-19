@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14"
               }
             }
           }
@@ -16,40 +16,37 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "58e87bbd60e17ddde4abd70a143adbd5"
+          "eTag": "560f39f53595e6bb3dc28cd7fd25f41c"
         },
         "interactionModel": {
           "en-AU": {
             "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "en-GB": {
-            "eTag": "d6954d665a4b833f650b8369ece07fc4"
+            "eTag": "914e2b6c0d4a73366da4e99e6ed23c84"
           },
           "en-CA": {
             "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "en-US": {
-            "eTag": "052833d3567c479e457fa3416ad18ce1"
+            "eTag": "189ad6d311c1b6f8ab9abb4c4bd97501"
           },
           "en-IN": {
             "eTag": "c12f9082030a8fe15933fdd52a2e8715"
           },
           "de-DE": {
-            "eTag": "995908ba9d8157f14d512e8ef4231349"
+            "eTag": "eaa28036915946c222b136689e5523bb"
           }
         },
         "lambda": [
           {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "awsRegion": "us-east-1",
             "alexaUsage": [
               "custom/default"
             ],
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
-            "awsRegion": "us-east-1",
-            "codeUri": "lambda/custom",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v13",
-            "handler": "index.handler",
-            "revisionId": "05a90cf2-a70f-486a-b038-d150c3558fb7",
-            "runtime": "nodejs8.10"
+            "revisionId": "83f2ddc5-18ed-4e2c-868c-82b5fcef531a"
           }
         ]
       },
@@ -58,31 +55,37 @@
           "deploy_status": "Update",
           "filePath": "isps\\subscription\\coinreset.json",
           "productId": "amzn1.adg.product.9ca0c5e9-4986-4dd8-be66-77fc928197ef",
-          "eTag": "8164c88de9cf2462f79f4431a32aa550"
+          "eTag": "4ab3bd22f4f10ce2b803e7d43d15ab54"
         },
         {
           "deploy_status": "Update",
           "filePath": "isps\\entitlement\\crazydiamond.json",
           "productId": "amzn1.adg.product.0f960bb3-f86c-4ff7-a2c0-06a14b558e91",
-          "eTag": "9efd10d3130043bfc6bb2c8eb89ceab3"
+          "eTag": "be79372dd878794eca7133ca50e645b8"
         },
         {
           "deploy_status": "Update",
           "filePath": "isps\\entitlement\\holiday.json",
           "productId": "amzn1.adg.product.c29c1be0-cc93-487c-97b6-fea7bd47e3d9",
-          "eTag": "1969d8dbbaeb7443d423933f0e0f2a2b"
+          "eTag": "8ab720e68c439c51dcf0a842c3af5c80"
         },
         {
           "deploy_status": "Update",
           "filePath": "isps\\entitlement\\valentine.json",
           "productId": "amzn1.adg.product.9bf2a878-7ded-4af0-83d8-699165b2a3b1",
-          "eTag": "bc8b85acdd4caf451b3cfa5d8fd6d3e0"
+          "eTag": "07ce4924cffcb617a4631430b98bf93f"
         },
         {
           "deploy_status": "Update",
           "filePath": "isps\\entitlement\\independenceday.json",
           "productId": "amzn1.adg.product.b99f0d05-8a7f-469d-883c-c9089d90e7f8",
           "eTag": "a9edea9d23a45b44e935d258e92f6b71"
+        },
+        {
+          "deploy_status": "Update",
+          "filePath": "isps\\entitlement\\circus.json",
+          "productId": "amzn1.adg.product.c21961fb-eb21-422f-a604-12504a22a550",
+          "eTag": "985b1e990d3311da330ef96177ad7c38"
         }
       ]
     }

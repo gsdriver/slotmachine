@@ -4,12 +4,31 @@
   "referenceName": "valentine",
   "publishingInformation": {
     "locales": {
+      "de-DE": {
+        "name": "Valentinstag Maschine",
+        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine hinzu",
+        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine mit einem Wild Diamond-Symbol hinzu.",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/3d5b/fb6543da55fe473fa586bd6913151e0f/APP_ICON?versionId=4IxhG966U.GkwgTgLik_Xo7584tTk2Kv&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=d0c12abba0508a60bc27c410c7ac59b6a91e342b967486678a92bf691ef1b6e3",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/573d/8b91799e3f5f4ac99277c1674fc51b34/APP_ICON_LARGE?versionId=YLXKFrMctGaB22Bb_IXSvecs3e7QYu9R&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c668c951c3d11471eae7a7561bc7bd537f035694e22344a23a12aba4b56b4f79",
+        "examplePhrases": [
+          "For Future Use – Example Phrase 1",
+          "For Future Use – Example Phrase 2",
+          "For Future Use – Example Phrase 3"
+        ],
+        "keywords": [
+          "For Future Use – Keywords"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Dies fügt Valentinstag zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf Valentinstag zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
+        }
+      },
       "en-US": {
         "name": "Valentine's Day Machine",
         "summary": "Adds a valentine's day themed machine to the list of games you can play",
         "description": "This adds a valentine's day machine featuring special symbols to the list of games you can play",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b5a05f555bdc27f2f7f8c4b7d0e8c298f023bc9f2f34599319e5ea36bf5c01e8",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=839069e4a8d0914b72cc3768ee39559bd89849b316d47ccc8d272ea81dc2c88a",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b155e5c7a7e93d2dd385cb658a75b1dc7c4a98fa9eada5294737c441207d4418",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b246d354ab0afcb70f6657254bc6933855cb38e0f9a595505c9bba58b2b83d5c",
         "examplePhrases": [
           "Alexa, buy the valentine machine",
           "Alexa, give me the valentines day machine",
@@ -29,78 +48,92 @@
         "name": "Valentine's Day Machine",
         "summary": "Adds a valentine's day themed machine to the list of games you can play",
         "description": "This adds a valentine's day machine featuring special symbols to the list of games you can play",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b5a05f555bdc27f2f7f8c4b7d0e8c298f023bc9f2f34599319e5ea36bf5c01e8",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=839069e4a8d0914b72cc3768ee39559bd89849b316d47ccc8d272ea81dc2c88a",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/8677/9fb257f84de04c2a81cd85faa0e620e4/APP_ICON?versionId=52Z44O3H_aBPcAQ9aQZshS148oO.tFRN&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c8ec6a73aa5cd45a64c83802fa9fb9b7422ddb6072a7225e70769ca628bc1a0b",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a44f/98bf6ffa475f4dd683bdf1ae015aaec3/APP_ICON_LARGE?versionId=.L2M96ZCZ6BpmJtFcibxV3_DwT013aPP&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174713Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=95c144159005cbcdb3efa503a1284cb064f6553fcef88f38180f96ee6645a857",
         "examplePhrases": [
-          "Alexa, buy the valentine machine",
-          "Alexa, give me the valentines day machine",
-          "Alexa, buy the valetnines day game"
+          "For Future Use – Example Phrase 1",
+          "For Future Use – Example Phrase 2",
+          "For Future Use – Example Phrase 3"
         ],
         "keywords": [
-          "slot machine",
-          "casino",
-          "valentines day"
+          "For Future Use – Keywords"
         ],
         "customProductPrompts": {
           "purchasePromptDescription": "This will add the Valentine's Day Machine to the list of slot machines you can play.",
           "boughtCardDescription": "Congratulations! You can now access the Valentine's Day Machine by saying select a new machine."
         }
-      },
-      "de-DE": {
-        "name": "Valentinstag Maschine",
-        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine hinzu",
-        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine Valentinstag maschine mit einem Wild Diamond-Symbol hinzu",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/924a/1780ee022c6d477fb215690741bb95b4/APP_ICON?versionId=HO8oJRi8eFWqZti4sQScJiIH83gtUQt2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b5a05f555bdc27f2f7f8c4b7d0e8c298f023bc9f2f34599319e5ea36bf5c01e8",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9af9/622d6d92261a41aeb5c4e7f129689ebb/APP_ICON_LARGE?versionId=AQolrBX9iXUxumyjdknynnhkdyaAYXwU&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T211732Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=839069e4a8d0914b72cc3768ee39559bd89849b316d47ccc8d272ea81dc2c88a",
-        "examplePhrases": [
-          "Alexa, buy the valentine machine",
-          "Alexa, give me the valentines day machine",
-          "Alexa, buy the valetnines day game"
-        ],
-        "keywords": [
-          "slot machine",
-          "casino",
-          "valentines day"
-        ],
-        "customProductPrompts": {
-          "purchasePromptDescription": "Dies fügt Valentinstag zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
-          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf Valentinstag zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
-        }
       }
     },
     "distributionCountries": [
-      "US",
-      "UK",
-      "DE"
+      "AT",
+      "BE",
+      "BG",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "FI",
+      "GB",
+      "GG",
+      "GI",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PT",
+      "RO",
+      "SE",
+      "SI",
+      "SK",
+      "UA",
+      "US"
     ],
     "pricing": {
+      "amazon.de": {
+        "releaseDate": "2019-06-09T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "EUR"
+        }
+      },
       "amazon.com": {
-        "releaseDate": "2018-09-22T00:00Z",
+        "releaseDate": "2018-12-26T00:00Z",
         "defaultPriceListing": {
           "price": 1.99,
           "currency": "USD"
         }
       },
       "amazon.co.uk": {
-        "releaseDate": "2018-09-22T00:00Z",
+        "releaseDate": "2019-06-09T00:00Z",
         "defaultPriceListing": {
           "price": 1.99,
           "currency": "GBP"
         }
-      },
-      "amazon.de": {
-        "releaseDate": "2018-09-22T00:00Z",
-        "defaultPriceListing": {
-          "price": 1.99,
-          "currency": "EUR"
-        }
       }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
     }
   },
   "privacyAndCompliance": {
     "locales": {
+      "de-DE": {
+        "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
+      },
       "en-US": {
         "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "en-GB": {
+        "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
       }
     }
   },

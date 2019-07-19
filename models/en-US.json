@@ -289,6 +289,21 @@
               }
             },
             {
+              "id": "circus",
+              "name": {
+                "value": "circus machine",
+                "synonyms": [
+                  "the circus machine",
+                  "circus",
+                  "the circus game",
+                  "circus game",
+                  "the clown machine",
+                  "the clown game",
+                  "clown game"
+                ]
+              }
+            },
+            {
               "id": "independenceday",
               "name": {
                 "value": "independence day machine",

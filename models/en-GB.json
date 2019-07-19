@@ -302,6 +302,21 @@
                   "valentine machine"
                 ]
               }
+            },
+            {
+              "id": "circus",
+              "name": {
+                "value": "circus machine",
+                "synonyms": [
+                  "the circus machine",
+                  "circus",
+                  "the circus game",
+                  "circus game",
+                  "the clown machine",
+                  "the clown game",
+                  "clown game"
+                ]
+              }
             }
           ],
           "name": "LIST_OF_PRODUCTS"

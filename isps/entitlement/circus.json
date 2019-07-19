@@ -1,0 +1,118 @@
+{
+  "version": "1.0",
+  "type": "ENTITLEMENT",
+  "referenceName": "circus",
+  "publishingInformation": {
+    "locales": {
+      "de-DE": {
+        "name": "Zirkus maschine",
+        "summary": "Fügen Sie der Liste der Spiele, die Sie spielen können, eine Zirkus maschine hinzu",
+        "description": "Dies fügt der Liste der Spiele, die Sie spielen können, eine Zirkus maschine mit einem Wild Clown-Symbol hinzu",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/faa1/27f0f1cf440a4ca8b1fb3882fb7ce88f/APP_ICON?versionId=k5MN1KBPKVe0vrVJwhzNkhZud34URbBk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c3040ca2193cedd356313947a8026bd5614b65b13e88187f4195f21eb5b3466f",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/7ebf/f4261fe1d2d74b2ea0bf212cc0115526/APP_ICON_LARGE?versionId=UOyqgJWdqziHYG3MthxkRqCKXmoDSZxL&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=617d23ad09b404738eb81f78e3c972f3f40ed24f3a6e8a9decce28ca8461039a",
+        "examplePhrases": [
+          "Alexa, Ich will Zirkus maschine",
+          "Alexa, Ich will Zirkusspiel",
+          "Alexa, Ich will das Clownspiel"
+        ],
+        "keywords": [
+          "slot maschine",
+          "spiel",
+          "Zirkus"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "Dies fügt Zirkus maschine zu der Liste der Spielautomaten hinzu, die Sie spielen können.",
+          "boughtCardDescription": "Herzliche Glückwünsche! Sie können jetzt auf Zirkus maschine zugreifen, indem Sie sagen, Such dir eine andere Maschine aus."
+        }
+      },
+      "en-US": {
+        "name": "Circus Machine",
+        "summary": "Adds a circus machine to the list of games you can play",
+        "description": "This adds a circus machine featuring a wild clown symbol and special sound effects to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/8f00/b2614d55e44e4aa4aaf0a14033a773ff/APP_ICON?versionId=DjPh71Y8vH0qpvN7u9XeF1KE.u9Oc9jC&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=1ea4e9a3edbed353e3c6bf8aad4867bee1801d99c345ab8e292ab67d0bf388da",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bb29/e3fe54836fd444c4b3921668507440d1/APP_ICON_LARGE?versionId=X38CILr8R6OLeOMZShOVLKb9lP.et0jc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=321c1e0fa4c487034d1fc8c50664f6000320cb35d9dbf56391427de4ede65e8c",
+        "examplePhrases": [
+          "Alexa, buy the circus machine",
+          "Alexa, give me the circus game",
+          "Alexa, buy circus machine"
+        ],
+        "keywords": [
+          "slot machine",
+          "clown",
+          "circus"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add Circus Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Circus Machine by saying select a new machine."
+        }
+      },
+      "en-GB": {
+        "name": "Circus Machine",
+        "summary": "Adds a circus machine to the list of games you can play",
+        "description": "This adds a circus machine featuring a wild clown symbol and special sound effects to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/3111/3f32470df3df43bab460674974ad1af4/APP_ICON?versionId=fPtchV5tBATXiQolxjBR75CK.yzwXYR7&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c7cba5d7b3e40966ca390233a01143aaf5c3590f00501eea28291c9552a6823e",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e90d/cf83422b19eb4bc7b13128517ec08846/APP_ICON_LARGE?versionId=HKwNHORvyNlr.Nc3Qfl8Box_GkSls_Zc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=a83a71f2c71cba65ca5d2a4258cd45b494c1c21a864a8d078acb37a9ca5bb773",
+        "examplePhrases": [
+          "Alexa, buy the circus machine",
+          "Alexa, give me the circus game",
+          "Alexa, buy circus machine"
+        ],
+        "keywords": [
+          "slot machine",
+          "clown",
+          "circus"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add Circus Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Circus Machine by saying select a new machine."
+        }
+      }
+    },
+    "distributionCountries": [
+      "US",
+      "GB",
+      "DE"
+    ],
+    "pricing": {
+      "amazon.de": {
+        "releaseDate": "2019-07-19T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "EUR"
+        }
+      },
+      "amazon.com": {
+        "releaseDate": "2019-07-19T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "USD"
+        }
+      },
+      "amazon.co.uk": {
+        "releaseDate": "2019-07-19T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "GBP"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "de-DE": {
+        "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
+      },
+      "en-US": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      },
+      "en-GB": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      }
+    }
+  },
+  "testingInstructions": "After purchasing, the Circus Machine will show up in the list of games you can play when you say Select a new machine",
+  "purchasableState": "PURCHASABLE"
+}

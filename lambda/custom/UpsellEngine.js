@@ -170,6 +170,7 @@ function selectUpsellMessage(handlerInput, game, message) {
       'holiday': 'das Weihnachten spiel',
       'valentine': 'Valentinstag Spiel',
       'independenceday': 'Tag der Unabhängigkeit spiel',
+      'circus': 'das Zirkus spiel',
     };
   } else {
     upsellMessages = {
@@ -183,6 +184,7 @@ function selectUpsellMessage(handlerInput, game, message) {
       'holiday': 'the holiday game',
       'valentine': 'the valentine\'s day game',
       'independenceday': 'the independence day game',
+      'circus': 'the circus game',
     };
   }
 

@@ -1,6 +1,8 @@
 {
   "AVAILABLE_GAMES": "Wir haben {Number} verschiedene Spiele <break time=\"200ms\"/> {GameChoices}.",
   "BATMAN_GAME": "Die Turniermaschine des Tages ist <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
+  "CIRCUS_GAME": "<audio src=\"https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3\"/> ",
+  "CIRCUS_SPECIAL": "clownen sind unberechenbar.",
   "DIAMOND_SPECIAL": "Diamanten sind unberechenbar.",
   "DISPLAY_DIRECTIVE_CHOICES": {
     "backButton": "HIDDEN",
@@ -28,6 +30,7 @@
   "GAME_LIST_CRAZYDIAMOND": "verrückte Diamanten",
   "GAME_LIST_VALENTINE": "Valentinstag Spiel",
   "GAME_LIST_INDEPENDENCEDAY": "das Unabhängigkeitstag Spiel",
+  "GAME_LIST_CIRCUS": "ein Zirkusspiel",
   "GAME_LIST_HOLIDAY": "das Weihnachten spiel",
   "GAME_LIST_LOOSE": "das Spiel mit der 105 % Auszahlungs-Chance",
   "GAME_LIST_PROGRESSIVE": "Progressiver Jackpot",
@@ -376,7 +379,11 @@
     "bbq": "grill",
     "sun": "sonne",
     "flag": "flagge",
-    "firework": "feuerwerk"
+    "firework": "feuerwerk",
+    "lion": "Löwe",
+    "cotton": "Zuckerwatte",
+    "tiger": "Tiger",
+    "clown": "Clown"
   },
   "TEST_BANKRUPT_NOT_SET": "Der Testmodus ist deaktiviert. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
   "TEST_BANKRUPT_REPROMPT": "Sag \"Dreh dich!\" für eine Testrunde.",
@@ -413,7 +420,8 @@
     "coinreset": "ein Bankroll zurücksetzen Abonnement, das Ihr Bankroll automatisch zurücksetzt, wenn Ihnen die Münzen ausgehen",
     "crazydiamond": "eine Verrückter Diamant Maschine mit wilden Diamantensymbolen",
     "holiday": "eine Weihnachten maschine mit Yuletide-Sounds und Symbolen",
-    "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen"
+    "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen",
+    "circus": "eine Zirkus maschine mit einem wilden Clown-Symbol und speziellen Soundeffekten"
   },
   "PURCHASE_PRODUCTS": "Wir haben {Products} zum Kauf zur Verfügung. Sagen Sie das Produkt, das Sie kaufen möchten, oder nein, um Ihr Spiel fortzusetzen. ",
   "PURCHASE_NO_PRODUCTS": "Tut mir Leid. Wir haben keine neuen Produkte zu kaufen.",

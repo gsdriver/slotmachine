@@ -299,6 +299,7 @@
   },
   "WILD_SPECIAL": "Cherries are wild. ",
   "DIAMOND_SPECIAL": "Diamonds are wild. ",
+  "CIRCUS_SPECIAL": "Clowns are wild. ",
   "PITY_PAYOUT": "Every spin not mentioned wins 1 coin when 5 coins are played. ",
   "HIGH_JACKPOT": "Today's tournament features a 1000 to 1 maximum payout! ",
   "HIGH_PAYOUT": "Today's tournament machine pays out at 110%! ",
@@ -308,6 +309,7 @@
   "BATMAN_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
   "HOLIDAY_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3\"/> ",
   "INDEPENDENCE_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3\"/> ",
+  "CIRCUS_GAME": "<audio src=\"https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3\"/> ",
   "PROGRESSIVE_SPECIAL": "Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ",
   "TOURNAMENT_WINNER": "Congratulations, you won the tournament with {TournamentResult, plural, =1 {one coin} other {# coins}}!  You win {Coins, plural, =1 {one coin} other {# coins}} for your tournament win! ",
   "TOURNAMENT_LOSER": "Sorry, you didn't win the tournament. The high score was {TournamentWinner, plural, =1 {one coin} other {# coins}} and you had {TournamentResult, plural, =1 {one coin} other {# coins}}. ",
@@ -334,6 +336,7 @@
   "GAME_LIST_HOLIDAY": "the holiday game",
   "GAME_LIST_VALENTINE": "the valentine's day game",
   "GAME_LIST_INDEPENDENCEDAY": "the independence day game",
+  "GAME_LIST_CIRCUS": "a circus game",
   "SYMBOL_LIST": {
     "any": "any",
     "cherry": "cherry",
@@ -380,7 +383,11 @@
     "bbq": "barbecue",
     "sun": "sun",
     "flag": "flag",
-    "firework": "firework"
+    "firework": "firework",
+    "lion": "lion",
+    "cotton": "cotton candy",
+    "tiger": "tiger",
+    "clown": "clown"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
   "DISPLAY_DIRECTIVE_CHOICES": {
