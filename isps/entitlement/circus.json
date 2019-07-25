@@ -27,8 +27,8 @@
       },
       "en-US": {
         "name": "Circus Machine",
-        "summary": "Adds a circus machine to the list of games you can play",
-        "description": "This adds a circus machine featuring a wild clown symbol and special sound effects to the list of games you can play",
+        "summary": "Adds a circus themed machine to the list of games you can play",
+        "description": "This adds a circus themed machine featuring a wild clown symbol and special sound effects to the list of games you can play",
         "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/8f00/b2614d55e44e4aa4aaf0a14033a773ff/APP_ICON?versionId=DjPh71Y8vH0qpvN7u9XeF1KE.u9Oc9jC&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=1ea4e9a3edbed353e3c6bf8aad4867bee1801d99c345ab8e292ab67d0bf388da",
         "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bb29/e3fe54836fd444c4b3921668507440d1/APP_ICON_LARGE?versionId=X38CILr8R6OLeOMZShOVLKb9lP.et0jc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=321c1e0fa4c487034d1fc8c50664f6000320cb35d9dbf56391427de4ede65e8c",
         "examplePhrases": [
@@ -48,8 +48,8 @@
       },
       "en-GB": {
         "name": "Circus Machine",
-        "summary": "Adds a circus machine to the list of games you can play",
-        "description": "This adds a circus machine featuring a wild clown symbol and special sound effects to the list of games you can play",
+        "summary": "Adds a circus themed machine to the list of games you can play",
+        "description": "This adds a circus themed machine featuring a wild clown symbol and special sound effects to the list of games you can play",
         "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/3111/3f32470df3df43bab460674974ad1af4/APP_ICON?versionId=fPtchV5tBATXiQolxjBR75CK.yzwXYR7&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c7cba5d7b3e40966ca390233a01143aaf5c3590f00501eea28291c9552a6823e",
         "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e90d/cf83422b19eb4bc7b13128517ec08846/APP_ICON_LARGE?versionId=HKwNHORvyNlr.Nc3Qfl8Box_GkSls_Zc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190719T174708Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190719%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=a83a71f2c71cba65ca5d2a4258cd45b494c1c21a864a8d078acb37a9ca5bb773",
         "examplePhrases": [
