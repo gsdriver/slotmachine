@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test"
               }
             }
           }
@@ -16,26 +16,26 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "560f39f53595e6bb3dc28cd7fd25f41c"
+          "eTag": "5ee6e8ea89bd45b93d772a21421431ec"
         },
         "interactionModel": {
           "en-AU": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "en-GB": {
-            "eTag": "aeb70a281e47683d6cc059fe671c7075"
+            "eTag": "f731983ed1d2c1833e406b26dd389db9"
           },
           "en-CA": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "en-US": {
-            "eTag": "1979b98c2a18cbc953f43b089f361495"
+            "eTag": "61fb1dda04456e4121bf133c0e1bf339"
           },
           "en-IN": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "de-DE": {
-            "eTag": "eaa28036915946c222b136689e5523bb"
+            "eTag": "dd172d3c88e6f139b7b2a06a8855145c"
           }
         },
         "lambda": [
@@ -43,13 +43,13 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_Test",
             "awsRegion": "us-east-1",
             "codeUri": "lambda/custom",
-            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "functionName": "SlotMachine_Test",
             "handler": "index.handler",
-            "revisionId": "d5cfc339-9da9-47ab-b468-dbb883c747b2",
-            "runtime": "nodejs8.10"
+            "revisionId": "f8f3ffd9-63d7-4757-976b-f905dc228fba",
+            "runtime": "nodejs10.x"
           }
         ]
       },

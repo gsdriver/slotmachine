@@ -33,6 +33,7 @@ const utils = require('./utils');
 const request = require('request');
 const {ri, JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
 const ssmlCheck = require('ssml-check-core');
+const voicehero = require('voicehero-sdk')(process.env.VOICEHEROKEY).alexa;
 
 const requestInterceptor = {
   process(handlerInput) {
@@ -275,7 +276,7 @@ function runGame(event, context, callback) {
     partitionKeyName: 'userId',
     attributesName: 'mapAttr',
   });
-  const skillFunction = skillBuilder.addRequestHandlers(
+  const skillFunction = voicehero.handler(skillBuilder.addRequestHandlers(
       OldTimeOut,
       ProductResponse,
       Launch,
@@ -303,7 +304,7 @@ function runGame(event, context, callback) {
     .withPersistenceAdapter(dbAdapter)
     .withApiClient(new Alexa.DefaultApiClient())
     .withSkillId('amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd')
-    .lambda();
+    .lambda());
   skillFunction(event, context, (err, response) => {
     callback(err, response);
   });
