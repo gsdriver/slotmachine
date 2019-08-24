@@ -307,10 +307,7 @@ function runGame(event, context, callback) {
 
   if (process.env.VOICEHEROKEY) {
     const voicehero = require('voicehero-sdk')(process.env.VOICEHEROKEY).alexa;
-
-    console.log('Calling VoiceHero');
     voicehero.handler(skillFunction)(event, context, (err, response) => {
-      console.log('Skill function is calling back ');
       callback(err, response);
     });
   } else {
