@@ -57,8 +57,17 @@
         },
         {
           "name": "SelectIntent",
-          "slots": [],
+          "slots": [
+            {
+              "name": "Machine",
+              "type": "LIST_OF_MACHINES"
+            }
+          ],
           "samples": [
+            "play {Machine}",
+            "switch to {Machine}",
+            "select {Machine}",
+            "change to {Machine}",
             "pick a different game",
             "pick a different machine",
             "pick a new game",
@@ -337,6 +346,115 @@
             }
           ],
           "name": "LIST_OF_PRODUCTS"
+        },
+        {
+          "values": [
+            {
+              "id": "crazydiamond",
+              "name": {
+                "value": "crazy diamond",
+                "synonyms": [
+                  "crazy diamonds machine",
+                  "crazy diamond machine",
+                  "diamonds",
+                  "crazy diamonds"
+                ]
+              }
+            },
+            {
+              "id": "holiday",
+              "name": {
+                "value": "holiday machine",
+                "synonyms": [
+                  "the holiday machine",
+                  "holiday",
+                  "the holiday game",
+                  "holiday game"
+                ]
+              }
+            },
+            {
+              "id": "circus",
+              "name": {
+                "value": "circus machine",
+                "synonyms": [
+                  "the circus machine",
+                  "circus",
+                  "the circus game",
+                  "circus game",
+                  "the clown machine",
+                  "the clown game",
+                  "clown game"
+                ]
+              }
+            },
+            {
+              "id": "independenceday",
+              "name": {
+                "value": "independence day machine",
+                "synonyms": [
+                  "the independence day machine",
+                  "independence day",
+                  "the independence day game",
+                  "the fourth of july machine",
+                  "fourth of july",
+                  "the fourth of july game"
+                ]
+              }
+            },
+            {
+              "id": "valentine",
+              "name": {
+                "value": "valentine",
+                "synonyms": [
+                  "the valentines day game",
+                  "valentines day game",
+                  "valentine game",
+                  "valentines day machine",
+                  "valentines day",
+                  "the valentine machine",
+                  "valentine machine"
+                ]
+              }
+            },
+            {
+              "id": "basic",
+              "name": {
+                "value": "the standard fruit game",
+                "synonyms": [
+                  "standard fruit game",
+                  "the fruit game",
+                  "fruit game",
+                  "standard fruit machine",
+                  "the fruit machine"
+                ]
+              }
+            },
+            {
+              "id": "wild",
+              "name": {
+                "value": "wild cherry",
+                "synonyms": [
+                  "the wild cherry game",
+                  "wild cherry game",
+                  "cherry machine",
+                  "wild cherry machine"
+                ]
+              }
+            },
+            {
+              "id": "progressive",
+              "name": {
+                "value": "the progressive game",
+                "synonyms": [
+                  "progressive game",
+                  "the progressive machine",
+                  "progressive machine"
+                ]
+              }
+            }
+          ],
+          "name": "LIST_OF_MACHINES"
         }
       ]
     }

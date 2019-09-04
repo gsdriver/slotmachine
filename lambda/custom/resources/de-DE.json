@@ -101,8 +101,8 @@
     "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Willkommen zurück beim Slotmaschine. Wenn dein Echo Button einen Knopf hat, drücke ihn, um mit dem Spiel zu beginnen. {Game1} <break time=\"200ms\"/> Du kannst auch \"Dreh dich!\" sagen für eine Runde {Game2} oder \"Nein\", um eine andere Maschine auszuwählen.",
     "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Hast du Lust auf eine Runde am Slotmaschine? Wenn dein Echo Button einen Knopf hat, drücke ihn, um {Game1} zu spielen. <break time=\"200ms\"/> Du kannst auch \"Dreh dich!\" sagen für eine Runde {Game2} oder \"Nein\", um eine andere Maschine auszuwählen."
   },
-  "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen beim Slotmaschine. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
-  "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen beim Slotmaschine. Wenn dein Echo Button einen Knopf hat, drücke ihn. Sag andernfalls \"Dreh dich!\", um den Hebel zu ziehen.",
+  "LAUNCH_NEWUSER": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen bei der Slotmaschine. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
+  "LAUNCH_NEWUSER_BUTTON": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {TournamentResult} {Greeting} Willkommen bei der Slotmaschine. Wenn dein Echo Button einen Knopf hat, drücke ihn. Sag andernfalls \"Dreh dich!\", um den Hebel zu ziehen.",
   "LAUNCH_NEWUSER_REPROMPT": "Sag \"Dreh dich!\", um am Hebel zu ziehen.",
   "LAUNCH_REPROMPT": "Möchtest du {Game} spielen?",
   "LAUNCH_RESUME_GAME": "{TournamentResult} Sag einfach \"Dreh dich!\", um am Hebel zu ziehen.",

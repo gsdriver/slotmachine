@@ -216,7 +216,17 @@
         },
         {
           "name": "SelectIntent",
+          "slots": [
+            {
+              "name": "Machine",
+              "type": "LIST_OF_MACHINES"
+            }
+          ],
           "samples": [
+            "spielen Sie {Machine}",
+            "wechsle zu {Machine}",
+            "wähle {Machine}",
+            "probier {Machine}",
             "probier ein anderes Spiel",
             "Such dir eine andere Maschine aus",
             "wähle eine andere Maschine",
@@ -339,6 +349,96 @@
             }
           ],
           "name": "LIST_OF_PRODUCTS"
+        },
+        {
+          "values": [
+            {
+              "id": "coinreset",
+              "name": {
+                "value": "Bankroll Zurücksetzen",
+                "synonyms": [
+                  "münzen zurücksetzen"
+                ]
+              }
+            },
+            {
+              "id": "crazydiamond",
+              "name": {
+                "value": "verrückter diamant",
+                "synonyms": [
+                  "verrückter diamanten maschine",
+                  "verrückter diamant maschine",
+                  "diamenten",
+                  "verrückter diamanten"
+                ]
+              }
+            },
+            {
+              "id": "holiday",
+              "name": {
+                "value": "Weihnachten maschine",
+                "synonyms": [
+                  "Weihnachten",
+                  "Weihnachten spiel"
+                ]
+              }
+            },
+            {
+              "id": "valentine",
+              "name": {
+                "value": "Valentinstag",
+                "synonyms": [
+                  "Valentinstag spiel",
+                  "Valentinstag maschine"
+                ]
+              }
+            },
+            {
+              "id": "circus",
+              "name": {
+                "value": "Zirkusmaschine",
+                "synonyms": [
+                  "die Zirkusmaschine",
+                  "Zirkus",
+                  "das Zirkusspiel",
+                  "Zirkusspiel",
+                  "die Clownmaschine",
+                  "das Clownspiel",
+                  "Clownspiel"
+                ]
+              }
+            },
+            {
+              "id": "basic",
+              "name": {
+                "value": "das normale Obstspiel",
+                "synonyms": [
+                  "normale Obstspiel"
+                ]
+              }
+            },
+            {
+              "id": "wild",
+              "name": {
+                "value": "wilde Kirsche",
+                "synonyms": [
+                  "wilde Kirsche maschine",
+                  "wilde Kirsche spiel"
+                ]
+              }
+            },
+            {
+              "id": "progressive",
+              "name": {
+                "value": "Progressiver Jackpot",
+                "synonyms": [
+                  "Progressiver Jackpot maschine",
+                  "Progressiver Jackpot spiel"
+                ]
+              }
+            }
+          ],
+          "name": "LIST_OF_MACHINES"
         }
       ]
     }
