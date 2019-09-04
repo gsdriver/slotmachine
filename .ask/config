@@ -16,7 +16,7 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "5ee6e8ea89bd45b93d772a21421431ec"
+          "eTag": "560f39f53595e6bb3dc28cd7fd25f41c"
         },
         "interactionModel": {
           "en-AU": {
@@ -48,7 +48,7 @@
             "codeUri": "lambda/custom",
             "functionName": "SlotMachine_v14",
             "handler": "index.handler",
-            "revisionId": "ab0489f2-ff6d-40d7-a255-7e15b84f8e8d",
+            "revisionId": "8203b0e8-9e71-4b3f-836a-917c2d7e7600",
             "runtime": "nodejs8.10"
           }
         ]

@@ -16,7 +16,7 @@
     "request-promise": "^4.2.2",
     "seedrandom": "^2.4.3",
     "ssml-check-core": "^0.2.0",
-    "voicehero-sdk": "0.0.13"
+    "voicehero-sdk": "0.0.14"
   },
   "devDependencies": {
     "eslint-config-google": "^0.7.1",
