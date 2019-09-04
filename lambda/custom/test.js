@@ -464,6 +464,6 @@ if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {
 } else {
   var event = BuildEvent(process.argv);
   if (event) {
-      mainApp.handler(event, null, myResponse);
+      mainApp.handler(event, {}, myResponse);
   }
 }

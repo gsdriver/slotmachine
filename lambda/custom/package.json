@@ -4,7 +4,7 @@
   "description": "Alexa slot machine",
   "main": "index.js",
   "dependencies": {
-    "@jargon/alexa-skill-sdk": "^1.1.2",
+    "@jargon/alexa-skill-sdk": "^1.3.2",
     "alexa-speech-utils": "0.0.4",
     "ask-sdk": "^2.1.0",
     "aws-sdk": "^2.282.1",
@@ -15,7 +15,8 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "seedrandom": "^2.4.3",
-    "ssml-check-core": "^0.2.0"
+    "ssml-check-core": "^0.2.0",
+    "voicehero-sdk": "0.0.14"
   },
   "devDependencies": {
     "eslint-config-google": "^0.7.1",

@@ -7,17 +7,53 @@
 const utils = require('../utils');
 const upsell = require('../UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
+const SelectYes = require('./SelectYes');
+const Purchase = require('./Purchase');
 
 module.exports = {
   canHandle: function(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return ((request.type === 'IntentRequest') && (request.intent.name === 'SelectIntent')
-      && (!attributes.choices || !attributes.choices.length));
+    if ((request.type === 'IntentRequest') && (request.intent.name === 'SelectIntent')) {
+      if (request.intent.slots && request.intent.slots.Machine) {
+        return true;
+      }
+
+      return (!attributes.choices || !attributes.choices.length);
+    }
+
+    return false;
   },
   handle: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    // If they specified a machine name, switch to it if they can purchase it
+    const product = utils.mapProduct(handlerInput);
+    if (product) {
+      return utils.readAvailableGames(handlerInput, false)
+      .then((availableGames) => {
+        let choice = availableGames.choices.indexOf(product);
+        if (choice > -1) {
+          attributes.choices = [product];
+          return SelectYes.handle(handlerInput);
+        } else {
+          // This game isn't available to them
+          choice = availableGames.availableProducts.indexOf(product);
+          if (choice > -1) {
+            // But they can buy it - treat as a purchase
+            return Purchase.handle(handlerInput);
+          } else {
+            // Hmm - this shouldn't happen
+            console.log('ERROR: Select non-existing machine name ' + product);
+            return handlerInput.jrb
+              .speak(ri('Jargon.unhandledResponse'))
+              .reprompt(ri('Jargon.defaultReprompt'))
+              .getResponse();
+          }
+        }
+      });
+    }
 
     if (!attributes.temp.noUpsell) {
       const directive = upsell.getUpsell(handlerInput, 'select');

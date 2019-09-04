@@ -964,16 +964,19 @@ module.exports = {
   mapProduct: function(handlerInput) {
     const event = handlerInput.requestEnvelope;
     let product;
+    let slot;
 
-    if (event.request.intent.slots && event.request.intent.slots.Product
-      && event.request.intent.slots.Product.resolutions
-      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority
-      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0].values
-      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0].values[0].value
-      && event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0]
-        .values[0].value.id) {
-      product = event.request.intent.slots.Product.resolutions.resolutionsPerAuthority[0]
-        .values[0].value.id;
+    if (event.request.intent.slots && event.request.intent.slots.Product) {
+      slot = event.request.intent.slots.Product;
+    } else if (event.request.intent.slots && event.request.intent.slots.Machine) {
+      slot = event.request.intent.slots.Machine;
+    }
+
+    if (slot && slot.resolutions && slot.resolutions.resolutionsPerAuthority
+      && slot.resolutions.resolutionsPerAuthority[0].values
+      && slot.resolutions.resolutionsPerAuthority[0].values[0].value
+      && slot.resolutions.resolutionsPerAuthority[0].values[0].value.id) {
+      product = slot.resolutions.resolutionsPerAuthority[0].values[0].value.id;
     }
 
     return product;
