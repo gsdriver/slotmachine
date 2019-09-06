@@ -48,7 +48,7 @@
             "codeUri": "lambda/custom",
             "functionName": "SlotMachine_v14",
             "handler": "index.handler",
-            "revisionId": "675ecf2c-5410-4443-b13d-492bd07deb53",
+            "revisionId": "d1ac1792-28a1-4672-b065-939a1592c26f",
             "runtime": "nodejs8.10"
           }
         ]

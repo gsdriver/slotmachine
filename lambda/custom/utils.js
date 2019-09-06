@@ -966,9 +966,9 @@ module.exports = {
     let product;
     let slot;
 
-    if (event.request.intent.slots && event.request.intent.slots.Product) {
+    if (event.request.intent && event.request.intent.slots && event.request.intent.slots.Product) {
       slot = event.request.intent.slots.Product;
-    } else if (event.request.intent.slots && event.request.intent.slots.Machine) {
+    } else if (event.request.intent && event.request.intent.slots && event.request.intent.slots.Machine) {
       slot = event.request.intent.slots.Machine;
     }
 
