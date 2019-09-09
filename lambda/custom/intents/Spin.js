@@ -106,30 +106,42 @@ module.exports = {
       const spinResult = [];
       let i;
 
-      for (i = 0; i < rules.slots; i++) {
-        let spin;
-        let j;
-        let total = 0;
-
-        rules.frequency[i].symbols.map((item) => {
-          total = total + item;
-        });
-
-        const randomValue = seedrandom(i + event.session.user.userId + (game.timestamp ? game.timestamp : ''))();
-        spin = Math.floor(randomValue * total);
-        if (spin == total) {
-          spin--;
+      if (attributes.temp.forceWin) {
+        // Wait - force a win here!
+        // The built-in machines are all designed so you can set the first three symbols
+        // Might want to be a bit more robust about this in the future
+        for (i = 0; i < rules.slots; i++) {
+          spinResult.push(rules.symbols[i]);
         }
 
-        for (j = 0; j < rules.frequency[i].symbols.length; j++) {
-          if (spin < rules.frequency[i].symbols[j]) {
-            // This is it!
-            spinResult.push(rules.symbols[j]);
-            break;
+        // Not letting that happen again
+        attributes.temp.forceWin = undefined;
+      } else {
+        for (i = 0; i < rules.slots; i++) {
+          let spin;
+          let j;
+          let total = 0;
+
+          rules.frequency[i].symbols.map((item) => {
+            total = total + item;
+          });
+
+          const randomValue = seedrandom(i + event.session.user.userId + (game.timestamp ? game.timestamp : ''))();
+          spin = Math.floor(randomValue * total);
+          if (spin == total) {
+            spin--;
           }
 
-          // Nope, go to the next one
-          spin -= rules.frequency[i].symbols[j];
+          for (j = 0; j < rules.frequency[i].symbols.length; j++) {
+            if (spin < rules.frequency[i].symbols[j]) {
+              // This is it!
+              spinResult.push(rules.symbols[j]);
+              break;
+            }
+
+            // Nope, go to the next one
+            spin -= rules.frequency[i].symbols[j];
+          }
         }
       }
 

@@ -7,6 +7,7 @@
 const utils = require('../utils');
 const buttons = require('../buttons');
 const upsell = require('../UpsellEngine');
+const Spin = require('./Spin');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let response;
     let speech = 'LAUNCH';
+    let passthruPromise;
 
     return utils.getGreeting(handlerInput)
     .then((greeting) => {
@@ -51,6 +53,21 @@ module.exports = {
           }
         });
         attributes.temp.inSkillProductInfo = undefined;
+      }
+
+      // OK - now that we got the ISP information - if they are a new user, let's bucket them
+      if (attributes.newUser) {
+        if (!attributes.tests) {
+          attributes.tests = {};
+        }
+        attributes.tests.newUserSpin = getTestBucket(handlerInput);
+        console.log('New user bucket', attributes.tests.newUserSpin);
+        if (attributes.tests.newUserSpin === 'A') {
+          // We are going to go right into a spin
+          attributes.temp.forceWin = true;
+          passthruPromise = true;
+          return Spin.handle(handlerInput);
+        }
       }
 
       // Check to see if we should upsell
@@ -92,6 +109,9 @@ module.exports = {
         return 'nobust';
       }
     }).then((nextDay) => {
+      if (passthruPromise) {
+        return nextDay;
+      }
       if (nextDay === 'nobust') {
         return 'continue';
       } else if (nextDay === 'exit') {
@@ -119,6 +139,9 @@ module.exports = {
         return 'continue';
       }
     }).then((directive) => {
+      if (passthruPromise) {
+        return directive;
+      }
       if (typeof directive !== 'string') {
         directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
         handlerInput.jrb.addDirective(directive);
@@ -130,6 +153,9 @@ module.exports = {
         return directive;
       }
     }).then((action) => {
+      if (passthruPromise) {
+        return action;
+      }
       if (action === 'continue') {
         // Set up the buttons to all flash, welcoming the user to press a button
         attributes.buttonId = undefined;
@@ -165,6 +191,9 @@ module.exports = {
         return 'exit';
       }
     }).then((availableGames) => {
+      if (passthruPromise) {
+        return availableGames;
+      }
       if ((typeof availableGames !== 'string')
         && (availableGames.choices.indexOf('tournament') > -1)) {
         speech += '_TOURNAMENT';
@@ -176,6 +205,9 @@ module.exports = {
         return availableGames;
       }
     }).then((availableGames) => {
+      if (passthruPromise) {
+        return availableGames;
+      }
       if (typeof availableGames !== 'string') {
         attributes.choices = availableGames.choices;
         attributes.originalChoices = availableGames.choices;
@@ -215,4 +247,18 @@ function mentionButton(handlerInput) {
   }
 
   return retVal;
+}
+
+// Bucket a new user returning "A" or "B"
+function getTestBucket(handlerInput) {
+  const event = handlerInput.requestEnvelope;
+  let i;
+  let total = 0;
+  const names = event.session.user.userId.split('.');
+  const user = names[names.length - 1];
+
+  for (i = 0; i < Math.max(10, user.length); i++) {
+    total += user.charCodeAt(i);
+  }
+  return (total % 2 == 0) ? 'A' : 'B';
 }
