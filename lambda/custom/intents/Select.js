@@ -5,7 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
-const upsell = require('../UpsellEngine');
+const upsell = require('../upsell/UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 const SelectYes = require('./SelectYes');
 const Purchase = require('./Purchase');
@@ -25,7 +25,7 @@ module.exports = {
 
     return false;
   },
-  handle: function(handlerInput) {
+  handle: async function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     // If they specified a machine name, switch to it if they can purchase it
@@ -55,15 +55,13 @@ module.exports = {
       });
     }
 
-    if (!attributes.temp.noUpsell) {
-      const directive = upsell.getUpsell(handlerInput, 'select');
-      if (directive) {
-        directive.token = 'machine.' + directive.token + '.select';
-        return handlerInput.responseBuilder
-          .addDirective(directive)
-          .withShouldEndSession(true)
-          .getResponse();
-      }
+    const directive = await upsell.evaluateTrigger(handlerInput.requestEnvelope.session.user.userId, 'select');
+    if (directive) {
+      directive.token = 'machine.' + directive.token + '.select';
+      return handlerInput.responseBuilder
+        .addDirective(directive)
+        .withShouldEndSession(true)
+        .getResponse();
     }
 
     // Read the available games then prompt for each one

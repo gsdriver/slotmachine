@@ -6,7 +6,7 @@
 
 const utils = require('../utils');
 const buttons = require('../buttons');
-const upsell = require('../UpsellEngine');
+const upsell = require('../upsell/UpsellEngine');
 const Spin = require('./Spin');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
@@ -15,7 +15,7 @@ module.exports = {
     return handlerInput.requestEnvelope.session.new ||
       (handlerInput.requestEnvelope.request.type === 'LaunchRequest');
   },
-  handle: function(handlerInput) {
+  async handle(handlerInput) {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let response;
@@ -33,8 +33,8 @@ module.exports = {
       .catch((error) => {
         // Ignore errors
       });
-    }).then(() => {
-      console.log(attributes.temp.inSkillProductInfo);
+    }).then(async function() {
+      console.log('isp', attributes.temp.inSkillProductInfo);
       if (attributes.temp.inSkillProductInfo) {
         let state;
         attributes.paid = {};
@@ -72,10 +72,10 @@ module.exports = {
 
       // Check to see if we should upsell
       // Don't upsell if the tournament is available or there is a result
-      if (!attributes.temp.resumeGame && !attributes.temp.noUpsell
+      if (!attributes.temp.resumeGame
         && !attributes.temp.tournamentAvailable
         && !(attributes.tournamentResult && (attributes.tournamentResult.length > 0))) {
-        const directive = upsell.getUpsell(handlerInput, 'launch');
+        const directive = await upsell.evaluateTrigger(handlerInput.requestEnvelope.session.user.userId, 'launch');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';
           response = handlerInput.responseBuilder

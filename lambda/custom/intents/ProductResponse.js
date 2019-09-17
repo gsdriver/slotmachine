@@ -24,49 +24,24 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let promise;
 
-    // First write out to S3
-    const summary = {
-      token: event.request.token,
-      action: event.request.name,
-      userId: event.session.user.userId,
-      response: event.request.payload.purchaseResult,
-    };
-    if (attributes.upsellSelection) {
-      summary.selection = attributes.upsellSelection;
-    }
-    const params = {
-      Body: JSON.stringify(summary),
-      Bucket: 'garrett-alexa-usage',
-      Key: 'slots-upsell/' + Date.now() + '.txt',
-    };
+    // Publish to SNS if the action was accepted so we know something happened
+    if ((process.env.SNSTOPIC) && (event.request.payload.purchaseResult === 'ACCEPTED')) {
+      let message;
 
-    if (process.env.SNSTOPIC) {
-      promise = s3.putObject(params).promise().then(() => {
-        // Publish to SNS if the action was accepted so we know something happened
-        if (event.request.payload.purchaseResult === 'ACCEPTED') {
-          let message;
+      // This message is sent internally so no worries about localizing
+      message = 'For token ' + event.request.token + ' (' + attributes.playerLocale + '), ';
+      if (event.request.payload.message) {
+        message += event.request.payload.message;
+      } else {
+        message += event.request.name + ' was accepted';
+      }
+      message += ' by user ' + event.session.user.userId;
 
-          // This message is sent internally so no worries about localizing
-          message = 'For token ' + event.request.token + ' (' + attributes.playerLocale + '), ';
-          if (event.request.payload.message) {
-            message += event.request.payload.message;
-          } else {
-            message += event.request.name + ' was accepted';
-          }
-          message += ' by user ' + event.session.user.userId;
-          if (attributes.upsellSelection) {
-            message += '\nUpsell variant ' + attributes.upsellSelection + ' was presented. ';
-          }
-
-          return SNS.publish({
-            Message: message,
-            TopicArn: process.env.SNSTOPIC,
-            Subject: 'Slot Machine New Purchase',
-          }).promise();
-        } else {
-          return;
-        }
-      });
+      promise = SNS.publish({
+        Message: message,
+        TopicArn: process.env.SNSTOPIC,
+        Subject: 'Slot Machine New Purchase',
+      }).promise();
     } else {
       promise = Promise.resolve();
     }
@@ -80,12 +55,6 @@ module.exports = {
         ((event.request.payload.purchaseResult == 'ACCEPTED') ||
         (event.request.payload.purchaseResult == 'ALREADY_PURCHASED')));
       let nextAction = 'launch';
-
-      attributes.upsellSelection = undefined;
-      if ((event.request.name === 'Upsell') && !accepted) {
-        // Don't upsell them again on the next round
-        attributes.temp.noUpsell = true;
-      }
 
       // Figure out next step if this was a machine upsell
       if (options[0] === 'machine') {

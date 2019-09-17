@@ -5,7 +5,7 @@
 
 'use strict';
 
-const upsell = require('../UpsellEngine');
+const upsell = require('../upsell/UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 const speechUtils = require('alexa-speech-utils')();
 
@@ -22,7 +22,7 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     return handlerInput.jrm.renderObject(ri('PURCHASE_PRODUCT_LIST'))
-    .then((productMap) => {
+    .then(async function(productMap) {
       const availableProducts = [];
       const purchasedProducts = [];
       let product;
@@ -44,7 +44,7 @@ module.exports = {
         speech = 'LISTPURCHASES_PURCHASED';
       } else if (availableProducts.length > 0) {
         // Let's upsell them!
-        const directive = upsell.getUpsell(handlerInput, 'listpurchases');
+        const directive = await upsell.evaluateTrigger(handlerInput.requestEnvelope.session.user.userId, 'listpurchases');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.launch';
           return handlerInput.responseBuilder

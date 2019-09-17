@@ -8,7 +8,7 @@ const utils = require('../utils');
 const request = require('request');
 const seedrandom = require('seedrandom');
 const buttons = require('../buttons');
-const upsell = require('../UpsellEngine');
+const upsell = require('../upsell/UpsellEngine');
 const ri = require('@jargon/alexa-skill-sdk').ri;
 
 module.exports = {
@@ -59,16 +59,15 @@ module.exports = {
         || (request.intent.name === 'SpinIntent')));
   },
   handle: function(handlerInput) {
-    return selectGame(handlerInput).then((welcome) => {
+    return selectGame(handlerInput).then(async function(welcome) {
       const event = handlerInput.requestEnvelope;
       const attributes = handlerInput.attributesManager.getSessionAttributes();
 
       // First off, let's see if we should do an upsell
       // We will do this if they have played this game 10 times in a row
       // during this session and we haven't done an upsell already
-      if ((attributes.currentGame !== 'tournament')
-        && !attributes.temp.noUpsell) {
-        const directive = upsell.getUpsell(handlerInput, 'spin');
+      if (attributes.currentGame !== 'tournament') {
+        const directive = await upsell.evaluateTrigger(handlerInput.requestEnvelope.session.user.userId, 'spin');
         if (directive) {
           directive.token = 'machine.' + directive.token + '.spin';
           return handlerInput.responseBuilder
