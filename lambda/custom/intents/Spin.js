@@ -320,23 +320,28 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     } else {
       lastbet = undefined;
       attributes.busted = Date.now();
-      if (attributes.paid && attributes.paid.coinreset) {
-        speech += '_UPSELL';
-        attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-
-        return handlerInput.jrm.renderObject(ri(speech, attributes.temp.speechParams))
-        .then((directive) => {
-          directive.payload.InSkillProduct.productId = attributes.paid.coinreset.productId;
-          handlerInput.jrb.addDirective(directive).getResponse();
-          return handlerInput.jrb.withShouldEndSession(true).getResponse();
-        });
-      } else {
-        attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
-        return handlerInput.jrb
-          .speak(ri(speech, attributes.temp.speechParams))
-          .withShouldEndSession(true)
-          .getResponse();
-      }
+      return upsell.evaluateTrigger(handlerInput.requestEnvelope.session.user.userId, 'bankrupt')
+      .then((directive) => {
+        if (directive) {
+          // Resolve the spin text
+          attributes.temp.speechParams.Upsell = directive.payload.upsellMessage;
+          return handlerInput.jrm.render(ri('SPIN_BUSTED_UPSELL', attributes.temp.speechParams))
+          .then((upsellMessage) => {
+            directive.payload.upsellMessage = upsellMessage;
+            directive.token = `subscribe.${directive.token}.launch`;
+            return handlerInput.responseBuilder
+              .addDirective(directive)
+              .withShouldEndSession(true)
+              .getResponse();
+          });
+        } else {
+          attributes.temp.speechParams.Coins = utils.REFRESH_BANKROLL;
+          return handlerInput.jrb
+            .speak(ri(speech, attributes.temp.speechParams))
+            .withShouldEndSession(true)
+            .getResponse();
+        }
+      });
     }
   } else {
     attributes.temp.speechParams.Amount = utils.getBankroll(attributes);

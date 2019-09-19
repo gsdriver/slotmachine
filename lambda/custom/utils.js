@@ -390,8 +390,8 @@ const graveyard = {
 */
 
 module.exports = {
-  STARTING_BANKROLL: 100,
-  REFRESH_BANKROLL: 100,
+  STARTING_BANKROLL: 50,
+  REFRESH_BANKROLL: 25,
   TOURNAMENT_PAYOUT: 50,
   ri: function(key, params) {
     let param;

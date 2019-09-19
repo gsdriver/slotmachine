@@ -7,7 +7,7 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const fs = require('fs');
 
-const LOCALE= 'en-GB';
+const LOCALE= 'en-US';
 const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 const APITOKEN = '';
 
