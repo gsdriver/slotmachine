@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "type": "ENTITLEMENT",
+  "referenceName": "halloween",
+  "publishingInformation": {
+    "locales": {
+      "en-US": {
+        "name": "Halloween Machine",
+        "summary": "Adds a halloween themed machine to the list of games you can play",
+        "description": "This adds a halloween themed machine featuring spooky symbols and special sound effects to the list of games you can play",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6b57/d499cb19591743d6b553b278e4ee7ce3/APP_ICON?versionId=vbhQpul__M4uc6lzHeXXcVISZFr6ZpA5&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190922T225018Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190922%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=5a406444a66fe0e4fbb6a6887c7cdc8e84d6c5e269f3eec0bf0024dfc288717a",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/de53/4bc5906dea41484c8db0bdba7bfc3ea5/APP_ICON_LARGE?versionId=Xxl4_KQ7kgctpVf8urJM9UM_R206sBDo&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190922T225018Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20190922%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=7aee1ee4bde673998e82cda1a7c0fa685f2a847fac50556bc0780e2579284bc3",
+        "examplePhrases": [
+          "Alexa, buy the halloween machine",
+          "Alexa, give me the halloween game",
+          "Alexa, buy halloween machine"
+        ],
+        "keywords": [
+          "slot machine",
+          "halloween",
+          "scary"
+        ],
+        "customProductPrompts": {
+          "purchasePromptDescription": "This will add the Halloween Machine to the list of slot machines you can play.",
+          "boughtCardDescription": "Congratulations! You can now access the Halloween Machine by saying select a new machine."
+        }
+      }
+    },
+    "distributionCountries": [
+      "US"
+    ],
+    "pricing": {
+      "amazon.com": {
+        "releaseDate": "2019-09-22T00:00Z",
+        "defaultPriceListing": {
+          "price": 1.99,
+          "currency": "USD"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "en-US": {
+        "privacyPolicyUrl": "http://garrettvargas.com/privacy.html"
+      }
+    }
+  },
+  "testingInstructions": "After purchasing, the Halloween Machine will show up in the list of games you can play when you say Select a new machine",
+  "purchasableState": "PURCHASABLE"
+}

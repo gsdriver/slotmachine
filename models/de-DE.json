@@ -346,6 +346,18 @@
                   "Clownspiel"
                 ]
               }
+            },
+            {
+              "id": "halloween",
+              "name": {
+                "value": "halloween",
+                "synonyms": [
+                  "halloween spiel",
+                  "halloween maschine",
+                  "das halloween spiel",
+                  "das halloween maschine"
+                ]
+              }
             }
           ],
           "name": "LIST_OF_PRODUCTS"
@@ -405,6 +417,18 @@
                   "die Clownmaschine",
                   "das Clownspiel",
                   "Clownspiel"
+                ]
+              }
+            },
+            {
+              "id": "halloween",
+              "name": {
+                "value": "halloween",
+                "synonyms": [
+                  "halloween spiel",
+                  "halloween maschine",
+                  "das halloween spiel",
+                  "das halloween maschine"
                 ]
               }
             },

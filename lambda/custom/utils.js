@@ -218,6 +218,31 @@ const games = {
       'firework|firework|firework': 100,
     },
   },
+  // Like basic but slightly different payouts and 99.4% payout
+  'halloween': {
+    'product': 'halloween',
+    'maxCoins': 5,
+    'slots': 3,
+    'symbols': ['bat', 'ghost', 'witch', 'skeleton', 'pumpkin'],
+    'frequency': [
+      {'symbols': [6, 8, 8, 10, 2]},
+      {'symbols': [4, 8, 4, 7, 4]},
+      {'symbols': [24, 7, 6, 1, 1]},
+    ],
+    'welcome': 'HALLOWEEN_GAME',
+    'win': ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/witch.mp3\"/> ',
+    'stopreplace': 'bellstop',
+    'payouts': {
+      'bat': 2,
+      'bat|bat': 4,
+      'ghost|ghost|ghost': 6,
+      'witch|witch|witch': 8,
+      'skeleton|skeleton|skeleton': 12,
+      'pumpkin': 5,
+      'pumpkin|pumpkin': 10,
+      'pumpkin|pumpkin|pumpkin': 500,
+    },
+  },
 };
 
 const tournaments = [
@@ -1118,6 +1143,7 @@ module.exports = {
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3', length: 325},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/firestop.mp3', length: 550},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighstop.mp3', length: 450},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/bellstop.mp3', length: 2000},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3', length: 6400},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/simpsons.mp3', length: 5100},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3', length: 4050},
@@ -1126,6 +1152,7 @@ module.exports = {
       {file: 'https://alexasoundclips.s3-us-west-2.amazonaws.com/lion.mp3', length: 1250},
       {file: 'https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3', length: 7200},
       {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3', length: 3700},
+      {file: 'https://s3-us-west-2.amazonaws.com/alexasoundclips/evillaugh.mp3', length: 3765},
     ];
 
     // Look for and remove all audio clips
