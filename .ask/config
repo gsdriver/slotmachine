@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v15"
               }
             }
           }
@@ -16,26 +16,26 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "aa688a2777761c9b2f98f2320cd3ad3d"
+          "eTag": "08f8244736dcc1299034af69a530a481"
         },
         "interactionModel": {
           "en-AU": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "en-GB": {
-            "eTag": "44b55f69aab6a395923204695caa2a63"
+            "eTag": "8a9be32776847f1ff5ae3914b8946670"
           },
           "en-CA": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "en-US": {
-            "eTag": "c84217e44bf0319904fc4702bd466bed"
+            "eTag": "f94f3dcf1a8eb453dec8817a2f659a02"
           },
           "en-IN": {
             "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
           },
           "de-DE": {
-            "eTag": "4e011e8e45beb299ffabfa7e7c9a0c49"
+            "eTag": "aa8f19111eff5267d12e5894428b9bf2"
           }
         },
         "lambda": [
@@ -43,13 +43,13 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v15",
             "awsRegion": "us-east-1",
             "codeUri": "lambda/custom",
-            "functionName": "SlotMachine_v14",
+            "functionName": "SlotMachine_v15",
             "handler": "index.handler",
-            "revisionId": "6f679bec-2597-46d2-91de-e889c7c18c40",
-            "runtime": "nodejs8.10"
+            "revisionId": "c55f1a89-5836-4a5b-a1f2-7baec5db5d5d",
+            "runtime": "nodejs10.x"
           }
         ]
       },
@@ -89,6 +89,12 @@
           "filePath": "isps\\entitlement\\circus.json",
           "productId": "amzn1.adg.product.c21961fb-eb21-422f-a604-12504a22a550",
           "eTag": "985b1e990d3311da330ef96177ad7c38"
+        },
+        {
+          "deploy_status": "Update",
+          "filePath": "isps/entitlement/halloween.json",
+          "productId": "amzn1.adg.product.8f9e4336-68d8-4f1e-a59e-b30b38474df2",
+          "eTag": "87c2ab968874eacce08104ca4572750b"
         }
       ]
     }

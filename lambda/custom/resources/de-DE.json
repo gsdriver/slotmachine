@@ -29,6 +29,7 @@
   "GAME_LIST_BASIC": "das normale Obstspiel",
   "GAME_LIST_CRAZYDIAMOND": "verrückte Diamanten",
   "GAME_LIST_VALENTINE": "Valentinstag Spiel",
+  "GAME_LIST_HALLOWEEN": "das Halloween Spiel",
   "GAME_LIST_INDEPENDENCEDAY": "das Unabhängigkeitstag Spiel",
   "GAME_LIST_CIRCUS": "ein Zirkusspiel",
   "GAME_LIST_HOLIDAY": "das Weihnachten spiel",
@@ -60,6 +61,7 @@
   "HIGH_PAYOUT": "Beim heutigen Turnier zahlt die Maschine 110 % aus.",
   "HOLIDAY_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3\"/> ",
   "INDEPENDENCE_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3\"/> ",
+  "HALLOWEEN_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/evillaugh.mp3\"/> ",
   "LAUNCH": {
     "v1": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Willkommen zurück bei Slotmaschine! Sag \"Dreh dich!\", um {Game} zu starten.",
     "v2": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/casinowelcome.mp3\"/> {Greeting} {TournamentResult} Lass uns Slotmaschine spielen! Was hältst du von einer Runde {Game}? "
@@ -383,7 +385,12 @@
     "lion": "Löwe",
     "cotton": "Zuckerwatte",
     "tiger": "Tiger",
-    "clown": "Clown"
+    "clown": "Clown",
+    "bat": "Fledermaus",
+    "ghost": "geist",
+    "witch": "hexe",
+    "skeleton": "Skelett",
+    "pumpkin": "Kürbislaterne"
   },
   "TEST_BANKRUPT_NOT_SET": "Der Testmodus ist deaktiviert. Sag \"Dreh dich!\", um am Hebel zu ziehen.",
   "TEST_BANKRUPT_REPROMPT": "Sag \"Dreh dich!\" für eine Testrunde.",
@@ -403,16 +410,6 @@
   "UNKNOWN_SELECT_INTENT": "Ich habe dich leider nicht verstanden. Sag erneut \"Ja\".",
   "UNKNOWN_SELECT_INTENT_REPROMPT": "Sag einfach \"Ja\".",
   "WILD_SPECIAL": "Kirschen sind heiß.",
-  "LAUNCH_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "{TournamentResult} Du hast leider keine Münzen mehr. Besuch morgen wieder den Slotmaschine und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
   "LISTPURCHASES_PURCHASED": "Sie haben Mais {Products} gekauft.  Willst du noch etwas anderes wissen?",
   "LISTPURCHASES_NONE": "Sie haben keine Produkte für die Slotmaschine gekauft. Willst du noch etwas anderes wissen?",
   "LISTPURCHASES_REPROMPT": "Willst du noch etwas anderes wissen?",
@@ -421,6 +418,7 @@
     "crazydiamond": "eine Verrückter Diamant Maschine mit wilden Diamantensymbolen",
     "holiday": "eine Weihnachten maschine mit Yuletide-Sounds und Symbolen",
     "valentine": "Valentinstag Spiel mit speziellen Valentin-Symbolen",
+    "halloween": "eine Halloween Spiel mit speziellen gruselige Symbolen",
     "circus": "eine Zirkus maschine mit einem wilden Clown-Symbol und speziellen Soundeffekten"
   },
   "PURCHASE_PRODUCTS": "Wir haben {Products} zum Kauf zur Verfügung. Sagen Sie das Produkt, das Sie kaufen möchten, oder nein, um Ihr Spiel fortzusetzen. ",
@@ -438,105 +436,5 @@
     },
     "token": "subscribe.coinreset.launch"
   },
-  "SPIN_BET_LOSER_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult} Leider hast du verloren! Du hast keine Münzen mehr. Komm morgen wieder zurück und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_LOSER_BIG_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "{SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch mal mit {Coins} frischen Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_BET_LOSER_BIG_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Na, gewöhnst du dich ans Verlieren? Mach eine Pause und probier es morgen noch einmal mit {Coins} frischen Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_LOSER_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Lass uns eine Runde {Game} spielen! {GameWelcome} {SpinResult} Pech gehabt! Du hast all deine Münzen verloren. Komm morgen wieder zurück und erhalte {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-
-  "SPIN_JOINGAME_BET_LOSER_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Lass uns {Game} spielen. {GameWelcome} <break time=\"300ms\"/> Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Wie Schade! Du hast alle Münzen verloren. Aber komm morgen wieder für {Coins} neue Münzen zurück. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Lass uns {Game} mit dem progressiven Jackpot von {Jackpot} Münzen spielen. {SpinResult}. Sorry, du hast alle Münzen eingebüßt. Komm morgen wieder zurück und sichere dir {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Komm, wir spielen {Game}, denn jetzt sind {Jackpot} Münzen im progressiven Jackpot. Du setzt {AmountBet, plural, =1 {eine Münze} other {# Münzen}}. {SpinResult}. Schade, du hast alle Münzen verloren. Aber komm morgen wieder zurück und erhalte {Coins} Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_LOSER_BIG_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Sollen wir eine Runde {Game} spielen! {GameWelcome} {SpinResult}.  Du hast leider all deine Münzen verloren. Komm morgen wieder zurück für {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_PROGRESSIVE_LOSER_BIG_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Komm, wir spielen {Game}, denn da sind jetzt {Jackpot} Münzen im progressiven Jackpot. {SpinResult} Pech gehabt. Du hast deinen Einsatz verloren Aber schau morgen wieder vorbei für {Coins} neue Münzen. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  },
-  "SPIN_JOINGAME_PROGRESSIVE_BET_LOSER_BIG_BUSTED_UPSELL": {
-    "type": "Connections.SendRequest",
-    "name": "Upsell",
-    "payload": {
-      "InSkillProduct": {
-      },
-      "upsellMessage": "Lass uns {Game} mit einem progressiven Jackpot von {Jackpot} Münzen spielen. Du setzt {AmountBet, plural, =1{eine Münze} other {# Münzen}}. {SpinResult} Was für ein Pech! Du hast alle Münzen verloren. Aber komm doch morgen wieder zurück, um {Coins} Münzen einzusammeln. Sie können auch ein Abonnement kaufen, um Ihre Bankroll automatisch zurückzusetzen und jetzt weiter zu spielen. Wollen Sie mehr hören?"
-    },
-    "token": "subscribe.coinreset.launch"
-  }
+  "SPIN_BUSTED_UPSELL": "{SpinResult}. Tut mir leid, dass du verloren hast. {Upsell}"
 }

@@ -309,6 +309,7 @@
   "BATMAN_GAME": "Today's tournament machine is <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/batman.mp3\"/> ",
   "HOLIDAY_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/sleighbells.mp3\"/> ",
   "INDEPENDENCE_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/fireworks.mp3\"/> ",
+  "HALLOWEEN_GAME": "<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/evillaugh.mp3\"/> ",
   "CIRCUS_GAME": "<audio src=\"https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3\"/> ",
   "PROGRESSIVE_SPECIAL": "Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ",
   "TOURNAMENT_WINNER": "Congratulations, you won the tournament with {TournamentResult, plural, =1 {one coin} other {# coins}}!  You win {Coins, plural, =1 {one coin} other {# coins}} for your tournament win! ",
@@ -335,6 +336,7 @@
   "GAME_LIST_CRAZYDIAMOND": "crazy diamonds",
   "GAME_LIST_HOLIDAY": "the holiday game",
   "GAME_LIST_VALENTINE": "the valentine's day game",
+  "GAME_LIST_HALLOWEEN": "the halloween game",
   "GAME_LIST_INDEPENDENCEDAY": "the independence day game",
   "GAME_LIST_CIRCUS": "a circus game",
   "SYMBOL_LIST": {
@@ -387,7 +389,12 @@
     "lion": "lion",
     "cotton": "cotton candy",
     "tiger": "tiger",
-    "clown": "clown"
+    "clown": "clown",
+    "bat": "bat",
+    "ghost": "ghost",
+    "witch": "witch",
+    "skeleton": "skeleton",
+    "pumpkin": "jack o lantern"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
   "DISPLAY_DIRECTIVE_CHOICES": {
