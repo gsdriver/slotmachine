@@ -353,15 +353,6 @@
         {
           "values": [
             {
-              "id": "coinreset",
-              "name": {
-                "value": "Bankroll Zurücksetzen",
-                "synonyms": [
-                  "münzen zurücksetzen"
-                ]
-              }
-            },
-            {
               "id": "crazydiamond",
               "name": {
                 "value": "verrückter diamant",
