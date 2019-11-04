@@ -1,5 +1,5 @@
 //
-// Handles stop, which will exit the skill
+// Handles cancel while reading the rules
 //
 
 'use strict';
@@ -13,7 +13,7 @@ module.exports = {
 
     // Can always handle with Stop and Cancel
     return ((request.type === 'IntentRequest') &&
-      (request.intent.name === 'AMAZON.StopIntent') &&
+      (request.intent.name === 'AMAZON.CancelIntent') &&
       attributes.temp.readingRules);
   },
   handle: function(handlerInput) {

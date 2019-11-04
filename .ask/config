@@ -16,26 +16,26 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "08f8244736dcc1299034af69a530a481"
+          "eTag": "c8e9e701227c09b25ae17e761d4af061"
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "d4461e01e39e5048d4ebfbc9832847e6"
           },
           "en-GB": {
-            "eTag": "8a9be32776847f1ff5ae3914b8946670"
+            "eTag": "60e628872e75fd2177e05052aabf82da"
           },
           "en-CA": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "ea010f4c176d374f8e9e6232239ab6de"
           },
           "en-US": {
-            "eTag": "f94f3dcf1a8eb453dec8817a2f659a02"
+            "eTag": "9c2746fae39ae05917af97d2c69ee835"
           },
           "en-IN": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "bee549366785076125b1eb82fab0c00a"
           },
           "de-DE": {
-            "eTag": "aa8f19111eff5267d12e5894428b9bf2"
+            "eTag": "fd34abecc48fb6bbdcd89da3f35ce2c7"
           }
         },
         "lambda": [
@@ -48,7 +48,7 @@
             "codeUri": "lambda/custom",
             "functionName": "SlotMachine_v15",
             "handler": "index.handler",
-            "revisionId": "c55f1a89-5836-4a5b-a1f2-7baec5db5d5d",
+            "revisionId": "5459d5dc-fcf2-4ff0-bb6f-dcf76539cd17",
             "runtime": "nodejs10.x"
           }
         ]
