@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v15"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v16"
               }
             }
           }
@@ -16,26 +16,26 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "c8e9e701227c09b25ae17e761d4af061"
+          "eTag": "fadcb3fb9a589c387684b0e850868086"
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "d4461e01e39e5048d4ebfbc9832847e6"
+            "eTag": "c641b561d5ef4590bb208781d709dc54"
           },
           "en-GB": {
-            "eTag": "60e628872e75fd2177e05052aabf82da"
+            "eTag": "460c529b297d3054b29b881e052902b2"
           },
           "en-CA": {
-            "eTag": "ea010f4c176d374f8e9e6232239ab6de"
+            "eTag": "03713040f910b078742131d15c105880"
           },
           "en-US": {
-            "eTag": "9c2746fae39ae05917af97d2c69ee835"
+            "eTag": "6f8c653f75e35b3b158a786c917a9e1f"
           },
           "en-IN": {
-            "eTag": "bee549366785076125b1eb82fab0c00a"
+            "eTag": "5eee7f88b37aaa6c88368a66694b816d"
           },
           "de-DE": {
-            "eTag": "fd34abecc48fb6bbdcd89da3f35ce2c7"
+            "eTag": "3041eb1adbaf38fe9efcf42430881494"
           }
         },
         "lambda": [
@@ -43,12 +43,12 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v15",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v16",
             "awsRegion": "us-east-1",
             "codeUri": "lambda/custom",
-            "functionName": "SlotMachine_v15",
+            "functionName": "SlotMachine_v16",
             "handler": "index.handler",
-            "revisionId": "5459d5dc-fcf2-4ff0-bb6f-dcf76539cd17",
+            "revisionId": "431016c9-12e0-4a2b-aa8f-93213ba65236",
             "runtime": "nodejs10.x"
           }
         ]

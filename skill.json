@@ -147,22 +147,22 @@
       "allowsPurchases": true,
       "locales": {
         "en-US": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         },
         "en-AU": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         },
         "en-CA": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         },
         "en-IN": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         },
         "de-DE": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy-DE.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy-DE.html"
         },
         "en-GB": {
-          "privacyPolicyUrl": "http://www.garrettvargas.com/privacy.html"
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
         }
       },
       "isExportCompliant": true,
