@@ -20,22 +20,22 @@
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "c641b561d5ef4590bb208781d709dc54"
+            "eTag": "843054c36b630709c44c4281f260304c"
           },
           "en-GB": {
-            "eTag": "460c529b297d3054b29b881e052902b2"
+            "eTag": "e40c38d393f83f5cfb9fb3d465cc2319"
           },
           "en-CA": {
-            "eTag": "03713040f910b078742131d15c105880"
+            "eTag": "a7bca0d08b85cdee84ab4a739df786b6"
           },
           "en-US": {
-            "eTag": "6f8c653f75e35b3b158a786c917a9e1f"
+            "eTag": "735a38a6569b4b06b6cc26efc2f5e4d4"
           },
           "en-IN": {
-            "eTag": "5eee7f88b37aaa6c88368a66694b816d"
+            "eTag": "d09b615ceede7d09a557ff400752c00a"
           },
           "de-DE": {
-            "eTag": "3041eb1adbaf38fe9efcf42430881494"
+            "eTag": "e372dd01e86336971f27f7e0ea6f1be8"
           }
         },
         "lambda": [
@@ -48,7 +48,7 @@
             "codeUri": "lambda/custom",
             "functionName": "SlotMachine_v16",
             "handler": "index.handler",
-            "revisionId": "431016c9-12e0-4a2b-aa8f-93213ba65236",
+            "revisionId": "0ba557a6-fbeb-4c35-99e4-c066eb6ee412",
             "runtime": "nodejs10.x"
           }
         ]

@@ -244,7 +244,8 @@ const saveResponseInterceptor = {
         }
 
         if (response.outputSpeech && response.outputSpeech.ssml) {
-          return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, {platform: 'amazon'});
+          return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, 
+              {platform: 'amazon', locale: handlerInput.requestEnvelope.request.locale});
         } else {
           return Promise.resolve({});
         }
