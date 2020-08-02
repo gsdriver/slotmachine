@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v16"
               }
             }
           }
@@ -16,26 +16,26 @@
       },
       "resources": {
         "manifest": {
-          "eTag": "560f39f53595e6bb3dc28cd7fd25f41c"
+          "eTag": "fadcb3fb9a589c387684b0e850868086"
         },
         "interactionModel": {
           "en-AU": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "843054c36b630709c44c4281f260304c"
           },
           "en-GB": {
-            "eTag": "44b55f69aab6a395923204695caa2a63"
+            "eTag": "e40c38d393f83f5cfb9fb3d465cc2319"
           },
           "en-CA": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "a7bca0d08b85cdee84ab4a739df786b6"
           },
           "en-US": {
-            "eTag": "c84217e44bf0319904fc4702bd466bed"
+            "eTag": "735a38a6569b4b06b6cc26efc2f5e4d4"
           },
           "en-IN": {
-            "eTag": "3d6cbaa9331c50831ea5c2a4704908a5"
+            "eTag": "d09b615ceede7d09a557ff400752c00a"
           },
           "de-DE": {
-            "eTag": "4e011e8e45beb299ffabfa7e7c9a0c49"
+            "eTag": "e372dd01e86336971f27f7e0ea6f1be8"
           }
         },
         "lambda": [
@@ -43,13 +43,13 @@
             "alexaUsage": [
               "custom/default"
             ],
-            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v14",
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v16",
             "awsRegion": "us-east-1",
             "codeUri": "lambda/custom",
-            "functionName": "SlotMachine_v14",
+            "functionName": "SlotMachine_v16",
             "handler": "index.handler",
-            "revisionId": "5ac4e1ae-3bfb-4599-a78c-1f8fee4d9554",
-            "runtime": "nodejs8.10"
+            "revisionId": "0ba557a6-fbeb-4c35-99e4-c066eb6ee412",
+            "runtime": "nodejs10.x"
           }
         ]
       },
@@ -89,6 +89,12 @@
           "filePath": "isps\\entitlement\\circus.json",
           "productId": "amzn1.adg.product.c21961fb-eb21-422f-a604-12504a22a550",
           "eTag": "985b1e990d3311da330ef96177ad7c38"
+        },
+        {
+          "deploy_status": "Update",
+          "filePath": "isps/entitlement/halloween.json",
+          "productId": "amzn1.adg.product.8f9e4336-68d8-4f1e-a59e-b30b38474df2",
+          "eTag": "87c2ab968874eacce08104ca4572750b"
         }
       ]
     }

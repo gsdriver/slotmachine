@@ -5,7 +5,6 @@
 'use strict';
 
 const buttons = require('../buttons');
-const upsell = require('../UpsellEngine');
 
 module.exports = {
   canHandle(handlerInput) {
@@ -25,11 +24,8 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     // Clear and persist attributes
-    return upsell.saveSession(handlerInput)
-    .then(() => {
-      attributes.temp = undefined;
-      handlerInput.attributesManager.setPersistentAttributes(attributes);
-      handlerInput.attributesManager.savePersistentAttributes();
-    });
+    attributes.temp = undefined;
+    handlerInput.attributesManager.setPersistentAttributes(attributes);
+    handlerInput.attributesManager.savePersistentAttributes();
   },
 };

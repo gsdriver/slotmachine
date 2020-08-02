@@ -33,13 +33,16 @@ const utils = require('./utils');
 const request = require('request');
 const {ri, JargonSkillBuilder} = require('@jargon/alexa-skill-sdk');
 const ssmlCheck = require('ssml-check-core');
+const upsell = require('./upsell/UpsellEngine');
 
 const requestInterceptor = {
-  process(handlerInput) {
+  async process(handlerInput) {
     const attributesManager = handlerInput.attributesManager;
     const sessionAttributes = attributesManager.getSessionAttributes();
     const event = handlerInput.requestEnvelope;
     let attributes;
+
+    await upsell.processRequest(event);
 
     if ((Object.keys(sessionAttributes).length === 0) ||
       ((Object.keys(sessionAttributes).length === 1)
@@ -147,7 +150,7 @@ const requestInterceptor = {
 };
 
 const saveResponseInterceptor = {
-  process(handlerInput) {
+  async process(handlerInput) {
     const response = handlerInput.responseBuilder.getResponse();
     const attributes = handlerInput.attributesManager.getSessionAttributes();
 
@@ -175,6 +178,37 @@ const saveResponseInterceptor = {
             attributes.temp.lastReprompt = lastReprompt;
           }
 
+          // Strip <audio> tags (issue with dev console)
+          if (process.env.NOAUDIO) {
+            let index;
+            let end;
+
+            if (response.outputSpeech && response.outputSpeech.ssml) {
+              while (true) {
+                index = response.outputSpeech.ssml.lastIndexOf('<audio');
+                if (index === -1) {
+                  break;
+                }
+                end = response.outputSpeech.ssml.indexOf('>', index);
+                response.outputSpeech.ssml =
+                  response.outputSpeech.ssml.substring(0, index)
+                  + response.outputSpeech.ssml.substring(end + 1);
+              }
+            }
+            if (response.reprompt && response.reprompt.ssml) {
+              while (true) {
+                index = response.reprompt.ssml.lastIndexOf('<audio');
+                if (index === -1) {
+                  break;
+                }
+                end = response.reprompt.ssml.indexOf('>', index);
+                response.reprompt.ssml =
+                  response.reprompt.ssml.substring(0, index)
+                  + response.reprompt.ssml.substring(end + 1);
+              }
+            }
+          }
+
           if (attributes.temp) {
             if (attributes.temp.deferReprompt) {
               // Oh, actually we don't want to reprompt but will
@@ -190,9 +224,6 @@ const saveResponseInterceptor = {
             // If there is a reprompt - set a flag so any errant
             // input handler reprompt timeout events are ignored
             attributes.temp.ignoreTimeouts = (response.reprompt) ? true : false;
-
-            // OK to upsell again!
-            attributes.temp.noUpsell = undefined;
           }
 
           // Save state if we need to (but just for certain platforms)
@@ -213,7 +244,8 @@ const saveResponseInterceptor = {
         }
 
         if (response.outputSpeech && response.outputSpeech.ssml) {
-          return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, {platform: 'amazon'});
+          return ssmlCheck.verifyAndFix(response.outputSpeech.ssml, 
+              {platform: 'amazon', locale: handlerInput.requestEnvelope.request.locale});
         } else {
           return Promise.resolve({});
         }
@@ -258,6 +290,7 @@ if (process.env.DASHBOTKEY) {
 
 function runGame(event, context, callback) {
   const skillBuilder = new JargonSkillBuilder().wrap(Alexa.SkillBuilders.custom());
+  const start = Date.now();
 
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));
@@ -308,11 +341,17 @@ function runGame(event, context, callback) {
   if (process.env.VOICEHEROKEY) {
     const voicehero = require('voicehero-sdk')(process.env.VOICEHEROKEY).alexa;
     voicehero.handler(skillFunction)(event, context, (err, response) => {
-      callback(err, response);
+      upsell.processResponse(response, event.session.user.userId).then(() => {
+        console.log('Running time', (Date.now() - start));
+        callback(err, response);
+      });
     });
   } else {
     skillFunction(event, context, (err, response) => {
-      callback(err, response);
+      upsell.processResponse(response, event.session.user.userId).then(() => {
+        console.log('Running time', (Date.now() - start));
+        callback(err, response);
+      });
     });
   }
 }

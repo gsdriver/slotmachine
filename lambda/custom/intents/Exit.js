@@ -43,6 +43,16 @@ module.exports = {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let noReminder;
     const now = Date.now();
+    const request = handlerInput.requestEnvelope.request;
+
+    // If this is Stop, just exit the skill
+    if ((request.type === 'IntentRequest') && (request.intent.name === 'AMAZON.StopIntent')) {
+      attributes.temp.speechParams.Ad = '';
+      return handlerInput.jrb
+        .speak(ri('EXIT_GAME', attributes.temp.speechParams))
+        .withShouldEndSession(true)
+        .getResponse();
+    }
 
     // Have we recently asked about setting a reminder?
     if (attributes.prompts.reminder

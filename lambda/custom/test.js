@@ -7,7 +7,8 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const fs = require('fs');
 
-const LOCALE= 'en-GB';
+const LOCALE= 'en-US';
+const USERID = 'not-amazon'; //'amzn1.ask.account.AHPZIGELCNZXKU667LLN4NN5TEOXPDRVD2QLZ6JMTNJULJXLC7MY3VHKSMRBPAR4XP33N7KCTEZXW527GW73VX2OFWCLR72IRNP4A52OIHOUGLVCWEJIST5CV333YXQWSUVJ7OXN3AZCX3IGHEGPGDVK5V3YGXF5AUGAJ4LJPEQRJHFYHYQCZRGBK37YVDTKP44IEHDRS77I5OA';
 const APPID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
 const APITOKEN = '';
 
@@ -39,7 +40,7 @@ function BuildEvent(argv)
       },
       "attributes": {},
       "user": {
-        "userId": "not-amazon",
+        "userId": USERID,
       },
       "new": false
     },
@@ -61,10 +62,10 @@ function BuildEvent(argv)
            "applicationId": APPID
          },
          "user": {
-           "userId": "not-amazon",
+           "userId": USERID,
          },
          "device": {
-           "deviceId": "not-amazon",
+           "deviceId": USERID,
            "supportedInterfaces": {
              "AudioPlayer": {},
              "Display": {
@@ -87,7 +88,7 @@ function BuildEvent(argv)
       },
       "attributes": {},
       "user": {
-        "userId": "not-amazon",
+        "userId": USERID,
       },
       "new": false
     },
@@ -123,10 +124,10 @@ function BuildEvent(argv)
            "applicationId": APPID
          },
          "user": {
-           "userId": "not-amazon",
+           "userId": USERID,
          },
          "device": {
-           "deviceId": "not-amazon",
+           "deviceId": USERID,
            "supportedInterfaces": {
              "AudioPlayer": {},
              "Display": {
@@ -149,7 +150,7 @@ function BuildEvent(argv)
       },
       "attributes": {},
       "user": {
-        "userId": "not-amazon",
+        "userId": USERID,
       },
       "new": false
     },
@@ -185,10 +186,10 @@ function BuildEvent(argv)
            "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
          },
          "user": {
-           "userId": "not-amazon",
+           "userId": USERID,
          },
          "device": {
-           "deviceId": "not-amazon",
+           "deviceId": USERID,
            "supportedInterfaces": {
              "AudioPlayer": {},
              "Display": {
@@ -211,7 +212,7 @@ function BuildEvent(argv)
       },
       "attributes": {},
       "user": {
-        "userId": "not-amazon",
+        "userId": USERID,
       },
       "new": false
     },
@@ -239,10 +240,10 @@ function BuildEvent(argv)
            "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
          },
          "user": {
-           "userId": "not-amazon",
+           "userId": USERID,
          },
          "device": {
-           "deviceId": "not-amazon",
+           "deviceId": USERID,
            "supportedInterfaces": {
              "AudioPlayer": {},
              "Display": {
@@ -264,7 +265,7 @@ function BuildEvent(argv)
         "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
       },
       "user": {
-        "userId": "not-amazon",
+        "userId": USERID,
       },
       "new": true
     },
@@ -286,10 +287,10 @@ function BuildEvent(argv)
            "applicationId": APPID
          },
          "user": {
-           "userId": "not-amazon",
+           "userId": USERID,
          },
          "device": {
-           "deviceId": "not-amazon",
+           "deviceId": USERID,
            "supportedInterfaces": {
              "AudioPlayer": {},
              "Display": {

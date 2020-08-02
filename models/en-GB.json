@@ -329,6 +329,18 @@
                   "clown game"
                 ]
               }
+            },
+            {
+              "id": "halloween",
+              "name": {
+                "value": "halloween",
+                "synonyms": [
+                  "the halloween game",
+                  "halloween game",
+                  "halloween machine",
+                  "the halloween machine"
+                ]
+              }
             }
           ],
           "name": "LIST_OF_PRODUCTS"
@@ -400,6 +412,18 @@
                   "valentines day",
                   "the valentine machine",
                   "valentine machine"
+                ]
+              }
+            },
+            {
+              "id": "halloween",
+              "name": {
+                "value": "halloween",
+                "synonyms": [
+                  "the halloween game",
+                  "halloween game",
+                  "halloween machine",
+                  "the halloween machine"
                 ]
               }
             },
