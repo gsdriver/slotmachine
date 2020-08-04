@@ -9,6 +9,10 @@ const rp = require('request-promise');
 
 module.exports = {
   processRequest: async function(event) {
+    if (!process.env.REVISUPURL) {
+      return;
+    }
+
     const body = {
       key: process.env.REVISUPKEY,
       alexa: event,
@@ -24,6 +28,10 @@ module.exports = {
     });
   },
   processResponse: async function(response, userId) {
+    if (!process.env.REVISUPURL) {
+      return;
+    }
+
     const body = {
       key: process.env.REVISUPKEY,
       alexa: {
@@ -45,6 +53,10 @@ module.exports = {
     });
   },
   evaluateTrigger: function(userId, trigger) {
+    if (!process.env.REVISUPURL) {
+      return;
+    }
+
     const body = {
       key: process.env.REVISUPKEY,
     };
