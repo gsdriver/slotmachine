@@ -9,14 +9,14 @@
     "ask-sdk": "^2.1.0",
     "aws-sdk": "^2.282.1",
     "bluebird": "^3.5.0",
-    "dashbot": "^9.9.2",
+    "dashbot": "^12.1.0",
     "leven": "^2.1.0",
     "moment-timezone": "^0.5.21",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "seedrandom": "^2.4.3",
     "ssml-check-core": "^0.3.0",
-    "voicehero-sdk": "0.0.14"
+    "voicehero-sdk": "0.0.15"
   },
   "devDependencies": {
     "eslint-config-google": "^0.7.1",
