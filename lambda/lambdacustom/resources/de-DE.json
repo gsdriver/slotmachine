@@ -4,22 +4,9 @@
   "CIRCUS_GAME": "<audio src=\"https://alexasoundclips.s3-us-west-2.amazonaws.com/circus.mp3\"/> ",
   "CIRCUS_SPECIAL": "clownen sind unberechenbar.",
   "DIAMOND_SPECIAL": "Diamanten sind unberechenbar.",
-  "DISPLAY_DIRECTIVE_CHOICES": {
-    "backButton": "HIDDEN",
-    "title": "Wähle ein Spiel aus",
-    "token": "listToken",
-    "type": "ListTemplate1"
-  },
-  "DISPLAY_PAYOUT_LOSER": {
-    "backButton": "HIDDEN",
-    "title": "Schade, du hast leider verloren",
-    "type": "BodyTemplate1"
-  },
-  "DISPLAY_PAYOUT_WINNER": {
-    "backButton": "HIDDEN",
-    "title": "Du hast {Coins, plural, =1 {eine Münze} other {# Münzen}} gewonnen!",
-    "type": "BodyTemplate1"
-  },
+  "DISPLAY_SELECT_GAME": "Wähle ein Spiel aus",
+  "DISPLAY_PAYOUT_LOSER": "Schade, du hast leider verloren",
+  "DISPLAY_PAYOUT_WINNER": "Du hast {Coins, plural, =1 {eine Münze} other {# Münzen}} gewonnen!",
   "DISPLAY_WELCOME": "Willkommen bei der Slotmaschine.",
   "ERROR_REPROMPT": "Kann ich sonst noch weiterhelfen?",
   "EVERYONE_WINS": "Bei der heutigen Turniermaschine gewinnt jedes Spiel mit einem Einsatz von 5 Münzen.",

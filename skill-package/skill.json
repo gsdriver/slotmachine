@@ -123,9 +123,6 @@
         },
         "interfaces": [
           {
-            "type": "RENDER_TEMPLATE"
-          },
-          {
             "type": "GAME_ENGINE"
           },
           {

@@ -397,20 +397,7 @@
     "pumpkin": "jack o lantern"
   },
   "DISPLAY_WELCOME": "Welcome to Slot Machine. ",
-  "DISPLAY_DIRECTIVE_CHOICES": {
-    "type": "ListTemplate1",
-    "token": "listToken",
-    "backButton": "HIDDEN",
-    "title": "Select a game to play"
-  },
-  "DISPLAY_PAYOUT_WINNER": {
-    "type": "BodyTemplate1",
-    "backButton": "HIDDEN",
-    "title": "You won {Coins, plural, =1 {one coin} other {# coins}}"
-  },
-  "DISPLAY_PAYOUT_LOSER": {
-    "type": "BodyTemplate1",
-    "backButton": "HIDDEN",
-    "title": "Sorry, you lost"
-  }
+  "DISPLAY_SELECT_GAME": "Select a game to play",
+  "DISPLAY_PAYOUT_WINNER": "You won {Coins, plural, =1 {one coin} other {# coins}}",
+  "DISPLAY_PAYOUT_LOSER": "Sorry, you lost"
 }

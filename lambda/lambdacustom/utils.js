@@ -909,45 +909,63 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    let image;
     const displayParams = {};
 
+    // We could look at the specific viewport dimensions and display based on that
+    // But for now, we'll try to display on all viewport sizes
     if (attributes.temp && event.context && event.context.System &&
       event.context.System.device &&
       event.context.System.device.supportedInterfaces &&
-      event.context.System.device.supportedInterfaces.Display) {
+      event.context.System.device.supportedInterfaces['Alexa.Presentation.APL']) {
       attributes.display = true;
 
       if (attributes.originalChoices) {
         let i;
-        const listItems = [];
-        const gameList = [];
+        const renderItems = [];
 
         for (i = 0; i < attributes.originalChoices.length; i++) {
-          gameList.push(ri('GAME_LIST_' + attributes.originalChoices[i].toUpperCase()));
+          renderItems.push(ri('GAME_LIST_' + attributes.originalChoices[i].toUpperCase()));
         }
-        return handlerInput.jrm.renderBatch(gameList)
-        .then((renderItems) => {
-          for (i = 0; i < attributes.originalChoices.length; i++) {
-            listItems.push({
-              'token': 'game.' + i,
-              'textContent': {
-                'primaryText': {
-                  'type': 'RichText',
-                  'text': '<font size=\"7\">' + renderItems[i] + '</font>',
-                },
+
+        return handlerInput.jrm.renderBatch(renderItems).then((textItems) => {
+          const listItems = textItems.map((primaryText, i) => {
+            return { primaryText, token: 'game.' + i };
+          });
+          return handlerInput.jrm.render(ri('DISPLAY_SELECT_GAME')).then((textContent) => {
+            const document = {
+              type: 'APL',
+              version: '1.6',
+              import: [{
+                name: 'alexa-layouts',
+                version: '1.3.0',
+              }],
+              mainTemplate: {
+                parameters: [
+                  'listTemplateData',
+                ],
+                item: [{
+                  type: 'AlexaTextList',
+                  primaryText: '${listTemplateData.textContent}',
+                  headerBackButton: false,
+                  backgroundImageSource: '${listTemplateData.backgroundImage}',
+                  listItems: '${listTemplateData.listItems}',
+                }],
               },
+            };
+            const datasources = {
+              listTemplateData: {
+                backgroundImage: 'http://garrettvargas.com/img/slot-background.png',
+                textContent,
+                listItems,
+              },
+            };
+
+            return response.addDirective({
+              type: 'Alexa.Presentation.APL.RenderDocument',
+              version: '1.1',
+              document,
+              datasources,
             });
-          }
-
-          image = new Alexa.ImageHelper()
-            .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-            .getImage();
-
-          return handlerInput.jrm.renderObject(ri('DISPLAY_DIRECTIVE_CHOICES')).then((directive) => {
-            directive.backgroundImage = image;
-            directive.listItems = listItems;
-            response.addRenderTemplateDirective(directive);
           });
         });
       } else if (!attributes.temp.spinColor && game && game.result && game.result.spin) {
@@ -959,26 +977,76 @@ module.exports = {
           name += spin;
         });
 
-        const title = (game.result.payout) ? 'DISPLAY_PAYOUT_WINNER' : 'DISPLAY_PAYOUT_LOSER';
-        displayParams.Coins = game.result.payout;
-        image = new Alexa.ImageHelper()
-          .addImageInstance('https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png')
-          .getImage();
-        return handlerInput.jrm.renderObject(ri(title, displayParams)).then((directive) => {
-          directive.backgroundImage = image;
-          response.addRenderTemplateDirective(directive);
+        return handlerInput.jrm.render(
+          ri((game.result.payout) ? 'DISPLAY_PAYOUT_WINNER' : 'DISPLAY_PAYOUT_LOSER', {Coins: game.result.payout}))
+          .then((title) => {
+          const document = {
+            type: 'APL',
+            version: '1.6',
+            import: [{
+              name: 'alexa-layouts',
+              version: '1.3.0',
+            }],
+            mainTemplate: {
+              parameters: [
+                'headlineTemplateData',
+              ],
+              item: [{
+                type: 'AlexaHeadline',
+                headerTitle: '${headlineTemplateData.textContent}',
+                headerBackButton: false,
+                backgroundImageSource: '${headlineTemplateData.backgroundImage}',
+              }],
+            },
+          };
+          const datasources = {
+            headlineTemplateData: {
+              backgroundImage: 'https://s3.amazonaws.com/garrett-alexa-images/slots/' + name + '.png',
+              textContent: title,
+            },
+          };
+
+          return response.addDirective({
+            type: 'Alexa.Presentation.APL.RenderDocument',
+            version: '1.1',
+            document,
+            datasources,
+          });
         });
       } else {
         // Just show the background image
-        return handlerInput.jrm.render(ri('DISPLAY_WELCOME')).then((welcome) => {
-          image = new Alexa.ImageHelper()
-            .withDescription(welcome)
-            .addImageInstance('http://garrettvargas.com/img/slot-background.png')
-            .getImage();
-          response.addRenderTemplateDirective({
-            type: 'BodyTemplate1',
-            backButton: 'HIDDEN',
-            backgroundImage: image,
+        const document = {
+          type: 'APL',
+          version: '1.6',
+          import: [{
+            name: 'alexa-layouts',
+            version: '1.3.0',
+          }],
+          mainTemplate: {
+            parameters: [
+              'headlineTemplateData',
+            ],
+            item: [{
+              type: 'AlexaHeadline',
+              primaryText: '${headlineTemplateData.textContent}',
+              headerBackButton: false,
+              backgroundImageSource: '${headlineTemplateData.backgroundImage}',
+            }],
+          },
+        };
+        const datasources = {
+          headlineTemplateData: {
+            backgroundImage: 'http://garrettvargas.com/img/slot-background.png',
+            textContent: '',
+          },
+        };
+
+        return handlerInput.jrm.render(ri('DISPLAY_SELECT_GAME')).then((textContent) => {
+          return response.addDirective({
+            type: 'Alexa.Presentation.APL.RenderDocument',
+            version: '1.1',
+            document,
+            datasources,
           });
         });
       }
