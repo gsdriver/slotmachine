@@ -21,7 +21,7 @@
   "devDependencies": {
     "eslint-config-google": "^0.7.1",
     "gulp": "^4.0.0",
-    "gulp-eslint": "^3.0.1"
+    "gulp-eslint": "^6.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
