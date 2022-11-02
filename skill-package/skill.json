@@ -1,0 +1,254 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "de-DE": {
+          "summary": "Spiel ein Slot-Spiel mit der optionalen Unterstützung des Echo-Knopfs. Versuch den großen Jackpot zu knacken!",
+          "examplePhrases": [
+            "Alexa, starte slotmaschine",
+            "Lies mir die Highscores vor",
+            "Gib mir einen anderen Automaten"
+          ],
+          "keywords": [
+            "Einarmiger Bandit",
+            "Spielautomaten",
+            "Slotmaschine",
+            "Casino"
+          ],
+          "name": "Slotmaschine",
+          "description": "Spiel eines von mehreren Slot-Spielen mit der spannenden Chance auf einen progressiven Jackpot der immer großer wird durch zusätzliche Play. Sie starten mit 50 Münzen und können pro Runde eine bis fünf Münzen einsetzen. Du hast alle deine Münzen verloren? Wenn du am nächsten Tag wiederkommst, erhältst du weitere Münzen. Wirst du es sein, der den Jackpot knackt? Verfolge den HighScore und vergleiche deine Leistungen mit denen anderer Spieler, indem zu sagst: „HighScore vorlesen“, um die Bestenliste abzufragen. Wenn du weiterspielst, kannst du auch zur Spitze aufsteigen! Du kannst dir auch jederzeit mit „Auszahlungstabelle vorlesen“ die unterschiedlichen Auszahlungen des Spiels ansagen lassen oder den Befehl „eine neue Maschine wählen“ verwenden, wenn du ein anderes Spiel ausprobieren möchtest. Viel Glück!\n\nKomme jeden Montag und Mittwoch zu einer spannenden Turnierrunde. Du kannst Alexa sagen: \"Setze einen Alarm für die Turnierrunde\" und du wirst benachrichtigt, wenn das nächste Turnier beginnt. Du erhältst unbegrenzte Spins während dieses zeitlich begrenzten Spiels, und jede Woche bieten wir eine andere Maschine an.",
+          "smallIconUri": "file://assets/images/de-DE_smallIconUri.png",
+          "largeIconUri": "file://assets/images/de-DE_largeIconUri.png"
+        },
+        "en-US": {
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
+          "examplePhrases": [
+            "Alexa, open slot machine",
+            "Read high scores",
+            "Select a new machine"
+          ],
+          "keywords": [
+            "slots",
+            "casino"
+          ],
+          "name": "Slot Machine",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play. You start with 50 coins and can play from 1 to 5 coins per spin. Lost all your coins? Come back the following day for additional coins or you can sign up for a subscription to immediately reset your bankroll. Will you hit the jackpot? Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top! At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game. In addition to three built-in machines, we feature a number of premium themed machines available for purchase. Good luck!\n\nJoin us on Monday and Wednesday each week for an exciting tournament round! You can ask Alexa \"set a reminder for the tournament\" and you'll be notified when the next tournament is starting. You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "smallIconUri": "file://assets/images/en-US_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-US_largeIconUri.png"
+        },
+        "en-CA": {
+          "summary": "Play a game of slots with multiple machine options. Try your luck for the big jackpot!",
+          "examplePhrases": [
+            "Alexa, open slot machine",
+            "Read high scores",
+            "Select a new machine"
+          ],
+          "keywords": [
+            "alexa",
+            "slots"
+          ],
+          "name": "Slot Machine",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 50 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?  Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!  At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us on Monday and Wednesday each week for an exciting tournament round!  You can ask Alexa \"set a reminder for the tournament\" and you'll be notified when the next tournament is starting.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "smallIconUri": "file://assets/images/en-CA_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-CA_largeIconUri.png"
+        },
+        "en-IN": {
+          "summary": "Play a game of slots with multiple machine options. Try your luck for the big jackpot!",
+          "examplePhrases": [
+            "Alexa, open slot machine",
+            "Read high scores",
+            "Select a new machine"
+          ],
+          "keywords": [
+            "alexa",
+            "slots"
+          ],
+          "name": "Slot Machine",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 50 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us on Monday and Wednesday each week for an exciting tournament round!  You can ask Alexa \"set a reminder for the tournament\" and you'll be notified when the next tournament is starting.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "smallIconUri": "file://assets/images/en-IN_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-IN_largeIconUri.png"
+        },
+        "en-AU": {
+          "summary": "Play a game of slots with multiple machine options. Try your luck for the big jackpot!",
+          "examplePhrases": [
+            "Alexa, open slot machine",
+            "Read high scores",
+            "Select a new machine"
+          ],
+          "keywords": [
+            "alexa",
+            "slots"
+          ],
+          "name": "Slot Machine",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play.  You start with 50 coins and can play from 1 to 5 coins per spin.  Lost all your coins?  Come back the following day for additional coins.  Will you hit the jackpot?\n\nKeep track of your high score, separately per wheel, and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top!\n\nAt any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game.  Good luck!\n\nJoin us on Monday and Wednesday each week for an exciting tournament round!  You can ask Alexa \"set a reminder for the tournament\" and you'll be notified when the next tournament is starting.  You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "smallIconUri": "file://assets/images/en-AU_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-AU_largeIconUri.png"
+        },
+        "en-GB": {
+          "summary": "Play a game of slots with optional support for an Echo Button. Try your luck for the big jackpot!",
+          "examplePhrases": [
+            "Alexa, open slot machine",
+            "Read high scores",
+            "Select a new machine"
+          ],
+          "keywords": [
+            "slots",
+            "casino"
+          ],
+          "name": "Slot Machine",
+          "description": "Play one of several different slot machines, including an exciting progressive jackpot that grows based on aggregate play. You start with 50 coins and can play from 1 to 5 coins per spin. Lost all your coins? Come back the following day for additional coins or you can sign up for a subscription to immediately reset your bankroll. Will you hit the jackpot? Keep track of your high score and compare how you're doing with other players by saying \"read high scores\" to hear the leader board. Keep playing and you can move to the top! At any time, you can ask to \"read the payout table\" to hear the different payouts from the game, or \"select a new machine\" if you want to try a different game. In addition to three built-in machines, we feature a number of premium themed machines available for purchase. Good luck!\n\nJoin us on Monday and Wednesday each week for an exciting tournament round! You can ask Alexa \"set a reminder for the tournament\" and you'll be notified when the next tournament is starting. You get unlimited spins during this timed play, with a different machine offered each week.\n\nConnect with us on Facebook at https://www.facebook.com/alexacasinogames!",
+          "smallIconUri": "file://assets/images/en-GB_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-GB_largeIconUri.png"
+        }
+      },
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Allows you to play a slot machine. The game keeps the player's state so they can track their progress as they play.",
+      "category": "GAMES",
+      "distributionCountries": [],
+      "gadgetSupport": {
+        "maxGadgetButtons": 1,
+        "minGadgetButtons": 1,
+        "numPlayersMax": 1,
+        "requirement": "OPTIONAL",
+        "numPlayersMin": 1
+      }
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:129065607926:function:SlotMachine_v17"
+        },
+        "interfaces": [
+          {
+            "type": "RENDER_TEMPLATE"
+          },
+          {
+            "type": "GAME_ENGINE"
+          },
+          {
+            "type": "GADGET_CONTROLLER"
+          },
+          {
+            "type": "ALEXA_PRESENTATION_APL",
+            "supportedViewports": [
+              {
+                "mode": "HUB",
+                "shape": "ROUND",
+                "minWidth": 100,
+                "maxWidth": 599,
+                "minHeight": 100,
+                "maxHeight": 599
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minHeight": 100,
+                "maxHeight": 599,
+                "minWidth": 960,
+                "maxWidth": 1279
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minHeight": 600,
+                "maxHeight": 959,
+                "minWidth": 960,
+                "maxWidth": 1279
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minHeight": 600,
+                "maxHeight": 1279,
+                "minWidth": 1280,
+                "maxWidth": 1920
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minHeight": 960,
+                "maxHeight": 1279,
+                "minWidth": 1920,
+                "maxWidth": 2560
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minHeight": 1920,
+                "maxHeight": 2560,
+                "minWidth": 960,
+                "maxWidth": 1279
+              },
+              {
+                "mode": "TV",
+                "shape": "RECTANGLE",
+                "minHeight": 540,
+                "maxHeight": 540,
+                "minWidth": 960,
+                "maxWidth": 960
+              },
+              {
+                "mode": "MOBILE",
+                "shape": "RECTANGLE",
+                "minHeight": 320,
+                "maxHeight": 1920,
+                "minWidth": 960,
+                "maxWidth": 1279
+              },
+              {
+                "mode": "MOBILE",
+                "shape": "RECTANGLE",
+                "minHeight": 320,
+                "maxHeight": 1920,
+                "minWidth": 1280,
+                "maxWidth": 1920
+              }
+            ]
+          },
+          {
+            "type": "CAN_FULFILL_INTENT_REQUEST"
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [
+      {
+        "name": "alexa::profile:given_name:read"
+      },
+      {
+        "name": "alexa::alerts:reminders:skill:readwrite"
+      }
+    ],
+    "privacyAndCompliance": {
+      "allowsPurchases": true,
+      "locales": {
+        "de-DE": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy-DE.html"
+        },
+        "en-US": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
+        },
+        "en-CA": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
+        },
+        "en-IN": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
+        },
+        "en-AU": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
+        },
+        "en-GB": {
+          "privacyPolicyUrl": "https://s3-us-west-2.amazonaws.com/garrettvargas.com/privacy.html"
+        }
+      },
+      "containsAds": false,
+      "isExportCompliant": true,
+      "isChildDirected": false,
+      "usesPersonalInfo": false
+    }
+  }
+}
