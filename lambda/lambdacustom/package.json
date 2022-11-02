@@ -9,7 +9,7 @@
     "ask-sdk": "^2.1.0",
     "aws-sdk": "^2.282.1",
     "bluebird": "^3.5.0",
-    "dashbot": "^9.9.2",
+    "dashbot": "^12.1.0",
     "leven": "^2.1.0",
     "moment-timezone": "^0.5.21",
     "request": "^2.88.0",
