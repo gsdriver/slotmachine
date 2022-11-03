@@ -1137,12 +1137,17 @@ module.exports = {
       return rp(params);
     })
     .then((body) => {
+      console.log('SetReminder response: ', JSON.stringify(body));
+      if (body && body.code && (body.code !== 'OK')) {
+        return {errorCode: body.code};
+      }
+
       // Return the local tournament time
       return module.exports.getLocalTournamentTime(handlerInput);
     })
     .catch((err) => {
-      console.log('SetReminder error ' + err.error.code);
-      return err.error.code;
+      console.log('SetReminder error ' + err);
+      return {errorCode: (err && err.error) ? err.error.code : "UNKNOWNERROR"};
     });
   },
   isReminderActive: function(handlerInput) {

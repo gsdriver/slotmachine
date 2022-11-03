@@ -67,7 +67,7 @@ module.exports = {
       return utils.setTournamentReminder(handlerInput, endSession)
       .then((result) => {
         attributes.prompts.reminder = undefined;
-        if (typeof result !== 'string') {
+        if (!result.errorCode) {
           attributes.setReminder = true;
           attributes.temp.speechParams.Time = result.time;
           attributes.temp.speechParams.Timezone = result.timezone;
@@ -82,7 +82,8 @@ module.exports = {
               .reprompt(ri('REMINDER_REPROMPT'))
               .getResponse();
           }
-        } else if (result === 'UNAUTHORIZED') {
+        // We're going to assume all errors mean that we are unauthorized
+        } else {
           // Get their permission to show a reminder
           // We will end the session and prompt again
           response = handlerInput.jrb
@@ -90,19 +91,6 @@ module.exports = {
             .withAskForPermissionsConsentCard(['alexa::alerts:reminders:skill:readwrite'])
             .withShouldEndSession(true)
             .getResponse();
-        } else {
-          // Some other problem not auth-related
-          if (endSession) {
-            response = handlerInput.jrb
-              .speak(ri('REMINDER_ERROR'))
-              .withShouldEndSession(true)
-              .getResponse();
-          } else {
-            response = handlerInput.jrb
-              .speak(ri('REMINDER_ERROR_EXPLICIT'))
-              .reprompt(ri('REMINDER_REPROMPT'))
-              .getResponse();
-          }
         }
 
         return response;
