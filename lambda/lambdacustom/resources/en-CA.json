@@ -1,0 +1,19 @@
+{
+  "LISTPURCHASES_PURCHASED": "You have purchased {Products}.  What else can I help you with?",
+  "LISTPURCHASES_NONE": "You haven't purchased any products for Slot Machine. What else can I help you with?",
+  "LISTPURCHASES_REPROMPT": "What else can I help you with?",
+  "PURCHASE_PRODUCT_LIST": {
+    "coinreset": "a Reset Bankroll subscription which will automatically reset your bankroll whenever you run out of coins",
+    "crazydiamond": "a Crazy Diamond machine with wild diamond symbols",
+    "holiday": "a Holiday machine with yuletide sounds and symbols",
+    "valentine": "a Valentine's Day game with special valentine symbols",
+    "halloween": "a Halloween game with special spooky symbols",
+    "circus": "a circus machine with a wild clown symbol and special sound effects"
+  },
+  "PURCHASE_PRODUCTS": "We have {Products} available for purchase. Say the product you would like to buy or no to continue your game. ",
+  "PURCHASE_NO_PRODUCTS": "Sorry. We don't have any new products available to purchase.",
+  "PURCHASE_CONFIRM_REPROMPT": "Say the product you want to buy or no to continue your game.",
+  "PURCHASE_NO_PURCHASE": "What else can I help you with?",
+  "REFUND_SAY_PRODUCT": "Say the name of the product you want to refund such as Cancel Crazy Diamonds or Cancel Reset Bankroll.",
+  "SPIN_BUSTED_UPSELL": "{SpinResult}. Sorry, you lost. {Upsell}"
+}
