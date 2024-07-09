@@ -1121,10 +1121,10 @@ module.exports = {
           status: (outcome === 'win') || (outcome === 'jackpot') ? 'win' : 'lose',
         },
         method: 'GET',
+        json: true,
+        timeout: parseInt(process.env.AITIMEOUT) || 4000,
       };
-      return rp(params).then((dataStr) => {
-        const data = JSON.parse(dataStr);
-
+      return rp(params).then((data) => {
         // Replace the last question in speech with the AI response
         response = speech.trim();
         if (response.endsWith('?')) {
@@ -1136,9 +1136,13 @@ module.exports = {
 
         console.log(`Got AI response ${data.response} in ${data.timeElasped} ms`);
         return `${response} ${data.response || ''}`;
+      }).catch((err) => {
+        console.log('AI error', err);
+        return speech;
       });
     } catch (err) {
       // Just use the same response
+      console.log('AI error', err);
       return Promise.resolve(speech);
     }
   },
