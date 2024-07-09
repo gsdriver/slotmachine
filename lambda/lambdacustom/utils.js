@@ -1092,6 +1092,56 @@ module.exports = {
       return (err.statusCode === 403) ? false : undefined;
     });
   },
+  updateAiSpinResult: function(handlerInput, speech, outcome) {
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+    let response;
+
+    // If we have an AI endpoint, send the result
+    if (!process.env.AIENDPOINT || !process.env.AIKEY) {
+      return Promise.resolve(speech);
+    }
+    if (process.env.AITHROTTLE) {
+      if (Math.random() > parseFloat(process.env.AITHROTTLE)) {
+        return Promise.resolve(speech);
+      }
+    }
+
+    try {
+      const params = {
+        url: process.env.AIENDPOINT,
+        qs: {
+          userId: handlerInput.requestEnvelope.session.user.userId,
+          timestamp: Date.now(),
+          key: process.env.AIKEY,
+          speech,
+          games: game.spins,
+          wins: attributes.temp.winningStreak,
+          losses: attributes.temp.losingStreak,
+          status: (outcome === 'win') || (outcome === 'jackpot') ? 'win' : 'lose',
+        },
+        method: 'GET',
+      };
+      return rp(params).then((dataStr) => {
+        const data = JSON.parse(dataStr);
+
+        // Replace the last question in speech with the AI response
+        response = speech.trim();
+        if (response.endsWith('?')) {
+          const endPoint = Math.max(response.lastIndexOf('.'), response.lastIndexOf('>'));
+          if (endPoint > 0) {
+            response = response.substring(0, endPoint + 1);
+          }
+        }
+
+        console.log(`Got AI response ${data.response} in ${data.timeElasped} ms`);
+        return `${response} ${data.response || ''}`;
+      });
+    } catch (err) {
+      // Just use the same response
+      return Promise.resolve(speech);
+    }
+  },
   setTournamentReminder: function(handlerInput, endSession) {
     const times = getTournamentTimes(true);
     const alert = {};

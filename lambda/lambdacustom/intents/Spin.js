@@ -204,6 +204,8 @@ module.exports = {
       game.result.payout = Math.floor(bet * (matchedPayout ? rules.payouts[matchedPayout] : 0));
       attributes.temp.losingStreak = (game.result.payout === 0)
           ? ((attributes.temp.losingStreak + 1) || 1) : 0;
+      attributes.temp.winningStreak = (game.result.payout === 0)
+          ? 0 : ((attributes.temp.winningStreak + 1) || 1);
       if (game.result.payout > 0) {
         // You won!  If more than 50:1, play the jackpot sound
         speech += '_WIN';
@@ -362,16 +364,24 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     speech += '_NEWUSER';
   }
 
+  let resolvedSpeech;
   return handlerInput.jrm.renderBatch([
     ri(speech, attributes.temp.speechParams),
     ri('SPIN_PLAY_AGAIN'),
   ])
-  .then((resolvedSpeech) => {
+  .then((jargonResponse) => {
     // If this machine replaces the slotstop sound, do the replacement now
+    resolvedSpeech = jargonResponse;
     const rules = utils.getGame(attributes.currentGame);
     if (rules.stopreplace) {
       resolvedSpeech[0] = resolvedSpeech[0].replace(/slotstop/g, rules.stopreplace);
     }
+
+    // Now call AI to see if we want to update the result
+    return utils.updateAiSpinResult(handlerInput, resolvedSpeech[0], outcome);
+  })
+  .then((updatedResult) => {
+    resolvedSpeech[0] = updatedResult;
 
     // If this locale supports Echo buttons and the customer is using a button
     // or has a display screen, we will use the GameEngine
