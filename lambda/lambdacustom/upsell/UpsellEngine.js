@@ -10,7 +10,7 @@ const rp = require('request-promise');
 module.exports = {
   processRequest: async function(event) {
     if (!process.env.REVISUPURL) {
-      return;
+      return Promise.resolve(undefined);
     }
 
     const body = {
@@ -29,7 +29,7 @@ module.exports = {
   },
   processResponse: async function(response, userId) {
     if (!process.env.REVISUPURL) {
-      return;
+      return Promise.resolve(undefined);
     }
 
     const body = {
@@ -54,7 +54,7 @@ module.exports = {
   },
   evaluateTrigger: function(userId, trigger) {
     if (!process.env.REVISUPURL) {
-      return;
+      return Promise.resolve(undefined);
     }
 
     const body = {
