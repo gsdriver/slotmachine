@@ -378,7 +378,18 @@ function updateGamePostPayout(handlerInput, partialSpeech, game, bet, outcome) {
     }
 
     // Now call AI to see if we want to update the result
-    return utils.updateAiSpinResult(handlerInput, resolvedSpeech[0], outcome);
+    // Probably would be better to do this before we generated the alternate text
+    // But this allows for a more surgical change
+    return utils.updateAiSpinResult(handlerInput)
+      .then((updatedResult) => {
+        if (updatedResult && updatedResult.length) {
+          console.log(`AI updated result: ${updatedResult}\r\nJargon: ${resolvedSpeech[0]}`);
+          return updatedResult;
+        }
+
+        // Must have been an error or throttle - use the original text
+        return resolvedSpeech[0];
+      });
   })
   .then((updatedResult) => {
     resolvedSpeech[0] = updatedResult;

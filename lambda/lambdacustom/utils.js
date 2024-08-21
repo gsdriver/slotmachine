@@ -1092,18 +1092,17 @@ module.exports = {
       return (err.statusCode === 403) ? false : undefined;
     });
   },
-  updateAiSpinResult: function(handlerInput, speech, outcome) {
+  updateAiSpinResult: function(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
-    let response;
 
     // If we have an AI endpoint, send the result
     if (!process.env.AIENDPOINT || !process.env.AIKEY) {
-      return Promise.resolve(speech);
+      return Promise.resolve("");
     }
     if (process.env.AITHROTTLE) {
       if (Math.random() > parseFloat(process.env.AITHROTTLE)) {
-        return Promise.resolve(speech);
+        return Promise.resolve("");
       }
     }
 
@@ -1114,36 +1113,34 @@ module.exports = {
           userId: handlerInput.requestEnvelope.session.user.userId,
           timestamp: Date.now(),
           key: process.env.AIKEY,
-          speech,
+          reels: attributes.temp.speechParams.SpinResult,
           games: game.spins,
           wins: attributes.temp.winningStreak,
           losses: attributes.temp.losingStreak,
-          status: (outcome === 'win') || (outcome === 'jackpot') ? 'win' : 'lose',
+          payout: (game.result.payout > 0) ? game.result.payout : -game.bet,
+          bankroll: game.bankroll || attributes.bankroll,
         },
         method: 'GET',
         json: true,
         timeout: parseInt(process.env.AITIMEOUT) || 4000,
       };
-      return rp(params).then((data) => {
-        // Replace the last question in speech with the AI response
-        response = speech.trim();
-        if (response.endsWith('?')) {
-          const endPoint = Math.max(response.lastIndexOf('.'), response.lastIndexOf('>'));
-          if (endPoint > 0) {
-            response = response.substring(0, endPoint + 1);
-          }
-        }
 
-        console.log(`Got AI response ${data.response} in ${data.timeElasped} ms`);
-        return `${response} ${data.response || ''}`;
+      if (process.env.AIGETDETAILS) {
+        params.qs.getDetails = "1";
+      }
+
+      return rp(params).then((data) => {
+        // Return the result
+        console.log(`Got AI response in ${data.timeElasped} ms`);
+        return data.response;
       }).catch((err) => {
         console.log('AI error', err);
-        return speech;
+        return "";
       });
     } catch (err) {
-      // Just use the same response
+      // Return an empty string if we have an error
       console.log('AI error', err);
-      return Promise.resolve(speech);
+      return Promise.resolve("");
     }
   },
   setTournamentReminder: function(handlerInput, endSession) {
